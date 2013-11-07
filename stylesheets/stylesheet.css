@@ -44,7 +44,7 @@ nav ul li a
 	color: #3bb4bf;
 }
 
-#home-logo-link:visited {
+#home-logo-link, #home-logo-link:visited {
 	color: #3bb4bf;
 }
 
