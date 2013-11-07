@@ -7,6 +7,10 @@ body {
 	padding: 0;
 }
 
+.undecorated {
+	text-decoration: none;
+}
+
 #project-title {
 	display: inline;
 }
@@ -37,6 +41,10 @@ nav ul li a
 #project-title {
 	font-size: 48px;
 	font-weight: 700;
+	color: #3bb4bf;
+}
+
+#home-logo-link:visited {
 	color: #3bb4bf;
 }
 
@@ -82,6 +90,16 @@ nav ul li a
 	margin: 0 auto 60px auto;
 }
 
+.recent-posts {
+    list-style-type: none;
+    padding: 0;
+    margin-left: 0;
+}
+
+.recent-post-date {
+    color: #999;
+}
+
 #recent-posts-header {
 	margin: 60px auto 10px auto;
 	width: 800px;
@@ -94,7 +112,7 @@ nav ul li a
 }
 
 #read-more {
-	margin: 10px 0 0 0;
+	margin: 10px 0 0 400px;
 }
 
 #recent-post-list {

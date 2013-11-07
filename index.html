@@ -1,5 +1,6 @@
 ---
 layout: page
+title: WAVED - Web App for Visualizing Environmental Data
 ---
 
 <div id="splash-container">
@@ -18,13 +19,20 @@ layout: page
 	<div id="recent-posts">
 		<h1 id="recent-posts-header">Recent Posts</h1>
 		<div id="recent-post-blurb">
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin non sapien sollicitudin, egestas augue a, consequat diam. Quisque eu ullamcorper nibh. In scelerisque ornare egestas. Curabitur ullamcorper ut ipsum vitae sodales. Pellentesque vitae feugiat metus. Vestibulum accumsan, orci sollicitudin sodales tincidunt, lacus elit vehicula mauris, eu molestie dui neque sit amet dolor. Sed ut commodo neque. 
-			<div id="read-more">
-				Read More 
-			</div>
+			{% for post in site.posts limit 1 %}
+			<a class="undecorated" href="{{ post.url }}">{{ post.title }}</a><br/>
+			<span>&raquo; {{ post.date | date_to_string }}</span><br/>
+				{{ post.content | strip_html | truncatewords:50 }}
+					<br/><a id="read-more" href="{{ post.url }}">Read more...</a>
+			{% endfor %}
 		</div>
 		<div id="recent-post-list">
-				Test Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin non sapien sollicitudin, egestas augue a, consequa
+			<ul class="recent-posts">
+				{% for post in site.posts limit: 5 %}
+				<li><a href="{{ post.url }}" class="undecorated">{{ post.title }}</a><br/>
+                <span class="recent-post-date">{{ post.date | date: "%d %B %Y" }}</span></li>
+				{% endfor %}
+			</ul>
 		</div>
 	</div>
 </div>
