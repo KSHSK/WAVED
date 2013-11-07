@@ -20,16 +20,16 @@ title: WAVED - Web App for Visualizing Environmental Data
 		<h1 id="recent-posts-header">Recent Posts</h1>
 		<div id="recent-post-blurb">
 			{% for post in site.posts limit 1 %}
-			<a class="undecorated" href="{{ post.url }}">{{ post.title }}</a><br/>
+			<a class="undecorated" href="{{ post.url | remove_first:'/' }}">{{ post.title }}</a><br/>
 			<span>&raquo; {{ post.date | date_to_string }}</span><br/>
 				{{ post.content | strip_html | truncatewords:50 }}
-					<br/><a id="read-more" href="{{ post.url }}">Read more...</a>
+					<br/><a id="read-more" href="{{ post.url | remove_first:'/' }}">Read more...</a>
 			{% endfor %}
 		</div>
 		<div id="recent-post-list">
 			<ul class="recent-posts">
 				{% for post in site.posts limit: 5 %}
-				<li><a href="{{ post.url }}" class="undecorated">{{ post.title }}</a><br/>
+				<li><a href="{{ post.url | remove_first:'/' }}" class="undecorated">{{ post.title }}</a><br/>
                 <span class="recent-post-date">{{ post.date | date: "%d %B %Y" }}</span></li>
 				{% endfor %}
 			</ul>
