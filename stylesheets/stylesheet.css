@@ -21,7 +21,7 @@ nav {
 
 nav ul {
 	list-style-type: none;
-	padding: 0 20px;
+	padding: 0 8px 0 20px;
 	margin: 15px 0 0 0;
 }
 
@@ -36,6 +36,8 @@ nav ul li a
 
 #header {
 	line-height: 48px;
+	width: 800px;
+	margin: 0 auto;
 }
 
 #project-title {
@@ -53,8 +55,8 @@ nav ul li a
 	line-height: 48px;
 	font-size: 32px;
 	color: #3bb4bf;
-	padding: 0 12px 0 12px;
 	float: right;
+	padding: 0 12px 0 12px;
 }
 
 .nav-link a:hover {
@@ -74,6 +76,39 @@ nav ul li a
 
 #homepage-content-container {
 	padding: 0 40px 10px 40px;
+}
+
+#page-content-container {
+	padding: 0 40px 10px 40px;	
+}
+
+#page-content {
+	width: 800px;
+	margin: 0 auto;
+	border-top: thin solid #3bb4bf;
+}
+
+#page-header {
+	padding: 40px 0 20px 0;
+	font-weight: 700;
+	text-align: center;
+	font-size: 2.613em;
+}
+
+#page-header-subtext {
+	font-size: 0.5em;
+	font-weight: 400;
+	color: #3bb4bf;
+	margin: 10px;
+}
+
+#page-footer-container {
+	background: #3bb4bf;
+	color: white;
+	padding: 40px 0;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
 }
 
 #about-header {
