@@ -135,6 +135,10 @@ nav ul li a
     color: #999;
 }
 
+.recent-posts > li {
+	margin-top: 6px;
+}
+
 #recent-posts-header {
 	margin: 60px auto 10px auto;
 	width: 800px;
@@ -201,4 +205,49 @@ nav ul li a
 #DrexelCCI {
 	margin: 0 auto;
 	display: block;
+}
+
+#blog-posts {
+	width: 600px;
+	display: inline-block;
+	vertical-align: top;
+}
+
+#blog-recent-posts {
+	width: 180px;
+	display:inline-block;
+	vertical-align: top;
+	margin-left: 15px;
+}
+
+.no-decoration a {
+	text-decoration: none;
+}
+
+.post-meta {
+    color: #999;
+    font-size: 12px;
+    margin: 0 0 15px 0;
+}
+
+.post-header h2 {
+    margin-bottom: 0;
+}
+
+#blog-posts a:link, 
+#blog-posts a:visited {
+	color: #3bb4bf;
+}
+
+hr { 
+	display: block; 
+	height: 1px;
+    border: 0; 
+    border-top: 1px solid #3bb4bf;
+    margin: 1em 0; 
+    padding: 0; 
+}
+
+.post-content {
+	padding: 0 0 20px 0;
 }

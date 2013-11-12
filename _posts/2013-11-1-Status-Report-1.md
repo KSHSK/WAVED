@@ -13,7 +13,7 @@ author: Kristian Calhoun
 * Kristian
   * Came up with a design concept for the project website.
   * Started implementing the website’s homepage.
-  * Created GitHub organization & repository: https://github.com/KSHSK/WAVED
+  * Created GitHub [organization & repository](https://github.com/KSHSK/WAVED).
 * Keith
   * Investigated options for hosting the project website.
   * Decided on using GitHub pages.

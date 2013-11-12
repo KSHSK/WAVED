@@ -19,12 +19,11 @@ title: WAVED - Web App for Visualizing Environmental Data
 	<div id="recent-posts">
 		<h1 id="recent-posts-header">Recent Posts</h1>
 		<div id="recent-post-blurb">
-			{% for post in site.posts limit 1 %}
+			{% assign post = site.posts.first %}
 			<a class="undecorated" href="{{ post.url | remove_first:'/' }}">{{ post.title }}</a><br/>
 			<span>&raquo; {{ post.date | date_to_string }}</span><br/>
 				{{ post.content | strip_html | truncatewords:50 }}
 					<br/><a id="read-more" href="{{ post.url | remove_first:'/' }}">Read more...</a>
-			{% endfor %}
 		</div>
 		<div id="recent-post-list">
 			<ul class="recent-posts">
