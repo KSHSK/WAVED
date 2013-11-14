@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Google Analytics Demo</title>
+        <script type="text/javascript" src="d3/d3.v3.js"></script>
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+        
+        <style type="text/css">
+			.axis path,
+			.axis line {
+				fill: none;
+				stroke: black;
+				shape-rendering: crispEdges;
+			}
+
+			.axis text {
+				font-family: sans-serif;
+				font-size: 11px;
+			}
+			
+			#tooltip {
+				position: absolute;
+				height: auto;
+				padding: 10px;
+				background-color: white;
+				-webkit-border-radius: 10px;
+				-moz-border-radius: 10px;
+				border-radius: 10px;
+				-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+				-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+				box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+				pointer-events: none;
+			}
+
+			#tooltip.hidden, #tooltip-population.hidden, .hidden {
+				display: none;
+			}
+
+			#tooltip p {
+				margin: 0;
+				font-family: sans-serif;
+				font-size: 16px;
+				line-height: 20px;
+			}
+        </style>
+        
+        <script type="text/javascript">
+        	var _gaq=_gaq || [];
+			_gaq.push(['_setAccount','UA-45743706-1']);
+			_gaq.push(['_trackPageview']);
+			(function() {
+				var ga=document.createElement('script');
+				ga.type='text/javascript';
+				ga.async=true;
+				ga.src=('https:'==document.location.protocol ? 'https://ssl' :'http://www') + '.google-analytics.com/ga.js';
+				var s=document.getElementsByTagName('script')[0];
+				s.parentNode.insertBefore(ga,s);
+			})(); 
+        </script>
+        
+    </head>
+    <body>
+        <script type="text/javascript">
+            // Your beautiful D3 code will go here
+            
+            var dataset;
+            var scenario;
+            var cityCountsDataset;
+            
+            (function() {
+            
+				var w = 800;
+				var h = 500;
+				
+				var tooltipOffsetX = 30;
+				var tooltipOffsetY = 42;
+
+			
+				var svg = d3.select("body")
+							.append("svg")
+							.attr("width", w)
+							.attr("height", h);
+			
+				var projection = d3.geo.albersUsa().translate([w/2, h/2]);
+				var path = d3.geo.path().projection(projection);
+				
+				d3.json("data/states.json", function(error, json) {
+				
+					if (error) {
+						console.log(error);
+					} else {
+					
+						svg.selectAll("path")
+							.data(json.features)
+							.enter()
+							.append("path")
+							.attr("d", path)
+							.attr("id", function(d) {
+								return d.properties.name;
+							})
+							.style("fill", function(d, i){
+								return "rgba(0, 0, 0, 0.5)";
+							})
+							.style("stroke", "white")
+							.on("mouseover", function(d) {
+								d3.select(this).style("opacity", 0.6);
+							
+								var coords = d3.mouse(this);
+								var x = coords[0];
+								var y = coords[1];
+
+								d3.select("#tooltip")
+									.style("left", (x - tooltipOffsetX) + "px")
+									.style("top", (y - tooltipOffsetY) + "px")
+									.select("#state-name")
+									.text(d.properties.name);
+								
+								d3.select("#tooltip").classed("hidden", false);
+							})
+							.on("mousemove", function(d) {
+								var coords = d3.mouse(this);
+								var x = coords[0];
+								var y = coords[1];
+
+								d3.select("#tooltip")
+									.style("left", (x - tooltipOffsetX) + "px")
+									.style("top", (y - tooltipOffsetY) + "px");
+							})
+							.on("mouseout", function() {
+								d3.select(this).style("opacity", 1.0);
+								d3.select("#tooltip").classed("hidden", true);
+							})
+							.on("click", function(d) {
+								console.log(d.properties.name);
+								_gaq.push(['_trackEvent', 'TrackingDemo', 'click-'+d.properties.name]);
+							});
+					}
+				});	
+            })();
+        </script>
+    <div id="tooltip" class="hidden">
+			<p><span id="state-name"></span></p>
+		</div>
+    </body>
+</html>
