@@ -20,6 +20,7 @@
     		<div id="widget_panel" style="width:20%; background-color:#AAAAAA;float:left;">
     			<div id="widget_header"><b>Widgets</b></div><br>
     			<button id="generate_map_button" onclick="us_map.generate(); $(this).attr('disabled','disabled');">Generate Map</button><br>
+    			<button id="get_svg" onclick="log_svg()">[Debug] Log SVG</button>
     		</div>
     		<div id="map_panel" style="width:80%;background-color:#FFFFFF;float:right;">
     			<h1>Map Panel</h1>
@@ -28,12 +29,9 @@
     		</div>
     	</div>
     	<script>
-    		var w = 800;
-    		var h = 500;
-    		var svg = d3.select(document.getElementById(constants.MAP_PREVIEW_ID).contentDocument.body)
-					.append("svg")
-					.attr("width", w)
-					.attr("height", h);
+    		function log_svg(){
+    			console.log(us_map.get_svg());
+    		}
     	</script>
     </body>
 </html>
