@@ -4,12 +4,36 @@
         <meta charset="utf-8">
         <title>WAVED (Prototype)</title>
         <script type="text/javascript" src="/js/d3/d3.v3.js"></script>
-        <script type="text/javascript" src="js/jquery/jquery-1.9.1.js"></script>
-    	<script type="text/javascript" src="js/jquery/jquery-ui-1.10.3.custom.min.js"></script>
+    	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     	<link rel="stylesheet" type="text/css" href="style/style.css">
-    	<link rel="stylesheet" type="text/css" href="style/jquery-ui/jquery-ui-1.10.3.custom.min.css">
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    	
+    	<script type="text/javascript" src="js/components/constants.js"></script>
+    	<script type="text/javascript" src="js/components/us_map.js"></script>
     </head>
     <body>
-    	
+    	<div id="header_div" style="background-color:#3BB4BF;">
+    		<font color="white" size="18">WAVED</font>
+    	</div>
+    	<div id="body_div">
+    		<div id="widget_panel" style="width:20%; background-color:#AAAAAA;float:left;">
+    			<div id="widget_header"><b>Widgets</b></div><br>
+    			<button id="generate_map_button" onclick="us_map.generate(); $(this).attr('disabled','disabled');">Generate Map</button><br>
+    		</div>
+    		<div id="map_panel" style="width:80%;background-color:#FFFFFF;float:right;">
+    			<h1>Map Panel</h1>
+    			<iframe id="map_preview" style="width:1000px;height:600px" seamless>
+    			</iframe>
+    		</div>
+    	</div>
+    	<script>
+    		var w = 800;
+    		var h = 500;
+    		var svg = d3.select(document.getElementById(constants.MAP_PREVIEW_ID).contentDocument.body)
+					.append("svg")
+					.attr("width", w)
+					.attr("height", h);
+    	</script>
     </body>
 </html>
