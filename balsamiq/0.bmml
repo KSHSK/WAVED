@@ -1,0 +1,78 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="1084" measuredH="788" mockupW="1024" mockupH="768">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::BrowserWindow" x="60" y="20" w="1024" h="768" measuredW="450" measuredH="400" zOrder="0" locked="true" isInGroup="-1">
+      <controlProperties>
+        <text>WAVED%20-%20Web%20App%20for%20Visualizing%20Environment%20Data%0Ahttp%3A//localhost%3A8080/index.html</text>
+      </controlProperties>
+    </control>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::Accordion" x="76" y="145" w="174" h="599" measuredW="150" measuredH="159" zOrder="1" locked="true" isInGroup="-1">
+      <controlProperties>
+        <text>Widgets%0AData%0AProperties</text>
+      </controlProperties>
+    </control>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::Title" x="85" y="102" w="-1" h="-1" measuredW="132" measuredH="43" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>WAVED</text>
+      </controlProperties>
+    </control>
+    <control controlID="9" controlTypeID="com.balsamiq.mockups::Switch" x="993" y="109" w="-1" h="-1" measuredW="68" measuredH="28" zOrder="3" locked="true" isInGroup="-1">
+      <controlProperties>
+        <onOffState>off</onOffState>
+      </controlProperties>
+    </control>
+    <control controlID="10" controlTypeID="com.balsamiq.mockups::Canvas" x="263" y="145" w="798" h="599" measuredW="100" measuredH="70" zOrder="4" locked="true" isInGroup="-1">
+      <controlProperties>
+        <borderStyle>square</borderStyle>
+      </controlProperties>
+    </control>
+    <control controlID="14" controlTypeID="com.balsamiq.mockups::Button" x="133" y="405" w="61" h="25" measuredW="61" measuredH="27" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Button</text>
+      </controlProperties>
+    </control>
+    <control controlID="15" controlTypeID="com.balsamiq.mockups::HSlider" x="110" y="471" w="106" h="-1" measuredW="33" measuredH="11" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <value>30</value>
+      </controlProperties>
+    </control>
+    <control controlID="16" controlTypeID="com.balsamiq.mockups::ButtonBar" x="711" y="110" w="-1" h="-1" measuredW="171" measuredH="27" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <selectedIndex>-1</selectedIndex>
+        <text>Load%2C%20Save%2C%20Export</text>
+      </controlProperties>
+    </control>
+    <control controlID="25" controlTypeID="com.balsamiq.mockups::Label" x="937" y="113" w="-1" h="-1" measuredW="50" measuredH="21" zOrder="8" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Preview%3A</text>
+      </controlProperties>
+    </control>
+    <control controlID="26" controlTypeID="com.balsamiq.mockups::TextInput" x="296" y="110" w="162" h="-1" measuredW="107" measuredH="27" zOrder="9" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>My%20Climate%20App</text>
+      </controlProperties>
+    </control>
+    <control controlID="28" controlTypeID="com.balsamiq.mockups::Label" x="263" y="113" w="-1" h="-1" measuredW="29" measuredH="21" zOrder="10" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Title%3A</text>
+      </controlProperties>
+    </control>
+    <control controlID="29" controlTypeID="com.balsamiq.mockups::LineChart" x="93" y="306" w="141" h="75" measuredW="187" measuredH="175" zOrder="11" locked="false" isInGroup="-1"/>
+    <control controlID="30" controlTypeID="com.balsamiq.mockups::ComboBox" x="117" y="523" w="-1" h="-1" measuredW="93" measuredH="24" zOrder="12" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>ComboBox</text>
+      </controlProperties>
+    </control>
+    <control controlID="33" controlTypeID="com.balsamiq.mockups::Image" x="93" y="188" w="141" h="103" measuredW="200" measuredH="125" zOrder="13" locked="false" isInGroup="-1">
+      <controlProperties>
+        <borderStyle>square</borderStyle>
+        <src>./map_small.png</src>
+      </controlProperties>
+    </control>
+    <control controlID="34" controlTypeID="com.balsamiq.mockups::ButtonBar" x="527" y="110" w="-1" h="-1" measuredW="110" measuredH="27" zOrder="14" locked="false" isInGroup="-1">
+      <controlProperties>
+        <selectedIndex>-1</selectedIndex>
+        <text>Undo%2C%20Redo</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>
