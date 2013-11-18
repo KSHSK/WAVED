@@ -20,7 +20,7 @@ var us_map = {
 					".attr(\"height\", h);" + 
 				"var projection = d3.geo.albersUsa().translate([w/2, h/2]);" + 
 				"var path = d3.geo.path().projection(projection);" + 
-				"d3.json(\"/data/states.json\", function (error, json) {" + 
+				"d3.json(\"data/states.json\", function (error, json) {" + 
 				"	if(error) {" + 
 				"		console.log(error);" + 
 				"	}" + 
