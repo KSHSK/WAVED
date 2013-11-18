@@ -1,4 +1,9 @@
 var us_map = {
+	// Holds JSONs with filenames and data
+	// For storing in our db, do we need a way to compact all of these into 1 JSON object?
+	// Need a way to list all of these somewhere and update it dynamically when new data is loaded
+	data: [],
+	
 	/* Generate the map of the US */
 	generate: function(){
 		var map_preview_document = $("#" + constants.MAP_PREVIEW_ID).contents();
@@ -39,6 +44,76 @@ var us_map = {
 	/* Get the svg object */
 	get_svg: function(){
 		return svg_element = $('#' + constants.MAP_PREVIEW_ID).contents().find('body').find('svg');
+	},
+	
+	get_script: function(){
+		console.log($('#' + constants.MAP_PREVIEW_ID).contents().find('body').find('script').html());
+	},
+	
+	/* Randomly colors each state */
+	colorize: function(){
+		svg.selectAll("path")
+			.style("fill", function(d){
+				var letters = '0123456789ABCDEF'.split('');
+			    var color = '#';
+			    for (var i = 0; i < 6; i++ ) {
+			        color += letters[Math.round(Math.random() * 15)];
+			    }
+    			
+    			return color;
+			});
+	},
+	
+	bind_data: function(filepath){
+		d3.csv(filepath, function(e){
+			// Create a JSON object here with the filepath and parsed data
+			var csvJSON = {
+				"filepath": filepath,
+				"data": e
+			};
+			us_map.data.push(csvJSON);
+		});
+	},
+	
+	circle_element: {
+		// Assumes the data we want is the first element of the data array in us_map
+		// Assumes we know that the data file is correct and has lat, long and such
+		// Has a hard-coded filter
+		render: function(){
+			var data = us_map.data[0].data;
+			
+			// This should probably not be local to this function
+			var populationRadiusScale = d3.scale.linear()
+									.domain([1000,500000])
+									.range([2,10])
+									.clamp(true); 
+			
+			// Create the circles
+			svg.selectAll("circle")
+				.data(data)
+				.enter()
+				.append("circle")
+				.attr("cx", function(d, i){
+					var coords = projection([d.Lon, d.Lat]);
+					if (coords !== null) {
+						return projection([d.Lon, d.Lat])[0];            				
+					}
+				})
+				.attr("cy", function(d, i){
+					var coords = projection([d.Lon, d.Lat]);
+					if (coords !== null) {
+						return projection([d.Lon, d.Lat])[1];            				
+					}
+				})
+				.attr("r", function(d, i){
+					var coords = projection([d.Lon, d.Lat]);
+					if (coords !== null) {
+						return populationRadiusScale(d.TotPop);
+					}
+				})
+				.style("fill", "red")
+				.style("opacity", 0.75);
+		}
 	}
 };
 

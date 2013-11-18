@@ -20,7 +20,14 @@
     		<div id="widget_panel" style="width:20%; background-color:#AAAAAA;float:left;">
     			<div id="widget_header"><b>Widgets</b></div><br>
     			<button id="generate_map_button" onclick="us_map.generate(); $(this).attr('disabled','disabled');">Generate Map</button><br>
-    			<button id="get_svg" onclick="log_svg()">[Debug] Log SVG</button>
+    			<button id="get_svg" onclick="log_svg()">[Debug] Log SVG</button><br>
+    			<button id="colorize_map" onclick="us_map.colorize()">Colorize Map</button><br>
+    			<select id="data_selector">
+    				<option value="">Select data to bind...</option>
+    				<option value="/data/data_full.csv">/data/data_full.csv</option>
+    			</select>
+    			<button id="bind_data_to_map" onclick="bind_csv()">Bind data</button><br>
+    			<button id="draw_city_circles" onclick="us_map.circle_element.render()">Render city markers</button><br>
     		</div>
     		<div id="map_panel" style="width:80%;background-color:#FFFFFF;float:right;">
     			<h1>Map Panel</h1>
@@ -31,6 +38,15 @@
     	<script>
     		function log_svg(){
     			console.log(us_map.get_svg());
+    			console.dir("Bound data: " + us_map.data.length);
+    		}
+    		
+    		function bind_csv(){
+    			var value = $("#data_selector").val()
+    			if(value != ""){
+    				us_map.bind_data(value);
+    				alert("Data bound!");
+    			}
     		}
     	</script>
     </body>
