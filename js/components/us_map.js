@@ -1,6 +1,14 @@
 var us_map = {
+	// Holds JSONs with filenames and data
+	// For storing in our db, do we need a way to compact all of these into 1 JSON object?
+	// Need a way to list all of these somewhere and update it dynamically when new data is loaded
+	data: [],
+	
 	/* Generate the map of the US */
 	generate: function(){
+		// This is the jQuery way of adding attributes to a JSON object
+		$.extend(state, {"us_map":{}});
+	
 		var map_preview_document = $("#" + constants.MAP_PREVIEW_ID).contents();
 		
 		map_preview_document.find('head').html(constants.D3_IMPORT + "\n" + 
@@ -34,11 +42,137 @@ var us_map = {
 				"});" + 
 			"</script>"
 		);
+		
+		state.us_map.generate = 1;
 	},
 	
 	/* Get the svg object */
 	get_svg: function(){
 		return svg_element = $('#' + constants.MAP_PREVIEW_ID).contents().find('body').find('svg');
+	},
+	
+	get_script: function(){
+		console.log($('#' + constants.MAP_PREVIEW_ID).contents().find('body').find('script').html());
+	},
+	
+	/* Randomly colors each state */
+	colorize: function(){
+		svg.selectAll("path")
+			.style("fill", function(d){
+				var letters = '0123456789ABCDEF'.split('');
+			    var color = '#';
+			    for (var i = 0; i < 6; i++ ) {
+			        color += letters[Math.round(Math.random() * 15)];
+			    }
+    			
+    			return color;
+			});
+		
+		state.us_map["color"] = 1;
+	},
+	
+	bind_data: function(filepath){
+		d3.csv(filepath, function(e){
+			// Create a JSON object here with the filepath and parsed data
+			var csvJSON = {
+				"filepath": filepath,
+				"data": e
+			};
+			us_map.data.push(csvJSON);
+		});
+		
+		// Create the JSON attr array if it doesn't exist		
+		if(state.us_map.bound_data == null){
+			state.us_map.bound_data = [];
+			
+		}
+
+		// Push the data file's path to the state array
+		state.us_map.bound_data.push(filepath);
+	},
+	
+	// Load the state of the map from JSON
+	// Pass in the state of the us_map component
+	load_state: function(us_map_state){
+	
+		// Clear the state of the us_map.data array and map preview frame
+		us_map.data = [];
+	
+		if(us_map_state.render == 1){
+			us_map.generate(); // TODO: Naming consistency
+			
+			// Everything else should require the map so they are nested here
+			if(us_map_state.bound_data.length > 0){
+				for(var i=0; i<us_map_state.bound_data.length; i++){
+					us_map.bind_data(us_map_state.bound_data[i]);
+				}
+			}
+			
+			// HACK: It takes time to actually open and process 
+			// the bind_data() function, so delay calling these to make sure it's done
+			window.setTimeout(function(){
+				if(us_map_state.circle_element == 1){
+					us_map.circle_element.render();
+				}
+			
+				if(us_map_state.color == 1){
+					us_map.colorize();
+				}
+			}, 500);
+			
+		}
+	},
+	
+	circle_element: {
+		// Assumes the data we want is the first element of the data array in us_map
+		// Assumes we know that the data file is correct and has lat, long and such
+		// Has a hard-coded filter
+		render: function(){
+			if(state.us_map.circle_element == null){
+				state.us_map.circle_element = {};
+			}
+			
+			var data = us_map.data[0].data;
+			
+			// This should probably not be local to this function
+			var populationRadiusScale = d3.scale.linear()
+									.domain([1000,500000])
+									.range([2,10])
+									.clamp(true); 
+			
+			// Create the circles
+			svg.selectAll("circle")
+				.data(data)
+				.enter()
+				.append("circle")
+				.attr("cx", function(d, i){
+					var coords = projection([d.Lon, d.Lat]);
+					if (coords !== null) {
+						return projection([d.Lon, d.Lat])[0];            				
+					}
+				})
+				.attr("cy", function(d, i){
+					var coords = projection([d.Lon, d.Lat]);
+					if (coords !== null) {
+						return projection([d.Lon, d.Lat])[1];            				
+					}
+				})
+				.attr("r", function(d, i){
+					var coords = projection([d.Lon, d.Lat]);
+					if (coords !== null) {
+						return populationRadiusScale(d.TotPop);
+					}
+				})
+				.style("fill", "red")
+				.style("opacity", 0.75);
+				
+			// Since we're hard coding things now, we just need to know that this function
+			// was called.
+			state.us_map.circle_element.data = 1;	
+			
+			// This is how it should be in the future
+			//state.us_map.circle_element.data = data;
+		}
 	}
 };
 

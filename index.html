@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>WAVED (Prototype)</title>
+        <link rel="shortcut icon" href="/favicon.ico" />
         <script src="http://d3js.org/d3.v3.min.js"></script>
     	<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
 		<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
@@ -19,8 +20,17 @@
     	<div id="body_div">
     		<div id="widget_panel" style="width:20%; background-color:#AAAAAA;float:left;">
     			<div id="widget_header"><b>Widgets</b></div><br>
+    			<button id="save_state_button" onclick="save_state()">Save State</button></br>
+    			<button id="load_state_button" onclick="load_state()">Load State</button></br>
     			<button id="generate_map_button" onclick="us_map.generate(); $(this).attr('disabled','disabled');">Generate Map</button><br>
-    			<button id="get_svg" onclick="log_svg()">[Debug] Log SVG</button>
+    			<button id="get_svg" onclick="log_svg()">[Debug] Log SVG</button><br>
+    			<button id="colorize_map" onclick="us_map.colorize()">Colorize Map</button><br>
+    			<select id="data_selector">
+    				<option value="">Select data to bind...</option>
+    				<option value="/data/data_full.csv">/data/data_full.csv</option>
+    			</select>
+    			<button id="bind_data_to_map" onclick="bind_csv()">Bind data</button><br>
+    			<button id="draw_city_circles" onclick="us_map.circle_element.render()">Render city markers</button><br>
     		</div>
     		<div id="map_panel" style="width:80%;background-color:#FFFFFF;float:right;">
     			<h1>Map Panel</h1>
@@ -29,8 +39,44 @@
     		</div>
     	</div>
     	<script>
+    		var state = {};
+    	
     		function log_svg(){
     			console.log(us_map.get_svg());
+    			console.dir("Bound data: " + us_map.data.length);
+    			console.dir(state);
+    		}
+    		
+    		function bind_csv(){
+    			var value = $("#data_selector").val()
+    			if(value != ""){
+    				us_map.bind_data(value);
+    				alert("Data bound!");
+    			}
+    		}
+    		
+    		function load_state(){
+    			// TODO: Actually get the state
+    			var saved_state = {
+    				"us_map": {
+    					"bound_data": ["/data/data_full.csv"],
+    					"circle_element": 1,
+    					"render": 1,
+    					"color": 1
+    				}
+    			};
+    			
+    			// Clear the iFrame
+    			var map_preview_document = $("#" + constants.MAP_PREVIEW_ID).contents();
+				map_preview_document.find('head').empty();
+				map_preview_document.find('body').empty();
+    			
+    			us_map.load_state(saved_state.us_map);
+    		}
+    		
+    		function save_state(){
+    			// Do something
+    			alert("This button doesn't do anything!");
     		}
     	</script>
     </body>
