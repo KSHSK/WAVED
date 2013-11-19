@@ -67,9 +67,9 @@
         <text>Select%20Data</text>
       </controlProperties>
     </control>
-    <control controlID="63" controlTypeID="com.balsamiq.mockups::DataGrid" x="475" y="334" w="277" h="140" measuredW="77" measuredH="21" zOrder="36" locked="false" isInGroup="-1">
+    <control controlID="63" controlTypeID="com.balsamiq.mockups::DataGrid" x="475" y="334" w="277" h="140" measuredW="115" measuredH="51" zOrder="36" locked="false" isInGroup="-1">
       <controlProperties>
-        <text>Add%2C%20Data</text>
+        <text>Add%2C%20Data%0A%5Bx%5D%2C%20climate.csv</text>
       </controlProperties>
     </control>
     <control controlID="64" controlTypeID="com.balsamiq.mockups::Button" x="496" y="480" w="-1" h="-1" measuredW="53" measuredH="27" zOrder="37" locked="false" isInGroup="-1">
@@ -179,17 +179,17 @@
         <text>Add%20glyphs</text>
       </controlProperties>
     </control>
-    <control controlID="109" controlTypeID="com.balsamiq.mockups::Button" x="85" y="431" w="141" h="27" measuredW="110" measuredH="27" zOrder="33" locked="true" isInGroup="-1">
+    <control controlID="109" controlTypeID="com.balsamiq.mockups::Button" x="85" y="431" w="141" h="27" measuredW="110" measuredH="27" zOrder="31" locked="true" isInGroup="-1">
       <controlProperties>
         <text>Add%20subwidget</text>
       </controlProperties>
     </control>
-    <control controlID="112" controlTypeID="com.balsamiq.mockups::ComboBox" x="931" y="161" w="118" h="-1" measuredW="55" measuredH="24" zOrder="31" locked="false" isInGroup="-1">
+    <control controlID="114" controlTypeID="com.balsamiq.mockups::ComboBox" x="931" y="161" w="118" h="-1" measuredW="55" measuredH="24" zOrder="32" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Map</text>
       </controlProperties>
     </control>
-    <control controlID="113" controlTypeID="com.balsamiq.mockups::Label" x="866" y="163" w="56" h="-1" measuredW="56" measuredH="21" zOrder="32" locked="false" isInGroup="-1">
+    <control controlID="115" controlTypeID="com.balsamiq.mockups::Label" x="866" y="163" w="56" h="-1" measuredW="56" measuredH="21" zOrder="33" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Selected%3A</text>
       </controlProperties>

@@ -184,12 +184,44 @@
         <text>Add%20subwidget</text>
       </controlProperties>
     </control>
-    <control controlID="112" controlTypeID="com.balsamiq.mockups::ComboBox" x="931" y="161" w="118" h="-1" measuredW="55" measuredH="24" zOrder="31" locked="false" isInGroup="-1">
+    <control controlID="110" controlTypeID="com.balsamiq.mockups::TitleWindow" x="416" y="238" w="450" h="332" measuredW="450" measuredH="400" zOrder="40" locked="true" isInGroup="-1">
+      <controlProperties>
+        <bottomheight>0</bottomheight>
+        <close>true</close>
+        <dragger>false</dragger>
+        <maximizeRestore>false</maximizeRestore>
+        <minimize>false</minimize>
+        <text>Load%20Data</text>
+        <topheight>26</topheight>
+      </controlProperties>
+    </control>
+    <control controlID="111" controlTypeID="com.balsamiq.mockups::Tree" x="431" y="274" w="114" h="234" measuredW="300" measuredH="225" zOrder="41" locked="true" isInGroup="-1">
+      <controlProperties>
+        <text>f%20Pictures%0AF%20Documents</text>
+      </controlProperties>
+    </control>
+    <control controlID="112" controlTypeID="com.balsamiq.mockups::List" x="557" y="276" w="294" h="232" measuredW="100" measuredH="126" zOrder="42" locked="true" isInGroup="-1">
+      <controlProperties>
+        <selectedIndex>1</selectedIndex>
+        <text>states.json%0Aclimate.csv</text>
+      </controlProperties>
+    </control>
+    <control controlID="113" controlTypeID="com.balsamiq.mockups::Button" x="482" y="523" w="-1" h="-1" measuredW="52" measuredH="27" zOrder="43" locked="true" isInGroup="-1">
+      <controlProperties>
+        <text>Load</text>
+      </controlProperties>
+    </control>
+    <control controlID="114" controlTypeID="com.balsamiq.mockups::Button" x="720" y="523" w="-1" h="-1" measuredW="64" measuredH="27" zOrder="44" locked="true" isInGroup="-1">
+      <controlProperties>
+        <text>Cancel</text>
+      </controlProperties>
+    </control>
+    <control controlID="115" controlTypeID="com.balsamiq.mockups::ComboBox" x="931" y="161" w="118" h="-1" measuredW="55" measuredH="24" zOrder="31" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Map</text>
       </controlProperties>
     </control>
-    <control controlID="113" controlTypeID="com.balsamiq.mockups::Label" x="866" y="163" w="56" h="-1" measuredW="56" measuredH="21" zOrder="32" locked="false" isInGroup="-1">
+    <control controlID="116" controlTypeID="com.balsamiq.mockups::Label" x="866" y="163" w="56" h="-1" measuredW="56" measuredH="21" zOrder="32" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Selected%3A</text>
       </controlProperties>

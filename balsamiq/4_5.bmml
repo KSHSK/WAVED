@@ -117,5 +117,17 @@
         <text/>
       </controlProperties>
     </control>
+    <control controlID="100" controlTypeID="com.balsamiq.mockups::ModalScreen" x="60" y="90" w="1024" h="669" measuredW="320" measuredH="240" zOrder="24" locked="true" isInGroup="-1"/>
+    <control controlID="101" controlTypeID="com.balsamiq.mockups::TitleWindow" x="416" y="270" w="450" h="332" measuredW="450" measuredH="400" zOrder="25" locked="false" isInGroup="-1">
+      <controlProperties>
+        <bottomheight>0</bottomheight>
+        <close>true</close>
+        <dragger>false</dragger>
+        <maximizeRestore>false</maximizeRestore>
+        <minimize>false</minimize>
+        <text>Add%20Filter</text>
+        <topheight>26</topheight>
+      </controlProperties>
+    </control>
   </controls>
 </mockup>
