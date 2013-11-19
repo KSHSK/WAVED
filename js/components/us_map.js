@@ -6,6 +6,9 @@ var us_map = {
 	
 	/* Generate the map of the US */
 	generate: function(){
+		// This is the jQuery way of adding attributes to a JSON object
+		$.extend(state, {"us_map":{}});
+	
 		var map_preview_document = $("#" + constants.MAP_PREVIEW_ID).contents();
 		
 		map_preview_document.find('head').html(constants.D3_IMPORT + "\n" + 
@@ -39,6 +42,8 @@ var us_map = {
 				"});" + 
 			"</script>"
 		);
+		
+		state.us_map.generate = 1;
 	},
 	
 	/* Get the svg object */
@@ -62,6 +67,8 @@ var us_map = {
     			
     			return color;
 			});
+		
+		state.us_map["color"] = 1;
 	},
 	
 	bind_data: function(filepath){
@@ -73,6 +80,47 @@ var us_map = {
 			};
 			us_map.data.push(csvJSON);
 		});
+		
+		// Create the JSON attr array if it doesn't exist		
+		if(state.us_map.bound_data == null){
+			state.us_map.bound_data = [];
+			
+		}
+
+		// Push the data file's path to the state array
+		state.us_map.bound_data.push(filepath);
+	},
+	
+	// Load the state of the map from JSON
+	// Pass in the state of the us_map component
+	load_state: function(us_map_state){
+	
+		// Clear the state of the us_map.data array and map preview frame
+		us_map.data = [];
+	
+		if(us_map_state.render == 1){
+			us_map.generate(); // TODO: Naming consistency
+			
+			// Everything else should require the map so they are nested here
+			if(us_map_state.bound_data.length > 0){
+				for(var i=0; i<us_map_state.bound_data.length; i++){
+					us_map.bind_data(us_map_state.bound_data[i]);
+				}
+			}
+			
+			// HACK: It takes time to actually open and process 
+			// the bind_data() function, so delay calling these to make sure it's done
+			window.setTimeout(function(){
+				if(us_map_state.circle_element == 1){
+					us_map.circle_element.render();
+				}
+			
+				if(us_map_state.color == 1){
+					us_map.colorize();
+				}
+			}, 500);
+			
+		}
 	},
 	
 	circle_element: {
@@ -80,6 +128,10 @@ var us_map = {
 		// Assumes we know that the data file is correct and has lat, long and such
 		// Has a hard-coded filter
 		render: function(){
+			if(state.us_map.circle_element == null){
+				state.us_map.circle_element = {};
+			}
+			
 			var data = us_map.data[0].data;
 			
 			// This should probably not be local to this function
@@ -113,6 +165,13 @@ var us_map = {
 				})
 				.style("fill", "red")
 				.style("opacity", 0.75);
+				
+			// Since we're hard coding things now, we just need to know that this function
+			// was called.
+			state.us_map.circle_element.data = 1;	
+			
+			// This is how it should be in the future
+			//state.us_map.circle_element.data = data;
 		}
 	}
 };
