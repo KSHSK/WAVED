@@ -7,7 +7,7 @@ var us_map = {
 	/* Generate the map of the US */
 	generate: function(){
 		// This is the jQuery way of adding attributes to a JSON object
-		$.extend(state, {"us_map":{}});
+		$.extend(state.widgets, {"us_map":{}});
 	
 		var map_preview_document = $("#" + constants.MAP_PREVIEW_ID).contents();
 		
@@ -43,7 +43,7 @@ var us_map = {
 			"</script>"
 		);
 		
-		state.us_map.generate = 1;
+		state.widgets.us_map.generate = 1;
 	},
 	
 	/* Get the svg object */
@@ -68,7 +68,7 @@ var us_map = {
     			return color;
 			});
 		
-		state.us_map["color"] = 1;
+		state.widgets.us_map["color"] = 1;
 	},
 	
 	bind_data: function(filepath){
@@ -82,13 +82,13 @@ var us_map = {
 		});
 		
 		// Create the JSON attr array if it doesn't exist		
-		if(state.us_map.bound_data == null){
-			state.us_map.bound_data = [];
+		if(state.widgets.us_map.bound_data == null){
+			state.widgets.us_map.bound_data = [];
 			
 		}
 
 		// Push the data file's path to the state array
-		state.us_map.bound_data.push(filepath);
+		state.widgets.us_map.bound_data.push(filepath);
 	},
 	
 	// Load the state of the map from JSON
@@ -118,8 +118,7 @@ var us_map = {
 				if(us_map_state.color == 1){
 					us_map.colorize();
 				}
-			}, 500);
-			
+			}, 500);	
 		}
 	},
 	
@@ -128,8 +127,8 @@ var us_map = {
 		// Assumes we know that the data file is correct and has lat, long and such
 		// Has a hard-coded filter
 		render: function(){
-			if(state.us_map.circle_element == null){
-				state.us_map.circle_element = {};
+			if(state.widgets.us_map.circle_element == null){
+				state.widgets.us_map.circle_element = {};
 			}
 			
 			var data = us_map.data[0].data;
@@ -168,10 +167,10 @@ var us_map = {
 				
 			// Since we're hard coding things now, we just need to know that this function
 			// was called.
-			state.us_map.circle_element.data = 1;	
+			state.widgets.us_map.circle_element.data = 1;	
 			
 			// This is how it should be in the future
-			//state.us_map.circle_element.data = data;
+			//state.widgets.us_map.circle_element.data = data;
 		}
 	}
 };

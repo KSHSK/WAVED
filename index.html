@@ -40,6 +40,10 @@
     	</div>
     	<script>
     		var state = {};
+    		
+    		$(document).ready(function(){
+    			$.extend(state, {"widgets":{}});
+    		});
     	
     		function log_svg(){
     			console.log(us_map.get_svg());
@@ -58,11 +62,13 @@
     		function load_state(){
     			// TODO: Actually get the state
     			var saved_state = {
-    				"us_map": {
-    					"bound_data": ["/data/data_full.csv"],
-    					"circle_element": 1,
-    					"render": 1,
-    					"color": 1
+    				"widgets": {
+    					"us_map": {
+    						"bound_data": ["/data/data_full.csv"],
+    						"circle_element": 1,
+    						"render": 1,
+    						"color": 1
+		   				}
     				}
     			};
     			
@@ -71,7 +77,7 @@
 				map_preview_document.find('head').empty();
 				map_preview_document.find('body').empty();
     			
-    			us_map.load_state(saved_state.us_map);
+    			us_map.load_state(saved_state.widgets.us_map);
     		}
     		
     		function save_state(){
