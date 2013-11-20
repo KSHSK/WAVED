@@ -12,25 +12,46 @@
     	
     	<script type="text/javascript" src="js/components/constants.js"></script>
     	<script type="text/javascript" src="js/components/us_map.js"></script>
+    	
+    	<script type="text/javascript">
+    		$(document).ready(function(){
+				$("#map-colorize-button").attr("disabled", "disabled");
+    			$("#map-bind-data-button").attr("disabled", "disabled");
+				$("#map-render-markers-button").attr("disabled", "disabled");
+    		});
+    	</script>
     </head>
     <body id="main-body">
     	<div id="header-container">
     		<a href="http://kshsk.github.io/WAVED/" target="_blank"><img id="header-logo" src="images/WAVED.png" ondragstart="return false;" /></a>
     	</div>
-    	<div>
+    	<div id="main-container">
     		<div id="widget-panel">
-    			<div id="widget-header">Widgets</div>
+    			<div class="widget-header">Save/Load</div>
     			<button onclick="save_state()">Save State</button></br>
     			<button onclick="load_state()">Load State</button></br>
-    			<button onclick="us_map.generate(); $(this).attr('disabled','disabled');">Generate Map</button><br>
-    			<button onclick="log_svg()">[Debug] Log SVG</button><br>
-    			<button onclick="us_map.colorize()">Colorize Map</button><br>
-    			<select id="data-selector">
+    			
+    			<div class="widget-header">Widget Controls</div>
+    			<button id="map-generate-button" onclick="us_map.generate(); $(this).attr('disabled','disabled');">Add Map Widget</button><br>
+    			<button id="map-colorize-button" onclick="us_map.colorize()">Colorize Map</button><br>
+    			<select id="data-sources">
     				<option value="">Select data to bind...</option>
     				<option value="data/data_full.csv">data/data_full.csv</option>
     			</select>
-    			<button onclick="bind_csv()">Bind data</button><br>
-    			<button onclick="us_map.circle_element.render()">Render city markers</button><br>
+    			<button id="map-bind-data-button" onclick="bind_csv()">Bind data</button><br>
+    			<button id="map-render-markers-button" onclick="us_map.circle_element.render()">Render city markers</button><br>
+    			
+    			<div id="widget-selector-container">
+    				<div class="widget-header">Widgets</div>
+					<select id="widget-selector" size="5"></select>
+    			</div>
+    			<div id="data-selector-container">
+    				<div class="widget-header">Data</div>
+					<select id="data-selector" size="5"></select>
+    			</div>
+    			
+    			<div class="widget-header">Debug</div>
+				<button onclick="log_svg()">[Debug] Log SVG</button><br>
     		</div>
     		<div id="workspace-panel">
     			<div id="workspace-header">Map Panel</div>
@@ -52,10 +73,12 @@
     		}
     		
     		function bind_csv(){
-    			var value = $("#data-selector").val()
+    			var value = $("#data-sources").val()
     			if(value != ""){
     				us_map.bind_data(value);
     				alert("Data bound!");
+    			} else {
+    				alert("No data selected");
     			}
     		}
     		

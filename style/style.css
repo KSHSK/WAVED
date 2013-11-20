@@ -102,12 +102,17 @@ html, body {
 	width: 300px;
 }
 
+#main-container {
+	height: 100%;
+}
+
 #widget-panel {
-	width: 120px;
+	width: 200px;
+	height: 100%;
 	background: #CCCCCC;
 	display: inline-block;
 	vertical-align: top;
-	padding: 10px 40px 10px 40px;
+	padding: 10px 10px 10px 10px;
 }
 
 #workspace-panel {
@@ -123,7 +128,32 @@ html, body {
 	height: 600px
 }
 
-#widget-header, #workspace-header {
+#workspace-header {
 	font-weight: 700;
 	margin: 0 0 10px 0;
+}
+
+.widget-header {
+	font-weight: 700;
+	margin: 10px 0 10px 0;
+}
+
+#widget-selector-container {
+	display: inline-block;
+	vertical-align: top;
+	width: 80px;
+}
+
+#widget-selector {
+	width: 80px;
+}
+
+#data-selector-container {
+	display: inline-block;
+	vertical-align: top;
+	width: 115px;
+}
+
+#data-selector {
+	width: 115px;
 }
