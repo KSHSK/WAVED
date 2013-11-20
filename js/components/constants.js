@@ -4,5 +4,5 @@ var constants = {
 	JQUERY_UI_IMPORT: "<script src=\"https://code.jquery.com/ui/1.10.3/jquery-ui.js\"></script>",
 	COMMON_STYLE_IMPORT: "<link rel=\"stylesheet\" type=\"text/css\" href=\"style/style.css\">",
 	JQUERY_UI_STYLE_IMPORT: "<script src=\"https://code.jquery.com/ui/1.10.3/jquery-ui.js\"></script>",
-	MAP_PREVIEW_ID: "map_preview"
+	MAP_PREVIEW_ID: "workspace-preview"
 };

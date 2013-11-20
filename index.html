@@ -13,28 +13,28 @@
     	<script type="text/javascript" src="js/components/constants.js"></script>
     	<script type="text/javascript" src="js/components/us_map.js"></script>
     </head>
-    <body>
+    <body id="main-body">
     	<div id="header-container">
-    		<img id="header-logo" src="images/WAVED.png" onDragStart="return false;" />
+    		<a href="http://kshsk.github.io/WAVED/" target="_blank"><img id="header-logo" src="images/WAVED.png" ondragstart="return false;" /></a>
     	</div>
     	<div>
     		<div id="widget-panel">
-    			<div id="widget_header"><b>Widgets</b></div><br>
-    			<button id="save_state_button" onclick="save_state()">Save State</button></br>
-    			<button id="load_state_button" onclick="load_state()">Load State</button></br>
-    			<button id="generate_map_button" onclick="us_map.generate(); $(this).attr('disabled','disabled');">Generate Map</button><br>
-    			<button id="get_svg" onclick="log_svg()">[Debug] Log SVG</button><br>
-    			<button id="colorize_map" onclick="us_map.colorize()">Colorize Map</button><br>
-    			<select id="data_selector">
+    			<div id="widget-header">Widgets</div>
+    			<button onclick="save_state()">Save State</button></br>
+    			<button onclick="load_state()">Load State</button></br>
+    			<button onclick="us_map.generate(); $(this).attr('disabled','disabled');">Generate Map</button><br>
+    			<button onclick="log_svg()">[Debug] Log SVG</button><br>
+    			<button onclick="us_map.colorize()">Colorize Map</button><br>
+    			<select id="data-selector">
     				<option value="">Select data to bind...</option>
-    				<option value="/data/data_full.csv">/data/data_full.csv</option>
+    				<option value="data/data_full.csv">data/data_full.csv</option>
     			</select>
-    			<button id="bind_data_to_map" onclick="bind_csv()">Bind data</button><br>
-    			<button id="draw_city_circles" onclick="us_map.circle_element.render()">Render city markers</button><br>
+    			<button onclick="bind_csv()">Bind data</button><br>
+    			<button onclick="us_map.circle_element.render()">Render city markers</button><br>
     		</div>
-    		<div id="map-panel">
-    			<h1>Map Panel</h1>
-    			<iframe id="map_preview" style="width:1000px;height:600px" seamless>
+    		<div id="workspace-panel">
+    			<div id="workspace-header">Map Panel</div>
+    			<iframe id="workspace-preview" seamless>
     			</iframe>
     		</div>
     	</div>
@@ -52,7 +52,7 @@
     		}
     		
     		function bind_csv(){
-    			var value = $("#data_selector").val()
+    			var value = $("#data-selector").val()
     			if(value != ""){
     				us_map.bind_data(value);
     				alert("Data bound!");
@@ -64,7 +64,7 @@
     			var saved_state = {
     				"widgets": {
     					"us_map": {
-    						"bound_data": ["/data/data_full.csv"],
+    						"bound_data": ["data/data_full.csv"],
     						"circle_element": 1,
     						"render": 1,
     						"color": 1

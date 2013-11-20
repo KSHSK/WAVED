@@ -1,6 +1,15 @@
-body {
+@import url(http://fonts.googleapis.com/css?family=Lato:400,700);
+
+html, body {
+	width: 100%;
+	height: 100%;
 	margin: 0;
-	background: #3BB4BF;
+	padding: 0;
+}
+
+#main-body {
+	font-family: 'Lato', sans-serif;
+	min-width: 1000px;
 }
 
 #tooltip {
@@ -85,7 +94,8 @@ body {
 
 #header-container {
 	background: #3BB4BF;
-	padding: 10px 20px 10px 20px;
+	padding: 10px 40px 10px 40px;
+	display: block;
 }
 
 #header-logo {
@@ -93,13 +103,27 @@ body {
 }
 
 #widget-panel {
-	width:20%;
+	width: 120px;
 	background: #CCCCCC;
-	float:left;
+	display: inline-block;
+	vertical-align: top;
+	padding: 10px 40px 10px 40px;
 }
 
-#map-panel {
-	width:80%;
-	background:#FFFFFF;
-	float:right;
+#workspace-panel {
+	width: 800px;
+	display: inline-block;
+	vertical-align: top;
+	background: #FFFFFF;
+	padding: 10px 0px 10px 20px;
+}
+
+#workspace-preview {
+	width: 800px;
+	height: 600px
+}
+
+#widget-header, #workspace-header {
+	font-weight: 700;
+	margin: 0 0 10px 0;
 }
