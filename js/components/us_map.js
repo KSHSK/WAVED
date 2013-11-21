@@ -49,7 +49,9 @@ var us_map = {
 				"			.data(json.features)" + 
 				"			.enter()" + 
 				"			.append(\"path\")" + 
-				"			.attr(\"d\", path);" + 
+				"			.attr(\"d\", path)" + 
+				"			.attr(\"stroke\", \"white\");" + 
+				"		us_map.json = json" + 
 				"	}" + 
 				"});" + 
 			"</script>"
@@ -110,7 +112,7 @@ var us_map = {
 		// Clear the state of the us_map.data array and map preview frame
 		us_map.data = [];
 	
-		if (us_map_state.render == 1) {
+		if (us_map_state.render === 1) {
 			us_map.generate(); // TODO: Naming consistency
 			
 			// Everything else should require the map so they are nested here
@@ -123,11 +125,11 @@ var us_map = {
 			// HACK: It takes time to actually open and process 
 			// the bind_data() function, so delay calling these to make sure it's done
 			window.setTimeout(function() {
-				if (us_map_state.circle_element == 1) {
+				if (us_map_state.circle_element === 1) {
 					us_map.circle_element.render();
 				}
 			
-				if (us_map_state.color == 1) {
+				if (us_map_state.color === 1) {
 					us_map.colorize();
 				}
 			}, 500);	
@@ -189,12 +191,45 @@ var us_map = {
 			// This is how it should be in the future
 			//state.widgets.us_map.circle_element.data = data;
 		}
+	},
+	
+	add_analytics: function(UA) {
+		var map_preview_document = $("#" + constants.MAP_PREVIEW_ID).contents();
+		
+		map_preview_document.find('head').append(
+			"<script type=\"text/javascript\">" + 
+                "var _gaq=_gaq || [];" +
+				"_gaq.push(['_setAccount','" + UA + "']);" +
+				"_gaq.push(['_trackPageview']);" +
+				"(function() {" +
+				"	var ga=document.createElement('script');" +
+				"	ga.type='text/javascript';" +
+				"	ga.async=true;" +
+				"	ga.src=('https:'==document.location.protocol ? 'https://ssl' :'http://www') + '.google-analytics.com/ga.js';" +
+				"	var s=document.getElementsByTagName('script')[0];" +
+				"	s.parentNode.insertBefore(ga,s);" +
+				"})();" +
+			"</script>"
+		);
+		
+		svg.selectAll("path")
+			.data(us_map.json.features)
+			.on("click", function(d) {
+				console.log(d.properties.name);
+				_gaq.push(['_trackEvent', 'Prototype', 'click-'+d.properties.name]);
+			});
 	}
 };
 
 /*
 This is the general form of the unique namespace. To call a function in this, we call 
-us_map.functioncall(). To interact with the frame, we get it by calling $("#" + constants.MAP_PREVIEW_ID).contents();. The svg element is created here when generating the map. To get it we use $("#" + constants.MAP_PREVIEW_ID).contents().find('body').find('svg');. That returns the svg element and you can do whatever you want with it like appending new things.The benefit of doing things this way is that we decouple the different components from the main index page. The only things tying these components to the page are a script import at the top of the index page and the actual function calls. This makes it easy to add and remove components. We can even generate the html from these js files so they actually render a button with the appropriate onclick events. Then we can pretty much render almost the entire index page in a script.
+us_map.functioncall(). To interact with the frame, we get it by calling $("#" + constants.MAP_PREVIEW_ID).contents();. 
+The svg element is created here when generating the map. To get it we use $("#" + constants.MAP_PREVIEW_ID).contents().find('body').find('svg');. 
+That returns the svg element and you can do whatever you want with it like appending new things.
+The benefit of doing things this way is that we decouple the different components from the main index page. 
+The only things tying these components to the page are a script import at the top of the index page and the actual function calls. 
+This makes it easy to add and remove components. We can even generate the html from these js files so they actually render a button 
+with the appropriate onclick events. Then we can pretty much render almost the entire index page in a script.
 
 I understand that this isn't exactly a "plugin" system in its truest form, but does allow for easy the easy addition and removal of components.
 */

@@ -9,7 +9,7 @@ html, body {
 
 #main-body {
 	font-family: 'Lato', sans-serif;
-	min-width: 1000px;
+	min-width: 1050px;
 }
 
 #tooltip {
@@ -107,7 +107,7 @@ html, body {
 }
 
 #widget-panel {
-	width: 200px;
+	width: 220px;
 	height: 100%;
 	background: #CCCCCC;
 	display: inline-block;
@@ -120,7 +120,7 @@ html, body {
 	display: inline-block;
 	vertical-align: top;
 	background: #FFFFFF;
-	padding: 10px 0px 10px 20px;
+	padding: 10px 0px 10px 0;
 }
 
 #workspace-preview {
@@ -130,7 +130,8 @@ html, body {
 
 #workspace-header {
 	font-weight: 700;
-	margin: 0 0 10px 0;
+	margin: 10px 0 10px 0;
+	padding: 0 10px 0 10px;
 }
 
 .widget-header {

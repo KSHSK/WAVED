@@ -28,7 +28,7 @@
     	<div id="main-container">
     		<div id="widget-panel">
     			<div class="widget-header">Save/Load</div>
-    			<button onclick="save_state()">Save State</button></br>
+    			<button onclick="save_state()">Save State</button>
     			<button onclick="load_state()">Load State</button></br>
     			
     			<div class="widget-header">Widget Controls</div>
@@ -38,7 +38,14 @@
     				<option value="">Select data to bind...</option>
     				<option value="data/data_full.csv">data/data_full.csv</option>
     			</select>
-    			<button id="map-bind-data-button" onclick="bind_csv()">Bind data</button><br>
+    			<button id="map-bind-data-button" onclick="bind_csv(); setTimeout(refresh_data_selector, 250);">Bind data</button><br>
+    			
+    			<select id="analytics-select">
+    				<option value="">Enter Google Analytics UA</option>
+    				<option value="UA-45743706-1">UA-45743706-1</option>
+    			</select>
+    			<button id="map-analytics-button" onclick="add_analytics();">Add</button><br>
+    			
     			<button id="map-render-markers-button" onclick="us_map.circle_element.render()">Render city markers</button><br>
     			
     			<div id="widget-selector-container">
@@ -51,7 +58,7 @@
     			</div>
     			
     			<div class="widget-header">Debug</div>
-				<button onclick="log_svg()">[Debug] Log SVG</button><br>
+				<button onclick="log_svg()">Log SVG</button><br>
     		</div>
     		<div id="workspace-panel">
     			<div id="workspace-header">Map Panel</div>
@@ -74,13 +81,25 @@
     		
     		function bind_csv(){
     			var value = $("#data-sources").val()
-    			if(value != ""){
+    			if (value !== "") {
     				us_map.bind_data(value);
     				alert("Data bound!");
     			} else {
     				alert("No data selected");
     			}
     		}
+    		
+    		
+			function add_analytics() {
+				var UA = $("#analytics-select").val();
+				
+				if (UA !== "") {
+    				us_map.add_analytics(UA);
+    				alert("Analytics Added!");
+    			} else {
+    				alert("No UA selected");
+    			}
+			}
     		
     		function load_state(){
     			// TODO: Actually get the state
@@ -107,6 +126,15 @@
     			// Do something
     			alert("This button doesn't do anything!");
     		}
+    		
+    		function refresh_data_selector() {
+				// TODO: Make this grab the currently selected widget from widget-selector
+				// and populate the data-selector with the file names of its bound data.    		
+    			$("#data-selector").empty();
+				for (var i = 0; i < us_map.data.length; i++) {
+					$("#data-selector").append("<option>"+ us_map.data[i].filepath +"</option>");
+				}
+			}
     	</script>
     </body>
 </html>
