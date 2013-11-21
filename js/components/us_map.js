@@ -12,6 +12,7 @@ var us_map = {
 		$("#map-colorize-button").removeAttr("disabled");
 		$("#map-bind-data-button").removeAttr("disabled");
 		$("#map-render-markers-button").removeAttr("disabled");
+		$("#map-analytics-button").removeAttr("disabled");
 		
 		$("#widget-selector").append("<option id='us-map-widget-option'>US Map</option>");
 		$("#us-map-widget-option").on("click", function(){
