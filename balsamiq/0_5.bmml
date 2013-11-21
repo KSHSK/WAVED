@@ -39,8 +39,6 @@
     <control controlID="33" controlTypeID="com.balsamiq.mockups::Image" x="93" y="188" w="141" h="103" measuredW="200" measuredH="125" zOrder="8" locked="false" isInGroup="-1">
       <controlProperties>
         <borderStyle>square</borderStyle>
-        <href>1%26bm%3B1.bmml%26bm%3B1.bmml%26bm%3B1.bmml</href>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2233%2C168%2C174%2C271%22%20href%3D%221.bmml%22%20alt%3D%221%22%20id%3D%2233%22/%3E</map>
         <src>./map_small.png</src>
       </controlProperties>
     </control>
@@ -56,8 +54,6 @@
     </control>
     <control controlID="37" controlTypeID="com.balsamiq.mockups::ButtonBar" x="602" y="110" w="-1" h="-1" measuredW="171" measuredH="27" zOrder="11" locked="false" isInGroup="-1">
       <controlProperties>
-        <hrefs>0_5%26bm%3B0_5.bmml%26bm%3B0_5.bmml%26bm%3B0_5.bmml%2C%2C</hrefs>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22542%2C90%2C596%2C117%22%20href%3D%220_5.bmml%22%20alt%3D%220_5%22%20id%3D%2237%22/%3E</map>
         <selectedIndex>-1</selectedIndex>
         <text>Load%2C%20Save%2C%20Export</text>
       </controlProperties>
@@ -81,6 +77,35 @@
     <control controlID="41" controlTypeID="com.balsamiq.mockups::Button" x="992" y="110" w="-1" h="-1" measuredW="69" measuredH="27" zOrder="15" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Preview</text>
+      </controlProperties>
+    </control>
+    <control controlID="42" controlTypeID="com.balsamiq.mockups::LineChart" x="492" y="247" w="350" h="244" measuredW="187" measuredH="175" zOrder="16" locked="false" isInGroup="-1"/>
+    <control controlID="43" controlTypeID="com.balsamiq.mockups::ModalScreen" x="60" y="90" w="1024" h="669" measuredW="320" measuredH="240" zOrder="17" locked="true" isInGroup="-1"/>
+    <control controlID="44" controlTypeID="com.balsamiq.mockups::TitleWindow" x="426" y="247" w="376" h="264" measuredW="450" measuredH="400" zOrder="18" locked="false" isInGroup="-1">
+      <controlProperties>
+        <bottomheight>0</bottomheight>
+        <close>true</close>
+        <text>Load</text>
+      </controlProperties>
+    </control>
+    <control controlID="46" controlTypeID="com.balsamiq.mockups::List" x="445" y="284" w="334" h="156" measuredW="100" measuredH="126" zOrder="19" locked="false" isInGroup="-1">
+      <controlProperties>
+        <selectedIndex>0</selectedIndex>
+        <text>my%20climate%20app%0Aheat%20index%0Asea%20levels</text>
+      </controlProperties>
+    </control>
+    <control controlID="47" controlTypeID="com.balsamiq.mockups::Button" x="492" y="463" w="-1" h="-1" measuredW="52" measuredH="27" zOrder="20" locked="false" isInGroup="-1">
+      <controlProperties>
+        <href>10%26bm%3B10.bmml%26bm%3B10.bmml%26bm%3B10.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22432%2C443%2C484%2C470%22%20href%3D%2210.bmml%22%20alt%3D%2210%22%20id%3D%2247%22/%3E</map>
+        <text>Load</text>
+      </controlProperties>
+    </control>
+    <control controlID="48" controlTypeID="com.balsamiq.mockups::Button" x="679" y="463" w="-1" h="-1" measuredW="64" measuredH="27" zOrder="21" locked="false" isInGroup="-1">
+      <controlProperties>
+        <href>0%26bm%3B0.bmml%26bm%3B0.bmml%26bm%3B0.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22619%2C443%2C683%2C470%22%20href%3D%220.bmml%22%20alt%3D%220%22%20id%3D%2248%22/%3E</map>
+        <text>Cancel</text>
       </controlProperties>
     </control>
   </controls>

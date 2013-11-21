@@ -28,54 +28,6 @@
         <text/>
       </controlProperties>
     </control>
-    <control controlID="60" controlTypeID="com.balsamiq.mockups::ModalScreen" x="60" y="90" w="1024" h="669" measuredW="320" measuredH="240" zOrder="34" locked="true" isInGroup="-1"/>
-    <control controlID="61" controlTypeID="com.balsamiq.mockups::TitleWindow" x="411" y="266" w="389" h="211" measuredW="450" measuredH="400" zOrder="35" locked="true" isInGroup="-1">
-      <controlProperties>
-        <bottomheight>0</bottomheight>
-        <close>true</close>
-        <text>Add%20Sub%20Widget</text>
-      </controlProperties>
-    </control>
-    <control controlID="62" controlTypeID="com.balsamiq.mockups::RadioButton" x="435" y="308" w="-1" h="-1" measuredW="80" measuredH="22" zOrder="36" locked="false" isInGroup="-1">
-      <controlProperties>
-        <text>Entire%20Map</text>
-      </controlProperties>
-    </control>
-    <control controlID="63" controlTypeID="com.balsamiq.mockups::RadioButton" x="559" y="308" w="-1" h="-1" measuredW="73" measuredH="22" zOrder="37" locked="false" isInGroup="-1">
-      <controlProperties>
-        <state>selected</state>
-        <text>Per%20State</text>
-      </controlProperties>
-    </control>
-    <control controlID="64" controlTypeID="com.balsamiq.mockups::RadioButton" x="684" y="308" w="-1" h="-1" measuredW="81" measuredH="22" zOrder="38" locked="false" isInGroup="-1">
-      <controlProperties>
-        <text>Per%20Region</text>
-      </controlProperties>
-    </control>
-    <control controlID="65" controlTypeID="com.balsamiq.mockups::Label" x="435" y="361" w="-1" h="-1" measuredW="45" measuredH="21" zOrder="39" locked="false" isInGroup="-1">
-      <controlProperties>
-        <text>Widget%3A</text>
-      </controlProperties>
-    </control>
-    <control controlID="66" controlTypeID="com.balsamiq.mockups::ComboBox" x="495" y="361" w="117" h="-1" measuredW="65" measuredH="24" zOrder="40" locked="false" isInGroup="-1">
-      <controlProperties>
-        <text>Graph</text>
-      </controlProperties>
-    </control>
-    <control controlID="69" controlTypeID="com.balsamiq.mockups::Button" x="458" y="431" w="-1" h="-1" measuredW="53" measuredH="27" zOrder="41" locked="false" isInGroup="-1">
-      <controlProperties>
-        <href>9%26bm%3B9.bmml%26bm%3B9.bmml%26bm%3B9.bmml</href>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22398%2C411%2C451%2C438%22%20href%3D%229.bmml%22%20alt%3D%229%22%20id%3D%2269%22/%3E</map>
-        <text>Okay</text>
-      </controlProperties>
-    </control>
-    <control controlID="70" controlTypeID="com.balsamiq.mockups::Button" x="675" y="431" w="-1" h="-1" measuredW="64" measuredH="27" zOrder="42" locked="false" isInGroup="-1">
-      <controlProperties>
-        <href>7_5%26bm%3B7_5.bmml%26bm%3B7_5.bmml%26bm%3B7_5.bmml</href>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22615%2C411%2C679%2C438%22%20href%3D%227_5.bmml%22%20alt%3D%227_5%22%20id%3D%2270%22/%3E</map>
-        <text>Cancel</text>
-      </controlProperties>
-    </control>
     <control controlID="86" controlTypeID="com.balsamiq.mockups::VerticalScrollBar" x="234" y="225" w="-1" h="519" measuredW="16" measuredH="100" zOrder="5" locked="true" isInGroup="-1">
       <controlProperties>
         <value>0</value>
@@ -202,6 +154,8 @@
     </control>
     <control controlID="119" controlTypeID="com.balsamiq.mockups::Button" x="85" y="465" w="141" h="27" measuredW="110" measuredH="27" zOrder="30" locked="false" isInGroup="-1">
       <controlProperties>
+        <href>8%26bm%3B8.bmml%26bm%3B8.bmml%26bm%3B8.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2225%2C445%2C166%2C472%22%20href%3D%228.bmml%22%20alt%3D%228%22%20id%3D%22119%22/%3E</map>
         <text>Add%20subwidget</text>
       </controlProperties>
     </control>
