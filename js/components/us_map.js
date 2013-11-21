@@ -132,6 +132,10 @@ var us_map = {
 				if (us_map_state.color === 1) {
 					us_map.colorize();
 				}
+				
+				if (typeof us_map_state.UA !== 'undefined') {
+					us_map.add_analytics(us_map_state.UA);
+				}
 			}, 500);	
 		}
 	},
