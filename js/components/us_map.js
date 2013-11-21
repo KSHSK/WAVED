@@ -13,6 +13,7 @@ var us_map = {
 		$("#map-bind-data-button").removeAttr("disabled");
 		$("#map-render-markers-button").removeAttr("disabled");
 		$("#map-analytics-button").removeAttr("disabled");
+		$("#map-highlight-checkbox").removeAttr("disabled");
 		
 		$("#widget-selector").append("<option id='us-map-widget-option'>US Map</option>");
 		$("#us-map-widget-option").on("click", function(){
@@ -223,6 +224,24 @@ var us_map = {
 				console.log(d.properties.name);
 				_gaq.push(['_trackEvent', 'Prototype', 'click-'+d.properties.name]);
 			});
+	},
+	
+	set_highlighting: function(enable) {
+		if (enable) {
+			svg.selectAll("path")
+				.data(us_map.json.features)
+				.on("mouseover", function(d) {
+					d3.select(this).style("opacity", 0.5);
+				})
+				.on("mouseout", function(d) {
+					d3.select(this).style("opacity", 1.0);
+				});
+		} else {
+			svg.selectAll("path")
+				.data(us_map.json.features)
+				.on("mouseover", function(d) {})
+				.on("mouseout", function(d) {});
+		}
 	}
 };
 

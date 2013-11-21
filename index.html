@@ -19,6 +19,7 @@
     			$("#map-bind-data-button").attr("disabled", "disabled");
 				$("#map-render-markers-button").attr("disabled", "disabled");
 				$("#map-analytics-button").attr("disabled", "disabled");
+				$("#map-highlight-checkbox").attr("disabled", "disabled");
     		});
     	</script>
     </head>
@@ -48,6 +49,7 @@
     				<option value="UA-45743706-1">UA-45743706-1</option>
     			</select>
     			<button id="map-analytics-button" onclick="add_analytics();">Add</button><br>
+    			<span class="checkboxLabel">Highlighting: </span><input type="checkbox" id="map-highlight-checkbox" onclick="toggle_map_highlight();"/></br>
     			
     			<button id="map-render-markers-button" onclick="us_map.circle_element.render()">Render city markers</button><br>
     			
@@ -164,6 +166,10 @@
 				for (var i = 0; i < us_map.data.length; i++) {
 					$("#data-selector").append("<option>"+ us_map.data[i].filepath +"</option>");
 				}
+			}
+			
+			function toggle_map_highlight() {
+				us_map.set_highlighting($("#map-highlight-checkbox").is(':checked'));
 			}
     	</script>
     </body>
