@@ -31,7 +31,9 @@
     			<div class="widget-header">Save/Load</div>
     			<button onclick="save_state()">Save State</button>
     			<button onclick="load_state()">Load State</button></br>
-    			
+			<button id="export-demo-button">Export</button>
+    			<input type="text" id="export-file-name" placeholder="Filename" />
+			<a id="export-file-link" href="" style="display: none"></a>
     			<div class="widget-header">Widget Controls</div>
     			<button id="map-generate-button" onclick="us_map.generate(); $(this).attr('disabled','disabled');">Add Map Widget</button><br>
     			<button id="map-colorize-button" onclick="us_map.colorize()">Colorize Map</button><br>
@@ -128,6 +130,32 @@
     			// Do something
     			alert("This button doesn't do anything!");
     		}
+
+		$("#widget-panel").on("click", "#export-demo-button", function() {
+		        export_html();
+		});
+
+		function export_html() {
+		    // Change this to use the app name once that is defined.
+		    var fileName = $("#export-file-name").val();
+		    if (fileName === undefined || fileName === "") {
+		        alert("Need a filename");
+		        return;
+		    }
+		    
+		    var html = $("#workspace-preview").contents().contents().html();
+         	    var octetBlob = new Blob([html], {
+		        'type' : 'application/octet-stream',
+                        'endings' : 'native'
+		    });
+		    var octetBlobURL = window.URL.createObjectURL(octetBlob);
+		    var exportLink = $("#export-file-link");
+
+		    // Set and click a hidden link, so that this doesn't require another step by the user.
+		    exportLink.attr("href", octetBlobURL);
+		    exportLink.attr("download", fileName);
+		    exportLink[0].click();		    
+ 		}
     		
     		function refresh_data_selector() {
 				// TODO: Make this grab the currently selected widget from widget-selector
