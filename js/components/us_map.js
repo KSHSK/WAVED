@@ -34,6 +34,7 @@ var us_map = {
 		
 		map_preview_document.find('body').append(
 			"<script>" + 
+				"var highlightingEnabled = false;" + 
 				"var w = 800;" +
     			"var h = 500;" +
     			"var svg = d3.select(document.getElementById(constants.MAP_PREVIEW_ID).contentDocument.body)" +
@@ -52,8 +53,15 @@ var us_map = {
 				"			.enter()" + 
 				"			.append(\"path\")" + 
 				"			.attr(\"d\", path)" + 
-				"			.attr(\"stroke\", \"white\");" + 
-				"		us_map.json = json" + 
+				"			.attr(\"stroke\", \"white\")" + 
+				"			.on(\"mouseover\", function(d) {" +
+				"				if(highlightingEnabled) {" +
+				"					d3.select(this).style(\"opacity\", 0.5);" +
+				"				}" +
+				"			})" +
+				"			.on(\"mouseout\", function(d) {" +
+				"				d3.select(this).style(\"opacity\", 1.0); " +
+				"			});" +
 				"	}" + 
 				"});" + 
 			"</script>"
@@ -227,20 +235,15 @@ var us_map = {
 	},
 	
 	set_highlighting: function(enable) {
+	
+		var script = $("#" + constants.MAP_PREVIEW_ID).contents().find('body').find('script');
+		var scriptText = script.text();	
 		if (enable) {
-			svg.selectAll("path")
-				.data(us_map.json.features)
-				.on("mouseover", function(d) {
-					d3.select(this).style("opacity", 0.5);
-				})
-				.on("mouseout", function(d) {
-					d3.select(this).style("opacity", 1.0);
-				});
+			script.text(scriptText.replace("highlightingEnabled = false;", "highlightingEnabled = true;"));
+			eval("highlightingEnabled = true;");
 		} else {
-			svg.selectAll("path")
-				.data(us_map.json.features)
-				.on("mouseover", function(d) {})
-				.on("mouseout", function(d) {});
+			script.text(scriptText.replace("highlightingEnabled = true;", "highlightingEnabled = false;"));
+			eval("highlightingEnabled = false;");
 		}
 	}
 };
