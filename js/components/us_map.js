@@ -3,9 +3,14 @@ var us_map = {
 	// For storing in our db, do we need a way to compact all of these into 1 JSON object?
 	// Need a way to list all of these somewhere and update it dynamically when new data is loaded
 	data: [],
+	svg: "",
+	projection: "",
+	w: 0,
+	h: 0,
+	highlightingEnabled: false,
 	
 	/* Generate the map of the US */
-	generate: function() {
+	render: function() {
 		// This is the jQuery way of adding attributes to a JSON object
 		$.extend(state.widgets, {"us_map":{}});
 		
@@ -23,65 +28,61 @@ var us_map = {
 			}
 		});
 	
-		var map_preview_document = $("#" + constants.MAP_PREVIEW_ID).contents();
+		var map_preview_document = $("#" + constants.MAP_PREVIEW_ID);
 		
-		map_preview_document.find('head').html(constants.D3_IMPORT + "\n" + 
-			constants.JQUERY_IMPORT + "\n" + 
-			constants.JQUERY_UI_IMPORT + "\n" + 
-			constants.COMMON_STYLE_IMPORT + "\n" + 
-			constants.JQUERY_UI_STYLE_IMPORT
-		);
+		// Default values
+		if(us_map.w <= 0){
+			us_map.w = 800;
+		}
+		if(us_map.h <= 0){
+			us_map.h = 500;
+		}
 		
-		map_preview_document.find('body').append(
-			"<script>" + 
-				"var highlightingEnabled = false;" + 
-				"var w = 800;" +
-    			"var h = 500;" +
-    			"var svg = d3.select(document.getElementById(constants.MAP_PREVIEW_ID).contentDocument.body)" +
-					".append(\"svg\")" +
-					".attr(\"width\", w)" + 
-					".attr(\"height\", h);" + 
-				"var projection = d3.geo.albersUsa().translate([w/2, h/2]);" + 
-				"var path = d3.geo.path().projection(projection);" + 
-				"d3.json(\"data/states.json\", function (error, json) {" + 
-				"	if(error) {" + 
-				"		console.log(error);" + 
-				"	}" + 
-				"	else {" + 
-				"		svg.selectAll(\"path\")" + 
-				"			.data(json.features)" + 
-				"			.enter()" + 
-				"			.append(\"path\")" + 
-				"			.attr(\"d\", path)" + 
-				"			.attr(\"stroke\", \"white\")" + 
-				"			.on(\"mouseover\", function(d) {" +
-				"				if(highlightingEnabled) {" +
-				"					d3.select(this).style(\"opacity\", 0.5);" +
-				"				}" +
-				"			})" +
-				"			.on(\"mouseout\", function(d) {" +
-				"				d3.select(this).style(\"opacity\", 1.0); " +
-				"			});" +
-				"	}" + 
-				"});" + 
-			"</script>"
-		);
+		us_map.projection = d3.geo.albersUsa().translate(([us_map.w/2, us_map.h/2]));
+		var path = d3.geo.path().projection(us_map.projection);
 		
-		state.widgets.us_map.generate = 1;
+		// Put the svg inside the preview div
+		us_map.svg = d3.select("#" + constants.MAP_PREVIEW_ID)
+			.append("svg")
+			.attr("width", us_map.w)
+			.attr("height", us_map.h);
+		
+		d3.json("data/states.json", function(error, json){
+			if(error){
+				console.log(error);
+			}
+			else {
+				us_map.svg.selectAll("path")
+					.data(json.features)
+					.enter()
+					.append("path")
+					.attr("d", path)
+					.attr("stroke", "white")
+					.on("mouseover", function(d){
+						if(us_map.highlightingEnabled){
+							d3.select(this).style("opacity", 0.5);
+						}
+					})
+					.on("mouseout", function(d) {
+						d3.select(this).style("opacity", 1.0);
+					});
+			}
+		});
+		
+		state.widgets.us_map.render = true;
+		state.widgets.us_map.w = us_map.w;
+		state.widgets.us_map.h = us_map.h;
+		state.widgets.us_map.highlightingEnabled = us_map.highlightingEnabled;
 	},
 	
 	/* Get the svg object */
 	get_svg: function() {
-		return svg_element = $('#' + constants.MAP_PREVIEW_ID).contents().find('body').find('svg');
-	},
-	
-	get_script: function() {
-		console.log($('#' + constants.MAP_PREVIEW_ID).contents().find('body').find('script').html());
+		return us_map.svg;
 	},
 	
 	/* Randomly colors each state */
 	colorize: function() {
-		svg.selectAll("path")
+		us_map.svg.selectAll("path")
 			.style("fill", function(d) {
 				var letters = '0123456789ABCDEF'.split('');
 			    var color = '#';
@@ -92,7 +93,7 @@ var us_map = {
     			return color;
 			});
 		
-		state.widgets.us_map["color"] = 1;
+		state.widgets.us_map["color"] = true;
 	},
 	
 	bind_data: function(filepath) {
@@ -121,9 +122,13 @@ var us_map = {
 	
 		// Clear the state of the us_map.data array and map preview frame
 		us_map.data = [];
-	
-		if (us_map_state.render === 1) {
-			us_map.generate(); // TODO: Naming consistency
+		
+		if (us_map_state.render === true) {
+			us_map.w = us_map_state.w;
+			us_map.h = us_map_state.h;
+			us_map.highlightingEnabled = us_map_state.highlightingEnabled;
+			
+			us_map.render();
 			
 			// Everything else should require the map so they are nested here
 			if (us_map_state.bound_data.length > 0) {
@@ -135,18 +140,23 @@ var us_map = {
 			// HACK: It takes time to actually open and process 
 			// the bind_data() function, so delay calling these to make sure it's done
 			window.setTimeout(function() {
-				if (us_map_state.circle_element === 1) {
-					us_map.circle_element.render();
+				if (us_map_state.circle_element.render === true) {
+					for(var i=0; i<us_map.data.length; i++){
+						if(us_map_state.circle_element.data === us_map.data[i].filepath){
+							us_map.circle_element.render(us_map.data[i]);
+							break; // This break might not be needed?
+						}
+					}
 				}
 			
-				if (us_map_state.color === 1) {
+				if (us_map_state.color === true) {
 					us_map.colorize();
 				}
 				
 				if (typeof us_map_state.UA !== 'undefined') {
 					us_map.add_analytics(us_map_state.UA);
 				}
-			}, 500);	
+			}, 500);
 		}
 	},
 	
@@ -154,7 +164,7 @@ var us_map = {
 		// Assumes the data we want is the first element of the data array in us_map
 		// Assumes we know that the data file is correct and has lat, long and such
 		// Has a hard-coded filter
-		render: function() {
+		render: function(dataJSON) {
 			if(state.widgets.us_map.circle_element == null) {
 				state.widgets.us_map.circle_element = {};
 			}
@@ -164,33 +174,33 @@ var us_map = {
 				return;
 			}
 			
-			var data = us_map.data[0].data;
-			
 			// This should probably not be local to this function
 			var populationRadiusScale = d3.scale.linear()
 									.domain([1000,500000])
 									.range([2,10])
 									.clamp(true); 
 			
+			var data = dataJSON.data;
+			
 			// Create the circles
-			svg.selectAll("circle")
+			us_map.svg.selectAll("circle")
 				.data(data)
 				.enter()
 				.append("circle")
 				.attr("cx", function(d, i) {
-					var coords = projection([d.Lon, d.Lat]);
+					var coords = us_map.projection([d.Lon, d.Lat]);
 					if (coords !== null) {
-						return projection([d.Lon, d.Lat])[0];            				
+						return us_map.projection([d.Lon, d.Lat])[0];            				
 					}
 				})
 				.attr("cy", function(d, i) {
-					var coords = projection([d.Lon, d.Lat]);
+					var coords = us_map.projection([d.Lon, d.Lat]);
 					if (coords !== null) {
-						return projection([d.Lon, d.Lat])[1];            				
+						return us_map.projection([d.Lon, d.Lat])[1];            				
 					}
 				})
 				.attr("r", function(d, i) {
-					var coords = projection([d.Lon, d.Lat]);
+					var coords = us_map.projection([d.Lon, d.Lat]);
 					if (coords !== null) {
 						return populationRadiusScale(d.TotPop);
 					}
@@ -200,7 +210,8 @@ var us_map = {
 				
 			// Since we're hard coding things now, we just need to know that this function
 			// was called.
-			state.widgets.us_map.circle_element.data = 1;	
+			state.widgets.us_map.circle_element.data = dataJSON.filepath;
+			state.widgets.us_map.circle_element.render = true;
 			
 			// This is how it should be in the future
 			//state.widgets.us_map.circle_element.data = data;
@@ -226,7 +237,8 @@ var us_map = {
 			"</script>"
 		);
 		
-		svg.selectAll("path")
+		// There's an error here. us_map.json.features doesn't exist
+		us_map.svg.selectAll("path")
 			.data(us_map.json.features)
 			.on("click", function(d) {
 				console.log(d.properties.name);
@@ -235,16 +247,10 @@ var us_map = {
 	},
 	
 	set_highlighting: function(enable) {
-	
-		var script = $("#" + constants.MAP_PREVIEW_ID).contents().find('body').find('script');
-		var scriptText = script.text();	
-		if (enable) {
-			script.text(scriptText.replace("highlightingEnabled = false;", "highlightingEnabled = true;"));
-			eval("highlightingEnabled = true;");
-		} else {
-			script.text(scriptText.replace("highlightingEnabled = true;", "highlightingEnabled = false;"));
-			eval("highlightingEnabled = false;");
-		}
+		us_map.highlightingEnabled = enable;
+		
+		// Update state
+		state.widgets.us_map.highlightingEnabled = enable;
 	}
 };
 

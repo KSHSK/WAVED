@@ -12,6 +12,7 @@
     	
     	<script type="text/javascript" src="js/components/constants.js"></script>
     	<script type="text/javascript" src="js/components/us_map.js"></script>
+    	<script type="text/javascript" src="js/components/utilities.js"></script>
     	
     	<script type="text/javascript">
     		$(document).ready(function(){
@@ -36,7 +37,7 @@
     			<input type="text" id="export-file-name" placeholder="Filename" />
 			<a id="export-file-link" href="" style="display: none"></a>
     			<div class="widget-header">Widget Controls</div>
-    			<button id="map-generate-button" onclick="us_map.generate(); $(this).attr('disabled','disabled');">Add Map Widget</button><br>
+    			<button id="map-generate-button" onclick="us_map.render(); $(this).attr('disabled','disabled');">Add Map Widget</button><br>
     			<button id="map-colorize-button" onclick="us_map.colorize()">Colorize Map</button><br>
     			<select id="data-sources">
     				<option value="">Select data to bind...</option>
@@ -51,7 +52,7 @@
     			<button id="map-analytics-button" onclick="add_analytics();">Add</button><br>
     			<span class="checkboxLabel">Highlighting: </span><input type="checkbox" id="map-highlight-checkbox" onclick="toggle_map_highlight();"/></br>
     			
-    			<button id="map-render-markers-button" onclick="us_map.circle_element.render()">Render city markers</button><br>
+    			<button id="map-render-markers-button" onclick="us_map.circle_element.render(us_map.data[0])">Render city markers</button><br>
     			
     			<div id="widget-selector-container">
     				<div class="widget-header">Widgets</div>
@@ -67,8 +68,9 @@
     		</div>
     		<div id="workspace-panel">
     			<div id="workspace-header">Map Panel</div>
-    			<iframe id="workspace-preview" seamless>
-    			</iframe>
+    			<!--<iframe id="workspace-preview" seamless>
+    			</iframe>-->
+    			<div id="workspace-preview"></div>
     		</div>
     	</div>
     	<script>
@@ -112,20 +114,25 @@
     				"widgets": {
     					"us_map": {
     						"bound_data": ["data/data_full.csv"],
-    						"circle_element": 1,
-    						"render": 1,
-    						"color": 1,
-    						"UA": "UA-45743706-1"
+    						"circle_element": {
+    							"data": "data/data_full.csv",
+    							"render": true
+    						},
+    						"render": true,
+    						"color": true,
+    						"h": 500,
+    						"w": 800,
+    						"highlightingEnabled": true
 		   				}
     				}
     			};
     			
     			// Clear the iFrame
-    			var map_preview_document = $("#" + constants.MAP_PREVIEW_ID).contents();
-				map_preview_document.find('head').empty();
-				map_preview_document.find('body').empty();
+    			$("#" + constants.MAP_PREVIEW_ID).empty();
     			
     			us_map.load_state(saved_state.widgets.us_map);
+    			
+    			$("#map-generate-button").attr("disabled", "disabled");
     		}
     		
     		function save_state(){
