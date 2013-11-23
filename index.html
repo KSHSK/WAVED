@@ -21,6 +21,8 @@
 				$("#map-analytics-button").attr("disabled", "disabled");
 				$("#map-highlight-checkbox").attr("disabled", "disabled");
     		});
+    		
+    		var widgets = [];
     	</script>
     </head>
     <body id="main-body">
@@ -34,9 +36,9 @@
     			<button onclick="load_state()">Load State</button></br>
 			<button id="export-demo-button">Export</button>
     			<input type="text" id="export-file-name" placeholder="Filename" />
-			<a id="export-file-link" href="" style="display: none"></a>
+				<a id="export-file-link" href="" style="display: none"></a>
     			<div class="widget-header">Widget Controls</div>
-    			<button id="map-generate-button" onclick="us_map.render(); $(this).attr('disabled','disabled');">Add Map Widget</button><br>
+    			<button id="map-generate-button" onclick="us_map.render(); $(this).attr('disabled','disabled'); widgets.push(us_map);">Add Map Widget</button><br>
     			<button id="map-colorize-button" onclick="us_map.colorize()">Colorize Map</button><br>
     			<select id="data-sources">
     				<option value="">Select data to bind...</option>
@@ -95,7 +97,6 @@
     			}
     		}
     		
-    		
 			function add_analytics() {
 				var UA = $("#analytics-select").val();
 				
@@ -119,8 +120,8 @@
     						},
     						"render": true,
     						"color": true,
-    						"h": 500,
-    						"w": 800,
+    						"height": 500,
+    						"width": 800,
     						"highlightingEnabled": true,
     						"UA": "UA-45743706-1"
 		   				}
@@ -153,7 +154,26 @@
 			        return;
 			    }
 			    
-			    var html = $("#workspace-preview").html();
+				var widgetJS = "";
+				for (var i = 0; i < widgets.length; i++) {
+					widgetJS += widgets[i].exportJS();
+				}
+			    
+			    var html = "<html>" +
+			    		   "<head>" + "\n" +
+			    		   		constants.D3_IMPORT + "\n" +
+			    		   		constants.JQUERY_IMPORT + "\n" +
+			    		   	 	constants.JQUERY_UI_IMPORT + "\n" +
+			    		   	 	constants.JQUERY_UI_STYLE_IMPORT + "\n" +
+			    		   "</head>" + "\n" +
+			    		   "<body id=\"" + constants.EXPORT_CONTAINER_ID + "\">" +  "\n" +
+			    		   "<script type=\"text/javascript\">" + "\n" +
+								widgetJS + 
+							"<\/script>" + "\n" +
+			    		   "</body>" + "\n" +
+			    		   "</html>";
+			    
+			    //var html = $("#workspace-preview").html();
    	      	    var octetBlob = new Blob([html], {
 			        'type' : 'application/octet-stream',
    	                     'endings' : 'native'

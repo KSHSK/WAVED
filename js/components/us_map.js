@@ -5,8 +5,8 @@ var us_map = {
 	data: [],
 	svg: "",
 	projection: "",
-	w: 0,
-	h: 0,
+	width: 0,
+	height: 0,
 	highlightingEnabled: false,
 	_gaq: [],
 	
@@ -32,21 +32,21 @@ var us_map = {
 		var map_preview_document = $("#" + constants.MAP_PREVIEW_ID);
 		
 		// Default values
-		if(us_map.w <= 0){
-			us_map.w = 800;
+		if(us_map.width <= 0){
+			us_map.width = 800;
 		}
-		if(us_map.h <= 0){
-			us_map.h = 500;
+		if(us_map.height <= 0){
+			us_map.height = 500;
 		}
 		
-		us_map.projection = d3.geo.albersUsa().translate(([us_map.w/2, us_map.h/2]));
+		us_map.projection = d3.geo.albersUsa().translate(([us_map.width/2.0, us_map.height/2.0]));
 		var path = d3.geo.path().projection(us_map.projection);
 		
 		// Put the svg inside the preview div
 		us_map.svg = d3.select("#" + constants.MAP_PREVIEW_ID)
 			.append("svg")
-			.attr("width", us_map.w)
-			.attr("height", us_map.h);
+			.attr("width", us_map.width)
+			.attr("height", us_map.height);
 		
 		d3.json("data/states.json", function(error, json){
 			if(error){
@@ -71,8 +71,8 @@ var us_map = {
 		});
 		
 		state.widgets.us_map.render = true;
-		state.widgets.us_map.w = us_map.w;
-		state.widgets.us_map.h = us_map.h;
+		state.widgets.us_map.width = us_map.width;
+		state.widgets.us_map.height = us_map.height;
 		state.widgets.us_map.highlightingEnabled = us_map.highlightingEnabled;
 	},
 	
@@ -125,8 +125,8 @@ var us_map = {
 		us_map.data = [];
 		
 		if (us_map_state.render === true) {
-			us_map.w = us_map_state.w;
-			us_map.h = us_map_state.h;
+			us_map.width = us_map_state.width;
+			us_map.height = us_map_state.height;
 			us_map.highlightingEnabled = us_map_state.highlightingEnabled;
 			
 			us_map.render();
@@ -142,7 +142,7 @@ var us_map = {
 			// the bind_data() function, so delay calling these to make sure it's done
 			window.setTimeout(function() {
 				if (us_map_state.circle_element.render === true) {
-					for(var i=0; i<us_map.data.length; i++){
+					for(var i = 0; i < us_map.data.length; i++){
 						if(us_map_state.circle_element.data === us_map.data[i].filepath){
 							us_map.circle_element.render(us_map.data[i]);
 							break; // This break might not be needed?
@@ -249,5 +249,42 @@ var us_map = {
 		
 		// Update state
 		state.widgets.us_map.highlightingEnabled = enable;
+	},
+	
+	exportJS: function() {
+		return ("var svg = d3.select(\"#" + constants.EXPORT_CONTAINER_ID + "\")" + "\n" +
+				"\t" + 	".append(\"svg\")" + "\n" +
+				"\t" + 	".attr(\"width\", " + us_map.width + ")" + "\n" +
+				"\t" + 	".attr(\"height\", " + us_map.height + ");" + "\n\n" +
+				
+				"var projection = d3.geo.albersUsa().translate(([" + us_map.width/2.0 + ", " + us_map.height/2.0 + "]));" + "\n" +
+				"var path = d3.geo.path().projection(projection);" + "\n\n" + 
+				
+				// TODO: We need to expor data/states.json with the finished application
+				"\t" + "d3.json(\"data/states.json\", function(error, json) {" + "\n" +
+				"\t" + "if(error) {" + "\n" +
+				"\t" + "\t" + "console.log(error)" + "\n" +
+				"\t" + "}" + "\n" + 
+				"\t" + "else {" + "\n" + 
+				"\t" + "\t" + "svg.selectAll(\"path\")" + "\n" + 
+				"\t" + "\t" + "\t" + ".data(json.features)" + "\n" + 
+				"\t" + "\t" + "\t" + ".enter()" + "\n" + 
+				"\t" + "\t" + "\t" + ".append(\"path\")" + "\n" + 
+				"\t" + "\t" + "\t" + ".attr(\"d\", path)" + "\n" + 
+				"\t" + "\t" + "\t" + ".attr(\"stroke\", \"white\")" + "\n" + 
+				"\t" + "\t" + "\t" + ".on(\"mouseover\", function(d){" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + (us_map.highlightingEnabled ? "d3.select(this).style(\"opacity\", 0.5);" : "") + "\n" + 				
+				"\t" + "\t" + "\t" + "})" + "\n" + 
+				"\t" + "\t" + "\t" + ".on(\"mouseout\", function(d){" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + (us_map.highlightingEnabled ? "d3.select(this).style(\"opacity\", 1.0);" : "") + "\n" + 				
+				"\t" + "\t" + "\t" + "});" + "\n" + 
+				"\t" + "}" + "\n" + 
+				"})"
+				
+				// TODO: Add Google Analytics, as mentioned above, need to add script to header in addition to the mouseclick event for tracking
+				// TODO: Color
+				// TODO: Markers
+				
+				);
 	}
 };
