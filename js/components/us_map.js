@@ -223,7 +223,7 @@ var us_map = {
 	// You generate the script with all the specific google analytics code during generation
 	add_analytics: function(UA) {		
 		if(us_map._gaq.length === 0){
-			us_map._gaq.push(['_setAccount','" + UA + "']);
+			us_map._gaq.push(['_setAccount', UA]);
 			us_map._gaq.push(['_trackPageview']);
 			(function() {
 				var ga=document.createElement('script');
