@@ -12,7 +12,6 @@
     	
     	<script type="text/javascript" src="js/components/constants.js"></script>
     	<script type="text/javascript" src="js/components/us_map.js"></script>
-    	<script type="text/javascript" src="js/components/utilities.js"></script>
     	
     	<script type="text/javascript">
     		$(document).ready(function(){
@@ -140,31 +139,32 @@
     			alert("This button doesn't do anything!");
     		}
 
-		$("#widget-panel").on("click", "#export-demo-button", function() {
-		        export_html();
-		});
+			$("#widget-panel").on("click", "#export-demo-button", function() {
+		 	       export_html();
+			});
 
-		function export_html() {
-		    // Change this to use the app name once that is defined.
-		    var fileName = $("#export-file-name").val();
-		    if (fileName === undefined || fileName === "") {
-		        alert("Need a filename");
-		        return;
-		    }
-		    
-		    var html = $("#workspace-preview").contents().contents().html();
-         	    var octetBlob = new Blob([html], {
-		        'type' : 'application/octet-stream',
-                        'endings' : 'native'
-		    });
-		    var octetBlobURL = window.URL.createObjectURL(octetBlob);
-		    var exportLink = $("#export-file-link");
+			// BROKEN!
+			function export_html() {
+			    // Change this to use the app name once that is defined.
+			    var fileName = $("#export-file-name").val();
+			    if (fileName === undefined || fileName === "") {
+			        alert("Need a filename");
+			        return;
+			    }
+			    
+			    var html = $("#workspace-preview").html();
+   	      	    var octetBlob = new Blob([html], {
+			        'type' : 'application/octet-stream',
+   	                     'endings' : 'native'
+			    });
+			    var octetBlobURL = window.URL.createObjectURL(octetBlob);
+			    var exportLink = $("#export-file-link");
 
-		    // Set and click a hidden link, so that this doesn't require another step by the user.
-		    exportLink.attr("href", octetBlobURL);
-		    exportLink.attr("download", fileName);
-		    exportLink[0].click();		    
- 		}
+			    // Set and click a hidden link, so that this doesn't require another step by the user.
+			    exportLink.attr("href", octetBlobURL);
+			    exportLink.attr("download", fileName);
+			    exportLink[0].click();		    
+ 			}
     		
     		function refresh_data_selector() {
 				// TODO: Make this grab the currently selected widget from widget-selector

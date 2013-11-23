@@ -8,6 +8,7 @@ var us_map = {
 	w: 0,
 	h: 0,
 	highlightingEnabled: false,
+	_gaq: [],
 	
 	/* Generate the map of the US */
 	render: function() {
@@ -218,32 +219,29 @@ var us_map = {
 		}
 	},
 	
-	add_analytics: function(UA) {
-		var map_preview_document = $("#" + constants.MAP_PREVIEW_ID).contents();
+	// This function doesn't actually need to do anything except update the state
+	// You generate the script with all the specific google analytics code during generation
+	add_analytics: function(UA) {		
+		if(us_map._gaq.length === 0){
+			us_map._gaq.push(['_setAccount','" + UA + "']);
+			us_map._gaq.push(['_trackPageview']);
+			(function() {
+				var ga=document.createElement('script');
+				ga.type='text/javascript';
+				ga.async=true;
+				ga.src=('https:'==document.location.protocol ? 'https://ssl' :'http://www') + '.google-analytics.com/ga.js';
+				var s=document.getElementsByTagName('script')[0];
+				s.parentNode.insertBefore(ga,s);
+			})();
+		}
 		
-		map_preview_document.find('head').append(
-			"<script type=\"text/javascript\">" + 
-                "var _gaq=_gaq || [];" +
-				"_gaq.push(['_setAccount','" + UA + "']);" +
-				"_gaq.push(['_trackPageview']);" +
-				"(function() {" +
-				"	var ga=document.createElement('script');" +
-				"	ga.type='text/javascript';" +
-				"	ga.async=true;" +
-				"	ga.src=('https:'==document.location.protocol ? 'https://ssl' :'http://www') + '.google-analytics.com/ga.js';" +
-				"	var s=document.getElementsByTagName('script')[0];" +
-				"	s.parentNode.insertBefore(ga,s);" +
-				"})();" +
-			"</script>"
-		);
-		
-		// There's an error here. us_map.json.features doesn't exist
 		us_map.svg.selectAll("path")
-			.data(us_map.json.features)
 			.on("click", function(d) {
 				console.log(d.properties.name);
-				_gaq.push(['_trackEvent', 'Prototype', 'click-'+d.properties.name]);
+				us_map._gaq.push(['_trackEvent', 'Prototype', 'click-'+d.properties.name]);
 			});
+		
+		state.widgets.us_map.UA = UA;
 	},
 	
 	set_highlighting: function(enable) {
