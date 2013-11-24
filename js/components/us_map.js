@@ -135,7 +135,7 @@ var us_map = {
 			// HACK: It takes time to actually open and process 
 			// the bind_data() function, so delay calling these to make sure it's done
 			window.setTimeout(function() {
-				if (us_map_state.circle_element === 1) {
+				if (us_map_state.circle_element) {
 					us_map.circle_element.render();
 				}
 			
