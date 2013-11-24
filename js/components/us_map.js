@@ -67,7 +67,7 @@ var us_map = {
 			"</script>"
 		);
 		
-		state.widgets.us_map.generate = 1;
+		state.widgets.us_map.render = 1;
 	},
 	
 	/* Get the svg object */
