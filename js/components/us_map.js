@@ -10,6 +10,7 @@ var us_map = {
 	highlightingEnabled: false,
 	color: "black",
 	_gaq: [],
+	UA: "",
 	
 	/* Generate the map of the US */
 	render: function() {
@@ -224,25 +225,11 @@ var us_map = {
 	// This function doesn't actually need to do anything except update the state
 	// You generate the script with all the specific google analytics code during generation
 	add_analytics: function(UA) {		
-		if(us_map._gaq.length === 0){
-			us_map._gaq.push(['_setAccount', UA]);
-			us_map._gaq.push(['_trackPageview']);
-			(function() {
-				var ga=document.createElement('script');
-				ga.type='text/javascript';
-				ga.async=true;
-				ga.src=('https:'==document.location.protocol ? 'https://ssl' :'http://www') + '.google-analytics.com/ga.js';
-				var s=document.getElementsByTagName('script')[0];
-				s.parentNode.insertBefore(ga,s);
-			})();
-		}
+	
+		// Update widget's properties
+		us_map.UA = UA;
 		
-		us_map.svg.selectAll("path")
-			.on("click", function(d) {
-				console.log(d.properties.name);
-				us_map._gaq.push(['_trackEvent', 'Prototype', 'click-'+d.properties.name]);
-			});
-		
+		// Update application state
 		state.widgets.us_map.UA = UA;
 	},
 	
@@ -251,6 +238,29 @@ var us_map = {
 		
 		// Update state
 		state.widgets.us_map.highlightingEnabled = enable;
+	},
+	
+	get_GA_header_script: function() {
+		if (us_map.UA.length !== 0) {
+			function GASetup() {
+				var _gaq = _gaq || [];
+				_gaq.push(['_setAccount', us_map.UA]);
+				_gaq.push(['_trackPageview']);
+				(function() {
+					var ga=document.createElement('script');
+					ga.type='text/javascript';
+					ga.async=true;
+					ga.src=('https:'==document.location.protocol ? 'https://ssl' :'http://www') + '.google-analytics.com/ga.js';
+					var s=document.getElementsByTagName('script')[0];
+					s.parentNode.insertBefore(ga,s);
+				})();
+			}
+			
+			var str = GASetup.toString().replace("us_map.UA", "'" +us_map.UA + "'");
+			return str.substring(str.indexOf("{") + 1, str.lastIndexOf("}"));			
+		}
+		
+		return "";
 	},
 	
 	exportJS: function() {
@@ -295,6 +305,12 @@ var us_map = {
 				"\t" + "\t" + "\t" + "})" + "\n" + 
 				"\t" + "\t" + "\t" + ".on(\"mouseout\", function(d){" + "\n" + 
 				"\t" + "\t" + "\t" + "\t" + (us_map.highlightingEnabled ? "d3.select(this).style(\"opacity\", 1.0);" : "") + "\n" + 				
+				"\t" + "\t" + "\t" + "})" + "\n" + 
+				"\t" + "\t" + "\t" + ".on(\"click\", function(d){" + "\n" + 
+				// For debugging
+				"\t" + "\t" + "\t" + "\t" + "console.log('Clicked ' + d.properties.name);" + "\n" +
+				// TODO: Use exported application's name for tracking events.
+				"\t" + "\t" + "\t" + "\t" + "_gaq.push(['_trackEvent', 'ExportedPrototype', 'click-'+d.properties.name]);" + "\n" + 				
 				"\t" + "\t" + "\t" + "});" + "\n" + 
 				"\t" + "}" + "\n" + 
 				"})"
