@@ -159,8 +159,8 @@ var us_map = {
 					}
 				}
 			
-				if (us_map_state.color === true) {
-					us_map.colorize();
+				if (us_map_state.color) {
+					us_map.colorize(us_map_state.color);
 				}
 				
 				if (typeof us_map_state.UA !== 'undefined') {
