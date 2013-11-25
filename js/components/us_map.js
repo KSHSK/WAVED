@@ -3,9 +3,18 @@ var us_map = {
 	// For storing in our db, do we need a way to compact all of these into 1 JSON object?
 	// Need a way to list all of these somewhere and update it dynamically when new data is loaded
 	data: [],
+	svg: "",
+	projection: "",
+	width: 0,
+	height: 0,
+	highlightingEnabled: false,
+	renderCircles: false,
+	color: "black",
+	_gaq: [],
+	UA: "",
 	
 	/* Generate the map of the US */
-	generate: function() {
+	render: function() {
 		// This is the jQuery way of adding attributes to a JSON object
 		$.extend(state.widgets, {"us_map":{"bound_data": []}});
 		
@@ -23,76 +32,78 @@ var us_map = {
 			}
 		});
 	
-		var map_preview_document = $("#" + constants.MAP_PREVIEW_ID).contents();
+		var map_preview_document = $("#" + constants.MAP_PREVIEW_ID);
 		
-		map_preview_document.find('head').html(constants.D3_IMPORT + "\n" + 
-			constants.JQUERY_IMPORT + "\n" + 
-			constants.JQUERY_UI_IMPORT + "\n" + 
-			constants.COMMON_STYLE_IMPORT + "\n" + 
-			constants.JQUERY_UI_STYLE_IMPORT
-		);
+		// Default values
+		if(us_map.width <= 0){
+			us_map.width = 800;
+		}
+		if(us_map.height <= 0){
+			us_map.height = 500;
+		}
 		
-		map_preview_document.find('body').append(
-			"<script>" + 
-				"var highlightingEnabled = false;" + 
-				"var w = 800;" +
-    			"var h = 500;" +
-    			"var svg = d3.select(document.getElementById(constants.MAP_PREVIEW_ID).contentDocument.body)" +
-					".append(\"svg\")" +
-					".attr(\"width\", w)" + 
-					".attr(\"height\", h);" + 
-				"var projection = d3.geo.albersUsa().translate([w/2, h/2]);" + 
-				"var path = d3.geo.path().projection(projection);" + 
-				"d3.json(\"data/states.json\", function (error, json) {" + 
-				"	if(error) {" + 
-				"		console.log(error);" + 
-				"	}" + 
-				"	else {" + 
-				"		svg.selectAll(\"path\")" + 
-				"			.data(json.features)" + 
-				"			.enter()" + 
-				"			.append(\"path\")" + 
-				"			.attr(\"d\", path)" + 
-				"			.attr(\"stroke\", \"white\")" + 
-				"			.on(\"mouseover\", function(d) {" +
-				"				if(highlightingEnabled) {" +
-				"					d3.select(this).style(\"opacity\", 0.5);" +
-				"				}" +
-				"			})" +
-				"			.on(\"mouseout\", function(d) {" +
-				"				d3.select(this).style(\"opacity\", 1.0); " +
-				"			});" +
-				"	}" + 
-				"});" + 
-			"</script>"
-		);
+		us_map.projection = d3.geo.albersUsa().translate(([us_map.width/2.0, us_map.height/2.0]));
+		var path = d3.geo.path().projection(us_map.projection);
 		
-		state.widgets.us_map.render = 1;
+		// Put the svg inside the preview div
+		us_map.svg = d3.select("#" + constants.MAP_PREVIEW_ID)
+			.append("svg")
+			.attr("width", us_map.width)
+			.attr("height", us_map.height);
+		
+		d3.json("data/states.json", function(error, json){
+			if(error){
+				console.log(error);
+			}
+			else {
+				us_map.svg.selectAll("path")
+					.data(json.features)
+					.enter()
+					.append("path")
+					.attr("d", path)
+					.attr("stroke", "white")
+					.on("mouseover", function(d){
+						if(us_map.highlightingEnabled){
+							d3.select(this).style("opacity", 0.5);
+						}
+					})
+					.on("mouseout", function(d) {
+						d3.select(this).style("opacity", 1.0);
+					});
+			}
+		});
+		
+		state.widgets.us_map.render = true;
+		state.widgets.us_map.width = us_map.width;
+		state.widgets.us_map.height = us_map.height;
+		state.widgets.us_map.highlightingEnabled = us_map.highlightingEnabled;
 	},
 	
 	/* Get the svg object */
 	get_svg: function() {
-		return svg_element = $('#' + constants.MAP_PREVIEW_ID).contents().find('body').find('svg');
-	},
-	
-	get_script: function() {
-		console.log($('#' + constants.MAP_PREVIEW_ID).contents().find('body').find('script').html());
+		return us_map.svg;
 	},
 	
 	/* Randomly colors each state */
-	colorize: function() {
-		svg.selectAll("path")
-			.style("fill", function(d) {
-				var letters = '0123456789ABCDEF'.split('');
-			    var color = '#';
-			    for (var i = 0; i < 6; i++) {
-			        color += letters[Math.round(Math.random() * 15)];
-			    }
-    			
-    			return color;
-			});
+	colorize: function(color) {
+	
+		// Update the model and state.
+		us_map.color = color;
+		state.widgets.us_map["color"] = color;
 		
-		state.widgets.us_map["color"] = 1;
+		us_map.svg.selectAll("path")
+			.style("fill", function(d) {
+				if (us_map.color === "random") {
+					var letters = '0123456789ABCDEF'.split('');
+					var color = '#';
+					for (var i = 0; i < 6; i++) {
+						color += letters[Math.round(Math.random() * 15)];
+					}
+					return color;
+			    } else {
+			    	return us_map.color;
+			    }
+			});
 	},
 	
 	bind_data: function(filepath) {
@@ -121,9 +132,13 @@ var us_map = {
 	
 		// Clear the state of the us_map.data array and map preview frame
 		us_map.data = [];
-	
-		if (us_map_state.render === 1) {
-			us_map.generate(); // TODO: Naming consistency
+		
+		if (us_map_state.render === true) {
+			us_map.width = us_map_state.width;
+			us_map.height = us_map_state.height;
+			us_map.highlightingEnabled = us_map_state.highlightingEnabled;
+			
+			us_map.render();
 			
 			// Everything else should require the map so they are nested here
 			if (us_map_state.bound_data.length > 0) {
@@ -135,18 +150,23 @@ var us_map = {
 			// HACK: It takes time to actually open and process 
 			// the bind_data() function, so delay calling these to make sure it's done
 			window.setTimeout(function() {
-				if (us_map_state.circle_element) {
-					us_map.circle_element.render();
+				if (us_map_state.circle_element.render === true) {
+					for(var i = 0; i < us_map.data.length; i++){
+						if(us_map_state.circle_element.data === us_map.data[i].filepath){
+							us_map.circle_element.render(us_map.data[i]);
+							break; // This break might not be needed?
+						}
+					}
 				}
 			
-				if (us_map_state.color === 1) {
-					us_map.colorize();
+				if (us_map_state.color) {
+					us_map.colorize(us_map_state.color);
 				}
 				
 				if (typeof us_map_state.UA !== 'undefined') {
 					us_map.add_analytics(us_map_state.UA);
 				}
-			}, 500);	
+			}, 500);
 		}
 	},
 	
@@ -154,7 +174,10 @@ var us_map = {
 		// Assumes the data we want is the first element of the data array in us_map
 		// Assumes we know that the data file is correct and has lat, long and such
 		// Has a hard-coded filter
-		render: function() {
+		render: function(dataJSON) {
+		
+			us_map.renderCircles = true;
+			
 			if(state.widgets.us_map.circle_element == null) {
 				state.widgets.us_map.circle_element = {};
 			}
@@ -164,33 +187,33 @@ var us_map = {
 				return;
 			}
 			
-			var data = us_map.data[0].data;
-			
 			// This should probably not be local to this function
 			var populationRadiusScale = d3.scale.linear()
 									.domain([1000,500000])
 									.range([2,10])
 									.clamp(true); 
 			
+			var data = dataJSON.data;
+			
 			// Create the circles
-			svg.selectAll("circle")
+			us_map.svg.selectAll("circle")
 				.data(data)
 				.enter()
 				.append("circle")
 				.attr("cx", function(d, i) {
-					var coords = projection([d.Lon, d.Lat]);
+					var coords = us_map.projection([d.Lon, d.Lat]);
 					if (coords !== null) {
-						return projection([d.Lon, d.Lat])[0];            				
+						return us_map.projection([d.Lon, d.Lat])[0];            				
 					}
 				})
 				.attr("cy", function(d, i) {
-					var coords = projection([d.Lon, d.Lat]);
+					var coords = us_map.projection([d.Lon, d.Lat]);
 					if (coords !== null) {
-						return projection([d.Lon, d.Lat])[1];            				
+						return us_map.projection([d.Lon, d.Lat])[1];            				
 					}
 				})
 				.attr("r", function(d, i) {
-					var coords = projection([d.Lon, d.Lat]);
+					var coords = us_map.projection([d.Lon, d.Lat]);
 					if (coords !== null) {
 						return populationRadiusScale(d.TotPop);
 					}
@@ -198,65 +221,145 @@ var us_map = {
 				.style("fill", "red")
 				.style("opacity", 0.75);
 				
-			// Since we're hard coding things now, we just need to know that this function
-			// was called.
-			state.widgets.us_map.circle_element.data = 1;	
-			
-			// This is how it should be in the future
-			//state.widgets.us_map.circle_element.data = data;
+			state.widgets.us_map.circle_element.data = dataJSON.filepath;
+			state.widgets.us_map.circle_element.render = true;
 		}
 	},
 	
-	add_analytics: function(UA) {
-		var map_preview_document = $("#" + constants.MAP_PREVIEW_ID).contents();
+	// This function doesn't actually need to do anything except update the state
+	// You generate the script with all the specific google analytics code during generation
+	add_analytics: function(UA) {		
+	
+		// Update widget's properties
+		us_map.UA = UA;
 		
-		map_preview_document.find('head').append(
-			"<script type=\"text/javascript\">" + 
-                "var _gaq=_gaq || [];" +
-				"_gaq.push(['_setAccount','" + UA + "']);" +
-				"_gaq.push(['_trackPageview']);" +
-				"(function() {" +
-				"	var ga=document.createElement('script');" +
-				"	ga.type='text/javascript';" +
-				"	ga.async=true;" +
-				"	ga.src=('https:'==document.location.protocol ? 'https://ssl' :'http://www') + '.google-analytics.com/ga.js';" +
-				"	var s=document.getElementsByTagName('script')[0];" +
-				"	s.parentNode.insertBefore(ga,s);" +
-				"})();" +
-			"</script>"
-		);
-		
-		svg.selectAll("path")
-			.data(us_map.json.features)
-			.on("click", function(d) {
-				console.log(d.properties.name);
-				_gaq.push(['_trackEvent', 'Prototype', 'click-'+d.properties.name]);
-			});
+		// Update application state
+		state.widgets.us_map.UA = UA;
 	},
 	
 	set_highlighting: function(enable) {
+		us_map.highlightingEnabled = enable;
+		
+		// Update state
+		state.widgets.us_map.highlightingEnabled = enable;
+	},
 	
-		var script = $("#" + constants.MAP_PREVIEW_ID).contents().find('body').find('script');
-		var scriptText = script.text();	
-		if (enable) {
-			script.text(scriptText.replace("highlightingEnabled = false;", "highlightingEnabled = true;"));
-			eval("highlightingEnabled = true;");
-		} else {
-			script.text(scriptText.replace("highlightingEnabled = true;", "highlightingEnabled = false;"));
-			eval("highlightingEnabled = false;");
+	get_GA_header_script: function() {
+		if (us_map.UA.length !== 0) {
+			function GASetup() {
+				var _gaq = _gaq || [];
+				_gaq.push(['_setAccount', us_map.UA]);
+				_gaq.push(['_trackPageview']);
+				(function() {
+					var ga=document.createElement('script');
+					ga.type='text/javascript';
+					ga.async=true;
+					ga.src=('https:'==document.location.protocol ? 'https://ssl' :'http://www') + '.google-analytics.com/ga.js';
+					var s=document.getElementsByTagName('script')[0];
+					s.parentNode.insertBefore(ga,s);
+				})();
+			}
+			
+			var str = GASetup.toString().replace("us_map.UA", "'" +us_map.UA + "'");
+			return str.substring(str.indexOf("{") + 1, str.lastIndexOf("}"));			
 		}
+		
+		return "";
+	},
+	
+	exportJS: function() {
+	
+		var colorFunc;
+		if (us_map.color === "random") {
+			colorFunc = "var letters = '0123456789ABCDEF'.split('');" + "\n" +
+						"\t\t\t\t" + "var color = '#';"  + "\n" +
+						"\t\t\t\t" + "for (var i = 0; i < 6; i++) {" + "\n" +
+						"\t\t\t\t" + "\t" + "color += letters[Math.round(Math.random() * 15)];" + "\n" +
+						"\t\t\t\t" + "}" + "\n" +
+						"\t\t\t\t" + "return color;" 
+		} else {
+			colorFunc = "return \"" + us_map.color + "\";";
+		}
+		
+		// Hack until how we're packaging data with the download is decided
+		var renderCircleString = "";
+		if (us_map.renderCircles) {
+			renderCircleString = 
+				// Filepath should be selected from the map's state. 				
+				("\t" + "d3.csv(\"data/data_full.csv\", function(error, data) {" + "\n" + 
+				"\t" + "\t" + "if (error) {" + "\n" + 
+				"\t" + "\t" + "\t" + "console.log(error)" + "\n" + 
+				"\t" + "\t" + "} else {" + "\n" + 
+						// This will eventually be a user defined scale.
+				"\t" + "\t" + "\t" + "var populationRadiusScale = d3.scale.linear().domain([1000,500000]).range([2,10]).clamp(true);" + "\n" + 
+				
+				"\t" + "\t" + "\t" + "svg.selectAll(\"circle\")" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + ".data(data)" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + ".enter()" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + ".append(\"circle\")" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + ".attr(\"cx\", function(d, i) {" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "var coords = projection([d.Lon, d.Lat]);" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "if (coords !== null) {" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "return projection([d.Lon, d.Lat])[0];" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "}" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "})" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + ".attr(\"cy\", function(d, i) {" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "var coords = projection([d.Lon, d.Lat]);" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "if (coords !== null) {" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "return projection([d.Lon, d.Lat])[1];" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "}" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "})" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + ".attr(\"r\", function(d, i) {" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "var coords = projection([d.Lon, d.Lat]);" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "if (coords !== null) {" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "return populationRadiusScale(d.TotPop);" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "}" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "})" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + ".style(\"fill\", \"red\")" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + ".style(\"opacity\", 0.75);" + "\n" + 
+				"\t" + "\t" + "}" + "\n" + 
+				"\t" + "});" + "\n");
+		}
+		
+	
+		return ("\t" + "var svg = d3.select(\"#" + constants.EXPORT_CONTAINER_ID + "\")" + "\n" +
+				"\t" + ".append(\"svg\")" + "\n" +
+				"\t" + ".attr(\"width\", " + us_map.width + ")" + "\n" +
+				"\t" + ".attr(\"height\", " + us_map.height + ");" + "\n\n" +
+				
+				"\t" + "var projection = d3.geo.albersUsa().translate(([" + us_map.width/2.0 + ", " + us_map.height/2.0 + "]));" + "\n" +
+				"\t" + "var path = d3.geo.path().projection(projection);" + "\n\n" + 
+				
+				// TODO: We need to export data/states.json with the finished application
+				"\t" + "d3.json(\"data/states.json\", function(error, json) {" + "\n" +
+				"\t" + "if(error) {" + "\n" +
+				"\t" + "\t" + "console.log(error)" + "\n" +
+				"\t" + "}" + "\n" + 
+				"\t" + "else {" + "\n" + 
+				"\t" + "\t" + "svg.selectAll(\"path\")" + "\n" + 
+				"\t" + "\t" + "\t" + ".data(json.features)" + "\n" + 
+				"\t" + "\t" + "\t" + ".enter()" + "\n" + 
+				"\t" + "\t" + "\t" + ".append(\"path\")" + "\n" + 
+				"\t" + "\t" + "\t" + ".attr(\"d\", path)" + "\n" + 
+				"\t" + "\t" + "\t" + ".attr(\"stroke\", \"white\")" + "\n" + 
+				"\t" + "\t" + "\t" + ".style(\"fill\", function(d) {" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + colorFunc + "\n" + 
+				"\t" + "\t" + "\t" + "})" + "\n" + 
+				"\t" + "\t" + "\t" + ".on(\"mouseover\", function(d){" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + (us_map.highlightingEnabled ? "d3.select(this).style(\"opacity\", 0.5);" : "") + "\n" + 				
+				"\t" + "\t" + "\t" + "})" + "\n" + 
+				"\t" + "\t" + "\t" + ".on(\"mouseout\", function(d){" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + (us_map.highlightingEnabled ? "d3.select(this).style(\"opacity\", 1.0);" : "") + "\n" + 				
+				"\t" + "\t" + "\t" + "})" + "\n" + 
+				"\t" + "\t" + "\t" + ".on(\"click\", function(d){" + "\n" + 
+				// For debugging
+				"\t" + "\t" + "\t" + "\t" + "console.log('Clicked ' + d.properties.name);" + "\n" +
+				// TODO: Use exported application's name for tracking events.
+				"\t" + "\t" + "\t" + "\t" + (us_map.UA.length === 0 ? "" : "_gaq.push(['_trackEvent', 'ExportedPrototype', 'click-'+d.properties.name]);") + "\n" + 				
+				"\t" + "\t" + "\t" + "});" + "\n" +
+				renderCircleString + "\n" + 
+				"\t" + "}" + "\n"
+				+ "})"
+				);
 	}
 };
-
-/*
-This is the general form of the unique namespace. To call a function in this, we call 
-us_map.functioncall(). To interact with the frame, we get it by calling $("#" + constants.MAP_PREVIEW_ID).contents();. 
-The svg element is created here when generating the map. To get it we use $("#" + constants.MAP_PREVIEW_ID).contents().find('body').find('svg');. 
-That returns the svg element and you can do whatever you want with it like appending new things.
-The benefit of doing things this way is that we decouple the different components from the main index page. 
-The only things tying these components to the page are a script import at the top of the index page and the actual function calls. 
-This makes it easy to add and remove components. We can even generate the html from these js files so they actually render a button 
-with the appropriate onclick events. Then we can pretty much render almost the entire index page in a script.
-
-I understand that this isn't exactly a "plugin" system in its truest form, but does allow for easy the easy addition and removal of components.
-*/

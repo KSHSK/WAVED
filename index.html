@@ -21,6 +21,8 @@
 				$("#map-analytics-button").attr("disabled", "disabled");
 				$("#map-highlight-checkbox").attr("disabled", "disabled");
     		});
+    		
+    		var widgets = [];
     	</script>
     </head>
     <body id="main-body">
@@ -35,10 +37,17 @@
     			<button onclick="load_state()">Load State</button></br>
 			<button id="export-demo-button">Export</button>
     			<input type="text" id="export-file-name" placeholder="Filename" />
-			<a id="export-file-link" href="" style="display: none"></a>
+				<a id="export-file-link" href="" style="display: none"></a>
     			<div class="widget-header">Widget Controls</div>
-    			<button id="map-generate-button" onclick="us_map.generate(); $(this).attr('disabled','disabled');">Add Map Widget</button><br>
-    			<button id="map-colorize-button" onclick="us_map.colorize()">Colorize Map</button><br>
+    			<button id="map-generate-button" onclick="us_map.render(); $(this).attr('disabled','disabled'); widgets.push(us_map);">Add Map Widget</button><br>
+    			<select id="color-sources">
+    				<option value="">Select color...</option>
+    				<option value="red">red</option>
+    				<option value="blue">blue</option>
+    				<option value="black">black</option>
+    				<option value="green">green</option>
+    				<option value="random">multicolor</option>
+    			</select><button id="map-colorize-button" onclick="color_map();">Colorize Map</button><br>
     			<select id="data-sources">
     				<option value="">Select data to bind...</option>
     				<option value="data/data_full.csv">data/data_full.csv</option>
@@ -52,7 +61,7 @@
     			<button id="map-analytics-button" onclick="add_analytics();">Add</button><br>
     			<span class="checkboxLabel">Highlighting: </span><input type="checkbox" id="map-highlight-checkbox" onclick="toggle_map_highlight();"/></br>
     			
-    			<button id="map-render-markers-button" onclick="us_map.circle_element.render()">Render city markers</button><br>
+    			<button id="map-render-markers-button" onclick="us_map.circle_element.render(us_map.data[0])">Render city markers</button><br>
     			
     			<div id="widget-selector-container">
     				<div class="widget-header">Widgets</div>
@@ -69,8 +78,9 @@
     		</div>
     		<div id="workspace-panel">
     			<div id="workspace-header">Map Panel</div>
-    			<iframe id="workspace-preview" seamless>
-    			</iframe>
+    			<!--<iframe id="workspace-preview" seamless>
+    			</iframe>-->
+    			<div id="workspace-preview"></div>
     		</div>
     	</div>
     	<script>
@@ -79,6 +89,16 @@
     		$(document).ready(function(){
     			$.extend(state, {"widgets":{}});
     		});
+    		
+    		function color_map() {
+    			var value = $("#color-sources").val();
+				
+				if (value) {
+    				us_map.colorize(value);	
+    			} else {
+    				alert("Pick a color from the list.");
+    			}
+    		}
     	
     		function log_svg(){
     			console.log(us_map.get_svg());
@@ -100,7 +120,6 @@
     				alert("No data selected");
     			}
     		}
-    		
     		
 			function add_analytics() {
 				var UA = $("#analytics-select").val();
@@ -135,11 +154,11 @@
             {
                 //console.log(saved_state);
     			// Clear the iFrame
-    			var map_preview_document = $("#" + constants.MAP_PREVIEW_ID).contents();
-				map_preview_document.find('head').empty();
-				map_preview_document.find('body').empty();
+    			$("#" + constants.MAP_PREVIEW_ID).empty();
     			
     			us_map.load_state(saved_state.widgets.us_map);
+    			
+    			$("#map-generate-button").attr("disabled", "disabled");
     		}
     		
     		function save_state(){
@@ -159,31 +178,54 @@
                 }
     		}
 
-		$("#widget-panel").on("click", "#export-demo-button", function() {
-		        export_html();
-		});
+			$("#widget-panel").on("click", "#export-demo-button", function() {
+		 	       export_html();
+			});
 
-		function export_html() {
-		    // Change this to use the app name once that is defined.
-		    var fileName = $("#export-file-name").val();
-		    if (fileName === undefined || fileName === "") {
-		        alert("Need a filename");
-		        return;
-		    }
-		    
-		    var html = $("#workspace-preview").contents().contents().html();
-         	    var octetBlob = new Blob([html], {
-		        'type' : 'application/octet-stream',
-                        'endings' : 'native'
-		    });
-		    var octetBlobURL = window.URL.createObjectURL(octetBlob);
-		    var exportLink = $("#export-file-link");
+			// BROKEN!
+			function export_html() {
+			    // Change this to use the app name once that is defined.
+			    var fileName = $("#export-file-name").val();
+			    if (fileName === undefined || fileName === "") {
+			        alert("Need a filename");
+			        return;
+			    }
+			    
+				var widgetJS = "";
+				for (var i = 0; i < widgets.length; i++) {
+					widgetJS += widgets[i].exportJS();
+				}
+			    
+			    var html = "<html>" +
+			    		   "<head>" + "\n" +
+			    		   		constants.D3_IMPORT + "\n" +
+			    		   		constants.JQUERY_IMPORT + "\n" +
+			    		   	 	constants.JQUERY_UI_IMPORT + "\n" +
+			    		   	 	constants.JQUERY_UI_STYLE_IMPORT + "\n" +
+			    		   	 	"<script type=\"text/javascript\">" + "\n" +
+			    		   	 		us_map.get_GA_header_script() + 
+			    		   	 	"<\/script>" + "\n" +
+			    		   "</head>" + "\n" +
+			    		   "<body id=\"" + constants.EXPORT_CONTAINER_ID + "\">" +  "\n" +
+			    		   "<script type=\"text/javascript\">" + "\n" +
+								widgetJS + 
+							"<\/script>" + "\n" +
+			    		   "</body>" + "\n" +
+			    		   "</html>";
+			    
+			    //var html = $("#workspace-preview").html();
+   	      	    var octetBlob = new Blob([html], {
+			        'type' : 'application/octet-stream',
+   	                     'endings' : 'native'
+			    });
+			    var octetBlobURL = window.URL.createObjectURL(octetBlob);
+			    var exportLink = $("#export-file-link");
 
-		    // Set and click a hidden link, so that this doesn't require another step by the user.
-		    exportLink.attr("href", octetBlobURL);
-		    exportLink.attr("download", fileName);
-		    exportLink[0].click();		    
- 		}
+			    // Set and click a hidden link, so that this doesn't require another step by the user.
+			    exportLink.attr("href", octetBlobURL);
+			    exportLink.attr("download", fileName);
+			    exportLink[0].click();		    
+ 			}
     		
     		function refresh_data_selector() {
 				// TODO: Make this grab the currently selected widget from widget-selector
