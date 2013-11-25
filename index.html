@@ -32,6 +32,7 @@
     	<div id="main-container">
     		<div id="widget-panel">
     			<div class="widget-header">Save/Load</div>
+    			<input type="text" id="application-name" placeholder="Application Name" />
     			<button onclick="save_state()">Save State</button>
     			<button onclick="load_state()">Load State</button></br>
 			<button id="export-demo-button">Export</button>
@@ -72,7 +73,8 @@
     			</div>
     			
     			<div class="widget-header">Debug</div>
-				<button onclick="log_svg()">Log SVG</button><br>
+				<button onclick="log_svg()">Log SVG</button><br />
+				<button onclick="log_state()">Log State</button><br />
     		</div>
     		<div id="workspace-panel">
     			<div id="workspace-header">Map Panel</div>
@@ -103,6 +105,11 @@
     			console.dir("Bound data: " + us_map.data.length);
     			console.dir(state);
     		}
+
+            function log_state()
+            {
+                console.log(state);
+            }
     		
     		function bind_csv(){
     			var value = $("#data-sources").val()
@@ -126,25 +133,26 @@
 			}
     		
     		function load_state(){
-    			// TODO: Actually get the state
-    			var saved_state = {
-    				"widgets": {
-    					"us_map": {
-    						"bound_data": ["data/data_full.csv"],
-    						"circle_element": {
-    							"data": "data/data_full.csv",
-    							"render": true
-    						},
-    						"render": true,
-    						"color": true,
-    						"height": 500,
-    						"width": 800,
-    						"highlightingEnabled": true,
-    						"UA": "UA-45743706-1"
-		   				}
-    				}
-    			};
+
+    			// Get application name from text box
+                var applicationName = $('#application-name').val();
+
+                // Require a name to continue
+                if (applicationName.length <= 0)
+                {
+                    alert("Loading application state requires an application name!");
+                }
+                // Load state from the database
+                else
+                {
+                    var request = {'application': applicationName};
+                    $.getJSON('php/getApplicationState', request, set_state);
+                }
+            }
     			
+            function set_state(saved_state)
+            {
+                //console.log(saved_state);
     			// Clear the iFrame
     			$("#" + constants.MAP_PREVIEW_ID).empty();
     			
@@ -154,8 +162,20 @@
     		}
     		
     		function save_state(){
-    			// Do something
-    			alert("This button doesn't do anything!");
+    			// Get application name from text box
+                var applicationName = $('#application-name').val();
+
+                // Require a name to continue
+                if (applicationName.length <= 0)
+                {
+                    alert("Saving application state requires an application name!");
+                }
+                // Load state from the database
+                else
+                {
+                    var request = {'application': applicationName, 'json': JSON.stringify(state)};
+                    $.post('php/setApplicationState', request);
+                }
     		}
 
 			$("#widget-panel").on("click", "#export-demo-button", function() {
