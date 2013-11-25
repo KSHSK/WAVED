@@ -39,7 +39,14 @@
 				<a id="export-file-link" href="" style="display: none"></a>
     			<div class="widget-header">Widget Controls</div>
     			<button id="map-generate-button" onclick="us_map.render(); $(this).attr('disabled','disabled'); widgets.push(us_map);">Add Map Widget</button><br>
-    			<button id="map-colorize-button" onclick="us_map.colorize()">Colorize Map</button><br>
+    			<select id="color-sources">
+    				<option value="">Select color...</option>
+    				<option value="red">red</option>
+    				<option value="blue">blue</option>
+    				<option value="black">black</option>
+    				<option value="green">green</option>
+    				<option value="random">multicolor</option>
+    			</select><button id="map-colorize-button" onclick="color_map();">Colorize Map</button><br>
     			<select id="data-sources">
     				<option value="">Select data to bind...</option>
     				<option value="data/data_full.csv">data/data_full.csv</option>
@@ -80,6 +87,16 @@
     		$(document).ready(function(){
     			$.extend(state, {"widgets":{}});
     		});
+    		
+    		function color_map() {
+    			var value = $("#color-sources").val();
+				
+				if (value) {
+    				us_map.colorize(value);	
+    			} else {
+    				alert("Pick a color from the list.");
+    			}
+    		}
     	
     		function log_svg(){
     			console.log(us_map.get_svg());

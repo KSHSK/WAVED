@@ -8,6 +8,7 @@ var us_map = {
 	width: 0,
 	height: 0,
 	highlightingEnabled: false,
+	color: "black",
 	_gaq: [],
 	
 	/* Generate the map of the US */
@@ -82,19 +83,25 @@ var us_map = {
 	},
 	
 	/* Randomly colors each state */
-	colorize: function() {
+	colorize: function(color) {
+	
+		// Update the model and state.
+		us_map.color = color;
+		state.widgets.us_map["color"] = color;
+		
 		us_map.svg.selectAll("path")
 			.style("fill", function(d) {
-				var letters = '0123456789ABCDEF'.split('');
-			    var color = '#';
-			    for (var i = 0; i < 6; i++) {
-			        color += letters[Math.round(Math.random() * 15)];
+				if (us_map.color === "random") {
+					var letters = '0123456789ABCDEF'.split('');
+					var color = '#';
+					for (var i = 0; i < 6; i++) {
+						color += letters[Math.round(Math.random() * 15)];
+					}
+					return color;
+			    } else {
+			    	return us_map.color;
 			    }
-    			
-    			return color;
 			});
-		
-		state.widgets.us_map["color"] = true;
 	},
 	
 	bind_data: function(filepath) {
@@ -252,6 +259,19 @@ var us_map = {
 	},
 	
 	exportJS: function() {
+	
+		var colorFunc;
+		if (us_map.color === "random") {
+			colorFunc = "var letters = '0123456789ABCDEF'.split('');" + "\n" +
+						"\t\t\t\t" + "var color = '#';"  + "\n" +
+						"\t\t\t\t" + "for (var i = 0; i < 6; i++) {" + "\n" +
+						"\t\t\t\t" + "\t" + "color += letters[Math.round(Math.random() * 15)];" + "\n" +
+						"\t\t\t\t" + "}" + "\n" +
+						"\t\t\t\t" + "return color;" 
+		} else {
+			colorFunc = "return \"" + us_map.color + "\";";
+		}
+	
 		return ("var svg = d3.select(\"#" + constants.EXPORT_CONTAINER_ID + "\")" + "\n" +
 				"\t" + 	".append(\"svg\")" + "\n" +
 				"\t" + 	".attr(\"width\", " + us_map.width + ")" + "\n" +
@@ -260,7 +280,7 @@ var us_map = {
 				"var projection = d3.geo.albersUsa().translate(([" + us_map.width/2.0 + ", " + us_map.height/2.0 + "]));" + "\n" +
 				"var path = d3.geo.path().projection(projection);" + "\n\n" + 
 				
-				// TODO: We need to expor data/states.json with the finished application
+				// TODO: We need to export data/states.json with the finished application
 				"\t" + "d3.json(\"data/states.json\", function(error, json) {" + "\n" +
 				"\t" + "if(error) {" + "\n" +
 				"\t" + "\t" + "console.log(error)" + "\n" +
@@ -272,6 +292,9 @@ var us_map = {
 				"\t" + "\t" + "\t" + ".append(\"path\")" + "\n" + 
 				"\t" + "\t" + "\t" + ".attr(\"d\", path)" + "\n" + 
 				"\t" + "\t" + "\t" + ".attr(\"stroke\", \"white\")" + "\n" + 
+				"\t" + "\t" + "\t" + ".style(\"fill\", function(d) {" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + colorFunc + "\n" + 
+				"\t" + "\t" + "\t" + "})" + "\n" + 
 				"\t" + "\t" + "\t" + ".on(\"mouseover\", function(d){" + "\n" + 
 				"\t" + "\t" + "\t" + "\t" + (us_map.highlightingEnabled ? "d3.select(this).style(\"opacity\", 0.5);" : "") + "\n" + 				
 				"\t" + "\t" + "\t" + "})" + "\n" + 
@@ -282,7 +305,6 @@ var us_map = {
 				"})"
 				
 				// TODO: Add Google Analytics, as mentioned above, need to add script to header in addition to the mouseclick event for tracking
-				// TODO: Color
 				// TODO: Markers
 				
 				);
