@@ -8,6 +8,7 @@ var us_map = {
 	width: 0,
 	height: 0,
 	highlightingEnabled: false,
+	renderCircles: false,
 	color: "black",
 	_gaq: [],
 	UA: "",
@@ -174,6 +175,9 @@ var us_map = {
 		// Assumes we know that the data file is correct and has lat, long and such
 		// Has a hard-coded filter
 		render: function(dataJSON) {
+		
+			us_map.renderCircles = true;
+			
 			if(state.widgets.us_map.circle_element == null) {
 				state.widgets.us_map.circle_element = {};
 			}
@@ -276,14 +280,55 @@ var us_map = {
 		} else {
 			colorFunc = "return \"" + us_map.color + "\";";
 		}
-	
-		return ("var svg = d3.select(\"#" + constants.EXPORT_CONTAINER_ID + "\")" + "\n" +
-				"\t" + 	".append(\"svg\")" + "\n" +
-				"\t" + 	".attr(\"width\", " + us_map.width + ")" + "\n" +
-				"\t" + 	".attr(\"height\", " + us_map.height + ");" + "\n\n" +
+		
+		// Hack until how we're packaging data with the download is decided
+		var renderCircleString = "";
+		if (us_map.renderCircles) {
+			renderCircleString = 
+				// Filepath should be selected from the map's state. 				
+				("\t" + "d3.csv(\"data/data_full.csv\", function(error, data) {" + "\n" + 
+				"\t" + "\t" + "if (error) {" + "\n" + 
+				"\t" + "\t" + "\t" + "console.log(error)" + "\n" + 
+				"\t" + "\t" + "} else {" + "\n" + 
+						// This will eventually be a user defined scale.
+				"\t" + "\t" + "\t" + "var populationRadiusScale = d3.scale.linear().domain([1000,500000]).range([2,10]).clamp(true);" + "\n" + 
 				
-				"var projection = d3.geo.albersUsa().translate(([" + us_map.width/2.0 + ", " + us_map.height/2.0 + "]));" + "\n" +
-				"var path = d3.geo.path().projection(projection);" + "\n\n" + 
+				"\t" + "\t" + "\t" + "svg.selectAll(\"circle\")" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + ".data(data)" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + ".enter()" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + ".append(\"circle\")" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + ".attr(\"cx\", function(d, i) {" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "var coords = projection([d.Lon, d.Lat]);" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "if (coords !== null) {" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "return projection([d.Lon, d.Lat])[0];" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "}" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "})" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + ".attr(\"cy\", function(d, i) {" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "var coords = projection([d.Lon, d.Lat]);" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "if (coords !== null) {" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "return projection([d.Lon, d.Lat])[1];" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "}" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "})" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + ".attr(\"r\", function(d, i) {" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "var coords = projection([d.Lon, d.Lat]);" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "if (coords !== null) {" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "return populationRadiusScale(d.TotPop);" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "\t" + "}" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + "})" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + ".style(\"fill\", \"red\")" + "\n" + 
+				"\t" + "\t" + "\t" + "\t" + ".style(\"opacity\", 0.75);" + "\n" + 
+				"\t" + "\t" + "}" + "\n" + 
+				"\t" + "});" + "\n");
+		}
+		
+	
+		return ("\t" + "var svg = d3.select(\"#" + constants.EXPORT_CONTAINER_ID + "\")" + "\n" +
+				"\t" + ".append(\"svg\")" + "\n" +
+				"\t" + ".attr(\"width\", " + us_map.width + ")" + "\n" +
+				"\t" + ".attr(\"height\", " + us_map.height + ");" + "\n\n" +
+				
+				"\t" + "var projection = d3.geo.albersUsa().translate(([" + us_map.width/2.0 + ", " + us_map.height/2.0 + "]));" + "\n" +
+				"\t" + "var path = d3.geo.path().projection(projection);" + "\n\n" + 
 				
 				// TODO: We need to export data/states.json with the finished application
 				"\t" + "d3.json(\"data/states.json\", function(error, json) {" + "\n" +
@@ -311,13 +356,10 @@ var us_map = {
 				"\t" + "\t" + "\t" + "\t" + "console.log('Clicked ' + d.properties.name);" + "\n" +
 				// TODO: Use exported application's name for tracking events.
 				"\t" + "\t" + "\t" + "\t" + (us_map.UA.length === 0 ? "" : "_gaq.push(['_trackEvent', 'ExportedPrototype', 'click-'+d.properties.name]);") + "\n" + 				
-				"\t" + "\t" + "\t" + "});" + "\n" + 
-				"\t" + "}" + "\n" + 
-				"})"
-				
-				// TODO: Add Google Analytics, as mentioned above, need to add script to header in addition to the mouseclick event for tracking
-				// TODO: Markers
-				
+				"\t" + "\t" + "\t" + "});" + "\n" +
+				renderCircleString + "\n" + 
+				"\t" + "}" + "\n"
+				+ "})"
 				);
 	}
 };
