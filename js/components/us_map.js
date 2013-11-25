@@ -310,7 +310,7 @@ var us_map = {
 				// For debugging
 				"\t" + "\t" + "\t" + "\t" + "console.log('Clicked ' + d.properties.name);" + "\n" +
 				// TODO: Use exported application's name for tracking events.
-				"\t" + "\t" + "\t" + "\t" + "_gaq.push(['_trackEvent', 'ExportedPrototype', 'click-'+d.properties.name]);" + "\n" + 				
+				"\t" + "\t" + "\t" + "\t" + (us_map.UA.length === 0 ? "" : "_gaq.push(['_trackEvent', 'ExportedPrototype', 'click-'+d.properties.name]);") + "\n" + 				
 				"\t" + "\t" + "\t" + "});" + "\n" + 
 				"\t" + "}" + "\n" + 
 				"})"
