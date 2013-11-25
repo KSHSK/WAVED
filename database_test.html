@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>WAVED (Prototype)</title>
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+    	<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+		<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    	<link rel="stylesheet" type="text/css" href="style/style.css">
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    	
+    </head>
+    <body>
+    	<div id="header-container">
+    		<img id="header-logo" src="images/WAVED.png" onDragStart="return false;" />
+    	</div>
+    	<div>
+            <div id="controls">
+                <script>
+                    // Demonstrate getting the application
+                    // state using AJAX, JQuery getJSON
+                    function exampleGetState()
+                    {
+                    
+                        app = $('#application').val();
+                        request = {'application': app};
+                        $('#results').empty();
+                        $.getJSON('php/getApplicationState', request, function (data)
+                            {
+                                $.each(data, function (key, val)
+                                    {
+                                        $('#results').append("<div>" + app + "[" + key + "]: <input disabled='true' type='text' value='" + val + "' />");
+                                    }
+                                );
+                            }
+                        );
+                    }
+
+                    // Demonstrate setting the application
+                    // state using AJAX, JQuery post
+                    function exampleSetState()
+                    {
+                        app = $('#application').val();
+                        json = {
+                            "Member1": "Keith J. Horrocks",
+                            "Member2": "Sean Bluestein",
+                            "Member3": "Hannah Pinkos",
+                            "Member4": "Steve Nguyen",
+                            "Member5": "Kristian Calhoun",
+                            "Date": new Date().getTime()
+                        };
+
+                        request = {'application': app, 'json': JSON.stringify(json)};
+                        $('#results').empty();
+                        $.post('php/setApplicationState', request, exampleGetState());
+                    }
+
+
+                </script>
+                Application: <input name='application' id='application' type='text' />
+                <input type='button' value='Get Application State' onclick='exampleGetState()' />
+                <input type='button' value='Set Application State' onclick='exampleSetState()' />
+            </div>
+            <div id="results">
+            </div>
+    	</div>
+    </body>
+</html>
+
