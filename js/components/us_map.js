@@ -216,13 +216,8 @@ var us_map = {
 				.style("fill", "red")
 				.style("opacity", 0.75);
 				
-			// Since we're hard coding things now, we just need to know that this function
-			// was called.
 			state.widgets.us_map.circle_element.data = dataJSON.filepath;
 			state.widgets.us_map.circle_element.render = true;
-			
-			// This is how it should be in the future
-			//state.widgets.us_map.circle_element.data = data;
 		}
 	},
 	
