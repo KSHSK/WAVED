@@ -48,6 +48,14 @@
     				<option value="green">green</option>
     				<option value="random">multicolor</option>
     			</select><button id="map-colorize-button" onclick="color_map();">Colorize Map</button><br>
+			<br />
+			<form action="php/upload_data_file.php" method="post" id="dataFileUploadForm" enctype="multipart/form-data">
+			  <label for="file" class="dataFileLabel">Upload Data File:</label>
+			  <input type="file" name="file" id="dataFileUpload"><br>
+			</form>
+			<button id="submitDataFileUpload">Upload Data</button>
+			<br />
+			<br />
     			<select id="data-sources">
     				<option value="">Select data to bind...</option>
     				<option value="data/data_full.csv">data/data_full.csv</option>
@@ -177,6 +185,37 @@
                     $.post('php/setApplicationState', request);
                 }
     		}
+
+		$("#widget-panel").on("click", "#submitDataFileUpload", function(event) {
+			var form = new FormData();
+			var file = $("#dataFileUpload")[0].files[0];
+			if (file === undefined) {
+				alert("Cannot upload blank file.");
+				return;
+			}
+
+			form.append("file", file);
+
+			$.ajax({
+				type: "POST",
+				url: "php/upload_data_file.php",
+				data: form,
+				processData: false,
+				contentType: false,
+				success: function(data) {
+					var dataObj = JSON.parse(data);
+					if (!dataObj.success) {
+					      alert(dataObj.errorMessage);
+					      return;
+					}
+
+					var dataSelect = $("#data-sources");
+					var newFileOption = $("<option/>").val(dataObj.filePath).text(dataObj.filePath);
+					dataSelect.append(newFileOption);
+				}
+
+			});
+		});
 
 		$("#widget-panel").on("click", "#export-demo-button", function() {
 			export_app();

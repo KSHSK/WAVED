@@ -159,6 +159,6 @@ html, body {
 	width: 115px;
 }
 
-.checkboxLabel {
+.checkboxLabel, .dataFileLabel {
 	font-size: 12px;
 }
