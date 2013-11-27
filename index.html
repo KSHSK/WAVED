@@ -178,55 +178,101 @@
                 }
     		}
 
-			$("#widget-panel").on("click", "#export-demo-button", function() {
-		 	       export_html();
-			});
+		$("#widget-panel").on("click", "#export-demo-button", function() {
+			export_app();
+		});
 
-			// BROKEN!
-			function export_html() {
-			    // Change this to use the app name once that is defined.
-			    var fileName = $("#export-file-name").val();
-			    if (fileName === undefined || fileName === "") {
-			        alert("Need a filename");
-			        return;
-			    }
+		function export_app() {
+			// Change this to use the app name once that is defined.
+			var appName = $("#export-file-name").val();
+			if (appName === undefined || appName === "") {
+				alert("Need an app name");
+				return;
+			}
 			    
-				var widgetJS = "";
-				for (var i = 0; i < widgets.length; i++) {
-					widgetJS += widgets[i].exportJS();
+			var html = getGeneratedHtml();
+			var dataFiles = getDataFiles();
+			generateZipfile(appName, dataFiles, html);
+
+/*
+			var exportLink = $("#export-file-link");
+
+			// Set and click a hidden link, so that this doesn't require another step by the user.
+			exportLink.attr("href", octetBlobURL);
+			exportLink.attr("download", fileName);
+			exportLink[0].click();		    */
+ 		}
+
+                function getGeneratedHtml() {
+                                var widgetJS = "";
+                                for (var i = 0; i < widgets.length; i++) {
+                                        widgetJS += widgets[i].exportJS();
+                                }
+
+                                var html = "<html>" +
+                                           "<head>" + "\n" +
+                                                        constants.D3_IMPORT + "\n" +
+                                                        constants.JQUERY_IMPORT + "\n" +
+                                                        constants.JQUERY_UI_IMPORT + "\n" +
+                                                        constants.JQUERY_UI_STYLE_IMPORT + "\n" +
+                                                        "<script type=\"text/javascript\">" + "\n" +
+                                                                us_map.get_GA_header_script() +
+                                                        "<\/script>" + "\n" +
+                                           "</head>" + "\n" +
+                                           "<body id=\"" + constants.EXPORT_CONTAINER_ID + "\">" +  "\n" +
+                                           "<script type=\"text/javascript\">" + "\n" +
+                                                                widgetJS +
+                                                        "<\/script>" + "\n" +
+                                           "</body>" + "\n" +
+                                           "</html>";
+                                 return html;
+                }
+  
+		function getDataFiles() {
+			var filenames = {};
+			for (var i = 0; i < widgets.length; i++) {
+				var widget = widgets[i];
+				for (var j = 0; j < widget.data.length; j++) {
+					filenames[widget.data[j].filepath] = true;
 				}
-			    
-			    var html = "<html>" +
-			    		   "<head>" + "\n" +
-			    		   		constants.D3_IMPORT + "\n" +
-			    		   		constants.JQUERY_IMPORT + "\n" +
-			    		   	 	constants.JQUERY_UI_IMPORT + "\n" +
-			    		   	 	constants.JQUERY_UI_STYLE_IMPORT + "\n" +
-			    		   	 	"<script type=\"text/javascript\">" + "\n" +
-			    		   	 		us_map.get_GA_header_script() + 
-			    		   	 	"<\/script>" + "\n" +
-			    		   "</head>" + "\n" +
-			    		   "<body id=\"" + constants.EXPORT_CONTAINER_ID + "\">" +  "\n" +
-			    		   "<script type=\"text/javascript\">" + "\n" +
-								widgetJS + 
-							"<\/script>" + "\n" +
-			    		   "</body>" + "\n" +
-			    		   "</html>";
-			    
-			    //var html = $("#workspace-preview").html();
-   	      	    var octetBlob = new Blob([html], {
-			        'type' : 'application/octet-stream',
-   	                     'endings' : 'native'
-			    });
-			    var octetBlobURL = window.URL.createObjectURL(octetBlob);
-			    var exportLink = $("#export-file-link");
+			}
 
-			    // Set and click a hidden link, so that this doesn't require another step by the user.
-			    exportLink.attr("href", octetBlobURL);
-			    exportLink.attr("download", fileName);
-			    exportLink[0].click();		    
- 			}
-    		
+			// TODO: Don't hardcode this last filename. It should be included in the widget somewhere.
+			filenames['data/states.json'] = true;
+			return Object.keys(filenames);
+		}
+
+		function generateZipfile(appName, dataFiles, html) {
+                        $.ajax({
+                                type: "POST",
+                                url: "php/create_zip.php",
+                                data: {
+                                        demo: appName,
+                                        data_files: dataFiles,
+                                        html: html
+                                },
+                                success: function(data) {
+                                        downloadGeneratedZipfile(data, appName + ".zip");
+                                }
+			});
+		}
+
+		function downloadGeneratedZipfile(data, fileName) {
+			if (data !== "success") {
+				alert("Could not download zip file.");
+				return;
+			}
+
+			var exportLink = $("#export-file-link");
+
+			// Set and click a hidden link, so that this doesn't require another step by the user.
+			exportLink.attr("href", "php/download_zip.php?fileName=" + fileName);
+			exportLink.attr("download", fileName);
+			exportLink[0].click();
+		}
+
+
+
     		function refresh_data_selector() {
 				// TODO: Make this grab the currently selected widget from widget-selector
 				// and populate the data-selector with the file names of its bound data.    		
