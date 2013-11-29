@@ -100,9 +100,10 @@ var us_map = {
                 if (us_map.color === "random") {
                     var letters = '0123456789ABCDEF'.split('');
                     var color = '#';
-                    for (var i = 0; i < 6; i++) {
+                    for (var i = 0; i < 4; i++) {
                         color += letters[Math.round(Math.random() * 15)];
                     }
+                    color = color.substr(0, 3) + "DD" + color.substr(3);
                     return color;
                 } else {
                     return us_map.color;
