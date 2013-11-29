@@ -39,7 +39,7 @@
     			<input type="text" id="export-file-name" placeholder="Filename" />
 				<a id="export-file-link" href="" style="display: none"></a>
     			<div class="widget-header">Widget Controls</div>
-    			<button id="map-generate-button" onclick="us_map.render(); $(this).attr('disabled','disabled'); widgets.push(us_map);">Add Map Widget</button><br>
+                <button id="map-generate-button" onclick="us_map.render();">Add Map Widget</button><br>
     			<select id="color-sources">
     				<option value="">Select color...</option>
     				<option value="red">red</option>
@@ -161,12 +161,15 @@
             function set_state(saved_state)
             {
                 //console.log(saved_state);
-    			// Clear the iFrame
+                // Clear the iFrame, widgets, widget selector, and update
+                // data list
     			$("#" + constants.MAP_PREVIEW_ID).empty();
+                $("#widget-selector").empty();
+                widgets.length = 0;
+                refresh_data_selector();
     			
     			us_map.load_state(saved_state.widgets.us_map);
     			
-    			$("#map-generate-button").attr("disabled", "disabled");
     		}
     		
     		function save_state(){

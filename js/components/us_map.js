@@ -16,8 +16,10 @@ var us_map = {
 	/* Generate the map of the US */
 	render: function() {
 		// This is the jQuery way of adding attributes to a JSON object
+        widgets.push(this);
 		$.extend(state.widgets, {"us_map":{}});
 		
+        $("#map-generate-button").attr("disabled", "disabled");
 		$("#map-colorize-button").removeAttr("disabled");
 		$("#map-bind-data-button").removeAttr("disabled");
 		$("#map-render-markers-button").removeAttr("disabled");
