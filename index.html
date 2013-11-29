@@ -1,332 +1,339 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>WAVED (Prototype)</title>
-        <link rel="shortcut icon" href="/favicon.ico" />
-        <script src="http://d3js.org/d3.v3.min.js"></script>
-    	<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
-		<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-    	<link rel="stylesheet" type="text/css" href="style/style.css">
-		<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-    	
-    	<script type="text/javascript" src="js/components/constants.js"></script>
-    	<script type="text/javascript" src="js/components/us_map.js"></script>
-    	
-    	<script type="text/javascript">
-    		$(document).ready(function(){
-				$("#map-colorize-button").attr("disabled", "disabled");
-    			$("#map-bind-data-button").attr("disabled", "disabled");
-				$("#map-render-markers-button").attr("disabled", "disabled");
-				$("#map-analytics-button").attr("disabled", "disabled");
-				$("#map-highlight-checkbox").attr("disabled", "disabled");
-    		});
-    		
-    		var widgets = [];
-    	</script>
-    </head>
-    <body id="main-body">
-    	<div id="header-container">
-    		<a href="http://kshsk.github.io/WAVED/" target="_blank"><img id="header-logo" src="images/WAVED.png" ondragstart="return false;" /></a>
-    	</div>
-    	<div id="main-container">
-    		<div id="widget-panel">
-    			<div class="widget-header">Save/Load</div>
-    			<input type="text" id="application-name" placeholder="Application Name" />
-    			<button onclick="save_state()">Save State</button>
-    			<button onclick="load_state()">Load State</button></br>
+<head>
+<meta charset="utf-8">
+<title>WAVED (Prototype)</title>
+<link rel="shortcut icon" href="/favicon.ico" />
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<link rel="stylesheet" type="text/css" href="style/style.css">
+<link rel="stylesheet"
+	href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+	
+<script type="text/javascript" src="js/components/constants.js"></script>
+<script type="text/javascript" src="js/components/us_map.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#map-colorize-button").attr("disabled", "disabled");
+        $("#map-bind-data-button").attr("disabled", "disabled");
+        $("#map-render-markers-button").attr("disabled", "disabled");
+        $("#map-analytics-button").attr("disabled", "disabled");
+        $("#map-highlight-checkbox").attr("disabled", "disabled");
+    });
+
+    var widgets = [];
+</script>
+</head>
+<body id="main-body">
+	<div id="header-container">
+		<a href="http://kshsk.github.io/WAVED/" target="_blank"><img
+			id="header-logo" src="images/WAVED.png" ondragstart="return false;" /></a>
+	</div>
+	<div id="main-container">
+		<div id="widget-panel">
+			<div class="widget-header">Save/Load</div>
+			<input type="text" id="application-name"
+				placeholder="Application Name" />
+			<button onclick="save_state()">Save State</button>
+			<button onclick="load_state()">Load State</button>
+			</br>
 			<button id="export-demo-button">Export</button>
-    			<input type="text" id="export-file-name" placeholder="Filename" />
-				<a id="export-file-link" href="" style="display: none"></a>
-    			<div class="widget-header">Widget Controls</div>
-                <button id="map-generate-button" onclick="us_map.render();">Add Map Widget</button><br>
-    			<select id="color-sources">
-    				<option value="">Select color...</option>
-    				<option value="red">red</option>
-    				<option value="blue">blue</option>
-    				<option value="black">black</option>
-    				<option value="green">green</option>
-    				<option value="random">multicolor</option>
-    			</select><button id="map-colorize-button" onclick="color_map();">Colorize Map</button><br>
-			<br />
-			<form action="php/upload_data_file.php" method="post" id="dataFileUploadForm" enctype="multipart/form-data">
-			  <label for="file" class="dataFileLabel">Upload Data File:</label>
-			  <input type="file" name="file" id="dataFileUpload"><br>
+			<input type="text" id="export-file-name" placeholder="Filename" /> <a
+				id="export-file-link" href="" style="display: none"></a>
+			<div class="widget-header">Widget Controls</div>
+			<button id="map-generate-button" onclick="us_map.render();">Add
+				Map Widget</button>
+			<br> <select id="color-sources">
+				<option value="">Select color...</option>
+				<option value="red">red</option>
+				<option value="blue">blue</option>
+				<option value="black">black</option>
+				<option value="green">green</option>
+				<option value="random">multicolor</option>
+			</select>
+			<button id="map-colorize-button" onclick="color_map();">Colorize
+				Map</button>
+			<br> <br />
+			<form action="php/upload_data_file.php" method="post"
+				id="dataFileUploadForm" enctype="multipart/form-data">
+				<label for="file" class="dataFileLabel">Upload Data File:</label> <input
+					type="file" name="file" id="dataFileUpload"><br>
 			</form>
 			<button id="submitDataFileUpload">Upload Data</button>
+			<br /> <br /> <select id="data-sources">
+				<option value="">Select data to bind...</option>
+				<option value="data/data_full.csv">data/data_full.csv</option>
+			</select>
+			<button id="map-bind-data-button"
+				onclick="bind_csv(); setTimeout(refresh_data_selector, 250);">Bind
+				data</button>
+			<br> <select id="analytics-select">
+				<option value="">Enter Google Analytics UA</option>
+				<option value="UA-45743706-1">UA-45743706-1</option>
+			</select>
+			<button id="map-analytics-button" onclick="add_analytics();">Add</button>
+			<br> <span class="checkboxLabel">Highlighting: </span><input
+				type="checkbox" id="map-highlight-checkbox"
+				onclick="toggle_map_highlight();" /></br>
+
+			<button id="map-render-markers-button"
+				onclick="us_map.circle_element.render(us_map.data[0])">Render
+				city markers</button>
+			<br>
+
+			<div id="widget-selector-container">
+				<div class="widget-header">Widgets</div>
+				<select id="widget-selector" size="5"></select>
+			</div>
+			<div id="data-selector-container">
+				<div class="widget-header">Data</div>
+				<select id="data-selector" size="5"></select>
+			</div>
+
+			<div class="widget-header">Debug</div>
+			<button onclick="log_svg()">Log SVG</button>
 			<br />
+			<button onclick="log_state()">Log State</button>
 			<br />
-    			<select id="data-sources">
-    				<option value="">Select data to bind...</option>
-    				<option value="data/data_full.csv">data/data_full.csv</option>
-    			</select>
-    			<button id="map-bind-data-button" onclick="bind_csv(); setTimeout(refresh_data_selector, 250);">Bind data</button><br>
-    			
-    			<select id="analytics-select">
-    				<option value="">Enter Google Analytics UA</option>
-    				<option value="UA-45743706-1">UA-45743706-1</option>
-    			</select>
-    			<button id="map-analytics-button" onclick="add_analytics();">Add</button><br>
-    			<span class="checkboxLabel">Highlighting: </span><input type="checkbox" id="map-highlight-checkbox" onclick="toggle_map_highlight();"/></br>
-    			
-    			<button id="map-render-markers-button" onclick="us_map.circle_element.render(us_map.data[0])">Render city markers</button><br>
-    			
-    			<div id="widget-selector-container">
-    				<div class="widget-header">Widgets</div>
-					<select id="widget-selector" size="5"></select>
-    			</div>
-    			<div id="data-selector-container">
-    				<div class="widget-header">Data</div>
-					<select id="data-selector" size="5"></select>
-    			</div>
-    			
-    			<div class="widget-header">Debug</div>
-				<button onclick="log_svg()">Log SVG</button><br />
-				<button onclick="log_state()">Log State</button><br />
-    		</div>
-    		<div id="workspace-panel">
-    			<div id="workspace-header">Map Panel</div>
-    			<!--<iframe id="workspace-preview" seamless>
-    			</iframe>-->
-    			<div id="workspace-preview"></div>
-    		</div>
-    	</div>
-    	<script>
-    		var state = {};
-    		
-    		$(document).ready(function(){
-    			$.extend(state, {"widgets":{}});
-    		});
-    		
-    		function color_map() {
-    			var value = $("#color-sources").val();
-				
-				if (value) {
-    				us_map.colorize(value);	
-    			} else {
-    				alert("Pick a color from the list.");
-    			}
-    		}
-    	
-    		function log_svg(){
-    			console.log(us_map.get_svg());
-    			console.dir("Bound data: " + us_map.data.length);
-    			console.dir(state);
-    		}
+		</div>
+		<div id="workspace-panel">
+			<div id="workspace-header">Map Panel</div>
+			<!--<iframe id="workspace-preview" seamless>
+                </iframe>-->
+			<div id="workspace-preview"></div>
+		</div>
+	</div>
+	<script>
+        var state = {};
 
-            function log_state()
-            {
-                console.log(state);
+        $(document).ready(function() {
+            $.extend(state, {
+                "widgets" : {}
+            });
+        });
+
+        function color_map() {
+            var value = $("#color-sources").val();
+
+            if (value) {
+                us_map.colorize(value);
             }
-    		
-    		function bind_csv(){
-    			var value = $("#data-sources").val()
-    			if (value !== "") {
-    				us_map.bind_data(value);
-    				alert("Data bound!");
-    			} else {
-    				alert("No data selected");
-    			}
-    		}
-    		
-			function add_analytics() {
-				var UA = $("#analytics-select").val();
-				
-				if (UA !== "") {
-    				us_map.add_analytics(UA);
-    				alert("Analytics Added!");
-    			} else {
-    				alert("No UA selected");
-    			}
-			}
-    		
-    		function load_state(){
+            else {
+                alert("Pick a color from the list.");
+            }
+        }
 
-    			// Get application name from text box
-                var applicationName = $('#application-name').val();
+        function log_svg() {
+            console.log(us_map.get_svg());
+            console.dir("Bound data: " + us_map.data.length);
+            console.dir(state);
+        }
 
-                // Require a name to continue
-                if (applicationName.length <= 0)
-                {
-                    alert("Loading application state requires an application name!");
+        function log_state() {
+            console.log(state);
+        }
+
+        function bind_csv() {
+            var value = $("#data-sources").val()
+            if (value !== "") {
+                us_map.bind_data(value);
+                alert("Data bound!");
+            }
+            else {
+                alert("No data selected");
+            }
+        }
+
+        function add_analytics() {
+            var UA = $("#analytics-select").val();
+
+            if (UA !== "") {
+                us_map.add_analytics(UA);
+                alert("Analytics Added!");
+            }
+            else {
+                alert("No UA selected");
+            }
+        }
+
+        function load_state() {
+
+            // Get application name from text box
+            var applicationName = $('#application-name').val();
+
+            // Require a name to continue
+            if (applicationName.length <= 0) {
+                alert("Loading application state requires an application name!");
+            }
+            // Load state from the database
+            else {
+                var request = {
+                    'application' : applicationName
+                };
+                $.getJSON('php/getApplicationState', request, set_state);
+            }
+        }
+
+        function set_state(saved_state) {
+            //console.log(saved_state);
+            // Clear the iFrame, widgets, widget selector, and update
+            // data list
+            $("#" + constants.MAP_PREVIEW_ID).empty();
+            $("#widget-selector").empty();
+            widgets.length = 0;
+            refresh_data_selector();
+
+            us_map.load_state(saved_state.widgets.us_map);
+
+        }
+
+        function save_state() {
+            // Get application name from text box
+            var applicationName = $('#application-name').val();
+
+            // Require a name to continue
+            if (applicationName.length <= 0) {
+                alert("Saving application state requires an application name!");
+            }
+            // Load state from the database
+            else {
+                var request = {
+                    'application' : applicationName,
+                    'json' : JSON.stringify(state)
+                };
+                $.post('php/setApplicationState', request);
+            }
+        }
+
+        $("#widget-panel").on("click", "#submitDataFileUpload", function(event) {
+            var form = new FormData();
+            var file = $("#dataFileUpload")[0].files[0];
+            if (file === undefined) {
+                alert("Cannot upload blank file.");
+                return;
+            }
+
+            form.append("file", file);
+
+            $.ajax({
+                type : "POST",
+                url : "php/upload_data_file.php",
+                data : form,
+                processData : false,
+                contentType : false,
+                success : function(data) {
+                    var dataObj = JSON.parse(data);
+                    if (!dataObj.success) {
+                        alert(dataObj.errorMessage);
+                        return;
+                    }
+
+                    var dataSelect = $("#data-sources");
+                    var newFileOption = $("<option/>").val(dataObj.filePath).text(dataObj.filePath);
+                    dataSelect.append(newFileOption);
                 }
-                // Load state from the database
-                else
-                {
-                    var request = {'application': applicationName};
-                    $.getJSON('php/getApplicationState', request, set_state);
+
+            });
+        });
+
+        $("#widget-panel").on("click", "#export-demo-button", function() {
+            export_app();
+        });
+
+        function export_app() {
+            // Change this to use the app name once that is defined.
+            var appName = $("#export-file-name").val();
+            if (appName === undefined || appName === "") {
+                alert("Need an app name");
+                return;
+            }
+
+            var html = getGeneratedHtml();
+            var dataFiles = getDataFiles();
+            generateZipfile(appName, dataFiles, html);
+
+            /*
+            var exportLink = $("#export-file-link");
+            
+            // Set and click a hidden link, so that this doesn't require another step by the user.
+            exportLink.attr("href", octetBlobURL);
+            exportLink.attr("download", fileName);
+            exportLink[0].click();            */
+        }
+
+        function getGeneratedHtml() {
+            var widgetJS = "";
+            for (var i = 0; i < widgets.length; i++) {
+                widgetJS += widgets[i].exportJS();
+            }
+
+            var html = "<html>" + "<head>" + "\n" + constants.D3_IMPORT + "\n" + constants.JQUERY_IMPORT + "\n"
+                    + constants.JQUERY_UI_IMPORT + "\n" + constants.JQUERY_UI_STYLE_IMPORT + "\n"
+                    + "<script type=\"text/javascript\">" + "\n" + us_map.get_GA_header_script() + "<\/script>" + "\n"
+                    + "</head>" + "\n" + "<body id=\"" + constants.EXPORT_CONTAINER_ID + "\">" + "\n"
+                    + "<script type=\"text/javascript\">" + "\n" + widgetJS + "<\/script>" + "\n" + "</body>" + "\n"
+                    + "</html>";
+
+            return html;
+        }
+
+        function getDataFiles() {
+            var filenames = {};
+            for (var i = 0; i < widgets.length; i++) {
+                var widget = widgets[i];
+                for (var j = 0; j < widget.data.length; j++) {
+                    filenames[widget.data[j].filepath] = true;
                 }
             }
-    			
-            function set_state(saved_state)
-            {
-                //console.log(saved_state);
-                // Clear the iFrame, widgets, widget selector, and update
-                // data list
-    			$("#" + constants.MAP_PREVIEW_ID).empty();
-                $("#widget-selector").empty();
-                widgets.length = 0;
-                refresh_data_selector();
-    			
-    			us_map.load_state(saved_state.widgets.us_map);
-    			
-    		}
-    		
-    		function save_state(){
-    			// Get application name from text box
-                var applicationName = $('#application-name').val();
 
-                // Require a name to continue
-                if (applicationName.length <= 0)
-                {
-                    alert("Saving application state requires an application name!");
+            // TODO: Don't hardcode this last filename. It should be included in the widget somewhere.
+            filenames['data/states.json'] = true;
+            return Object.keys(filenames);
+        }
+
+        function generateZipfile(appName, dataFiles, html) {
+            $.ajax({
+                type : "POST",
+                url : "php/create_zip.php",
+                data : {
+                    demo : appName,
+                    data_files : dataFiles,
+                    html : html
+                },
+                success : function(data) {
+                    downloadGeneratedZipfile(data, appName + ".zip");
                 }
-                // Load state from the database
-                else
-                {
-                    var request = {'application': applicationName, 'json': JSON.stringify(state)};
-                    $.post('php/setApplicationState', request);
-                }
-    		}
+            });
+        }
 
-		$("#widget-panel").on("click", "#submitDataFileUpload", function(event) {
-			var form = new FormData();
-			var file = $("#dataFileUpload")[0].files[0];
-			if (file === undefined) {
-				alert("Cannot upload blank file.");
-				return;
-			}
+        function downloadGeneratedZipfile(data, fileName) {
+            if (data !== "success") {
+                alert("Could not download zip file.");
+                return;
+            }
 
-			form.append("file", file);
+            var exportLink = $("#export-file-link");
 
-			$.ajax({
-				type: "POST",
-				url: "php/upload_data_file.php",
-				data: form,
-				processData: false,
-				contentType: false,
-				success: function(data) {
-					var dataObj = JSON.parse(data);
-					if (!dataObj.success) {
-					      alert(dataObj.errorMessage);
-					      return;
-					}
+            // Set and click a hidden link, so that this doesn't require another step by the user.
+            exportLink.attr("href", "php/download_zip.php?fileName=" + fileName);
+            exportLink.attr("download", fileName);
+            exportLink[0].click();
+        }
 
-					var dataSelect = $("#data-sources");
-					var newFileOption = $("<option/>").val(dataObj.filePath).text(dataObj.filePath);
-					dataSelect.append(newFileOption);
-				}
+        function refresh_data_selector() {
+            // TODO: Make this grab the currently selected widget from widget-selector
+            // and populate the data-selector with the file names of its bound data.            
+            $("#data-selector").empty();
+            for (var i = 0; i < us_map.data.length; i++) {
+                $("#data-selector").append("<option>" + us_map.data[i].filepath + "</option>");
+            }
+        }
 
-			});
-		});
-
-		$("#widget-panel").on("click", "#export-demo-button", function() {
-			export_app();
-		});
-
-		function export_app() {
-			// Change this to use the app name once that is defined.
-			var appName = $("#export-file-name").val();
-			if (appName === undefined || appName === "") {
-				alert("Need an app name");
-				return;
-			}
-			    
-			var html = getGeneratedHtml();
-			var dataFiles = getDataFiles();
-			generateZipfile(appName, dataFiles, html);
-
-/*
-			var exportLink = $("#export-file-link");
-
-			// Set and click a hidden link, so that this doesn't require another step by the user.
-			exportLink.attr("href", octetBlobURL);
-			exportLink.attr("download", fileName);
-			exportLink[0].click();		    */
- 		}
-
-                function getGeneratedHtml() {
-                                var widgetJS = "";
-                                for (var i = 0; i < widgets.length; i++) {
-                                        widgetJS += widgets[i].exportJS();
-                                }
-
-                                var html = "<html>" +
-                                           "<head>" + "\n" +
-                                                        constants.D3_IMPORT + "\n" +
-                                                        constants.JQUERY_IMPORT + "\n" +
-                                                        constants.JQUERY_UI_IMPORT + "\n" +
-                                                        constants.JQUERY_UI_STYLE_IMPORT + "\n" +
-                                                        "<script type=\"text/javascript\">" + "\n" +
-                                                                us_map.get_GA_header_script() +
-                                                        "<\/script>" + "\n" +
-                                           "</head>" + "\n" +
-                                           "<body id=\"" + constants.EXPORT_CONTAINER_ID + "\">" +  "\n" +
-                                           "<script type=\"text/javascript\">" + "\n" +
-                                                                widgetJS +
-                                                        "<\/script>" + "\n" +
-                                           "</body>" + "\n" +
-                                           "</html>";
-                                 return html;
-                }
-  
-		function getDataFiles() {
-			var filenames = {};
-			for (var i = 0; i < widgets.length; i++) {
-				var widget = widgets[i];
-				for (var j = 0; j < widget.data.length; j++) {
-					filenames[widget.data[j].filepath] = true;
-				}
-			}
-
-			// TODO: Don't hardcode this last filename. It should be included in the widget somewhere.
-			filenames['data/states.json'] = true;
-			return Object.keys(filenames);
-		}
-
-		function generateZipfile(appName, dataFiles, html) {
-                        $.ajax({
-                                type: "POST",
-                                url: "php/create_zip.php",
-                                data: {
-                                        demo: appName,
-                                        data_files: dataFiles,
-                                        html: html
-                                },
-                                success: function(data) {
-                                        downloadGeneratedZipfile(data, appName + ".zip");
-                                }
-			});
-		}
-
-		function downloadGeneratedZipfile(data, fileName) {
-			if (data !== "success") {
-				alert("Could not download zip file.");
-				return;
-			}
-
-			var exportLink = $("#export-file-link");
-
-			// Set and click a hidden link, so that this doesn't require another step by the user.
-			exportLink.attr("href", "php/download_zip.php?fileName=" + fileName);
-			exportLink.attr("download", fileName);
-			exportLink[0].click();
-		}
-
-
-
-    		function refresh_data_selector() {
-				// TODO: Make this grab the currently selected widget from widget-selector
-				// and populate the data-selector with the file names of its bound data.    		
-    			$("#data-selector").empty();
-				for (var i = 0; i < us_map.data.length; i++) {
-					$("#data-selector").append("<option>"+ us_map.data[i].filepath +"</option>");
-				}
-			}
-			
-			function toggle_map_highlight() {
-				us_map.set_highlighting($("#map-highlight-checkbox").is(':checked'));
-			}
-    	</script>
-    </body>
+        function toggle_map_highlight() {
+            us_map.set_highlighting($("#map-highlight-checkbox").is(':checked'));
+        }
+    </script>
+</body>
 </html>
