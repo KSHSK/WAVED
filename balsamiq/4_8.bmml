@@ -267,7 +267,7 @@
     </control>
     <control controlID="161" controlTypeID="com.balsamiq.mockups::StickyNote" x="217" y="200" w="88" h="72" measuredW="109" measuredH="123" zOrder="48" locked="false" isInGroup="-1">
       <controlProperties>
-        <text>clicl%20to%20scroll%20up</text>
+        <text>click%20to%20scroll%20up</text>
       </controlProperties>
     </control>
   </controls>

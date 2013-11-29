@@ -7,8 +7,8 @@
     </control>
     <control controlID="1" controlTypeID="com.balsamiq.mockups::Accordion" x="76" y="145" w="174" h="599" measuredW="150" measuredH="159" zOrder="1" locked="false" isInGroup="-1">
       <controlProperties>
-        <hrefs>0_4%26bm%3B0_4.bmml%26bm%3B0_4.bmml%26bm%3B0_4.bmml%2C%2C</hrefs>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2216%2C125%2C190%2C155%22%20href%3D%220_4.bmml%22%20alt%3D%220_4%22%20id%3D%221%22/%3E</map>
+        <hrefs>0%26bm%3B0.bmml%26bm%3B0.bmml%26bm%3B0.bmml%2C%2C</hrefs>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2216%2C125%2C190%2C155%22%20href%3D%220.bmml%22%20alt%3D%220%22%20id%3D%221%22/%3E</map>
         <selectedIndex>1</selectedIndex>
         <text>Widgets%0AData%0AProperties%20%28map%29</text>
       </controlProperties>

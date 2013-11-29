@@ -226,8 +226,8 @@
     </control>
     <control controlID="155" controlTypeID="com.balsamiq.mockups::Button" x="474" y="523" w="-1" h="-1" measuredW="52" measuredH="27" zOrder="43" locked="false" isInGroup="-1">
       <controlProperties>
-        <href>0_3%26bm%3B0_3.bmml%26bm%3B0_3.bmml%26bm%3B0_3.bmml</href>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22414%2C503%2C466%2C530%22%20href%3D%220_3.bmml%22%20alt%3D%220_3%22%20id%3D%22155%22/%3E</map>
+        <href>2_6%26bm%3B2_6.bmml%26bm%3B2_6.bmml%26bm%3B2_6.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22414%2C503%2C466%2C530%22%20href%3D%222_6.bmml%22%20alt%3D%222_6%22%20id%3D%22155%22/%3E</map>
         <text>Load</text>
       </controlProperties>
     </control>
