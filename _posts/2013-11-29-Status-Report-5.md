@@ -52,5 +52,5 @@ author: Kristian Calhoun
 6.Add zoom on click event to the functional prototype
 
 	* Steve
-Demonstrate competed prototypes to advisor on Monday, Dec. 2. 
-Present prototypes to the class on Tuesday, Dec. 3. 
+7. Demonstrate competed prototypes to advisor on Monday, Dec. 2. 
+8. Present prototypes to the class on Tuesday, Dec. 3. 
