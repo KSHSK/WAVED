@@ -1,5 +1,4 @@
 _site/*
-RemoteSystemsTempFiles/.project
 .metadata
-.project
 .settings
+.project
