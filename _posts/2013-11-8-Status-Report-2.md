@@ -24,9 +24,21 @@ author: Kristian Calhoun
 
 **Action items for next week:**
 
-* Finish styling the rest of the website pages - Kristian
-* Continue architecture discussion - Keith, Sean, Steve
-* Continue planning functional prototype. - Keith, Sean, Steve
-* Implement skeleton for prototype (basic code for all components in separate files, all “working”, none of the modules need to be wired together yet). - Kristian, Keith, Sean, Steve
-* Investigate local website development on CS machines - Keith
-* Finish first draft of paper prototype - Hannah
+1. Finish styling the rest of the website pages 
+
+	* Kristian
+2. Continue architecture discussion 
+
+	* Keith, Sean, Steve
+3. Continue planning functional prototype. 
+
+	* Keith, Sean, Steve
+4. Implement skeleton for prototype (basic code for all components in separate files, all “working”, none of the modules need to be wired together yet). 
+
+	* Kristian, Keith, Sean, Steve
+5. Investigate local website development on CS machines 
+
+	* Keith
+6. Finish first draft of paper prototype 
+
+	* Hannah
