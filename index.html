@@ -327,7 +327,8 @@
                 widgetJS += widgets[i].exportJS();
             }
 
-            var html = "<html>" + "<head>" + "\n" + constants.D3_IMPORT + "\n" + constants.JQUERY_IMPORT + "\n"
+            var html = "<html>" + "\n" 
+            		+ "<head>" + "\n" + constants.D3_IMPORT + "\n" + constants.JQUERY_IMPORT + "\n"
                     + constants.JQUERY_UI_IMPORT + "\n" + constants.JQUERY_UI_STYLE_IMPORT + "\n"
                     + "<script type=\"text/javascript\">" + "\n" + us_map.get_GA_header_script() + "<\/script>" + "\n"
                     + "</head>" + "\n" + "<body id=\"" + constants.EXPORT_CONTAINER_ID + "\">" + "\n"
