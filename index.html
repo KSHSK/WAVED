@@ -238,7 +238,7 @@
                 var request = {
                     'application' : applicationName
                 };
-                $.getJSON('php/getApplicationState', request, set_state);
+                $.getJSON('php/getApplicationState.php', request, set_state);
             }
         }
 
@@ -269,7 +269,7 @@
                     'application' : applicationName,
                     'json' : JSON.stringify(state)
                 };
-                $.post('php/setApplicationState', request);
+                $.post('php/setApplicationState.php', request);
             }
         }
 
