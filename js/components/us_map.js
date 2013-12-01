@@ -158,7 +158,17 @@ var us_map = {
                 if (us_map_state.circle_element.render === true) {
                     for(var i = 0; i < us_map.data.length; i++){
                         if(us_map_state.circle_element.data === us_map.data[i].filepath){
-                            us_map.circle_element.render(us_map.data[i]);
+                        
+                        	var options = {
+								data: us_map.data[i],
+								color: us_map_state.circle_element.color,
+								lat: us_map_state.circle_element.lat,
+								lon: us_map_state.circle_element.lon,
+								size: us_map_state.circle_element.size,
+								opacity: us_map_state.circle_element.opacity
+							};
+							
+                            us_map.circle_element.render(options);
                             break; // This break might not be needed?
                         }
                     }
@@ -256,6 +266,11 @@ var us_map = {
             
             state.widgets.us_map.circle_element.data = options.data.filepath;
             state.widgets.us_map.circle_element.render = true;
+            state.widgets.us_map.circle_element.color = options.color;
+            state.widgets.us_map.circle_element.opacity = options.opacity;
+            state.widgets.us_map.circle_element.size = options.size;
+            state.widgets.us_map.circle_element.lat = options.lat;
+            state.widgets.us_map.circle_element.lon = options.lon;
         }
     },
     
