@@ -316,14 +316,15 @@ var us_map = {
     },
     
     exportJS: function() {
-    
+                    
         var colorFunc;
         if (us_map.color === "random") {
             colorFunc = "var letters = '0123456789ABCDEF'.split('');" + "\n" +
                         "\t\t\t\t" + "var color = '#';"  + "\n" +
-                        "\t\t\t\t" + "for (var i = 0; i < 6; i++) {" + "\n" +
+                        "\t\t\t\t" + "for (var i = 0; i < 4; i++) {" + "\n" +
                         "\t\t\t\t" + "\t" + "color += letters[Math.round(Math.random() * 15)];" + "\n" +
                         "\t\t\t\t" + "}" + "\n" +
+                        "\t\t\t\t" + "color = color.substr(0, 3) + \"DD\" + color.substr(3);" + "\n" +
                         "\t\t\t\t" + "return color;"; 
         } else {
             colorFunc = "return \"" + us_map.color + "\";";
