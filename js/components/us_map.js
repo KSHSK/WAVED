@@ -194,6 +194,7 @@ var us_map = {
         render: function(options, filterOptions) {
         
             us_map.renderCircles = true;
+            us_map.circle_element.data = options.data.filepath;
             us_map.circle_element.size = options.size;
             us_map.circle_element.color = options.color;
             us_map.circle_element.opacity = options.opacity;
@@ -220,6 +221,12 @@ var us_map = {
             
             if (typeof filterOptions !== 'undefined') {
             	data = filterOptions.data.data;
+				
+				
+				us_map.circle_element.filter = true;
+				us_map.circle_element.filterOperator = filterOptions.operator;
+				us_map.circle_element.value = filterOptions.value;
+				us_map.circle_element.field = filterOptions.field;
 				
             	data = data.filter(function(d) {
             		if (filterOptions.operator === '<') {
@@ -368,12 +375,23 @@ var us_map = {
         var renderCircleString = "";
         if (us_map.renderCircles) {
         	
-        	var filepath = state.widgets.us_map.circle_element.data;
-        	var lon = state.widgets.us_map.circle_element.lon;
-        	var lat = state.widgets.us_map.circle_element.lat;
-        	var size = state.widgets.us_map.circle_element.size;
-        	var color = state.widgets.us_map.circle_element.color;
-        	var opacity = state.widgets.us_map.circle_element.opacity;
+        	var filepath = us_map.circle_element.data;
+        	var lon = us_map.circle_element.lon;
+        	var lat = us_map.circle_element.lat;
+        	var size = us_map.circle_element.size;
+        	var color = us_map.circle_element.color;
+        	var opacity = us_map.circle_element.opacity;
+        	
+        	var filterString = "";
+        	if (us_map.circle_element.filter) {
+        		var operator = us_map.circle_element.filterOperator;
+				var value = us_map.circle_element.value;
+				var field = us_map.circle_element.field;
+				
+				filterString = "\t\t\t\t.filter(function(d){" + "\n" +
+							   "\t\t\t\t\treturn d." + field + " " + operator + " " + value + ";" + "\n" +
+								"\t\t\t\t})";
+        	}
         
             renderCircleString = 
                 // Filepath should be selected from the map's state.                 
@@ -385,7 +403,7 @@ var us_map = {
                 "\t" + "\t" + "\t" + "var populationRadiusScale = d3.scale.linear().domain([1000,500000]).range([2,10]).clamp(true);" + "\n" + 
                 
                 "\t" + "\t" + "\t" + "svg.selectAll(\"circle\")" + "\n" + 
-                "\t" + "\t" + "\t" + "\t" + ".data(data)" + "\n" + 
+                "\t" + "\t" + "\t" + "\t" + ".data(data" + ((filterString.length === 0) ? "" : (filterString + "\n")) + ")" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + ".enter()" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + ".append(\"circle\")" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + ".attr(\"cx\", function(d, i) {" + "\n" + 
