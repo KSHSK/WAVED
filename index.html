@@ -92,6 +92,10 @@
 			<button id="map-render-markers-button"
 					onclick="show_glyph_dialog();">Render city markers</button>
 			<br>
+			
+			<button id="map-filter-button"
+					onclick="show_filter_dialog();">Filter data</button>
+			<br>
 
 			<div id="widget-selector-container">
 				<div class="widget-header">Widgets</div>
@@ -167,6 +171,35 @@
 						<select id="glyph-lon">
 						</select>
 					</td>
+				</tr>
+			</table>
+		</div>
+		
+		<div id="glyph-filter-dialog" class="hidden">
+		
+			<table>
+				<tr>
+					<td>Data:</td>
+					<td><select id="filter-data"></select></td>
+				</tr>
+				<tr>
+					<td>Field:</td>
+					<td><select id="filter-field"></select></td>
+				</tr>
+				<tr>
+					<td>Operator:</td>
+					<td><select id="filter-operator">
+						<option value="<"><</option>
+						<option value="<="><=</option>
+						<option value="=">=</option>
+						<option value=">=">>=</option>
+						<option value=">">></option>
+						<option value="!=">!=</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td>Value:</td>
+					<td><input type="text" id="filter-value" /></td>
 				</tr>
 			</table>
 		</div>
@@ -442,6 +475,74 @@
 								$(this).dialog("close");
 							} else {
 								alert("Data, Lat, Lon, and Size need to bee selected.");
+							}
+						} 
+					},
+					{
+						text: "Cancel",
+						click: function() {
+							$(this).dialog("close");
+						}
+					}
+				]
+			});
+        }
+        
+        function show_filter_dialog() {
+        	
+        	// TODO: Listen to the select/onchange event of filter-data and then 
+        	// update filter-field with only the fields from the selected data file.
+        	
+        	$("#filter-data").empty();
+        	$("#filter-field").empty();
+        	$("#filter-field").append("<option value=\"\">Select a data field.</option>");
+        
+        	for (var i = 0; i < us_map.data.length; i++) {
+        		$("#filter-data").append("<option value=\"" + i + "\">" + us_map.data[i].filepath + "</option>");
+        		var keys = Object.keys(us_map.data[i].data[0]);
+        		
+        		for (var j = 0; j < keys.length; j++) {
+        			$("#filter-field").append("<option value=\"" + keys[j] + "\">" + us_map.data[i].filepath + " - " + keys[j] + "</option>");
+				}
+        	}
+        
+			$("#glyph-filter-dialog").dialog({
+				dialogClass: "no-close",
+			  	title: "Add Filter",
+			  	modal: true,
+				show: true,
+				hide: "fade",
+				width: "400px",
+				buttons: [
+					{
+						text: "Add",
+						click: function() {
+						
+							var value = $("#filter-value").val();
+							var field = $("#filter-field").val();
+							var operator = $("#filter-operator").val();
+							
+							if (value.length && field.length) {
+								var glyphOptions = {
+									data: us_map.data[parseInt($("#filter-data").val())],
+									color: us_map.circle_element.color,
+            						opacity: us_map.circle_element.opacity,
+						            size: us_map.circle_element.size,
+									lat: us_map.circle_element.lat,
+						            lon: us_map.circle_element.lon
+								};
+								
+								var filterOptions = {
+									data: us_map.data[parseInt($("#filter-data").val())],
+									value: value,
+									field: field,
+									operator: operator
+								};
+								
+								us_map.circle_element.render(glyphOptions, filterOptions);
+								$(this).dialog("close");
+							} else {
+								alert("Please select a field and enter a value.");
 							}
 						} 
 					},

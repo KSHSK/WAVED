@@ -191,9 +191,14 @@ var us_map = {
         // Assumes the data we want is the first element of the data array in us_map
         // Assumes we know that the data file is correct and has lat, long and such
         // Has a hard-coded filter
-        render: function(options) {
+        render: function(options, filterOptions) {
         
             us_map.renderCircles = true;
+            us_map.circle_element.size = options.size;
+            us_map.circle_element.color = options.color;
+            us_map.circle_element.opacity = options.opacity;
+            us_map.circle_element.lat = options.lat;
+            us_map.circle_element.lon = options.lon;
             
             if(state.widgets.us_map.circle_element == null) {
                 state.widgets.us_map.circle_element = {};
@@ -211,12 +216,37 @@ var us_map = {
                                     .range([2,10])
                                     .clamp(true); 
             
-            var data = options.data.data;
+			var data;
+            
+            if (typeof filterOptions !== 'undefined') {
+            	data = filterOptions.data.data;
+				
+            	data = data.filter(function(d) {
+            		if (filterOptions.operator === '<') {
+            			return d[filterOptions.field] < filterOptions.value;
+            		} else if (filterOptions.operator === '<=') {
+            			return d[filterOptions.field] <= filterOptions.value;
+            		} else if (filterOptions.operator === '=') {
+            			return d[filterOptions.field] === filterOptions.value;
+            		} else if (filterOptions.operator === '>=') {
+            			return d[filterOptions.field] >= filterOptions.value;
+            		} else if (filterOptions.operator === '>') {
+            			return d[filterOptions.field] > filterOptions.value;
+            		} else if (filterOptions.operator === '!=') {
+            			return d[filterOptions.field] !== filterOptions.value;
+            		}
+            	});
+            } else {
+				data = options.data.data;
+            }
+            
+            var n = us_map.svg.selectAll("circle")
+            			.data(data, function(d) {
+            				return d.GEOID10; 	// TODO: don't use this arbitrary field, since it might not exist.
+            			});
             
             // Create the circles
-            us_map.svg.selectAll("circle")
-                .data(data)
-                .enter()
+            n.enter()
                 .append("circle")
                 .attr("cx", function(d, i) {
                     var coords = us_map.projection([d[options.lon], d[options.lat]]);
@@ -241,9 +271,7 @@ var us_map = {
                 
                 
             // Update glyphs
-            us_map.svg.selectAll("circle")
-                .data(data)
-                .attr("cx", function(d, i) {
+            n.attr("cx", function(d, i) {
                     var coords = us_map.projection([d[options.lon], d[options.lat]]);
                     if (coords !== null) {
                         return us_map.projection([d[options.lon], d[options.lat]])[0];                            
@@ -263,6 +291,10 @@ var us_map = {
                 })
                 .style("fill", options.color)
                 .style("opacity", options.opacity);
+                
+            // Remove glyphs
+            n.exit()
+            	.remove();
             
             state.widgets.us_map.circle_element.data = options.data.filepath;
             state.widgets.us_map.circle_element.render = true;
@@ -271,6 +303,7 @@ var us_map = {
             state.widgets.us_map.circle_element.size = options.size;
             state.widgets.us_map.circle_element.lat = options.lat;
             state.widgets.us_map.circle_element.lon = options.lon;
+            
         }
     },
     
