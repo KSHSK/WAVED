@@ -144,6 +144,7 @@ var us_map = {
             us_map.highlightingEnabled = us_map_state.highlightingEnabled;
             
             us_map.render();
+            state.widgets.us_map.data_filter = us_map_state.data_filter;
             
             // Everything else should require the map so they are nested here
             if (us_map_state.bound_data.length > 0) {
@@ -219,7 +220,12 @@ var us_map = {
 			var data;
             
             if (typeof filterOptions !== 'undefined') {
-            	data = filterOptions.data.data;
+                state.widgets.us_map.data_filter = filterOptions;
+            }
+
+            if (typeof state.widgets.us_map.data_filter !== 'undefined') {
+                filterOptions = state.widgets.us_map.data_filter;
+            	data = us_map.data[filterOptions.data].data;
 				
             	data = data.filter(function(d) {
             		if (filterOptions.operator === '<') {
