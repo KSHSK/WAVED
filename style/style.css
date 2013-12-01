@@ -7,6 +7,10 @@ html, body {
 	padding: 0;
 }
 
+.hidden {
+	display: none;
+}
+
 #main-body {
 	font-family: 'Lato', sans-serif;
 	min-width: 1050px;
