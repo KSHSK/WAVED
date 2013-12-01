@@ -209,9 +209,15 @@ var us_map = {
         // Assumes the data we want is the first element of the data array in us_map
         // Assumes we know that the data file is correct and has lat, long and such
         // Has a hard-coded filter
-        render: function(options) {
+        render: function(options, filterOptions) {
         
             us_map.renderCircles = true;
+            us_map.circle_element.data = options.data.filepath;
+            us_map.circle_element.size = options.size;
+            us_map.circle_element.color = options.color;
+            us_map.circle_element.opacity = options.opacity;
+            us_map.circle_element.lat = options.lat;
+            us_map.circle_element.lon = options.lon;
             
             if(state.widgets.us_map.circle_element == null) {
                 state.widgets.us_map.circle_element = {};
@@ -229,12 +235,43 @@ var us_map = {
                                     .range([2,10])
                                     .clamp(true); 
             
-            var data = options.data.data;
+			var data;
+            
+            if (typeof filterOptions !== 'undefined') {
+            	data = filterOptions.data.data;
+				
+				
+				us_map.circle_element.filter = true;
+				us_map.circle_element.filterOperator = filterOptions.operator;
+				us_map.circle_element.value = filterOptions.value;
+				us_map.circle_element.field = filterOptions.field;
+				
+            	data = data.filter(function(d) {
+            		if (filterOptions.operator === '<') {
+            			return d[filterOptions.field] < filterOptions.value;
+            		} else if (filterOptions.operator === '<=') {
+            			return d[filterOptions.field] <= filterOptions.value;
+            		} else if (filterOptions.operator === '=') {
+            			return d[filterOptions.field] === filterOptions.value;
+            		} else if (filterOptions.operator === '>=') {
+            			return d[filterOptions.field] >= filterOptions.value;
+            		} else if (filterOptions.operator === '>') {
+            			return d[filterOptions.field] > filterOptions.value;
+            		} else if (filterOptions.operator === '!=') {
+            			return d[filterOptions.field] !== filterOptions.value;
+            		}
+            	});
+            } else {
+				data = options.data.data;
+            }
+            
+            var n = us_map.svg.selectAll("circle")
+            			.data(data, function(d) {
+            				return d.GEOID10; 	// TODO: don't use this arbitrary field, since it might not exist.
+            			});
             
             // Create the circles
-            us_map.svg.selectAll("circle")
-                .data(data)
-                .enter()
+            n.enter()
                 .append("circle")
                 .attr("cx", function(d, i) {
                     var coords = us_map.projection([d[options.lon], d[options.lat]]);
@@ -259,9 +296,7 @@ var us_map = {
                 
                 
             // Update glyphs
-            us_map.svg.selectAll("circle")
-                .data(data)
-                .attr("cx", function(d, i) {
+            n.attr("cx", function(d, i) {
                     var coords = us_map.projection([d[options.lon], d[options.lat]]);
                     if (coords !== null) {
                         return us_map.projection([d[options.lon], d[options.lat]])[0];                            
@@ -281,6 +316,10 @@ var us_map = {
                 })
                 .style("fill", options.color)
                 .style("opacity", options.opacity);
+                
+            // Remove glyphs
+            n.exit()
+            	.remove();
             
             state.widgets.us_map.circle_element.data = options.data.filepath;
             state.widgets.us_map.circle_element.render = true;
@@ -289,6 +328,7 @@ var us_map = {
             state.widgets.us_map.circle_element.size = options.size;
             state.widgets.us_map.circle_element.lat = options.lat;
             state.widgets.us_map.circle_element.lon = options.lon;
+            
         }
     },
     
@@ -414,12 +454,23 @@ var us_map = {
         var renderCircleString = "";
         if (us_map.renderCircles) {
         	
-        	var filepath = state.widgets.us_map.circle_element.data;
-        	var lon = state.widgets.us_map.circle_element.lon;
-        	var lat = state.widgets.us_map.circle_element.lat;
-        	var size = state.widgets.us_map.circle_element.size;
-        	var color = state.widgets.us_map.circle_element.color;
-        	var opacity = state.widgets.us_map.circle_element.opacity;
+        	var filepath = us_map.circle_element.data;
+        	var lon = us_map.circle_element.lon;
+        	var lat = us_map.circle_element.lat;
+        	var size = us_map.circle_element.size;
+        	var color = us_map.circle_element.color;
+        	var opacity = us_map.circle_element.opacity;
+        	
+        	var filterString = "";
+        	if (us_map.circle_element.filter) {
+        		var operator = us_map.circle_element.filterOperator;
+				var value = us_map.circle_element.value;
+				var field = us_map.circle_element.field;
+				
+				filterString = "\t\t\t\t.filter(function(d){" + "\n" +
+							   "\t\t\t\t\treturn d." + field + " " + operator + " " + value + ";" + "\n" +
+								"\t\t\t\t})";
+        	}
         
             renderCircleString = 
                 // Filepath should be selected from the map's state.                 
@@ -431,7 +482,7 @@ var us_map = {
                 "\t" + "\t" + "\t" + "var populationRadiusScale = d3.scale.linear().domain([1000,500000]).range([2,10]).clamp(true);" + "\n" + 
                 
                 "\t" + "\t" + "\t" + "svg.selectAll(\"circle\")" + "\n" + 
-                "\t" + "\t" + "\t" + "\t" + ".data(data)" + "\n" + 
+                "\t" + "\t" + "\t" + "\t" + ".data(data" + ((filterString.length === 0) ? "" : (filterString + "\n")) + ")" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + ".enter()" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + ".append(\"circle\")" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + ".attr(\"cx\", function(d, i) {" + "\n" + 
