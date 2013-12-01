@@ -7,12 +7,14 @@
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
 <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="style/style.css">
 <link rel="stylesheet"
-	href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-	
+    href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    
 <script type="text/javascript" src="js/components/constants.js"></script>
 <script type="text/javascript" src="js/components/us_map.js"></script>
+
 
 <script type="text/javascript">
 
@@ -28,150 +30,156 @@
 </script>
 </head>
 <body id="main-body">
-	<div id="header-container">
-		<a href="http://kshsk.github.io/WAVED/" target="_blank"><img
-			id="header-logo" src="images/WAVED.png" ondragstart="return false;" /></a>
-	</div>
-	<div id="main-container">
-		<div id="widget-panel">
-			<div class="widget-header">Save/Load</div>
-			<input type="text" id="application-name"
-				placeholder="Application Name" />
-			<button onclick="save_state()">Save State</button>
-			<button onclick="load_state()">Load State</button>
-			<br />
-			<button id="export-demo-button">Export</button>
-			<input type="text" id="export-file-name" placeholder="Filename" /> <a
-				id="export-file-link" href="" style="display: none"></a>
-			<div class="widget-header">Widget Controls</div>
-			<button id="map-generate-button" onclick="us_map.render();">Add
-				Map Widget</button>
-			<br />
-			<select id="color-sources">
-				<option value="">Select color...</option>
-				<option value="red">red</option>
-				<option value="blue">blue</option>
-				<option value="black">black</option>
-				<option value="green">green</option>
-				<option value="random">multicolor</option>
-			</select>
-			<button id="map-colorize-button" onclick="color_map();">Colorize
-				Map</button>
-				
-			<br /><br />
-			<form action="php/upload_data_file.php" method="post"
-				id="dataFileUploadForm" enctype="multipart/form-data">
-				<label for="file" class="dataFileLabel">Upload Data File:</label> <input
-					type="file" name="file" id="dataFileUpload"><br>
-			</form>
-			<button id="submitDataFileUpload">Upload Data</button>
-			
-			<br /><br />
-			<select id="data-sources">
-				<option value="">Select data to bind...</option>
-				<option value="data/data_full.csv">data/data_full.csv</option>
-			</select>
-			<button id="map-bind-data-button"
-				onclick="bind_csv(); setTimeout(refresh_data_selector, 250);">Bind
-				data</button>
-			
-			<br />
-			<select id="analytics-select">
-				<option value="">Enter Google Analytics UA</option>
-				<option value="UA-45743706-1">UA-45743706-1</option>
-			</select>
-			<button id="map-analytics-button" onclick="add_analytics();">Add</button>
-			
-			<br />
-			<span class="checkboxLabel">Highlighting: </span>
-			<input
-				type="checkbox" id="map-highlight-checkbox"
-				onclick="toggle_map_highlight();" />
-				
-			<br />
-			<button id="map-render-markers-button"
-					onclick="show_glyph_dialog();">Render city markers</button>
-			<br>
+    <div id="header-container">
+        <a href="http://kshsk.github.io/WAVED/" target="_blank"><img
+            id="header-logo" src="images/WAVED.png" ondragstart="return false;" /></a>
+    </div>
+    <div id="main-container">
+        <div id="widget-panel">
+            <div class="widget-header">Save/Load</div>
+            <input type="text" id="application-name"
+                placeholder="Application Name" />
+            <button onclick="save_state()">Save State</button>
+            <button onclick="load_state()">Load State</button>
+            <br />
+            <button id="export-demo-button">Export</button>
+            <input type="text" id="export-file-name" placeholder="Filename" /> <a
+                id="export-file-link" href="" style="display: none"></a>
+            <div class="widget-header">Widget Controls</div>
+            <button id="map-generate-button" onclick="us_map.render();">Add
+                Map Widget</button>
+            <br />
+            <select id="color-sources">
+                <option value="">Select color...</option>
+                <option value="red">red</option>
+                <option value="blue">blue</option>
+                <option value="black">black</option>
+                <option value="green">green</option>
+                <option value="random">multicolor</option>
+            </select>
+            <button id="map-colorize-button" onclick="color_map();">Colorize
+                Map</button>
+                
+            <br /><br />
+            <form action="php/upload_data_file.php" method="post"
+                id="dataFileUploadForm" enctype="multipart/form-data">
+                <label for="file" class="dataFileLabel">Upload Data File:</label> <input
+                    type="file" name="file" id="dataFileUpload"><br>
+            </form>
+            <button id="submitDataFileUpload">Upload Data</button>
+            
+            <br /><br />
+            <select id="data-sources">
+                <option value="">Select data to bind...</option>
+                <option value="data/data_full.csv">data/data_full.csv</option>
+            </select>
+            <button id="map-bind-data-button"
+                onclick="bind_csv(); setTimeout(refresh_data_selector, 250);">Bind
+                data</button>
+            
+            <br />
+            <select id="analytics-select">
+                <option value="">Enter Google Analytics UA</option>
+                <option value="UA-45743706-1">UA-45743706-1</option>
+            </select>
+            <button id="map-analytics-button" onclick="add_analytics();">Add</button>
+            
+            <br />
+            <span class="checkboxLabel">Highlighting: </span>
+            <input
+                type="checkbox" id="map-highlight-checkbox"
+                onclick="toggle_map_highlight();" />
+                
+            <br />
+            <span class="checkboxLabel">State zoom: </span>
+            <input
+                type="checkbox" id="state-zoom-checkbox"
+                onclick="toggle_state_zoom();" />
+                
+            <br />   
+            <button id="map-render-markers-button"
+                    onclick="show_glyph_dialog();">Render city markers</button>
+            <br>
 
-			<div id="widget-selector-container">
-				<div class="widget-header">Widgets</div>
-				<select id="widget-selector" size="5"></select>
-			</div>
-			<div id="data-selector-container">
-				<div class="widget-header">Data</div>
-				<select id="data-selector" size="5"></select>
-			</div>
+            <div id="widget-selector-container">
+                <div class="widget-header">Widgets</div>
+                <select id="widget-selector" size="5"></select>
+            </div>
+            <div id="data-selector-container">
+                <div class="widget-header">Data</div>
+                <select id="data-selector" size="5"></select>
+            </div>
 
-			<div class="widget-header">Debug</div>
-			<button onclick="log_svg()">Log SVG</button>
-			<br />
-			<button onclick="log_state()">Log State</button>
-			<br />
-		</div>
-		<div id="workspace-panel">
-			<div id="workspace-header">Map Panel</div>
-				<div id="workspace-preview"></div>
-		</div>
-		
-		<div id="glyph-creation-dialog" class="">
-			<table>
-				<tr>
-					<td>Data:</td>
-					<td>
-						<select id="glyph-data">
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>Color</td>
-					<td>
-						<select id="glyph-color">
-							<option value="red">red</option>
-							<option value="blue">blue</option>
-							<option value="black">black</option>
-							<option value="green">green</option>
-							<option value="yellow">yellow</option>
-							<option value="white">white</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>Opacity</td>
-					<td>
-						<select id="glyph-opacity">
-							<option value="1.0">1.0</option>
-							<option value="0.75">0.75</option>
-							<option value="0.5">0.5</option>
-							<option value="0.25">0.25</option>
-							<option value="0.1">0.1</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>Scale Size by </td>
-					<td>
-						<select id="glyph-size">
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>Latitude</td>
-					<td>
-						<select id="glyph-lat">
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>Longitude</td>
-					<td>
-						<select id="glyph-lon">
-						</select>
-					</td>
-				</tr>
-			</table>
-		</div>
-	</div>
-	<script>
+            <div class="widget-header">Debug</div>
+            <button onclick="log_svg()">Log SVG</button>
+            <br />
+            <button onclick="log_state()">Log State</button>
+            <br />
+        </div>
+        <div id="workspace-panel">
+            <div id="workspace-header">Map Panel</div>
+                <div id="workspace-preview"></div>
+        </div>
+        
+        <div id="glyph-creation-dialog" class="">
+            <table>
+                <tr>
+                    <td>Data:</td>
+                    <td>
+                        <select id="glyph-data">
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Color</td>
+                    <td>
+                        <select id="glyph-color">
+                            <option value="red">red</option>
+                            <option value="blue">blue</option>
+                            <option value="black">black</option>
+                            <option value="green">green</option>
+                            <option value="yellow">yellow</option>
+                            <option value="white">white</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Opacity</td>
+                    <td>
+                        <select id="glyph-opacity">
+                            <option value="1.0">1.0</option>
+                            <option value="0.75">0.75</option>
+                            <option value="0.5">0.5</option>
+                            <option value="0.25">0.25</option>
+                            <option value="0.1">0.1</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Scale Size by </td>
+                    <td>
+                        <select id="glyph-size">
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Latitude</td>
+                    <td>
+                        <select id="glyph-lat">
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Longitude</td>
+                    <td>
+                        <select id="glyph-lon">
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <script>
         var state = {};
 
         $(document).ready(function() {
@@ -328,8 +336,8 @@
             }
 
             var html = "<html>" + "\n" 
-            		+ "<head>" + "\n" + constants.D3_IMPORT + "\n" + constants.JQUERY_IMPORT + "\n"
-                    + constants.JQUERY_UI_IMPORT + "\n" + constants.JQUERY_UI_STYLE_IMPORT + "\n"
+                    + "<head>" + "\n" + constants.D3_IMPORT + "\n" + constants.JQUERY_IMPORT + "\n"
+                    + constants.JQUERY_UI_IMPORT + "\n" + constants.JQUERY_UI_STYLE_IMPORT + "\n" + constants.D3_TOPOJSON_IMPORT + "\n"
                     + "<script type=\"text/javascript\">" + "\n" + us_map.get_GA_header_script() + "<\/script>" + "\n"
                     + "</head>" + "\n" + "<body id=\"" + constants.EXPORT_CONTAINER_ID + "\">" + "\n"
                     + "<script type=\"text/javascript\">" + "\n" + widgetJS + "<\/script>" + "\n" + "</body>" + "\n"
@@ -394,65 +402,69 @@
             us_map.set_highlighting($("#map-highlight-checkbox").is(':checked'));
         }
         
+        function toggle_state_zoom(){
+            us_map.set_state_zoom($("#state-zoom-checkbox").is(':checked'));
+        }
+        
         function show_glyph_dialog() {
         
-        	$("#glyph-data").empty();
-        	$("#glyph-lat").empty();
-        	$("#glyph-lon").empty();
-        	$("#glyph-size").empty();
-        	
-        	$("#glyph-lat").append("<option value=\"\">Select a data field.</option>");
-        	$("#glyph-lon").append("<option value=\"\">Select a data field.</option>");
-        	$("#glyph-size").append("<option value=\"\">Select a data field.</option>");
-        	
-        	for (var i = 0; i < us_map.data.length; i++) {
-        		$("#glyph-data").append("<option value=\"" + i + "\">" + us_map.data[i].filepath + "</option>");
-        		var keys = Object.keys(us_map.data[i].data[0]);
-        		
-        		for (var j = 0; j < keys.length; j++) {
-        			$("#glyph-lat").append("<option value=\"" + keys[j] + "\">" + us_map.data[i].filepath + " - " + keys[j] + "</option>");
-					$("#glyph-lon").append("<option value=\"" + keys[j] + "\">" + us_map.data[i].filepath + " - " + keys[j] + "</option>");
-					$("#glyph-size").append("<option value=\"" + keys[j] + "\">" + us_map.data[i].filepath + " - " + keys[j] + "</option>");
-        		}
-        	}
+            $("#glyph-data").empty();
+            $("#glyph-lat").empty();
+            $("#glyph-lon").empty();
+            $("#glyph-size").empty();
+            
+            $("#glyph-lat").append("<option value=\"\">Select a data field.</option>");
+            $("#glyph-lon").append("<option value=\"\">Select a data field.</option>");
+            $("#glyph-size").append("<option value=\"\">Select a data field.</option>");
+            
+            for (var i = 0; i < us_map.data.length; i++) {
+                $("#glyph-data").append("<option value=\"" + i + "\">" + us_map.data[i].filepath + "</option>");
+                var keys = Object.keys(us_map.data[i].data[0]);
+                
+                for (var j = 0; j < keys.length; j++) {
+                    $("#glyph-lat").append("<option value=\"" + keys[j] + "\">" + us_map.data[i].filepath + " - " + keys[j] + "</option>");
+                    $("#glyph-lon").append("<option value=\"" + keys[j] + "\">" + us_map.data[i].filepath + " - " + keys[j] + "</option>");
+                    $("#glyph-size").append("<option value=\"" + keys[j] + "\">" + us_map.data[i].filepath + " - " + keys[j] + "</option>");
+                }
+            }
         
-        	$("#glyph-creation-dialog").dialog({
-				dialogClass: "no-close",
-			  	title: "Add Glyphs",
-			  	modal: true,
-				show: true,
-				hide: "fade",
-				width: "400px",
-				buttons: [
-					{
-						text: "Add",
-						click: function() {
-							
-							var options = {
-								data: us_map.data[parseInt($("#glyph-data").val())],
-								color: $("#glyph-color").val(),
-								lat: $("#glyph-lat").val(),
-								lon: $("#glyph-lon").val(),
-								size: $("#glyph-size").val(),
-								opacity: parseFloat($("#glyph-opacity").val())
-							};
-							
-							if (options.lat.length && options.lon.length && options.size.length) {
-								us_map.circle_element.render(options);
-								$(this).dialog("close");
-							} else {
-								alert("Data, Lat, Lon, and Size need to bee selected.");
-							}
-						} 
-					},
-					{
-						text: "Cancel",
-						click: function() {
-							$(this).dialog("close");
-						}
-					}
-				]
-			});
+            $("#glyph-creation-dialog").dialog({
+                dialogClass: "no-close",
+                  title: "Add Glyphs",
+                  modal: true,
+                show: true,
+                hide: "fade",
+                width: "400px",
+                buttons: [
+                    {
+                        text: "Add",
+                        click: function() {
+                            
+                            var options = {
+                                data: us_map.data[parseInt($("#glyph-data").val())],
+                                color: $("#glyph-color").val(),
+                                lat: $("#glyph-lat").val(),
+                                lon: $("#glyph-lon").val(),
+                                size: $("#glyph-size").val(),
+                                opacity: parseFloat($("#glyph-opacity").val())
+                            };
+                            
+                            if (options.lat.length && options.lon.length && options.size.length) {
+                                us_map.circle_element.render(options);
+                                $(this).dialog("close");
+                            } else {
+                                alert("Data, Lat, Lon, and Size need to bee selected.");
+                            }
+                        } 
+                    },
+                    {
+                        text: "Cancel",
+                        click: function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                ]
+            });
         }
     </script>
 </body>

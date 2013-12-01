@@ -12,6 +12,9 @@ var us_map = {
     color: "black",
     _gaq: [],
     UA: "",
+    stateZoomEnabled: false,
+    centered: null,
+    g: null,
     
     /* Generate the map of the US */
     render: function() {
@@ -51,26 +54,39 @@ var us_map = {
             .attr("width", us_map.width)
             .attr("height", us_map.height);
         
+        us_map.g = us_map.svg.append("g");
+        
         d3.json("data/states.json", function(error, json){
             if(error){
                 console.log(error);
             }
-            else {
-                us_map.svg.selectAll("path")
+            else {                
+                us_map.g.append("g")
+                    .attr("id", "states")
+                    .selectAll("path")
                     .data(json.features)
                     .enter()
                     .append("path")
                     .attr("d", path)
-                    .attr("stroke", "white")
+                    .attr("stoke", "white")
                     .on("mouseover", function(d){
                         if(us_map.highlightingEnabled){
                             d3.select(this).style("opacity", 0.5);
                         }
                     })
                     .on("mouseout", function(d) {
-                        d3.select(this).style("opacity", 1.0);
-                    }
-                );
+                        d3.select(this).style("opacity", 1.0);    
+                    })
+                    .on("click", function(d){
+                        if(us_map.stateZoomEnabled){
+                            us_map.state_zoom(d);
+                        }
+                    });
+                
+                us_map.g.append("path")
+                    .datum(topojson.mesh(json, json, function(a, b){ return a !== b; }))
+                    .attr("id", "state-borders")
+                    .attr("d", path);
             }
         });
         
@@ -81,6 +97,7 @@ var us_map = {
         state.widgets.us_map.width = us_map.width;
         state.widgets.us_map.height = us_map.height;
         state.widgets.us_map.highlightingEnabled = us_map.highlightingEnabled;
+        state.widgets.us_map.stateZoomEnabled = us_map.stateZoomEnabled;
     },
     
     /* Get the svg object */
@@ -142,6 +159,7 @@ var us_map = {
             us_map.width = us_map_state.width;
             us_map.height = us_map_state.height;
             us_map.highlightingEnabled = us_map_state.highlightingEnabled;
+            us_map.stateZoomEnabled = us_map_state.stateZoomEnabled;
             
             us_map.render();
             
@@ -292,6 +310,40 @@ var us_map = {
         state.widgets.us_map.highlightingEnabled = enable;
     },
     
+    set_state_zoom: function(enable){
+        us_map.stateZoomEnabled = enable;
+        
+        state.widgets.us_map.stateZoomEnabled = enable;
+    },
+    
+    
+    state_zoom: function(d){
+        var x, y, k;
+        
+        if(d && us_map.centered !== d){
+            var centroid = d3.geo.path().projection(us_map.projection).centroid(d);
+            x = centroid[0];
+            y = centroid[1];
+            k=4;
+            us_map.centered = d;
+        }
+        else{
+            x = us_map.width/2.0;
+            y = us_map.height/2.0;
+            k = 1;
+            us_map.centered = null;
+        }
+        
+        us_map.g.transition()
+            .duration(750)
+            .attr("transform", "translate(" 
+                + us_map.width/2.0 + "," 
+                + us_map.height/2.0 + ")scale(" 
+                + k + ")translate(" 
+                + -x + "," + -y + ")")
+            .style("stroke-width", 1.5/k + "px");
+    },
+    
     get_GA_header_script: function() {
         if (us_map.UA.length !== 0) {
             function GASetup() {
@@ -329,6 +381,33 @@ var us_map = {
         } else {
             colorFunc = "return \"" + us_map.color + "\";";
         }
+        
+        // TODO: There are hardcoded values in here that should be tied to some variables eventually
+        var state_zoom_func = 
+            "var x, y, k;" + "\n" +
+        
+        "if(d && us_map.centered !== d){" + "\n" + 
+            "var centroid = path.centroid(d);" + "\n" +
+            "x = centroid[0];" + "\n" +
+            "y = centroid[1];" + "\n" +
+            "k=4;" + "\n" +
+            "centered = d;" + "\n" +
+        "}" + "\n"
+        "else{" + "\n"
+            "x = " + us_map.width/2.0 + ";" + "\n" +
+            "y = " + us_map.height/2.0 + ";" + "\n" +
+            "k = 1;" + "\n" +
+            "us_map.centered = null;" + "\n" +
+        "}" + "\n"
+        
+        "us_map.g.transition()" + "\n" +
+        ".duration(750)" + "\n" +
+        ".attr(\"transform\", \"translate(\"" + "\n" +
+            "+ " + us_map.width/2.0 + "," + "\n" +
+            "+ " + us_map.height/2.0 + ")scale(" + "\n" + 
+            "+ k + \")translate(\"" + "\n" + 
+            "+ -x + \",\" + -y + \")\")" + "\n" +
+        ".style(\"stroke-width\", 1.5/k + \"px\");" + "\n";
         
         // Hack until how we're packaging data with the download is decided
         // TODO: Update d.Lon, d.Lat w/ the options passed in to glyph render function, same w/ data filepath
@@ -386,6 +465,8 @@ var us_map = {
                 
                 "\t" + "var projection = d3.geo.albersUsa().translate(([" + us_map.width/2.0 + ", " + us_map.height/2.0 + "]));" + "\n" +
                 "\t" + "var path = d3.geo.path().projection(projection);" + "\n\n" + 
+                "\t" + "var g = svg.append(\"g\");" +
+                "\t" + "var centered;" +
                 
                 // TODO: We need to export data/states.json with the finished application
                 "\t" + "d3.json(\"data/states.json\", function(error, json) {" + "\n" +
@@ -393,7 +474,9 @@ var us_map = {
                 "\t" + "\t" + "console.log(error)" + "\n" +
                 "\t" + "}" + "\n" + 
                 "\t" + "else {" + "\n" + 
-                "\t" + "\t" + "svg.selectAll(\"path\")" + "\n" + 
+                "\t" + "\t" + "g.append(\"g\")" + "\n" + 
+                "\t" + "\t" + "\t" + ".attr(\"id\", \"states\")" + "\n" + 
+                "\t" + "\t" + "\t" + ".selectAll(\"path\")" + "\n" + 
                 "\t" + "\t" + "\t" + ".data(json.features)" + "\n" + 
                 "\t" + "\t" + "\t" + ".enter()" + "\n" + 
                 "\t" + "\t" + "\t" + ".append(\"path\")" + "\n" + 
@@ -410,6 +493,9 @@ var us_map = {
                 "\t" + "\t" + "\t" + "})" + "\n" + 
                 "\t" + "\t" + "\t" + ".on(\"click\", function(d){" + "\n" + 
                 // For debugging
+                "\t" + "\t" + "\t" + "\t" + "console.log('Clicked ' + d.properties.name);" + "\n" +
+                // Add zooming on click
+                "\t" + "\t" + "\t" + "\t" + (us_map.stateZoomEnabled ? state_zoom_func : "") + "\n" +
                 "\t" + "\t" + "\t" + "\t" + "console.log('Clicked ' + d.properties.name);" + "\n" +
                 // TODO: Use exported application's name for tracking events.
                 "\t" + "\t" + "\t" + "\t" + (us_map.UA.length === 0 ? "" : "_gaq.push(['_trackEvent', 'ExportedPrototype', 'click-'+d.properties.name]);") + "\n" +                 
