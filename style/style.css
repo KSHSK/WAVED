@@ -162,3 +162,7 @@ html, body {
 .checkboxLabel, .dataFileLabel {
 	font-size: 12px;
 }
+
+.no-close .ui-dialog-titlebar-close {
+  display: none;
+}

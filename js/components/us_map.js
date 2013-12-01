@@ -175,11 +175,13 @@ var us_map = {
         }
     },
     
+    // TODO: Rename circle_element to glyphs or something since we now
+    // provide a way to choose between whether glyphs are circles or rectangles.
     circle_element: {
         // Assumes the data we want is the first element of the data array in us_map
         // Assumes we know that the data file is correct and has lat, long and such
         // Has a hard-coded filter
-        render: function(dataJSON) {
+        render: function(options) {
         
             us_map.renderCircles = true;
             
@@ -193,12 +195,13 @@ var us_map = {
             }
             
             // This should probably not be local to this function
+            // TODO: Make domain based on actual data values and range based on user input.
             var populationRadiusScale = d3.scale.linear()
                                     .domain([1000,500000])
                                     .range([2,10])
                                     .clamp(true); 
             
-            var data = dataJSON.data;
+            var data = options.data.data;
             
             // Create the circles
             us_map.svg.selectAll("circle")
@@ -206,27 +209,52 @@ var us_map = {
                 .enter()
                 .append("circle")
                 .attr("cx", function(d, i) {
-                    var coords = us_map.projection([d.Lon, d.Lat]);
+                    var coords = us_map.projection([d[options.lon], d[options.lat]]);
                     if (coords !== null) {
-                        return us_map.projection([d.Lon, d.Lat])[0];                            
+                        return us_map.projection([d[options.lon], d[options.lat]])[0];                            
                     }
                 })
                 .attr("cy", function(d, i) {
-                    var coords = us_map.projection([d.Lon, d.Lat]);
+                    var coords = us_map.projection([d[options.lon], d[options.lat]]);
                     if (coords !== null) {
-                        return us_map.projection([d.Lon, d.Lat])[1];                            
+                        return us_map.projection([d[options.lon], d[options.lat]])[1];                            
                     }
                 })
                 .attr("r", function(d, i) {
-                    var coords = us_map.projection([d.Lon, d.Lat]);
+                    var coords = us_map.projection([d[options.lon], d[options.lat]]);
                     if (coords !== null) {
-                        return populationRadiusScale(d.TotPop);
+                        return populationRadiusScale(d[options.size]);
                     }
                 })
-                .style("fill", "red")
-                .style("opacity", 0.75);
+                .style("fill", options.color)
+                .style("opacity", options.opacity);
                 
-            state.widgets.us_map.circle_element.data = dataJSON.filepath;
+                
+            // Update glyphs
+            us_map.svg.selectAll("circle")
+                .data(data)
+                .attr("cx", function(d, i) {
+                    var coords = us_map.projection([d[options.lon], d[options.lat]]);
+                    if (coords !== null) {
+                        return us_map.projection([d[options.lon], d[options.lat]])[0];                            
+                    }
+                })
+                .attr("cy", function(d, i) {
+                    var coords = us_map.projection([d[options.lon], d[options.lat]]);
+                    if (coords !== null) {
+                        return us_map.projection([d[options.lon], d[options.lat]])[1];                            
+                    }
+                })
+                .attr("r", function(d, i) {
+                    var coords = us_map.projection([d[options.lon], d[options.lat]]);
+                    if (coords !== null) {
+                        return populationRadiusScale(d[options.size]);
+                    }
+                })
+                .style("fill", options.color)
+                .style("opacity", options.opacity);
+            
+            state.widgets.us_map.circle_element.data = options.data.filepath;
             state.widgets.us_map.circle_element.render = true;
         }
     },
@@ -287,6 +315,7 @@ var us_map = {
         }
         
         // Hack until how we're packaging data with the download is decided
+        // TODO: Update d.Lon, d.Lat w/ the options passed in to glyph render function, same w/ data filepath
         var renderCircleString = "";
         if (us_map.renderCircles) {
             renderCircleString = 
