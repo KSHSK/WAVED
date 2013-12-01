@@ -333,9 +333,17 @@ var us_map = {
         // TODO: Update d.Lon, d.Lat w/ the options passed in to glyph render function, same w/ data filepath
         var renderCircleString = "";
         if (us_map.renderCircles) {
+        	
+        	var filepath = state.widgets.us_map.circle_element.data;
+        	var lon = state.widgets.us_map.circle_element.lon;
+        	var lat = state.widgets.us_map.circle_element.lat;
+        	var size = state.widgets.us_map.circle_element.size;
+        	var color = state.widgets.us_map.circle_element.color;
+        	var opacity = state.widgets.us_map.circle_element.opacity;
+        
             renderCircleString = 
                 // Filepath should be selected from the map's state.                 
-                ("\t" + "d3.csv(\"data/data_full.csv\", function(error, data) {" + "\n" + 
+                ("\t" + "d3.csv(\""+ filepath +"\", function(error, data) {" + "\n" + 
                 "\t" + "\t" + "if (error) {" + "\n" + 
                 "\t" + "\t" + "\t" + "console.log(error)" + "\n" + 
                 "\t" + "\t" + "} else {" + "\n" + 
@@ -347,25 +355,25 @@ var us_map = {
                 "\t" + "\t" + "\t" + "\t" + ".enter()" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + ".append(\"circle\")" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + ".attr(\"cx\", function(d, i) {" + "\n" + 
-                "\t" + "\t" + "\t" + "\t" + "\t" + "var coords = projection([d.Lon, d.Lat]);" + "\n" + 
+                "\t" + "\t" + "\t" + "\t" + "\t" + "var coords = projection([d." + lon + ", d." + lat + "]);" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + "\t" + "if (coords !== null) {" + "\n" + 
-                "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "return projection([d.Lon, d.Lat])[0];" + "\n" + 
+                "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "return projection([d." + lon + ", d." + lat + "])[0];" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + "\t" + "}" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + "})" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + ".attr(\"cy\", function(d, i) {" + "\n" + 
-                "\t" + "\t" + "\t" + "\t" + "\t" + "var coords = projection([d.Lon, d.Lat]);" + "\n" + 
+                "\t" + "\t" + "\t" + "\t" + "\t" + "var coords = projection([d." + lon + ", d." + lat + "]);" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + "\t" + "if (coords !== null) {" + "\n" + 
-                "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "return projection([d.Lon, d.Lat])[1];" + "\n" + 
+                "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "return projection([d." + lon + ", d." + lat + "])[1];" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + "\t" + "}" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + "})" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + ".attr(\"r\", function(d, i) {" + "\n" + 
-                "\t" + "\t" + "\t" + "\t" + "\t" + "var coords = projection([d.Lon, d.Lat]);" + "\n" + 
+                "\t" + "\t" + "\t" + "\t" + "\t" + "var coords = projection([d." + lon + ", d." + lat + "]);" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + "\t" + "if (coords !== null) {" + "\n" + 
-                "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "return populationRadiusScale(d.TotPop);" + "\n" + 
+                "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "return populationRadiusScale(d." + size + ");" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + "\t" + "}" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + "})" + "\n" + 
-                "\t" + "\t" + "\t" + "\t" + ".style(\"fill\", \"red\")" + "\n" + 
-                "\t" + "\t" + "\t" + "\t" + ".style(\"opacity\", 0.75);" + "\n" + 
+                "\t" + "\t" + "\t" + "\t" + ".style(\"fill\", \"" + color + "\")" + "\n" + 
+                "\t" + "\t" + "\t" + "\t" + ".style(\"opacity\", " + opacity + ");" + "\n" + 
                 "\t" + "\t" + "}" + "\n" + 
                 "\t" + "});" + "\n");
         }
