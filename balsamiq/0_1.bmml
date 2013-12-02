@@ -63,7 +63,7 @@
     <control controlID="41" controlTypeID="com.balsamiq.mockups::Button" x="992" y="110" w="-1" h="-1" measuredW="62" measuredH="27" zOrder="10" locked="false" isInGroup="-1">
       <controlProperties>
         <size>11</size>
-        <text>Preview</text>
+        <text>Refresh</text>
       </controlProperties>
     </control>
     <control controlID="42" controlTypeID="com.balsamiq.mockups::Button" x="263" y="110" w="-1" h="-1" measuredW="44" measuredH="27" zOrder="11" locked="false" isInGroup="-1">
@@ -79,7 +79,6 @@
     </control>
     <control controlID="44" controlTypeID="com.balsamiq.mockups::Button" x="208" y="236" w="33" h="27" measuredW="27" measuredH="27" zOrder="13" locked="false" isInGroup="-1">
       <controlProperties>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22148%2C216%2C181%2C243%22%20href%3D%220_2.bmml%22%20alt%3D%220_2%22%20id%3D%2244%22/%3E</map>
         <text>-</text>
       </controlProperties>
     </control>

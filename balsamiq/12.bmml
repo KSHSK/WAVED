@@ -31,8 +31,7 @@
     </control>
     <control controlID="111" controlTypeID="com.balsamiq.mockups::ButtonBar" x="648" y="111" w="-1" h="-1" measuredW="147" measuredH="25" zOrder="28" locked="false" isInGroup="-1">
       <controlProperties>
-        <hrefs>%2C10_5%26bm%3B10_5.bmml%26bm%3B10_5.bmml%26bm%3B10_5.bmml%2C11%26bm%3B11.bmml%26bm%3B11.bmml%26bm%3B11.bmml</hrefs>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22635%2C91%2C680%2C116%22%20href%3D%2210_5.bmml%22%20alt%3D%2210_5%22%20id%3D%22111%22/%3E%3Carea%20shape%3D%22rect%22%20coords%3D%22680%2C91%2C735%2C116%22%20href%3D%2211.bmml%22%20alt%3D%2211%22%20id%3D%22111%22/%3E</map>
+        <hrefs/>
         <selectedIndex>-1</selectedIndex>
         <size>11</size>
         <text>Load%2C%20Save%2C%20Export</text>
@@ -60,7 +59,7 @@
     <control controlID="115" controlTypeID="com.balsamiq.mockups::Button" x="992" y="110" w="-1" h="-1" measuredW="62" measuredH="27" zOrder="34" locked="false" isInGroup="-1">
       <controlProperties>
         <size>11</size>
-        <text>Preview</text>
+        <text>Refresh</text>
       </controlProperties>
     </control>
     <control controlID="116" controlTypeID="com.balsamiq.mockups::Button" x="263" y="110" w="-1" h="-1" measuredW="44" measuredH="27" zOrder="35" locked="false" isInGroup="-1">

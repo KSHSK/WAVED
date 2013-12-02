@@ -35,9 +35,9 @@
       </controlProperties>
     </control>
     <control controlID="55" controlTypeID="com.balsamiq.mockups::HRule" x="89" y="520" w="139" h="-1" measuredW="100" measuredH="10" zOrder="8" locked="false" isInGroup="-1"/>
-    <control controlID="57" controlTypeID="com.balsamiq.mockups::Label" x="90" y="541" w="-1" h="-1" measuredW="44" measuredH="21" zOrder="9" locked="false" isInGroup="-1">
+    <control controlID="57" controlTypeID="com.balsamiq.mockups::Label" x="90" y="541" w="-1" h="-1" measuredW="84" measuredH="21" zOrder="9" locked="false" isInGroup="-1">
       <controlProperties>
-        <text>Events%3A</text>
+        <text>Data%20Subsets%3A</text>
       </controlProperties>
     </control>
     <control controlID="63" controlTypeID="com.balsamiq.mockups::Button" x="85" y="261" w="141" h="27" measuredW="87" measuredH="27" zOrder="10" locked="false" isInGroup="-1">
@@ -98,7 +98,7 @@
     <control controlID="84" controlTypeID="com.balsamiq.mockups::Button" x="992" y="110" w="-1" h="-1" measuredW="62" measuredH="27" zOrder="20" locked="false" isInGroup="-1">
       <controlProperties>
         <size>11</size>
-        <text>Preview</text>
+        <text>Refresh</text>
       </controlProperties>
     </control>
     <control controlID="85" controlTypeID="com.balsamiq.mockups::Button" x="263" y="110" w="-1" h="-1" measuredW="44" measuredH="27" zOrder="21" locked="false" isInGroup="-1">

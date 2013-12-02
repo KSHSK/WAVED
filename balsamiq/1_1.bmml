@@ -71,7 +71,7 @@
     <control controlID="76" controlTypeID="com.balsamiq.mockups::Button" x="992" y="110" w="-1" h="-1" measuredW="62" measuredH="27" zOrder="11" locked="false" isInGroup="-1">
       <controlProperties>
         <size>11</size>
-        <text>Preview</text>
+        <text>Refresh</text>
       </controlProperties>
     </control>
     <control controlID="77" controlTypeID="com.balsamiq.mockups::Button" x="263" y="110" w="-1" h="-1" measuredW="44" measuredH="27" zOrder="12" locked="false" isInGroup="-1">
@@ -131,7 +131,7 @@
       </controlProperties>
     </control>
     <control controlID="88" controlTypeID="com.balsamiq.mockups::HRule" x="89" y="527" w="139" h="-1" measuredW="100" measuredH="10" zOrder="23" locked="false" isInGroup="-1"/>
-    <control controlID="89" controlTypeID="com.balsamiq.mockups::Label" x="90" y="548" w="-1" h="-1" measuredW="83" measuredH="21" zOrder="24" locked="false" isInGroup="-1">
+    <control controlID="89" controlTypeID="com.balsamiq.mockups::Label" x="85" y="548" w="-1" h="-1" measuredW="83" measuredH="21" zOrder="24" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Data%20Sources%3A</text>
       </controlProperties>

@@ -89,7 +89,7 @@
     <control controlID="55" controlTypeID="com.balsamiq.mockups::Button" x="992" y="110" w="-1" h="-1" measuredW="62" measuredH="27" zOrder="10" locked="false" isInGroup="-1">
       <controlProperties>
         <size>11</size>
-        <text>Preview</text>
+        <text>Refresh</text>
       </controlProperties>
     </control>
     <control controlID="56" controlTypeID="com.balsamiq.mockups::Button" x="263" y="110" w="-1" h="-1" measuredW="44" measuredH="27" zOrder="11" locked="false" isInGroup="-1">

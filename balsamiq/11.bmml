@@ -31,7 +31,7 @@
     </control>
     <control controlID="114" controlTypeID="com.balsamiq.mockups::List" x="569" y="284" w="289" h="156" measuredW="100" measuredH="126" zOrder="38" locked="false" isInGroup="-1">
       <controlProperties>
-        <text>sealevels.html%0Aheatindex.html</text>
+        <text>sealevels.zip%0Aheatindex.zip</text>
       </controlProperties>
     </control>
     <control controlID="115" controlTypeID="com.balsamiq.mockups::Button" x="737" y="459" w="-1" h="-1" measuredW="52" measuredH="27" zOrder="39" locked="false" isInGroup="-1">
@@ -48,9 +48,9 @@
         <text>Cancel</text>
       </controlProperties>
     </control>
-    <control controlID="117" controlTypeID="com.balsamiq.mockups::TextInput" x="505" y="459" w="217" h="-1" measuredW="121" measuredH="27" zOrder="41" locked="false" isInGroup="-1">
+    <control controlID="117" controlTypeID="com.balsamiq.mockups::TextInput" x="505" y="459" w="217" h="-1" measuredW="114" measuredH="27" zOrder="41" locked="false" isInGroup="-1">
       <controlProperties>
-        <text>myclimateapp.html</text>
+        <text>myclimateapp.zip</text>
       </controlProperties>
     </control>
     <control controlID="118" controlTypeID="com.balsamiq.mockups::Label" x="444" y="461" w="-1" h="-1" measuredW="51" measuredH="21" zOrder="42" locked="false" isInGroup="-1">
@@ -100,7 +100,7 @@
     <control controlID="125" controlTypeID="com.balsamiq.mockups::Button" x="992" y="110" w="-1" h="-1" measuredW="62" measuredH="27" zOrder="11" locked="false" isInGroup="-1">
       <controlProperties>
         <size>11</size>
-        <text>Preview</text>
+        <text>Refresh</text>
       </controlProperties>
     </control>
     <control controlID="126" controlTypeID="com.balsamiq.mockups::Button" x="263" y="110" w="-1" h="-1" measuredW="44" measuredH="27" zOrder="12" locked="false" isInGroup="-1">
