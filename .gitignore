@@ -20,3 +20,4 @@ RemoteSystemsTempFiles/.project
 .settings*
 
 .project*
+*.swp

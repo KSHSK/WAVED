@@ -6,5 +6,6 @@
 interface IDeserializer
 {
     public function get($id);
+    public function listId();
 }
 ?>

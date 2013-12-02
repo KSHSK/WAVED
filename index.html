@@ -29,6 +29,7 @@
         $("#remove-filter-button").attr("disabled", "disabled");        
 
         loadDataFilenames();
+        loadApplicationNames();
     });
 
 	function enableMapUIButtons() {
@@ -365,13 +366,13 @@
             if (applicationName.length <= 0) {
                 alert("Saving application state requires an application name!");
             }
-            // Load state from the database
+            // Save state to the database
             else {
                 var request = {
                     'application' : applicationName,
                     'json' : JSON.stringify(state)
                 };
-                $.post('php/setApplicationState.php', request);
+                $.post('php/setApplicationState.php', request, loadApplicationNames);
             }
         }
 
@@ -527,6 +528,14 @@
                         var option = $("<option/>").val(name).text(name).appendTo(dataFileSelect);
                     }
                 }
+            });
+        }
+
+        function loadApplicationNames()
+        {
+            $.getJSON('php/getApplicationList.php', {}, function(data)
+            {
+                $("#application-name").autocomplete({source: data, minLength: 1});
             });
         }
 

@@ -45,5 +45,19 @@ class SQLiteStateSerializer implements ISerializer, IDeserializer
         $query = "SELECT json FROM  " . self::TABLE . " WHERE application = '$app'";
         return $this->db->querySingle($query);
     }
+
+    public function listId()
+    {
+        $row = array();
+        $query = "SELECT application FROM  " . self::TABLE;
+        $result = $this->db->query($query);
+
+        while ($res = $result->fetchArray(SQLITE3_NUM))
+        {
+            array_push($row, $res[0]);
+        }
+
+        return $row;
+    }
 }
 ?>
