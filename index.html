@@ -24,6 +24,7 @@
         $("#map-render-markers-button").attr("disabled", "disabled");
         $("#map-analytics-button").attr("disabled", "disabled");
         $("#map-highlight-checkbox").attr("disabled", "disabled");
+        $("#state-zoom-checkbox").attr("disabled", "disabled");
     });
 
     var widgets = [];
@@ -284,16 +285,36 @@
         }
 
         function set_state(saved_state) {
-            //console.log(saved_state);
+            console.log(saved_state);
             // Clear the iFrame, widgets, widget selector, and update
             // data list
             $("#" + constants.MAP_PREVIEW_ID).empty();
             $("#widget-selector").empty();
             widgets.length = 0;
-            refresh_data_selector();
+            
+            setTimeout(refresh_data_selector, 250);
 
             us_map.load_state(saved_state.widgets.us_map);
-
+			
+			if (typeof saved_state.widgets.us_map.UA !== 'undefined') {
+				$("#map-analytics-button").attr("disabled", "disabled");
+				$("#analytics-select").val("UA-45743706-1");
+			}
+			
+			if (saved_state.widgets.us_map.highlightingEnabled) {
+				$('#map-highlight-checkbox').attr('checked','checked');
+			}
+			
+			if (saved_state.widgets.us_map.bound_data.indexOf("data/data_full.csv") !== -1) {
+				$("#data-sources").val("data/data_full.csv");
+				$("#map-bind-data-button").attr("disabled", "disabled");
+			}
+			
+			if (typeof saved_state.widgets.us_map.color !== 'undefined') {
+				$("#color-sources").val(saved_state.widgets.us_map.color);
+			} else {
+				$("#color-sources").val("black");
+			}
         }
 
         function save_state() {
@@ -545,7 +566,7 @@
 								};
 								
 								var filterOptions = {
-									data: us_map.data[parseInt($("#filter-data").val())],
+									data: parseInt($("#filter-data").val()),
 									value: value,
 									field: field,
 									operator: operator

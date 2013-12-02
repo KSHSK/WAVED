@@ -22,13 +22,16 @@ var us_map = {
         widgets.push(this);
         $.extend(state.widgets, {"us_map":{}});
         
+        // TODO: Should these go elsewhere? They're directly modifying the index page's fields from what's supposed to 
+        // be a (generally) decoupled module.
         $("#map-generate-button").attr("disabled", "disabled");
         $("#map-colorize-button").removeAttr("disabled");
         $("#map-bind-data-button").removeAttr("disabled");
         $("#map-render-markers-button").removeAttr("disabled");
         $("#map-analytics-button").removeAttr("disabled");
         $("#map-highlight-checkbox").removeAttr("disabled");
-        
+        $("#state-zoom-checkbox").removeAttr("disabled");
+
         $("#widget-selector").append("<option id='us-map-widget-option'>US Map</option>");
         $("#us-map-widget-option").on("click", function(){
             $("#data-selector").empty();
@@ -155,13 +158,14 @@ var us_map = {
         // Clear the state of the us_map.data array and map preview frame
         us_map.data = [];
         
-        if (us_map_state.render === true) {
+        if (us_map_state && us_map_state.render === true) {
             us_map.width = us_map_state.width;
             us_map.height = us_map_state.height;
             us_map.highlightingEnabled = us_map_state.highlightingEnabled;
             us_map.stateZoomEnabled = us_map_state.stateZoomEnabled;
             
             us_map.render();
+            state.widgets.us_map.data_filter = us_map_state.data_filter;
             
             // Everything else should require the map so they are nested here
             if (us_map_state.bound_data.length > 0) {
@@ -238,7 +242,12 @@ var us_map = {
 			var data;
             
             if (typeof filterOptions !== 'undefined') {
-            	data = filterOptions.data.data;
+                state.widgets.us_map.data_filter = filterOptions;
+            }
+
+            if (typeof state.widgets.us_map.data_filter !== 'undefined') {
+                filterOptions = state.widgets.us_map.data_filter;
+            	data = us_map.data[filterOptions.data].data;
 				
 				
 				us_map.circle_element.filter = true;
@@ -265,7 +274,7 @@ var us_map = {
 				data = options.data.data;
             }
             
-            var n = us_map.svg.selectAll("circle")
+            var n = us_map.g.selectAll("circle")
             			.data(data, function(d) {
             				return d.GEOID10; 	// TODO: don't use this arbitrary field, since it might not exist.
             			});
@@ -426,28 +435,29 @@ var us_map = {
         var state_zoom_func = 
             "var x, y, k;" + "\n" +
         
-        "if(d && us_map.centered !== d){" + "\n" + 
+        "if(d && centered !== d){" + "\n" + 
             "var centroid = path.centroid(d);" + "\n" +
             "x = centroid[0];" + "\n" +
             "y = centroid[1];" + "\n" +
             "k=4;" + "\n" +
             "centered = d;" + "\n" +
-        "}" + "\n"
-        "else{" + "\n"
+        "}" + "\n" +
+        "else{" + "\n" +
             "x = " + us_map.width/2.0 + ";" + "\n" +
             "y = " + us_map.height/2.0 + ";" + "\n" +
             "k = 1;" + "\n" +
-            "us_map.centered = null;" + "\n" +
-        "}" + "\n"
-        
-        "us_map.g.transition()" + "\n" +
+            "centered = null;" + "\n" +
+        "}" + "\n" +
+        "g.transition()" + "\n" +
         ".duration(750)" + "\n" +
         ".attr(\"transform\", \"translate(\"" + "\n" +
-            "+ " + us_map.width/2.0 + "," + "\n" +
-            "+ " + us_map.height/2.0 + ")scale(" + "\n" + 
+            "+ " + us_map.width/2.0 + "+ \",\"" + "\n" +
+            "+ " + us_map.height/2.0 + " +\")scale(\"" + "\n" + 
             "+ k + \")translate(\"" + "\n" + 
             "+ -x + \",\" + -y + \")\")" + "\n" +
-        ".style(\"stroke-width\", 1.5/k + \"px\");" + "\n";
+        ".style(\"stroke-width\", 1.5/k + \"px\");";
+        
+        console.log(state_zoom_func);
         
         // Hack until how we're packaging data with the download is decided
         // TODO: Update d.Lon, d.Lat w/ the options passed in to glyph render function, same w/ data filepath
@@ -481,7 +491,7 @@ var us_map = {
                 // This will eventually be a user defined scale.
                 "\t" + "\t" + "\t" + "var populationRadiusScale = d3.scale.linear().domain([1000,500000]).range([2,10]).clamp(true);" + "\n" + 
                 
-                "\t" + "\t" + "\t" + "svg.selectAll(\"circle\")" + "\n" + 
+                "\t" + "\t" + "\t" + "g.selectAll(\"circle\")" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + ".data(data" + ((filterString.length === 0) ? "" : (filterString + "\n")) + ")" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + ".enter()" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + ".append(\"circle\")" + "\n" + 
@@ -510,14 +520,14 @@ var us_map = {
         }
           
         return ("\t" + "var svg = d3.select(\"#" + constants.EXPORT_CONTAINER_ID + "\")" + "\n" +
-                "\t" + ".append(\"svg\")" + "\n" +
-                "\t" + ".attr(\"width\", " + us_map.width + ")" + "\n" +
-                "\t" + ".attr(\"height\", " + us_map.height + ");" + "\n\n" +
+                "\t" + "\t" + ".append(\"svg\")" + "\n" +
+                "\t" + "\t" + ".attr(\"width\", " + us_map.width + ")" + "\n" +
+                "\t" + "\t" + ".attr(\"height\", " + us_map.height + ");" + "\n\n" +
                 
                 "\t" + "var projection = d3.geo.albersUsa().translate(([" + us_map.width/2.0 + ", " + us_map.height/2.0 + "]));" + "\n" +
                 "\t" + "var path = d3.geo.path().projection(projection);" + "\n\n" + 
-                "\t" + "var g = svg.append(\"g\");" +
-                "\t" + "var centered;" +
+                "\t" + "var g = svg.append(\"g\");" + "\n" +
+                "\t" + "var centered = null;" + "\n" +
                 
                 // TODO: We need to export data/states.json with the finished application
                 "\t" + "d3.json(\"data/states.json\", function(error, json) {" + "\n" +
@@ -547,7 +557,6 @@ var us_map = {
                 "\t" + "\t" + "\t" + "\t" + "console.log('Clicked ' + d.properties.name);" + "\n" +
                 // Add zooming on click
                 "\t" + "\t" + "\t" + "\t" + (us_map.stateZoomEnabled ? state_zoom_func : "") + "\n" +
-                "\t" + "\t" + "\t" + "\t" + "console.log('Clicked ' + d.properties.name);" + "\n" +
                 // TODO: Use exported application's name for tracking events.
                 "\t" + "\t" + "\t" + "\t" + (us_map.UA.length === 0 ? "" : "_gaq.push(['_trackEvent', 'ExportedPrototype', 'click-'+d.properties.name]);") + "\n" +                 
                 "\t" + "\t" + "\t" + "});" + "\n" +
