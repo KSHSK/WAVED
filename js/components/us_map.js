@@ -71,7 +71,7 @@ var us_map = {
                     .enter()
                     .append("path")
                     .attr("d", path)
-                    .attr("stoke", "white")
+                    .attr("stroke", "white")
                     .on("mouseover", function(d){
                         if(us_map.highlightingEnabled){
                             d3.select(this).style("opacity", 0.5);
