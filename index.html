@@ -25,6 +25,7 @@
         $("#map-highlight-checkbox").attr("disabled", "disabled");
 		$("#map-filter-button").attr("disabled", "disabled");
         $("#state-zoom-checkbox").attr("disabled", "disabled");
+        $("#remove-filter-button").attr("disabled", "disabled");        
     });
 
 	function enableMapUIButtons() {
@@ -36,6 +37,7 @@
 		$("#map-highlight-checkbox").removeAttr("disabled");
 		$("#state-zoom-checkbox").removeAttr("disabled");
 		$("#map-filter-button").removeAttr("disabled");
+		$("#remove-filter-button").removeAttr("disabled");
 	}
 
     var widgets = [];
@@ -112,11 +114,14 @@
                 
             <br />  
 			<button id="map-render-markers-button"
-					onclick="show_glyph_dialog();">Render city markers</button>
+					onclick="show_glyph_dialog();">Add/Edit city markers</button>
 			<br>
 			
 			<button id="map-filter-button"
-					onclick="show_filter_dialog();">Filter data</button>
+					onclick="show_filter_dialog();">Add/Edit Filter</button>
+			<button id="remove-filter-button"
+					onclick="remove_filter();">Remove Filter</button>
+					
 			<br>
 
 			<div id="widget-selector-container">
@@ -197,7 +202,6 @@
 		</div>
 		
 		<div id="glyph-filter-dialog" class="hidden">
-		
 			<table>
 				<tr>
 					<td>Data:</td>
@@ -223,6 +227,10 @@
 					<td><input type="text" id="filter-value" /></td>
 				</tr>
 			</table>
+		</div>
+		
+		<div id="remove-filter-dialog" class="hidden">
+			Data: <select id="remove-filter-data"></select>
 		</div>
 	</div>
 	<script>
@@ -593,10 +601,56 @@
 								};
 								
 								us_map.circle_element.render(glyphOptions, filterOptions);
+								$("#remove-filter-button").removeAttr("disabled");
 								$(this).dialog("close");
 							} else {
 								alert("Please select a field and enter a value.");
 							}
+						} 
+					},
+					{
+						text: "Cancel",
+						click: function() {
+							$(this).dialog("close");
+						}
+					}
+				]
+			});
+        }
+        
+        function remove_filter() {
+        
+        	$("#remove-filter-data").empty();
+        	
+        	for (var i = 0; i < us_map.data.length; i++) {
+        		$("#remove-filter-data").append("<option value=\"" + i + "\">" + us_map.data[i].filepath + "</option>");
+        	}
+        
+        	$("#remove-filter-dialog").dialog({
+				dialogClass: "no-close",
+			  	title: "Remove Filter",
+			  	modal: true,
+				show: true,
+				hide: "fade",
+				width: "400px",
+				buttons: [
+					{
+						text: "Remove",
+						click: function() {
+
+							var glyphOptions = {
+								data: us_map.data[parseInt($("#remove-filter-data").val())],
+								color: us_map.circle_element.color,
+								opacity: us_map.circle_element.opacity,
+								size: us_map.circle_element.size,
+								lat: us_map.circle_element.lat,
+								lon: us_map.circle_element.lon
+							};
+		
+							state.widgets.us_map.data_filter = undefined; // Hacky
+							us_map.circle_element.render(glyphOptions);
+							$("#remove-filter-button").attr("disabled", "disabled");
+							$(this).dialog("close");						
 						} 
 					},
 					{
