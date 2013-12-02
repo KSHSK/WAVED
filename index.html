@@ -25,6 +25,8 @@
         $("#map-analytics-button").attr("disabled", "disabled");
         $("#map-highlight-checkbox").attr("disabled", "disabled");
         $("#state-zoom-checkbox").attr("disabled", "disabled");
+
+        loadDataFilenames();
     });
 
     var widgets = [];
@@ -72,7 +74,6 @@
 			<br /><br />
 			<select id="data-sources">
 				<option value="">Select data to bind...</option>
-				<option value="data/data_full.csv">data/data_full.csv</option>
 			</select>
 			<button id="map-bind-data-button"
 				onclick="bind_csv(); setTimeout(refresh_data_selector, 250);">Bind
@@ -309,11 +310,6 @@
 			    $('#state-zoom-checkbox').prop('checked', true);
 			}
 			
-			if (saved_state.widgets.us_map.bound_data.indexOf("data/data_full.csv") !== -1) {
-				$("#data-sources").val("data/data_full.csv");
-				$("#map-bind-data-button").attr("disabled", "disabled");
-			}
-			
 			if (typeof saved_state.widgets.us_map.color !== 'undefined') {
 				$("#color-sources").val(saved_state.widgets.us_map.color);
 			} else {
@@ -365,6 +361,7 @@
                     var dataSelect = $("#data-sources");
                     var newFileOption = $("<option/>").val(dataObj.filePath).text(dataObj.filePath);
                     dataSelect.append(newFileOption);
+                    alert("Uploaded new file");
                 }
 
             });
@@ -445,6 +442,22 @@
             exportLink.attr("href", "php/download_zip.php?fileName=" + fileName);
             exportLink.attr("download", fileName);
             exportLink[0].click();
+        }
+
+        function loadDataFilenames() {
+            var dataFileSelect = $("#data-sources");
+
+            $.ajax({
+                type : "GET",
+                url : "php/getDataFilePaths.php",
+                success : function(data) {
+                    var filenames = JSON.parse(data);
+                    for (var i = 0; i < filenames.length; i++) {
+                        var name = filenames[i];
+                        var option = $("<option/>").val(name).text(name).appendTo(dataFileSelect);
+                    }
+                }
+            });
         }
 
         function refresh_data_selector() {
