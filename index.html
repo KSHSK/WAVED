@@ -302,7 +302,11 @@
 			}
 			
 			if (saved_state.widgets.us_map.highlightingEnabled) {
-				$('#map-highlight-checkbox').attr('checked','checked');
+				$('#map-highlight-checkbox').prop('checked', true);
+			}
+			
+			if (saved_state.widgets.us_map.stateZoomEnabled){
+			    $('#state-zoom-checkbox').prop('checked', true);
 			}
 			
 			if (saved_state.widgets.us_map.bound_data.indexOf("data/data_full.csv") !== -1) {
