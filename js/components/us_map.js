@@ -491,27 +491,27 @@ var us_map = {
         var tooltipOutString = "";
         
         if (us_map.tooltip) {
-        	tooltipHoverString += "\t\t\t\t\t" + "var coords = d3.mouse(this);" + "\n" +
-							"\t\t\t\t\t" + "var x = coords[0];" + "\n" +
-							"\t\t\t\t\t" + "var y = coords[1];" + "\n" +
+        	tooltipHoverString += "var coords = d3.mouse(this);" + "\n" +
+							"\t\t\t\t" + "var x = coords[0];" + "\n" +
+							"\t\t\t\t" + "var y = coords[1];" + "\n" +
 
-							"\t\t\t\t\t" + "d3.select(\"#tooltip\")" + "\n" +
-							"\t\t\t\t\t\t" + ".style(\"left\", (x + 20) + \"px\")" + "\n" +
-							"\t\t\t\t\t\t" + ".style(\"top\", (y - 42)+ \"px\")" + "\n" +
-							"\t\t\t\t\t\t" + ".select(\"#state-name\")" + "\n" +
-							"\t\t\t\t\t\t" + ".text(d.properties.name);" + "\n" +
+							"\t\t\t\t" + "d3.select(\"#tooltip\")" + "\n" +
+							"\t\t\t\t\t" + ".style(\"left\", (x + 20) + \"px\")" + "\n" +
+							"\t\t\t\t\t" + ".style(\"top\", (y - 42)+ \"px\")" + "\n" +
+							"\t\t\t\t\t" + ".select(\"#state-name\")" + "\n" +
+							"\t\t\t\t\t" + ".text(d.properties.name);" + "\n" +
 							
-							"\t\t\t\t\t" + "d3.select(\"#tooltip\").classed(\"hidden\", false);" + "\n";
+							"\t\t\t\t" + "d3.select(\"#tooltip\").classed(\"hidden\", false);" + "\n";
 							
-			tooltipMoveString += "\t\t\t\t\t" + "var coords = d3.mouse(this);" + "\n" +
-							"\t\t\t\t\t" + "var x = coords[0];" + "\n" +
-							"\t\t\t\t\t" + "var y = coords[1];" + "\n" +
+			tooltipMoveString += "var coords = d3.mouse(this);" + "\n" +
+							"\t\t\t\t" + "var x = coords[0];" + "\n" +
+							"\t\t\t\t" + "var y = coords[1];" + "\n" +
 
-							"\t\t\t\t\t" + "d3.select(\"#tooltip\")" + "\n" +
-							"\t\t\t\t\t\t" + ".style(\"left\", (x + 20) + \"px\")" + "\n" +
-							"\t\t\t\t\t\t" + ".style(\"top\", (y - 42) + \"px\");" + "\n";
+							"\t\t\t\t" + "d3.select(\"#tooltip\")" + "\n" +
+							"\t\t\t\t\t" + ".style(\"left\", (x + 20) + \"px\")" + "\n" +
+							"\t\t\t\t\t" + ".style(\"top\", (y - 42) + \"px\");" + "\n";
 							
-			tooltipOutString += "\t\t\t\t\t" + "d3.select(\"#tooltip\").classed(\"hidden\", true);" + "\n";
+			tooltipOutString += "d3.select(\"#tooltip\").classed(\"hidden\", true);" + "\n";
         }
         
         var renderCircleString = "";
@@ -546,7 +546,7 @@ var us_map = {
                 "\t" + "\t" + "\t" + "var populationRadiusScale = d3.scale.linear().domain([1000,500000]).range([2,10]).clamp(true);" + "\n" + 
                 
                 "\t" + "\t" + "\t" + "g.selectAll(\"circle\")" + "\n" + 
-                "\t" + "\t" + "\t" + "\t" + ".data(data" + ((filterString.length === 0) ? "" : (filterString + "\n")) + ")" + "\n" + 
+                "\t" + "\t" + "\t" + "\t" + ".data(data" + ((filterString.length === 0) ? "" : filterString) + ")" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + ".enter()" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + ".append(\"circle\")" + "\n" + 
                 "\t" + "\t" + "\t" + "\t" + ".attr(\"cx\", function(d, i) {" + "\n" + 

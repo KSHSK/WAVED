@@ -105,19 +105,19 @@
 			<button id="map-analytics-button" onclick="add_analytics();">Add</button>
 			
 			<br />
-			<span class="checkboxLabel">Highlighting: </span>
+			<span class="checkboxLabel">Highlight state on hover: </span>
 			<input
 				type="checkbox" id="map-highlight-checkbox"
 				onclick="toggle_map_highlight();" />
 			
 			<br />
-            <span class="checkboxLabel">State zoom: </span>
+            <span class="checkboxLabel">Zoom to state on click: </span>
             <input
                 type="checkbox" id="state-zoom-checkbox"
                 onclick="toggle_state_zoom();" />
             
 			<br />
-			<span class="checkboxLabel">State Tooltip on Hover: </span>
+			<span class="checkboxLabel">State tooltip on hover: </span>
 			<input
 				type="checkbox" id="map-tooltip-checkbox"
 				onclick="toggle_map_tooltip();" />
@@ -192,7 +192,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td>Scale Size by </td>
+					<td>Scale by </td>
 					<td>
 						<select id="glyph-size">
 						</select>
@@ -373,6 +373,7 @@
                     'json' : JSON.stringify(state)
                 };
                 $.post('php/setApplicationState.php', request, loadApplicationNames);
+                alert("Application saved!");
             }
         }
 
