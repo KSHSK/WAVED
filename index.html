@@ -9,8 +9,7 @@
 <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 <script src="http://d3js.org/topojson.v1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="style/style.css">
-<link rel="stylesheet"
-    href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
     
 <script type="text/javascript" src="js/components/constants.js"></script>
 <script type="text/javascript" src="js/components/us_map.js"></script>
@@ -24,8 +23,20 @@
         $("#map-render-markers-button").attr("disabled", "disabled");
         $("#map-analytics-button").attr("disabled", "disabled");
         $("#map-highlight-checkbox").attr("disabled", "disabled");
+		$("#map-filter-button").attr("disabled", "disabled");
         $("#state-zoom-checkbox").attr("disabled", "disabled");
     });
+
+	function enableMapUIButtons() {
+		$("#map-generate-button").attr("disabled", "disabled");
+		$("#map-colorize-button").removeAttr("disabled");
+		$("#map-bind-data-button").removeAttr("disabled");
+		$("#map-render-markers-button").removeAttr("disabled");
+		$("#map-analytics-button").removeAttr("disabled");
+		$("#map-highlight-checkbox").removeAttr("disabled");
+		$("#state-zoom-checkbox").removeAttr("disabled");
+		$("#map-filter-button").removeAttr("disabled");
+	}
 
     var widgets = [];
 </script>
@@ -39,15 +50,25 @@
 		<div id="widget-panel">
 			<div class="widget-header">Save/Load</div>
 			<input type="text" id="application-name"
-				placeholder="Application Name" />
+				placeholder="Application Name" /> <br/>
 			<button onclick="save_state()">Save State</button>
 			<button onclick="load_state()">Load State</button>
 			<br />
-			<button id="export-demo-button">Export</button>
+			<br />
 			<input type="text" id="export-file-name" placeholder="Filename" /> <a
 				id="export-file-link" href="" style="display: none"></a>
-			<div class="widget-header">Widget Controls</div>
-			<button id="map-generate-button" onclick="us_map.render();">Add
+			<button id="export-demo-button">Export</button>	
+				
+			<div class="widget-header">Data</div>
+			<form action="php/upload_data_file.php" method="post"
+				id="dataFileUploadForm" enctype="multipart/form-data">
+				<label for="file" class="dataFileLabel">Upload File:</label> <input
+					type="file" name="file" id="dataFileUpload"><br>
+			</form>
+			<button id="submitDataFileUpload">Upload Data</button>	
+				
+			<div class="widget-header">Map Widget Controls</div>
+			<button id="map-generate-button" onclick="us_map.render(); enableMapUIButtons();">Add
 				Map Widget</button>
 			<br />
 			<select id="color-sources">
@@ -60,14 +81,6 @@
 			</select>
 			<button id="map-colorize-button" onclick="color_map();">Colorize
 				Map</button>
-				
-			<br /><br />
-			<form action="php/upload_data_file.php" method="post"
-				id="dataFileUploadForm" enctype="multipart/form-data">
-				<label for="file" class="dataFileLabel">Upload Data File:</label> <input
-					type="file" name="file" id="dataFileUpload"><br>
-			</form>
-			<button id="submitDataFileUpload">Upload Data</button>
 			
 			<br /><br />
 			<select id="data-sources">
@@ -117,7 +130,6 @@
 
 			<div class="widget-header">Debug</div>
 			<button onclick="log_svg()">Log SVG</button>
-			<br />
 			<button onclick="log_state()">Log State</button>
 			<br />
 		</div>
@@ -294,7 +306,11 @@
             
             setTimeout(refresh_data_selector, 250);
 
-            us_map.load_state(saved_state.widgets.us_map);
+			if (typeof saved_state.widgets.us_map !== 'undefined') {
+				us_map.load_state(saved_state.widgets.us_map);
+				
+				enableMapUIButtons();
+			}
 			
 			if (typeof saved_state.widgets.us_map.UA !== 'undefined') {
 				$("#map-analytics-button").attr("disabled", "disabled");

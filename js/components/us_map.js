@@ -21,16 +21,6 @@ var us_map = {
         // This is the jQuery way of adding attributes to a JSON object
         widgets.push(this);
         $.extend(state.widgets, {"us_map":{}});
-        
-        // TODO: Should these go elsewhere? They're directly modifying the index page's fields from what's supposed to 
-        // be a (generally) decoupled module.
-        $("#map-generate-button").attr("disabled", "disabled");
-        $("#map-colorize-button").removeAttr("disabled");
-        $("#map-bind-data-button").removeAttr("disabled");
-        $("#map-render-markers-button").removeAttr("disabled");
-        $("#map-analytics-button").removeAttr("disabled");
-        $("#map-highlight-checkbox").removeAttr("disabled");
-        $("#state-zoom-checkbox").removeAttr("disabled");
 
         $("#widget-selector").append("<option id='us-map-widget-option'>US Map</option>");
         $("#us-map-widget-option").on("click", function(){
@@ -435,32 +425,30 @@ var us_map = {
         var state_zoom_func = 
             "var x, y, k;" + "\n" +
         
-        "if(d && centered !== d){" + "\n" + 
-            "var centroid = path.centroid(d);" + "\n" +
-            "x = centroid[0];" + "\n" +
-            "y = centroid[1];" + "\n" +
-            "k=4;" + "\n" +
-            "centered = d;" + "\n" +
-        "}" + "\n" +
-        "else{" + "\n" +
-            "x = " + us_map.width/2.0 + ";" + "\n" +
-            "y = " + us_map.height/2.0 + ";" + "\n" +
-            "k = 1;" + "\n" +
-            "centered = null;" + "\n" +
-        "}" + "\n" +
-        "g.transition()" + "\n" +
-        ".duration(750)" + "\n" +
-        ".attr(\"transform\", \"translate(\"" + "\n" +
-            "+ " + us_map.width/2.0 + "+ \",\"" + "\n" +
-            "+ " + us_map.height/2.0 + " +\")scale(\"" + "\n" + 
-            "+ k + \")translate(\"" + "\n" + 
-            "+ -x + \",\" + -y + \")\")" + "\n" +
-        ".style(\"stroke-width\", 1.5/k + \"px\");";
+		"\t\t\t\t" + "if(d && centered !== d){" + "\n" + 
+            "\t\t\t\t\t" + "var centroid = path.centroid(d);" + "\n" +
+            "\t\t\t\t\t" + "x = centroid[0];" + "\n" +
+            "\t\t\t\t\t" + "y = centroid[1];" + "\n" +
+            "\t\t\t\t\t" + "k=4;" + "\n" +
+            "\t\t\t\t\t" + "centered = d;" + "\n" +
+		"\t\t\t\t" +  "}" + "\n" +
+		"\t\t\t\t" +  "else{" + "\n" +
+			"\t\t\t\t\t" + "x = " + us_map.width/2.0 + ";" + "\n" +
+			"\t\t\t\t\t" + "y = " + us_map.height/2.0 + ";" + "\n" +
+        	"\t\t\t\t\t" + "k = 1;" + "\n" +
+			"\t\t\t\t\t" + "centered = null;" + "\n" +
+        "\t\t\t\t" + "}" + "\n" +
+        "\t\t\t\t" + "g.transition()" + "\n" +
+        "\t\t\t\t" + ".duration(750)" + "\n" +
+        "\t\t\t\t" + ".attr(\"transform\", \"translate(\"" + "\n" +
+			"\t\t\t\t\t" + "+ " + us_map.width/2.0 + "+ \",\"" + "\n" +
+			"\t\t\t\t\t" + "+ " + us_map.height/2.0 + " +\")scale(\"" + "\n" + 
+			"\t\t\t\t\t" + "+ k + \")translate(\"" + "\n" + 
+			"\t\t\t\t\t" + "+ -x + \",\" + -y + \")\")" + "\n" +
+		"\t\t\t\t" + ".style(\"stroke-width\", 1.5/k + \"px\");";
         
         console.log(state_zoom_func);
         
-        // Hack until how we're packaging data with the download is decided
-        // TODO: Update d.Lon, d.Lat w/ the options passed in to glyph render function, same w/ data filepath
         var renderCircleString = "";
         if (us_map.renderCircles) {
         	
@@ -484,7 +472,8 @@ var us_map = {
         
             renderCircleString = 
                 // Filepath should be selected from the map's state.                 
-                ("\t" + "d3.csv(\""+ filepath +"\", function(error, data) {" + "\n" + 
+                ("\t" + "// Create glyphs" + "\n" +
+                "\t" + "d3.csv(\""+ filepath +"\", function(error, data) {" + "\n" + 
                 "\t" + "\t" + "if (error) {" + "\n" + 
                 "\t" + "\t" + "\t" + "console.log(error)" + "\n" + 
                 "\t" + "\t" + "} else {" + "\n" + 
@@ -519,7 +508,8 @@ var us_map = {
                 "\t" + "});" + "\n");
         }
           
-        return ("\t" + "var svg = d3.select(\"#" + constants.EXPORT_CONTAINER_ID + "\")" + "\n" +
+        return ("\t" + "// Create SVG Container" + "\n" +
+        		"\t" + "var svg = d3.select(\"#" + constants.EXPORT_CONTAINER_ID + "\")" + "\n" +
                 "\t" + "\t" + ".append(\"svg\")" + "\n" +
                 "\t" + "\t" + ".attr(\"width\", " + us_map.width + ")" + "\n" +
                 "\t" + "\t" + ".attr(\"height\", " + us_map.height + ");" + "\n\n" +
@@ -528,8 +518,8 @@ var us_map = {
                 "\t" + "var path = d3.geo.path().projection(projection);" + "\n\n" + 
                 "\t" + "var g = svg.append(\"g\");" + "\n" +
                 "\t" + "var centered = null;" + "\n" +
-                
-                // TODO: We need to export data/states.json with the finished application
+                "\n" +
+                "\t" + "// Load state geometry and create map." + "\n" +
                 "\t" + "d3.json(\"data/states.json\", function(error, json) {" + "\n" +
                 "\t" + "if(error) {" + "\n" +
                 "\t" + "\t" + "console.log(error)" + "\n" +
