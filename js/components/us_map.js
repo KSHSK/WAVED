@@ -211,7 +211,7 @@ var us_map = {
 								opacity: us_map_state.circle_element.opacity
 							};
 							
-                            us_map.circle_element.render(options);
+                            us_map.circle_element.render(options, us_map_state.data_filter);
                             break; // This break might not be needed?
                         }
                     }
@@ -234,15 +234,15 @@ var us_map = {
         // Assumes the data we want is the first element of the data array in us_map
         // Assumes we know that the data file is correct and has lat, long and such
         // Has a hard-coded filter
-        render: function(options, filterOptions) {
+        render: function(glyphOptions, filterOptions) {
         
             us_map.renderCircles = true;
-            us_map.circle_element.data = options.data.filepath;
-            us_map.circle_element.size = options.size;
-            us_map.circle_element.color = options.color;
-            us_map.circle_element.opacity = options.opacity;
-            us_map.circle_element.lat = options.lat;
-            us_map.circle_element.lon = options.lon;
+            us_map.circle_element.data = glyphOptions.data.filepath;
+            us_map.circle_element.size = glyphOptions.size;
+            us_map.circle_element.color = glyphOptions.color;
+            us_map.circle_element.opacity = glyphOptions.opacity;
+            us_map.circle_element.lat = glyphOptions.lat;
+            us_map.circle_element.lon = glyphOptions.lon;
             
             if(state.widgets.us_map.circle_element == null) {
                 state.widgets.us_map.circle_element = {};
@@ -292,7 +292,7 @@ var us_map = {
             		}
             	});
             } else {
-				data = options.data.data;
+				data = glyphOptions.data.data;
             }
             
             var n = us_map.g.selectAll("circle")
@@ -304,60 +304,60 @@ var us_map = {
             n.enter()
                 .append("circle")
                 .attr("cx", function(d, i) {
-                    var coords = us_map.projection([d[options.lon], d[options.lat]]);
+                    var coords = us_map.projection([d[glyphOptions.lon], d[glyphOptions.lat]]);
                     if (coords !== null) {
-                        return us_map.projection([d[options.lon], d[options.lat]])[0];                            
+                        return us_map.projection([d[glyphOptions.lon], d[glyphOptions.lat]])[0];                            
                     }
                 })
                 .attr("cy", function(d, i) {
-                    var coords = us_map.projection([d[options.lon], d[options.lat]]);
+                    var coords = us_map.projection([d[glyphOptions.lon], d[glyphOptions.lat]]);
                     if (coords !== null) {
-                        return us_map.projection([d[options.lon], d[options.lat]])[1];                            
+                        return us_map.projection([d[glyphOptions.lon], d[glyphOptions.lat]])[1];                            
                     }
                 })
                 .attr("r", function(d, i) {
-                    var coords = us_map.projection([d[options.lon], d[options.lat]]);
+                    var coords = us_map.projection([d[glyphOptions.lon], d[glyphOptions.lat]]);
                     if (coords !== null) {
-                        return populationRadiusScale(d[options.size]);
+                        return populationRadiusScale(d[glyphOptions.size]);
                     }
                 })
-                .style("fill", options.color)
-                .style("opacity", options.opacity);
+                .style("fill", glyphOptions.color)
+                .style("opacity", glyphOptions.opacity);
                 
                 
             // Update glyphs
             n.attr("cx", function(d, i) {
-                    var coords = us_map.projection([d[options.lon], d[options.lat]]);
+                    var coords = us_map.projection([d[glyphOptions.lon], d[glyphOptions.lat]]);
                     if (coords !== null) {
-                        return us_map.projection([d[options.lon], d[options.lat]])[0];                            
+                        return us_map.projection([d[glyphOptions.lon], d[glyphOptions.lat]])[0];                            
                     }
                 })
                 .attr("cy", function(d, i) {
-                    var coords = us_map.projection([d[options.lon], d[options.lat]]);
+                    var coords = us_map.projection([d[glyphOptions.lon], d[glyphOptions.lat]]);
                     if (coords !== null) {
-                        return us_map.projection([d[options.lon], d[options.lat]])[1];                            
+                        return us_map.projection([d[glyphOptions.lon], d[glyphOptions.lat]])[1];                            
                     }
                 })
                 .attr("r", function(d, i) {
-                    var coords = us_map.projection([d[options.lon], d[options.lat]]);
+                    var coords = us_map.projection([d[glyphOptions.lon], d[glyphOptions.lat]]);
                     if (coords !== null) {
-                        return populationRadiusScale(d[options.size]);
+                        return populationRadiusScale(d[glyphOptions.size]);
                     }
                 })
-                .style("fill", options.color)
-                .style("opacity", options.opacity);
+                .style("fill", glyphOptions.color)
+                .style("opacity", glyphOptions.opacity);
                 
             // Remove glyphs
             n.exit()
             	.remove();
             
-            state.widgets.us_map.circle_element.data = options.data.filepath;
+            state.widgets.us_map.circle_element.data = glyphOptions.data.filepath;
             state.widgets.us_map.circle_element.render = true;
-            state.widgets.us_map.circle_element.color = options.color;
-            state.widgets.us_map.circle_element.opacity = options.opacity;
-            state.widgets.us_map.circle_element.size = options.size;
-            state.widgets.us_map.circle_element.lat = options.lat;
-            state.widgets.us_map.circle_element.lon = options.lon;
+            state.widgets.us_map.circle_element.color = glyphOptions.color;
+            state.widgets.us_map.circle_element.opacity = glyphOptions.opacity;
+            state.widgets.us_map.circle_element.size = glyphOptions.size;
+            state.widgets.us_map.circle_element.lat = glyphOptions.lat;
+            state.widgets.us_map.circle_element.lon = glyphOptions.lon;
             
         }
     },
