@@ -25,6 +25,7 @@
         $("#map-highlight-checkbox").attr("disabled", "disabled");
 		$("#map-filter-button").attr("disabled", "disabled");
         $("#state-zoom-checkbox").attr("disabled", "disabled");
+        $("#map-tooltip-checkbox").attr("disabled", "disabled");
         $("#remove-filter-button").attr("disabled", "disabled");        
     });
 
@@ -36,6 +37,7 @@
 		$("#map-analytics-button").removeAttr("disabled");
 		$("#map-highlight-checkbox").removeAttr("disabled");
 		$("#state-zoom-checkbox").removeAttr("disabled");
+		$("#map-tooltip-checkbox").removeAttr("disabled");
 		$("#map-filter-button").removeAttr("disabled");
 		$("#remove-filter-button").removeAttr("disabled");
 	}
@@ -107,6 +109,12 @@
 				onclick="toggle_map_highlight();" />
 				
 			<br />
+			<span class="checkboxLabel">State Tooltip on Hover: </span>
+			<input
+				type="checkbox" id="map-tooltip-checkbox"
+				onclick="toggle_map_tooltip();" />
+				
+			<br />
             <span class="checkboxLabel">State zoom: </span>
             <input
                 type="checkbox" id="state-zoom-checkbox"
@@ -138,9 +146,13 @@
 			<button onclick="log_state()">Log State</button>
 			<br />
 		</div>
+		
 		<div id="workspace-panel">
 			<div id="workspace-header">Map Panel</div>
-				<div id="workspace-preview"></div>
+			<div id="workspace-preview"></div>
+			<div id="tooltip" class="hidden">
+				<p><span id="state-name"></span></p>
+			</div>		
 		</div>
 		
 		<div id="glyph-creation-dialog" class="hidden">
@@ -329,6 +341,10 @@
 				$('#map-highlight-checkbox').prop('checked', true);
 			}
 			
+			if (saved_state.widgets.us_map.tooltip) {
+				$('#map-tooltip-checkbox').prop('checked', true);
+			}
+			
 			if (saved_state.widgets.us_map.stateZoomEnabled){
 			    $('#state-zoom-checkbox').prop('checked', true);
 			}
@@ -420,9 +436,39 @@
             var html = "<html>" + "\n" 
                     + "<head>" + "\n" + constants.D3_IMPORT + "\n" + constants.JQUERY_IMPORT + "\n"
                     + constants.JQUERY_UI_IMPORT + "\n" + constants.JQUERY_UI_STYLE_IMPORT + "\n" + constants.D3_TOPOJSON_IMPORT + "\n"
+                    + "<style type=\"text/css\">" + "\n" 
+                    + "#tooltip {" + "\n" 
+					+ "\t" + "position: absolute;" + "\n" 
+					+ "\t" + "width: 120px;" + "\n" 
+					+ "\t" + "height: auto;" + "\n" 
+					+ "\t" + "padding: 10px;" + "\n" 
+					+ "\t" + "background-color: white;" + "\n" 
+					+ "\t" + "-webkit-border-radius: 10px;" + "\n" 
+					+ "\t" + "-moz-border-radius: 10px;" + "\n" 
+					+ "\t" + "border-radius: 10px;" + "\n" 
+					+ "\t" + "-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);" + "\n" 
+					+ "\t" + "-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);" + "\n" 
+					+ "\t" + "box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);" + "\n" 
+					+ "\t" + "pointer-events: none;" + "\n" 
+					+ "\t" + "}" + "\n\n" 
+
+					+ "#tooltip.hidden {" + "\n" 
+					+ "\t" + "display: none;" + "\n" 
+					+ "}" + "\n\n" 
+
+					+ "#tooltip p {" + "\n" 
+					+ "\t" + "margin: 0;" + "\n" 
+					+ "\t" + "font-family: sans-serif;" + "\n" 
+					+ "\t" + "font-size: 16px;" + "\n" 
+					+ "\t" + "line-height: 20px;" + "\n" 
+					+ "}" + "\n" 
+                    + "</style>" + "\n"
                     + "<script type=\"text/javascript\">" + "\n" + us_map.get_GA_header_script() + "<\/script>" + "\n"
-                    + "</head>" + "\n" + "<body id=\"" + constants.EXPORT_CONTAINER_ID + "\">" + "\n"
-                    + "<script type=\"text/javascript\">" + "\n" + widgetJS + "<\/script>" + "\n" + "</body>" + "\n"
+                    + "</head>" + "\n"
+                    + "<body id=\"" + constants.EXPORT_CONTAINER_ID + "\">" + "\n"
+                    + "<script type=\"text/javascript\">" + "\n" + widgetJS + "<\/script>" + "\n"
+                    + "<div id=\"tooltip\" class=\"hidden\"><p><span id=\"state-name\"></span></p></div>" + "\n"
+                    + "</body>" + "\n"
                     + "</html>";
 
             return html;
@@ -482,6 +528,10 @@
 
         function toggle_map_highlight() {
             us_map.set_highlighting($("#map-highlight-checkbox").is(':checked'));
+        }
+        
+        function toggle_map_tooltip() {
+        	us_map.set_tooltip($("#map-tooltip-checkbox").is(':checked'));
         }
         
         function toggle_state_zoom(){

@@ -18,7 +18,7 @@ html, body {
 
 #tooltip {
 	position: absolute;
-	width: 200px;
+	width: 120px;
 	height: auto;
 	padding: 10px;
 	background-color: white;
@@ -40,7 +40,6 @@ html, body {
 	font-family: sans-serif;
 	font-size: 16px;
 	line-height: 20px;
-	font-color: black;
 }
 
 .ui-tooltip, .arrow:after {
@@ -125,11 +124,12 @@ html, body {
 	vertical-align: top;
 	background: #FFFFFF;
 	padding: 10px 0px 10px 0;
+	position: relative;
 }
 
 #workspace-preview {
 	width: 800px;
-	height: 600px
+	height: 600px;
 }
 
 #workspace-header {

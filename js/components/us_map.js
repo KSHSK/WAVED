@@ -63,12 +63,41 @@ var us_map = {
                     .attr("d", path)
                     .attr("stroke", "white")
                     .on("mouseover", function(d){
-                        if(us_map.highlightingEnabled){
+                        if (us_map.highlightingEnabled){
                             d3.select(this).style("opacity", 0.5);
                         }
+                        
+                        if (us_map.tooltip) {
+                        	var coords = d3.mouse(this);
+							var x = coords[0];
+							var y = coords[1];
+
+							d3.select("#tooltip")
+									.style("left", x + "px")
+									.style("top", y + "px")
+									.select("#state-name")
+									.text(d.properties.name);
+							
+							d3.select("#tooltip").classed("hidden", false);
+                        }
+                    })
+                    .on("mousemove", function(d) {
+                    	if (us_map.tooltip) {
+							var coords = d3.mouse(this);
+							var x = coords[0];
+							var y = coords[1];
+
+							d3.select("#tooltip")
+									.style("left", x + "px")
+									.style("top", y + "px");
+						}
                     })
                     .on("mouseout", function(d) {
                         d3.select(this).style("opacity", 1.0);    
+                        
+                        if (us_map.tooltip) {
+                        	d3.select("#tooltip").classed("hidden", true);
+                        }
                     })
                     .on("click", function(d){
                         if(us_map.stateZoomEnabled){
@@ -90,6 +119,7 @@ var us_map = {
         state.widgets.us_map.width = us_map.width;
         state.widgets.us_map.height = us_map.height;
         state.widgets.us_map.highlightingEnabled = us_map.highlightingEnabled;
+        state.widgets.us_map.tooltip = us_map.tooltip;
         state.widgets.us_map.stateZoomEnabled = us_map.stateZoomEnabled;
     },
     
@@ -152,6 +182,7 @@ var us_map = {
             us_map.width = us_map_state.width;
             us_map.height = us_map_state.height;
             us_map.highlightingEnabled = us_map_state.highlightingEnabled;
+            us_map.tooltip = us_map_state.tooltip;
             us_map.stateZoomEnabled = us_map_state.stateZoomEnabled;
             
             us_map.render();
@@ -349,6 +380,12 @@ var us_map = {
         state.widgets.us_map.highlightingEnabled = enable;
     },
     
+    set_tooltip: function(enable) {
+        us_map.tooltip = enable;
+        
+        state.widgets.us_map.tooltip = enable;
+    },
+    
     set_state_zoom: function(enable){
         us_map.stateZoomEnabled = enable;
         
@@ -449,6 +486,34 @@ var us_map = {
         
         console.log(state_zoom_func);
         
+        var tooltipHoverString = "";
+        var tooltipMoveString = "";
+        var tooltipOutString = "";
+        
+        if (us_map.tooltip) {
+        	tooltipHoverString += "\t\t\t\t\t" + "var coords = d3.mouse(this);" + "\n" +
+							"\t\t\t\t\t" + "var x = coords[0];" + "\n" +
+							"\t\t\t\t\t" + "var y = coords[1];" + "\n" +
+
+							"\t\t\t\t\t" + "d3.select(\"#tooltip\")" + "\n" +
+							"\t\t\t\t\t\t" + ".style(\"left\", (x + 20) + \"px\")" + "\n" +
+							"\t\t\t\t\t\t" + ".style(\"top\", (y - 42)+ \"px\")" + "\n" +
+							"\t\t\t\t\t\t" + ".select(\"#state-name\")" + "\n" +
+							"\t\t\t\t\t\t" + ".text(d.properties.name);" + "\n" +
+							
+							"\t\t\t\t\t" + "d3.select(\"#tooltip\").classed(\"hidden\", false);" + "\n";
+							
+			tooltipMoveString += "\t\t\t\t\t" + "var coords = d3.mouse(this);" + "\n" +
+							"\t\t\t\t\t" + "var x = coords[0];" + "\n" +
+							"\t\t\t\t\t" + "var y = coords[1];" + "\n" +
+
+							"\t\t\t\t\t" + "d3.select(\"#tooltip\")" + "\n" +
+							"\t\t\t\t\t\t" + ".style(\"left\", (x + 20) + \"px\")" + "\n" +
+							"\t\t\t\t\t\t" + ".style(\"top\", (y - 42) + \"px\");" + "\n";
+							
+			tooltipOutString += "\t\t\t\t\t" + "d3.select(\"#tooltip\").classed(\"hidden\", true);" + "\n";
+        }
+        
         var renderCircleString = "";
         if (us_map.renderCircles) {
         	
@@ -537,10 +602,15 @@ var us_map = {
                 "\t" + "\t" + "\t" + "\t" + colorFunc + "\n" + 
                 "\t" + "\t" + "\t" + "})" + "\n" + 
                 "\t" + "\t" + "\t" + ".on(\"mouseover\", function(d){" + "\n" + 
-                "\t" + "\t" + "\t" + "\t" + (us_map.highlightingEnabled ? "d3.select(this).style(\"opacity\", 0.5);" : "") + "\n" +                 
+                "\t" + "\t" + "\t" + "\t" + (us_map.highlightingEnabled ? "d3.select(this).style(\"opacity\", 0.5);" : "") + "\n" +
+                "\t" + "\t" + "\t" + "\t" + (us_map.tooltip ? tooltipHoverString : "") + "\n" +
+                "\t" + "\t" + "\t" + "})" + "\n" + 
+                "\t" + "\t" + "\t" + ".on(\"mousemove\", function(d){" + "\n" + 
+                "\t" + "\t" + "\t" + "\t" + (us_map.tooltip ? tooltipMoveString : "") + "\n" +
                 "\t" + "\t" + "\t" + "})" + "\n" + 
                 "\t" + "\t" + "\t" + ".on(\"mouseout\", function(d){" + "\n" + 
-                "\t" + "\t" + "\t" + "\t" + (us_map.highlightingEnabled ? "d3.select(this).style(\"opacity\", 1.0);" : "") + "\n" +                 
+                "\t" + "\t" + "\t" + "\t" + (us_map.highlightingEnabled ? "d3.select(this).style(\"opacity\", 1.0);" : "") + "\n" +
+                "\t" + "\t" + "\t" + "\t" + (us_map.tooltip ? tooltipOutString : "") + "\n" +
                 "\t" + "\t" + "\t" + "})" + "\n" + 
                 "\t" + "\t" + "\t" + ".on(\"click\", function(d){" + "\n" + 
                 // For debugging
