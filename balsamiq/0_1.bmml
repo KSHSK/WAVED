@@ -5,10 +5,10 @@
         <text>WAVED%20-%20Web%20App%20for%20Visualizing%20Environment%20Data%0Ahttp%3A//localhost%3A8080/index.html</text>
       </controlProperties>
     </control>
-    <control controlID="1" controlTypeID="com.balsamiq.mockups::Accordion" x="76" y="145" w="174" h="599" measuredW="150" measuredH="159" zOrder="1" locked="false" isInGroup="-1">
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::Accordion" x="76" y="145" w="174" h="599" measuredW="150" measuredH="213" zOrder="1" locked="true" isInGroup="-1">
       <controlProperties>
-        <selectedIndex>1</selectedIndex>
-        <text>Widgets%0AData%0AProperties</text>
+        <selectedIndex>2</selectedIndex>
+        <text>Project%20Tree%0AWidgets%0AData%0AProperties%0AGoogle%20Analytics</text>
       </controlProperties>
     </control>
     <control controlID="2" controlTypeID="com.balsamiq.mockups::Title" x="85" y="102" w="-1" h="-1" measuredW="132" measuredH="43" zOrder="2" locked="false" isInGroup="-1">
@@ -72,15 +72,21 @@
         <text>New</text>
       </controlProperties>
     </control>
-    <control controlID="43" controlTypeID="com.balsamiq.mockups::List" x="91" y="235" w="144" h="167" measuredW="100" measuredH="126" zOrder="12" locked="false" isInGroup="-1">
+    <control controlID="43" controlTypeID="com.balsamiq.mockups::List" x="85" y="263" w="156" h="167" measuredW="100" measuredH="126" zOrder="12" locked="false" isInGroup="-1">
       <controlProperties>
         <text/>
       </controlProperties>
     </control>
-    <control controlID="44" controlTypeID="com.balsamiq.mockups::Button" x="204" y="208" w="-1" h="-1" measuredW="31" measuredH="27" zOrder="13" locked="false" isInGroup="-1">
+    <control controlID="44" controlTypeID="com.balsamiq.mockups::Button" x="208" y="236" w="33" h="27" measuredW="27" measuredH="27" zOrder="13" locked="false" isInGroup="-1">
+      <controlProperties>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22148%2C216%2C181%2C243%22%20href%3D%220_2.bmml%22%20alt%3D%220_2%22%20id%3D%2244%22/%3E</map>
+        <text>-</text>
+      </controlProperties>
+    </control>
+    <control controlID="45" controlTypeID="com.balsamiq.mockups::Button" x="175" y="236" w="33" h="27" measuredW="31" measuredH="27" zOrder="14" locked="false" isInGroup="-1">
       <controlProperties>
         <href>0_2%26bm%3B0_2.bmml%26bm%3B0_2.bmml%26bm%3B0_2.bmml</href>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22144%2C188%2C175%2C215%22%20href%3D%220_2.bmml%22%20alt%3D%220_2%22%20id%3D%2244%22/%3E</map>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22115%2C216%2C148%2C243%22%20href%3D%220_2.bmml%22%20alt%3D%220_2%22%20id%3D%2245%22/%3E</map>
         <text>+</text>
       </controlProperties>
     </control>

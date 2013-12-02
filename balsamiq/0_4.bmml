@@ -5,11 +5,10 @@
         <text>WAVED%20-%20Web%20App%20for%20Visualizing%20Environment%20Data%0Ahttp%3A//localhost%3A8080/index.html</text>
       </controlProperties>
     </control>
-    <control controlID="1" controlTypeID="com.balsamiq.mockups::Accordion" x="76" y="145" w="174" h="599" measuredW="150" measuredH="213" zOrder="1" locked="false" isInGroup="-1">
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::Accordion" x="76" y="145" w="174" h="599" measuredW="150" measuredH="186" zOrder="1" locked="false" isInGroup="-1">
       <controlProperties>
-        <hrefs>%2C0_4%26bm%3B0_4.bmml%26bm%3B0_4.bmml%26bm%3B0_4.bmml%2C%2C%2C</hrefs>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2216%2C152%2C190%2C182%22%20href%3D%220_4.bmml%22%20alt%3D%220_4%22%20id%3D%221%22/%3E</map>
-        <selectedIndex>2</selectedIndex>
+        <hrefs/>
+        <selectedIndex>1</selectedIndex>
         <text>Project%20Tree%0AWidgets%0AData%0AProperties%0AGoogle%20Analytics</text>
       </controlProperties>
     </control>
@@ -74,19 +73,28 @@
         <text>New</text>
       </controlProperties>
     </control>
-    <control controlID="81" controlTypeID="com.balsamiq.mockups::List" x="85" y="263" w="156" h="167" measuredW="100" measuredH="126" zOrder="12" locked="false" isInGroup="-1">
+    <control controlID="83" controlTypeID="com.balsamiq.mockups::Button" x="133" y="429" w="61" h="25" measuredW="61" measuredH="27" zOrder="12" locked="false" isInGroup="-1">
       <controlProperties>
-        <text>climate.csv</text>
+        <text>Button</text>
       </controlProperties>
     </control>
-    <control controlID="82" controlTypeID="com.balsamiq.mockups::Button" x="208" y="236" w="33" h="27" measuredW="31" measuredH="27" zOrder="13" locked="false" isInGroup="-1">
+    <control controlID="84" controlTypeID="com.balsamiq.mockups::HSlider" x="110" y="495" w="106" h="-1" measuredW="33" measuredH="11" zOrder="13" locked="false" isInGroup="-1">
       <controlProperties>
-        <text>-</text>
+        <value>30</value>
       </controlProperties>
     </control>
-    <control controlID="83" controlTypeID="com.balsamiq.mockups::Button" x="175" y="236" w="33" h="27" measuredW="31" measuredH="27" zOrder="14" locked="false" isInGroup="-1">
+    <control controlID="85" controlTypeID="com.balsamiq.mockups::LineChart" x="93" y="330" w="141" h="75" measuredW="187" measuredH="175" zOrder="14" locked="false" isInGroup="-1"/>
+    <control controlID="86" controlTypeID="com.balsamiq.mockups::ComboBox" x="117" y="547" w="-1" h="-1" measuredW="93" measuredH="24" zOrder="15" locked="false" isInGroup="-1">
       <controlProperties>
-        <text>+</text>
+        <text>ComboBox</text>
+      </controlProperties>
+    </control>
+    <control controlID="87" controlTypeID="com.balsamiq.mockups::Image" x="93" y="212" w="141" h="103" measuredW="200" measuredH="125" zOrder="16" locked="false" isInGroup="-1">
+      <controlProperties>
+        <borderStyle>square</borderStyle>
+        <href>1%26bm%3B1.bmml%26bm%3B1.bmml%26bm%3B1.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2233%2C192%2C174%2C295%22%20href%3D%221.bmml%22%20alt%3D%221%22%20id%3D%2287%22/%3E</map>
+        <src>./map_small.png</src>
       </controlProperties>
     </control>
   </controls>
