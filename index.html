@@ -332,30 +332,31 @@
 				us_map.load_state(saved_state.widgets.us_map);
 				
 				enableMapUIButtons();
-			}
-			
-			if (typeof saved_state.widgets.us_map.UA !== 'undefined') {
-				$("#map-analytics-button").attr("disabled", "disabled");
-				$("#analytics-select").val("UA-45743706-1");
-			}
-			
-			if (saved_state.widgets.us_map.highlightingEnabled) {
-				$('#map-highlight-checkbox').prop('checked', true);
-			}
-			
-			if (saved_state.widgets.us_map.tooltip) {
-				$('#map-tooltip-checkbox').prop('checked', true);
-			}
-			
-			if (saved_state.widgets.us_map.stateZoomEnabled){
-			    $('#state-zoom-checkbox').prop('checked', true);
-			}
-			
-			if (typeof saved_state.widgets.us_map.color !== 'undefined') {
-				$("#color-sources").val(saved_state.widgets.us_map.color);
-			} else {
-				$("#color-sources").val("black");
-			}
+				
+				// Must be nested. They are dependent on saved_state.widgets.us_map being present
+				if (typeof saved_state.widgets.us_map.UA !== 'undefined') {
+	                $("#map-analytics-button").attr("disabled", "disabled");
+	                $("#analytics-select").val("UA-45743706-1");
+	            }
+	            
+	            if (saved_state.widgets.us_map.highlightingEnabled) {
+	                $('#map-highlight-checkbox').prop('checked', true);
+	            }
+	            
+	            if (saved_state.widgets.us_map.tooltip) {
+	                $('#map-tooltip-checkbox').prop('checked', true);
+	            }
+	            
+	            if (saved_state.widgets.us_map.stateZoomEnabled){
+	                $('#state-zoom-checkbox').prop('checked', true);
+	            }
+	            
+	            if (typeof saved_state.widgets.us_map.color !== 'undefined') {
+	                $("#color-sources").val(saved_state.widgets.us_map.color);
+	            } else {
+	                $("#color-sources").val("black");
+	            }
+			}	
         }
 
         function save_state() {
