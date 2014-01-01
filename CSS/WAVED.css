@@ -1,8 +1,14 @@
 html, body {
     margin: 0;
     padding: 0;
-    min-width: 1325px; /* temp */
+    min-width: 1150px; /* temp */
 }
+
+/*** JQuery UI Overrides ***/
+.ui-widget {
+    font-size: 14px;
+}
+/*** End ***/
 
 .inline {
     display: inline-block;
@@ -22,7 +28,7 @@ html, body {
     font-weight: bold;
     color: #3BB4BF;
     font-family: Segoe UI,Arial,sans-serif;
-    font-size: 1.1em;
+    font-size: 14px;
 }
 
 #header-logo {
