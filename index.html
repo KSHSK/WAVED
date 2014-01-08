@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     
     <title>WAVED</title>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
     
     <!-- CSS -->
     <link rel="stylesheet" href="ThirdParty/jquery-ui-1.10.3.custom/css/waved-theme/jquery-ui-1.10.3.custom.min.css">
@@ -25,7 +26,9 @@
             $('#export-button').button();
             $('#refresh-button').button();
             
-            $('#accordion').accordion();
+            $('#accordion').accordion({
+                animate: false
+            });
             
             $('input').addClass('ui-corner-all');
         });
@@ -38,7 +41,6 @@
             </div>
             <div class="inline" bottom>
                 <button class="inline" id="new-button">New</button>
-                <span class="menu-text">Title: </span><input id="app-title">
             
                 <button class="inline" id="undo-button">Undo</button>
                 <button class="inline" id="redo-button">Redo</button>
