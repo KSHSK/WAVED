@@ -5,10 +5,10 @@
         <text>WAVED%20-%20Web%20App%20for%20Visualizing%20Environment%20Data%0Ahttp%3A//localhost%3A8080/index.html</text>
       </controlProperties>
     </control>
-    <control controlID="1" controlTypeID="com.balsamiq.mockups::Accordion" x="76" y="145" w="174" h="599" measuredW="150" measuredH="267" zOrder="1" locked="true" isInGroup="-1">
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::Accordion" x="76" y="145" w="174" h="599" measuredW="150" measuredH="267" zOrder="1" locked="false" isInGroup="-1">
       <controlProperties>
         <selectedIndex>2</selectedIndex>
-        <text>Project%20Tree%0AWidgets%0AData%0AEvents%0AActions%0AProperties%0AGoogle%20Analytics</text>
+        <text>Project%20Tree%0AWidgets%0AData%0AEvents%0AActions%0AProperties%20%28container%29%0AGoogle%20Analytics</text>
       </controlProperties>
     </control>
     <control controlID="2" controlTypeID="com.balsamiq.mockups::Title" x="85" y="102" w="-1" h="-1" measuredW="132" measuredH="43" zOrder="2" locked="false" isInGroup="-1">
@@ -56,7 +56,7 @@
     <control controlID="48" controlTypeID="com.balsamiq.mockups::ComboBox" x="867" y="112" w="132" h="-1" measuredW="30" measuredH="24" zOrder="9" locked="false" isInGroup="-1">
       <controlProperties>
         <size>11</size>
-        <text/>
+        <text>container</text>
       </controlProperties>
     </control>
     <control controlID="49" controlTypeID="com.balsamiq.mockups::Label" x="812" y="114" w="56" h="-1" measuredW="47" measuredH="19" zOrder="10" locked="false" isInGroup="-1">

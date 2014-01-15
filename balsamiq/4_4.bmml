@@ -346,7 +346,8 @@
     </control>
     <control controlID="66" controlTypeID="com.balsamiq.mockups::Accordion" x="76" y="145" w="174" h="599" measuredW="150" measuredH="267" zOrder="57" locked="false" isInGroup="-1">
       <controlProperties>
-        <hrefs/>
+        <hrefs>%2C%2C%2C%2C%2C%2C6%26bm%3B6.bmml%26bm%3B6.bmml%26bm%3B6.bmml</hrefs>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2216%2C694%2C190%2C724%22%20href%3D%226.bmml%22%20alt%3D%226%22%20id%3D%2266%22/%3E</map>
         <selectedIndex>3</selectedIndex>
         <text>Project%20Tree%0AWidgets%0AData%0AEvents%0AActions%0AProperties%20%28glyph2%29%0AGoogle%20Analytics</text>
         <verticalScrollbar>false</verticalScrollbar>
