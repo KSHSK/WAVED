@@ -7,8 +7,8 @@
     </control>
     <control controlID="1" controlTypeID="com.balsamiq.mockups::Accordion" x="76" y="145" w="174" h="599" measuredW="150" measuredH="213" zOrder="1" locked="false" isInGroup="-1">
       <controlProperties>
-        <hrefs>%2C0_4%26bm%3B0_4.bmml%26bm%3B0_4.bmml%26bm%3B0_4.bmml%2C%2C%2C</hrefs>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2216%2C152%2C190%2C182%22%20href%3D%220_4.bmml%22%20alt%3D%220_4%22%20id%3D%221%22/%3E</map>
+        <hrefs>%2C0_6%26bm%3B0_6.bmml%26bm%3B0_6.bmml%26bm%3B0_6.bmml%2C%2C%2C</hrefs>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2216%2C152%2C190%2C182%22%20href%3D%220_6.bmml%22%20alt%3D%220_6%22%20id%3D%221%22/%3E</map>
         <selectedIndex>2</selectedIndex>
         <text>Project%20Tree%0AWidgets%0AData%0AProperties%0AGoogle%20Analytics</text>
       </controlProperties>

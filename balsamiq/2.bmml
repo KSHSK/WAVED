@@ -44,8 +44,8 @@
     </control>
     <control controlID="64" controlTypeID="com.balsamiq.mockups::Button" x="508" y="480" w="-1" h="-1" measuredW="53" measuredH="27" zOrder="32" locked="false" isInGroup="-1">
       <controlProperties>
-        <href>2_7%26bm%3B2_7.bmml%26bm%3B2_7.bmml%26bm%3B2_7.bmml</href>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22448%2C460%2C501%2C487%22%20href%3D%222_7.bmml%22%20alt%3D%222_7%22%20id%3D%2264%22/%3E</map>
+        <href>2_1%26bm%3B2_1.bmml%26bm%3B2_1.bmml%26bm%3B2_1.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22448%2C460%2C501%2C487%22%20href%3D%222_1.bmml%22%20alt%3D%222_1%22%20id%3D%2264%22/%3E</map>
         <text>Okay</text>
       </controlProperties>
     </control>
@@ -146,10 +146,10 @@
         <text>Undo%2C%20Redo</text>
       </controlProperties>
     </control>
-    <control controlID="203" controlTypeID="com.balsamiq.mockups::ComboBox" x="867" y="112" w="132" h="-1" measuredW="30" measuredH="24" zOrder="20" locked="false" isInGroup="-1">
+    <control controlID="203" controlTypeID="com.balsamiq.mockups::ComboBox" x="867" y="112" w="132" h="-1" measuredW="52" measuredH="22" zOrder="20" locked="false" isInGroup="-1">
       <controlProperties>
         <size>11</size>
-        <text/>
+        <text>map</text>
       </controlProperties>
     </control>
     <control controlID="204" controlTypeID="com.balsamiq.mockups::Label" x="812" y="114" w="56" h="-1" measuredW="47" measuredH="19" zOrder="21" locked="false" isInGroup="-1">

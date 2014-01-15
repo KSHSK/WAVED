@@ -21,8 +21,8 @@
         <borderStyle>square</borderStyle>
       </controlProperties>
     </control>
-    <control controlID="56" controlTypeID="com.balsamiq.mockups::ModalScreen" x="60" y="90" w="1024" h="669" measuredW="320" measuredH="240" zOrder="15" locked="true" isInGroup="-1"/>
-    <control controlID="57" controlTypeID="com.balsamiq.mockups::TitleWindow" x="423" y="238" w="450" h="332" measuredW="450" measuredH="400" zOrder="16" locked="true" isInGroup="-1">
+    <control controlID="56" controlTypeID="com.balsamiq.mockups::ModalScreen" x="60" y="90" w="1024" h="669" measuredW="320" measuredH="240" zOrder="19" locked="true" isInGroup="-1"/>
+    <control controlID="57" controlTypeID="com.balsamiq.mockups::TitleWindow" x="423" y="238" w="450" h="332" measuredW="450" measuredH="400" zOrder="20" locked="true" isInGroup="-1">
       <controlProperties>
         <bottomheight>0</bottomheight>
         <close>true</close>
@@ -33,25 +33,25 @@
         <topheight>26</topheight>
       </controlProperties>
     </control>
-    <control controlID="58" controlTypeID="com.balsamiq.mockups::Tree" x="438" y="275" w="119" h="218" measuredW="300" measuredH="225" zOrder="17" locked="false" isInGroup="-1">
+    <control controlID="58" controlTypeID="com.balsamiq.mockups::Tree" x="438" y="275" w="119" h="218" measuredW="300" measuredH="225" zOrder="21" locked="false" isInGroup="-1">
       <controlProperties>
         <text>f%20Pictures%0AF%20Documents</text>
       </controlProperties>
     </control>
-    <control controlID="59" controlTypeID="com.balsamiq.mockups::List" x="572" y="276" w="286" h="217" measuredW="100" measuredH="126" zOrder="18" locked="false" isInGroup="-1">
+    <control controlID="59" controlTypeID="com.balsamiq.mockups::List" x="572" y="276" w="286" h="217" measuredW="100" measuredH="126" zOrder="22" locked="false" isInGroup="-1">
       <controlProperties>
         <selectedIndex>1</selectedIndex>
         <text>climate.csv%0Aheat_index.json</text>
       </controlProperties>
     </control>
-    <control controlID="60" controlTypeID="com.balsamiq.mockups::Button" x="482" y="523" w="-1" h="-1" measuredW="52" measuredH="27" zOrder="19" locked="false" isInGroup="-1">
+    <control controlID="60" controlTypeID="com.balsamiq.mockups::Button" x="482" y="523" w="-1" h="-1" measuredW="52" measuredH="27" zOrder="23" locked="false" isInGroup="-1">
       <controlProperties>
-        <href>0_3_2%26bm%3B0_3_2.bmml%26bm%3B0_3_2.bmml%26bm%3B0_3_2.bmml</href>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22422%2C503%2C474%2C530%22%20href%3D%220_3_2.bmml%22%20alt%3D%220_3_2%22%20id%3D%2260%22/%3E</map>
+        <href>0_5%26bm%3B0_5.bmml%26bm%3B0_5.bmml%26bm%3B0_5.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22422%2C503%2C474%2C530%22%20href%3D%220_5.bmml%22%20alt%3D%220_5%22%20id%3D%2260%22/%3E</map>
         <text>Load</text>
       </controlProperties>
     </control>
-    <control controlID="61" controlTypeID="com.balsamiq.mockups::Button" x="720" y="523" w="-1" h="-1" measuredW="64" measuredH="27" zOrder="20" locked="false" isInGroup="-1">
+    <control controlID="61" controlTypeID="com.balsamiq.mockups::Button" x="720" y="523" w="-1" h="-1" measuredW="64" measuredH="27" zOrder="24" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Cancel</text>
       </controlProperties>
@@ -66,7 +66,7 @@
         <text>-</text>
       </controlProperties>
     </control>
-    <control controlID="87" controlTypeID="com.balsamiq.mockups::Button" x="175" y="236" w="33" h="27" measuredW="31" measuredH="27" zOrder="14" locked="false" isInGroup="-1">
+    <control controlID="87" controlTypeID="com.balsamiq.mockups::Button" x="175" y="236" w="33" h="27" measuredW="31" measuredH="27" zOrder="18" locked="false" isInGroup="-1">
       <controlProperties>
         <text>+</text>
       </controlProperties>
@@ -115,12 +115,32 @@
         <text>Untitled%20Project</text>
       </controlProperties>
     </control>
-    <control controlID="108" controlTypeID="com.balsamiq.mockups::ButtonBar" x="693" y="111" w="102" h="25" measuredW="102" measuredH="25" zOrder="13" locked="false" isInGroup="-1">
+    <control controlID="108" controlTypeID="com.balsamiq.mockups::ButtonBar" x="693" y="111" w="102" h="25" measuredW="102" measuredH="25" zOrder="17" locked="false" isInGroup="-1">
       <controlProperties>
         <hrefs>%2C</hrefs>
         <selectedIndex>-1</selectedIndex>
         <size>11</size>
         <text>Load%2C%20Export</text>
+      </controlProperties>
+    </control>
+    <control controlID="109" controlTypeID="com.balsamiq.mockups::List" x="85" y="472" w="156" h="167" measuredW="100" measuredH="126" zOrder="13" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="110" controlTypeID="com.balsamiq.mockups::Button" x="208" y="445" w="33" h="27" measuredW="27" measuredH="27" zOrder="14" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>-</text>
+      </controlProperties>
+    </control>
+    <control controlID="111" controlTypeID="com.balsamiq.mockups::Button" x="175" y="445" w="33" h="27" measuredW="31" measuredH="27" zOrder="15" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>+</text>
+      </controlProperties>
+    </control>
+    <control controlID="112" controlTypeID="com.balsamiq.mockups::Label" x="87" y="448" w="-1" h="-1" measuredW="80" measuredH="21" zOrder="16" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Data%20subsets</text>
       </controlProperties>
     </control>
   </controls>
