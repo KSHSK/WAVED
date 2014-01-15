@@ -270,7 +270,7 @@
     <control controlID="178" controlTypeID="com.balsamiq.mockups::ComboBox" x="867" y="112" w="132" h="-1" measuredW="30" measuredH="24" zOrder="44" locked="false" isInGroup="-1">
       <controlProperties>
         <size>11</size>
-        <text/>
+        <text>glyph1</text>
       </controlProperties>
     </control>
     <control controlID="179" controlTypeID="com.balsamiq.mockups::Label" x="812" y="114" w="56" h="-1" measuredW="47" measuredH="19" zOrder="45" locked="false" isInGroup="-1">

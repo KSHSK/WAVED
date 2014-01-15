@@ -129,6 +129,8 @@
     </control>
     <control controlID="143" controlTypeID="com.balsamiq.mockups::Button" x="85" y="397" w="141" h="27" measuredW="96" measuredH="27" zOrder="23" locked="false" isInGroup="-1">
       <controlProperties>
+        <href>2_2%26bm%3B2_2.bmml%26bm%3B2_2.bmml%26bm%3B2_2.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2225%2C377%2C166%2C404%22%20href%3D%222_2.bmml%22%20alt%3D%222_2%22%20id%3D%22143%22/%3E</map>
         <text>Add%20element</text>
       </controlProperties>
     </control>
