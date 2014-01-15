@@ -5,11 +5,11 @@
         <text>WAVED%20-%20Web%20App%20for%20Visualizing%20Environment%20Data%0Ahttp%3A//localhost%3A8080/index.html</text>
       </controlProperties>
     </control>
-    <control controlID="1" controlTypeID="com.balsamiq.mockups::Accordion" x="76" y="145" w="174" h="599" measuredW="150" measuredH="213" zOrder="1" locked="false" isInGroup="-1">
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::Accordion" x="76" y="145" w="174" h="599" measuredW="150" measuredH="267" zOrder="1" locked="false" isInGroup="-1">
       <controlProperties>
         <hrefs/>
         <selectedIndex>1</selectedIndex>
-        <text>Project%20Tree%0AWidgets%0AData%0AProperties%0AGoogle%20Analytics</text>
+        <text>Project%20Tree%0AWidgets%0AData%0AEvents%0AActions%0AProperties%0AGoogle%20Analytics</text>
       </controlProperties>
     </control>
     <control controlID="2" controlTypeID="com.balsamiq.mockups::Title" x="85" y="102" w="-1" h="-1" measuredW="132" measuredH="43" zOrder="2" locked="false" isInGroup="-1">

@@ -5,12 +5,12 @@
         <text>WAVED%20-%20Web%20App%20for%20Visualizing%20Environment%20Data%0Ahttp%3A//localhost%3A8080/index.html</text>
       </controlProperties>
     </control>
-    <control controlID="1" controlTypeID="com.balsamiq.mockups::Accordion" x="76" y="145" w="174" h="599" measuredW="150" measuredH="213" zOrder="1" locked="false" isInGroup="-1">
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::Accordion" x="76" y="145" w="174" h="599" measuredW="150" measuredH="267" zOrder="1" locked="false" isInGroup="-1">
       <controlProperties>
-        <hrefs>%2C%2C2_4%26bm%3B2_4.bmml%26bm%3B2_4.bmml%26bm%3B2_4.bmml%2C%2C</hrefs>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2216%2C179%2C190%2C209%22%20href%3D%222_4.bmml%22%20alt%3D%222_4%22%20id%3D%221%22/%3E</map>
-        <selectedIndex>3</selectedIndex>
-        <text>Project%20Tree%0AWidgets%0AData%0AProperties%20%28glyph2%29%0AGoogle%20Analytics</text>
+        <hrefs>%2C%2C%2C%2C3_9%26bm%3B3_9.bmml%26bm%3B3_9.bmml%26bm%3B3_9.bmml%2C%2C</hrefs>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2216%2C233%2C190%2C263%22%20href%3D%223_9.bmml%22%20alt%3D%223_9%22%20id%3D%221%22/%3E</map>
+        <selectedIndex>5</selectedIndex>
+        <text>Project%20Tree%0AWidgets%0AData%0AEvents%0AActions%0AProperties%20%28glyph2%29%0AGoogle%20Analytics</text>
         <verticalScrollbar>true</verticalScrollbar>
       </controlProperties>
     </control>
@@ -31,83 +31,83 @@
         <text/>
       </controlProperties>
     </control>
-    <control controlID="105" controlTypeID="com.balsamiq.mockups::Label" x="86" y="328" w="-1" h="-1" measuredW="40" measuredH="21" zOrder="7" locked="false" isInGroup="-1">
+    <control controlID="105" controlTypeID="com.balsamiq.mockups::Label" x="86" y="384" w="-1" h="-1" measuredW="40" measuredH="21" zOrder="7" locked="false" isInGroup="-1">
       <controlProperties>
         <size>13</size>
         <text>Shape%3A</text>
       </controlProperties>
     </control>
-    <control controlID="106" controlTypeID="com.balsamiq.mockups::Label" x="86" y="359" w="-1" h="-1" measuredW="44" measuredH="21" zOrder="8" locked="false" isInGroup="-1">
+    <control controlID="106" controlTypeID="com.balsamiq.mockups::Label" x="86" y="415" w="-1" h="-1" measuredW="44" measuredH="21" zOrder="8" locked="false" isInGroup="-1">
       <controlProperties>
         <size>13</size>
         <text>Radius%3A</text>
       </controlProperties>
     </control>
-    <control controlID="107" controlTypeID="com.balsamiq.mockups::Label" x="86" y="391" w="-1" h="-1" measuredW="51" measuredH="21" zOrder="9" locked="false" isInGroup="-1">
+    <control controlID="107" controlTypeID="com.balsamiq.mockups::Label" x="86" y="447" w="-1" h="-1" measuredW="51" measuredH="21" zOrder="9" locked="false" isInGroup="-1">
       <controlProperties>
         <size>13</size>
         <text>Latitude%3A</text>
       </controlProperties>
     </control>
-    <control controlID="108" controlTypeID="com.balsamiq.mockups::Label" x="86" y="423" w="-1" h="-1" measuredW="61" measuredH="21" zOrder="10" locked="false" isInGroup="-1">
+    <control controlID="108" controlTypeID="com.balsamiq.mockups::Label" x="86" y="479" w="-1" h="-1" measuredW="61" measuredH="21" zOrder="10" locked="false" isInGroup="-1">
       <controlProperties>
         <size>13</size>
         <text>Longitude%3A</text>
       </controlProperties>
     </control>
-    <control controlID="109" controlTypeID="com.balsamiq.mockups::ComboBox" x="135" y="326" w="74" h="-1" measuredW="61" measuredH="24" zOrder="11" locked="false" isInGroup="-1">
+    <control controlID="109" controlTypeID="com.balsamiq.mockups::ComboBox" x="135" y="382" w="74" h="-1" measuredW="61" measuredH="24" zOrder="11" locked="false" isInGroup="-1">
       <controlProperties>
         <size>13</size>
         <text>circle</text>
       </controlProperties>
     </control>
-    <control controlID="110" controlTypeID="com.balsamiq.mockups::ComboBox" x="135" y="357" w="-1" h="-1" measuredW="38" measuredH="24" zOrder="12" locked="false" isInGroup="-1">
+    <control controlID="110" controlTypeID="com.balsamiq.mockups::ComboBox" x="135" y="413" w="-1" h="-1" measuredW="38" measuredH="24" zOrder="12" locked="false" isInGroup="-1">
       <controlProperties>
         <size>13</size>
         <text>5</text>
       </controlProperties>
     </control>
-    <control controlID="111" controlTypeID="com.balsamiq.mockups::ComboBox" x="147" y="392" w="-1" h="-1" measuredW="49" measuredH="24" zOrder="13" locked="false" isInGroup="-1">
+    <control controlID="111" controlTypeID="com.balsamiq.mockups::ComboBox" x="147" y="448" w="-1" h="-1" measuredW="49" measuredH="24" zOrder="13" locked="false" isInGroup="-1">
       <controlProperties>
         <size>13</size>
         <text>Lat</text>
       </controlProperties>
     </control>
-    <control controlID="112" controlTypeID="com.balsamiq.mockups::ComboBox" x="157" y="421" w="-1" h="-1" measuredW="52" measuredH="24" zOrder="14" locked="false" isInGroup="-1">
+    <control controlID="112" controlTypeID="com.balsamiq.mockups::ComboBox" x="157" y="477" w="-1" h="-1" measuredW="52" measuredH="24" zOrder="14" locked="false" isInGroup="-1">
       <controlProperties>
         <size>13</size>
         <text>Lon</text>
       </controlProperties>
     </control>
-    <control controlID="115" controlTypeID="com.balsamiq.mockups::Label" x="86" y="296" w="-1" h="-1" measuredW="31" measuredH="21" zOrder="15" locked="false" isInGroup="-1">
+    <control controlID="115" controlTypeID="com.balsamiq.mockups::Label" x="86" y="352" w="-1" h="-1" measuredW="31" measuredH="21" zOrder="15" locked="false" isInGroup="-1">
       <controlProperties>
         <size>13</size>
         <text>Data%3A</text>
       </controlProperties>
     </control>
-    <control controlID="116" controlTypeID="com.balsamiq.mockups::ComboBox" x="127" y="294" w="97" h="-1" measuredW="97" measuredH="24" zOrder="16" locked="false" isInGroup="-1">
+    <control controlID="116" controlTypeID="com.balsamiq.mockups::ComboBox" x="127" y="350" w="97" h="-1" measuredW="97" measuredH="24" zOrder="16" locked="false" isInGroup="-1">
       <controlProperties>
         <text>1987to1997</text>
       </controlProperties>
     </control>
-    <control controlID="117" controlTypeID="com.balsamiq.mockups::Label" x="86" y="455" w="-1" h="-1" measuredW="34" measuredH="21" zOrder="17" locked="false" isInGroup="-1">
+    <control controlID="117" controlTypeID="com.balsamiq.mockups::Label" x="86" y="511" w="-1" h="-1" measuredW="34" measuredH="21" zOrder="17" locked="false" isInGroup="-1">
       <controlProperties>
         <size>13</size>
         <text>Color%3A</text>
       </controlProperties>
     </control>
-    <control controlID="118" controlTypeID="com.balsamiq.mockups::ComboBox" x="136" y="455" w="-1" h="-1" measuredW="55" measuredH="24" zOrder="18" locked="false" isInGroup="-1">
+    <control controlID="118" controlTypeID="com.balsamiq.mockups::ComboBox" x="136" y="511" w="-1" h="-1" measuredW="55" measuredH="24" zOrder="18" locked="false" isInGroup="-1">
       <controlProperties>
         <size>13</size>
         <text>blue</text>
       </controlProperties>
     </control>
-    <control controlID="137" controlTypeID="com.balsamiq.mockups::Label" x="86" y="264" w="-1" h="-1" measuredW="38" measuredH="21" zOrder="5" locked="false" isInGroup="-1">
+    <control controlID="137" controlTypeID="com.balsamiq.mockups::Label" x="86" y="320" w="-1" h="-1" measuredW="38" measuredH="21" zOrder="5" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Name%3A</text>
       </controlProperties>
     </control>
-    <control controlID="138" controlTypeID="com.balsamiq.mockups::TextInput" x="135" y="261" w="82" h="-1" measuredW="54" measuredH="27" zOrder="6" locked="false" isInGroup="-1">
+    <control controlID="138" controlTypeID="com.balsamiq.mockups::TextInput" x="135" y="317" w="82" h="-1" measuredW="54" measuredH="27" zOrder="6" locked="false" isInGroup="-1">
       <controlProperties>
         <text>glyph2</text>
       </controlProperties>
