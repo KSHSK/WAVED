@@ -60,10 +60,10 @@
         <icon>ReloadIcon%7Csmall</icon>
       </controlProperties>
     </control>
-    <control controlID="18" controlTypeID="com.balsamiq.mockups::Label" x="263" y="113" w="-1" h="-1" measuredW="91" measuredH="22" zOrder="10" locked="false" isInGroup="-1">
+    <control controlID="18" controlTypeID="com.balsamiq.mockups::Label" x="263" y="113" w="-1" h="-1" measuredW="93" measuredH="22" zOrder="10" locked="false" isInGroup="-1">
       <controlProperties>
         <size>14</size>
-        <text>HeatIndexApp</text>
+        <text>heat%20index%20app</text>
       </controlProperties>
     </control>
     <control controlID="19" controlTypeID="com.balsamiq.mockups::ButtonBar" x="693" y="111" w="102" h="25" measuredW="102" measuredH="25" zOrder="11" locked="false" isInGroup="-1">
@@ -345,7 +345,7 @@
         <text>-</text>
       </controlProperties>
     </control>
-    <control controlID="79" controlTypeID="com.balsamiq.mockups::ModalScreen" x="60" y="90" w="1024" h="669" measuredW="320" measuredH="240" zOrder="59" locked="false" isInGroup="-1"/>
+    <control controlID="79" controlTypeID="com.balsamiq.mockups::ModalScreen" x="60" y="90" w="1024" h="669" measuredW="320" measuredH="240" zOrder="59" locked="true" isInGroup="-1"/>
     <control controlID="80" controlTypeID="com.balsamiq.mockups::TitleWindow" x="478" y="233" w="317" h="163" measuredW="450" measuredH="400" zOrder="60" locked="false" isInGroup="-1">
       <controlProperties>
         <bottomheight>0</bottomheight>
@@ -368,7 +368,6 @@
     </control>
     <control controlID="83" controlTypeID="com.balsamiq.mockups::Button" x="689" y="339" w="-1" h="-1" measuredW="64" measuredH="27" zOrder="63" locked="false" isInGroup="-1">
       <controlProperties>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22629%2C319%2C693%2C346%22%20href%3D%2210.bmml%22%20alt%3D%2210%22%20id%3D%2283%22/%3E</map>
         <text>Cancel</text>
       </controlProperties>
     </control>

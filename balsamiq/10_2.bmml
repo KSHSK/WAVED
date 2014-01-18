@@ -364,9 +364,9 @@
         <text>Cancel</text>
       </controlProperties>
     </control>
-    <control controlID="83" controlTypeID="com.balsamiq.mockups::TextInput" x="554" y="279" w="217" h="-1" measuredW="98" measuredH="27" zOrder="63" locked="false" isInGroup="-1">
+    <control controlID="83" controlTypeID="com.balsamiq.mockups::TextInput" x="554" y="279" w="217" h="-1" measuredW="101" measuredH="27" zOrder="63" locked="false" isInGroup="-1">
       <controlProperties>
-        <text>HeatIndexApp</text>
+        <text>heat%20index%20app</text>
       </controlProperties>
     </control>
     <control controlID="84" controlTypeID="com.balsamiq.mockups::Label" x="472" y="282" w="-1" h="-1" measuredW="51" measuredH="21" zOrder="64" locked="false" isInGroup="-1">

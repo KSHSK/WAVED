@@ -69,8 +69,8 @@
     </control>
     <control controlID="203" controlTypeID="com.balsamiq.mockups::Accordion" x="76" y="145" w="174" h="599" measuredW="150" measuredH="267" zOrder="11" locked="false" isInGroup="-1">
       <controlProperties>
-        <hrefs>%2C%2C%2C%2C7_5%26bm%3B7_5.bmml%26bm%3B7_5.bmml%26bm%3B7_5.bmml%2C%2C</hrefs>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2216%2C233%2C190%2C263%22%20href%3D%227_5.bmml%22%20alt%3D%227_5%22%20id%3D%22203%22/%3E</map>
+        <hrefs>%2C%2C%2C%2C%2C7_5%26bm%3B7_5.bmml%26bm%3B7_5.bmml%26bm%3B7_5.bmml%2C</hrefs>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2216%2C260%2C190%2C290%22%20href%3D%227_5.bmml%22%20alt%3D%227_5%22%20id%3D%22203%22/%3E</map>
         <selectedIndex>6</selectedIndex>
         <text>Project%20Tree%0AWidgets%0AData%0AEvents%0AActions%0AProperties%20%28map%29%0AGoogle%20Analytics</text>
       </controlProperties>

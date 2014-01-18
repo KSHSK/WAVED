@@ -448,8 +448,6 @@
     </control>
     <control controlID="260" controlTypeID="com.balsamiq.mockups::CheckBox" x="85" y="475" w="-1" h="-1" measuredW="147" measuredH="22" zOrder="78" locked="false" isInGroup="-1">
       <controlProperties>
-        <href>7_6%26bm%3B7_6.bmml%26bm%3B7_6.bmml%26bm%3B7_6.bmml</href>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2225%2C455%2C172%2C477%22%20href%3D%227_6.bmml%22%20alt%3D%227_6%22%20id%3D%22260%22/%3E</map>
         <state>up</state>
         <text>Log%20Google%20Analytics</text>
       </controlProperties>

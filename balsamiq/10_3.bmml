@@ -62,10 +62,10 @@
         <icon>ReloadIcon%7Csmall</icon>
       </controlProperties>
     </control>
-    <control controlID="18" controlTypeID="com.balsamiq.mockups::Label" x="263" y="113" w="-1" h="-1" measuredW="91" measuredH="22" zOrder="10" locked="false" isInGroup="-1">
+    <control controlID="18" controlTypeID="com.balsamiq.mockups::Label" x="263" y="113" w="-1" h="-1" measuredW="93" measuredH="22" zOrder="10" locked="false" isInGroup="-1">
       <controlProperties>
         <size>14</size>
-        <text>HeatIndexApp</text>
+        <text>heat%20index%20app</text>
       </controlProperties>
     </control>
     <control controlID="19" controlTypeID="com.balsamiq.mockups::ButtonBar" x="693" y="111" w="102" h="25" measuredW="102" measuredH="25" zOrder="11" locked="false" isInGroup="-1">

@@ -32,13 +32,13 @@
     <control controlID="46" controlTypeID="com.balsamiq.mockups::List" x="445" y="284" w="334" h="156" measuredW="100" measuredH="126" zOrder="15" locked="false" isInGroup="-1">
       <controlProperties>
         <selectedIndex>0</selectedIndex>
-        <text>my%20climate%20app%0Aheat%20index%0Asea%20levels</text>
+        <text>heat%20index%20app%0Amy%20climate%20app%0Asea%20levels%20app</text>
       </controlProperties>
     </control>
     <control controlID="47" controlTypeID="com.balsamiq.mockups::Button" x="492" y="463" w="-1" h="-1" measuredW="52" measuredH="27" zOrder="16" locked="false" isInGroup="-1">
       <controlProperties>
-        <href>10%26bm%3B10.bmml%26bm%3B10.bmml%26bm%3B10.bmml</href>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22432%2C443%2C484%2C470%22%20href%3D%2210.bmml%22%20alt%3D%2210%22%20id%3D%2247%22/%3E</map>
+        <href>10_3%26bm%3B10_3.bmml%26bm%3B10_3.bmml%26bm%3B10_3.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22432%2C443%2C484%2C470%22%20href%3D%2210_3.bmml%22%20alt%3D%2210_3%22%20id%3D%2247%22/%3E</map>
         <text>Load</text>
       </controlProperties>
     </control>

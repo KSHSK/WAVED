@@ -90,7 +90,7 @@
     </control>
     <control controlID="196" controlTypeID="com.balsamiq.mockups::List" x="91" y="314" w="147" h="215" measuredW="100" measuredH="126" zOrder="14" locked="false" isInGroup="-1">
       <controlProperties>
-        <text>state%20%3A%20color%20%3A%20purple%0Astate%20%3A%20show%20name%20%3A%20true</text>
+        <text>state%20%3A%20color%20%3A%20orange%0Astate%20%3A%20show%20name%20%3A%20true</text>
       </controlProperties>
     </control>
     <control controlID="197" controlTypeID="com.balsamiq.mockups::Button" x="196" y="290" w="21" h="21" measuredW="31" measuredH="27" zOrder="15" locked="false" isInGroup="-1">

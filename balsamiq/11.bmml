@@ -60,10 +60,10 @@
         <icon>ReloadIcon%7Csmall</icon>
       </controlProperties>
     </control>
-    <control controlID="18" controlTypeID="com.balsamiq.mockups::Label" x="263" y="113" w="-1" h="-1" measuredW="91" measuredH="22" zOrder="10" locked="false" isInGroup="-1">
+    <control controlID="18" controlTypeID="com.balsamiq.mockups::Label" x="263" y="113" w="-1" h="-1" measuredW="93" measuredH="22" zOrder="10" locked="false" isInGroup="-1">
       <controlProperties>
         <size>14</size>
-        <text>HeatIndexApp</text>
+        <text>heat%20index%20app</text>
       </controlProperties>
     </control>
     <control controlID="19" controlTypeID="com.balsamiq.mockups::ButtonBar" x="693" y="111" w="102" h="25" measuredW="102" measuredH="25" zOrder="11" locked="false" isInGroup="-1">
@@ -360,7 +360,7 @@
     </control>
     <control controlID="82" controlTypeID="com.balsamiq.mockups::List" x="569" y="284" w="289" h="156" measuredW="100" measuredH="126" zOrder="62" locked="false" isInGroup="-1">
       <controlProperties>
-        <text>sealevels.zip%0Aheatindex.zip</text>
+        <text>sealevels.zip%0Aclimate.zip</text>
       </controlProperties>
     </control>
     <control controlID="83" controlTypeID="com.balsamiq.mockups::Button" x="737" y="459" w="-1" h="-1" measuredW="52" measuredH="27" zOrder="63" locked="false" isInGroup="-1">
@@ -375,9 +375,9 @@
         <text>Cancel</text>
       </controlProperties>
     </control>
-    <control controlID="85" controlTypeID="com.balsamiq.mockups::TextInput" x="505" y="459" w="217" h="-1" measuredW="114" measuredH="27" zOrder="65" locked="false" isInGroup="-1">
+    <control controlID="85" controlTypeID="com.balsamiq.mockups::TextInput" x="505" y="459" w="217" h="-1" measuredW="112" measuredH="27" zOrder="65" locked="false" isInGroup="-1">
       <controlProperties>
-        <text>myclimateapp.zip</text>
+        <text>heatindexapp.zip</text>
       </controlProperties>
     </control>
     <control controlID="86" controlTypeID="com.balsamiq.mockups::Label" x="444" y="461" w="-1" h="-1" measuredW="51" measuredH="21" zOrder="66" locked="false" isInGroup="-1">

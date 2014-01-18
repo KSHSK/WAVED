@@ -16,7 +16,7 @@
       </controlProperties>
     </control>
     <control controlID="100" controlTypeID="com.balsamiq.mockups::ModalScreen" x="60" y="90" w="1024" h="669" measuredW="320" measuredH="240" zOrder="58" locked="true" isInGroup="-1"/>
-    <control controlID="101" controlTypeID="com.balsamiq.mockups::TitleWindow" x="416" y="270" w="392" h="174" measuredW="450" measuredH="400" zOrder="59" locked="true" isInGroup="-1">
+    <control controlID="101" controlTypeID="com.balsamiq.mockups::TitleWindow" x="416" y="270" w="392" h="243" measuredW="450" measuredH="400" zOrder="59" locked="true" isInGroup="-1">
       <controlProperties>
         <bottomheight>0</bottomheight>
         <close>true</close>
@@ -52,14 +52,14 @@
         <text>temp</text>
       </controlProperties>
     </control>
-    <control controlID="116" controlTypeID="com.balsamiq.mockups::Button" x="492" y="400" w="-1" h="-1" measuredW="53" measuredH="27" zOrder="65" locked="false" isInGroup="-1">
+    <control controlID="116" controlTypeID="com.balsamiq.mockups::Button" x="489" y="465" w="-1" h="-1" measuredW="53" measuredH="27" zOrder="65" locked="false" isInGroup="-1">
       <controlProperties>
         <href>3_5%26bm%3B3_5.bmml%26bm%3B3_5.bmml%26bm%3B3_5.bmml</href>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22432%2C380%2C485%2C407%22%20href%3D%223_5.bmml%22%20alt%3D%223_5%22%20id%3D%22116%22/%3E</map>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22429%2C445%2C482%2C472%22%20href%3D%223_5.bmml%22%20alt%3D%223_5%22%20id%3D%22116%22/%3E</map>
         <text>Okay</text>
       </controlProperties>
     </control>
-    <control controlID="117" controlTypeID="com.balsamiq.mockups::Button" x="677" y="400" w="-1" h="-1" measuredW="64" measuredH="27" zOrder="66" locked="false" isInGroup="-1">
+    <control controlID="117" controlTypeID="com.balsamiq.mockups::Button" x="674" y="465" w="-1" h="-1" measuredW="64" measuredH="27" zOrder="66" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Cancel</text>
       </controlProperties>
@@ -130,7 +130,7 @@
         <icon>DotIcon%7Cxsmall</icon>
       </controlProperties>
     </control>
-    <control controlID="137" controlTypeID="com.balsamiq.mockups::Icon" x="561" y="416" w="-1" h="-1" measuredW="16" measuredH="16" zOrder="15" locked="false" isInGroup="-1">
+    <control controlID="137" controlTypeID="com.balsamiq.mockups::Icon" x="558" y="481" w="-1" h="-1" measuredW="16" measuredH="16" zOrder="15" locked="false" isInGroup="-1">
       <controlProperties>
         <color>13576743</color>
         <icon>DotIcon%7Cxsmall</icon>
@@ -172,7 +172,7 @@
         <icon>DotIcon%7Cxsmall</icon>
       </controlProperties>
     </control>
-    <control controlID="144" controlTypeID="com.balsamiq.mockups::Icon" x="714" y="406" w="-1" h="-1" measuredW="16" measuredH="16" zOrder="22" locked="false" isInGroup="-1">
+    <control controlID="144" controlTypeID="com.balsamiq.mockups::Icon" x="711" y="471" w="-1" h="-1" measuredW="16" measuredH="16" zOrder="22" locked="false" isInGroup="-1">
       <controlProperties>
         <color>13576743</color>
         <icon>DotIcon%7Cxsmall</icon>
@@ -418,5 +418,17 @@
         <text>Data%20subsets</text>
       </controlProperties>
     </control>
+    <control controlID="216" controlTypeID="com.balsamiq.mockups::Label" x="541" y="426" w="-1" h="-1" measuredW="53" measuredH="21" zOrder="72" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Operator</text>
+      </controlProperties>
+    </control>
+    <control controlID="217" controlTypeID="com.balsamiq.mockups::ComboBox" x="609" y="424" w="59" h="-1" measuredW="30" measuredH="24" zOrder="73" locked="false" isInGroup="-1">
+      <controlProperties>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22549%2C404%2C608%2C428%22%20href%3D%223_1.bmml%22%20alt%3D%223_1%22%20id%3D%22217%22/%3E</map>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="218" controlTypeID="com.balsamiq.mockups::HRule" x="483" y="407" w="246" h="-1" measuredW="100" measuredH="10" zOrder="74" locked="false" isInGroup="-1"/>
   </controls>
 </mockup>
