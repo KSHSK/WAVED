@@ -375,77 +375,9 @@
     </control>
     <control controlID="70" controlTypeID="com.balsamiq.mockups::Button" x="196" y="264" w="21" h="21" measuredW="31" measuredH="27" zOrder="62" locked="false" isInGroup="-1">
       <controlProperties>
+        <href>9_6%26bm%3B9_6.bmml%26bm%3B9_6.bmml%26bm%3B9_6.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22136%2C244%2C157%2C265%22%20href%3D%229_6.bmml%22%20alt%3D%229_6%22%20id%3D%2270%22/%3E</map>
         <text>+</text>
-      </controlProperties>
-    </control>
-    <control controlID="71" controlTypeID="com.balsamiq.mockups::ModalScreen" x="60" y="90" w="1024" h="669" measuredW="320" measuredH="240" zOrder="63" locked="true" isInGroup="-1"/>
-    <control controlID="72" controlTypeID="com.balsamiq.mockups::TitleWindow" x="416" y="238" w="450" h="332" measuredW="450" measuredH="400" zOrder="64" locked="false" isInGroup="-1">
-      <controlProperties>
-        <bottomheight>0</bottomheight>
-        <close>true</close>
-        <dragger>false</dragger>
-        <maximizeRestore>false</maximizeRestore>
-        <minimize>false</minimize>
-        <text>Add%20Event</text>
-        <topheight>26</topheight>
-      </controlProperties>
-    </control>
-    <control controlID="73" controlTypeID="com.balsamiq.mockups::ComboBox" x="515" y="269" w="189" h="-1" measuredW="75" measuredH="31" zOrder="65" locked="false" isInGroup="-1">
-      <controlProperties>
-        <size>20</size>
-        <text>Click</text>
-      </controlProperties>
-    </control>
-    <control controlID="74" controlTypeID="com.balsamiq.mockups::Label" x="431" y="268" w="-1" h="-1" measuredW="69" measuredH="32" zOrder="66" locked="false" isInGroup="-1">
-      <controlProperties>
-        <size>24</size>
-        <text>Event%3A</text>
-      </controlProperties>
-    </control>
-    <control controlID="75" controlTypeID="com.balsamiq.mockups::SubTitle" x="431" y="346" w="-1" h="-1" measuredW="73" measuredH="27" zOrder="67" locked="false" isInGroup="-1">
-      <controlProperties>
-        <text>Action%3A</text>
-      </controlProperties>
-    </control>
-    <control controlID="76" controlTypeID="com.balsamiq.mockups::List" x="431" y="377" w="420" h="131" measuredW="100" measuredH="126" zOrder="68" locked="false" isInGroup="-1">
-      <controlProperties>
-        <selectedIndex>-1</selectedIndex>
-        <text/>
-      </controlProperties>
-    </control>
-    <control controlID="77" controlTypeID="com.balsamiq.mockups::Button" x="494" y="523" w="-1" h="-1" measuredW="52" measuredH="27" zOrder="69" locked="false" isInGroup="-1">
-      <controlProperties>
-        <href>9_7%26bm%3B9_7.bmml%26bm%3B9_7.bmml%26bm%3B9_7.bmml</href>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22434%2C503%2C486%2C530%22%20href%3D%229_7.bmml%22%20alt%3D%229_7%22%20id%3D%2277%22/%3E</map>
-        <text>Save</text>
-      </controlProperties>
-    </control>
-    <control controlID="78" controlTypeID="com.balsamiq.mockups::Button" x="712" y="523" w="-1" h="-1" measuredW="64" measuredH="27" zOrder="70" locked="false" isInGroup="-1">
-      <controlProperties>
-        <text>Cancel</text>
-      </controlProperties>
-    </control>
-    <control controlID="79" controlTypeID="com.balsamiq.mockups::Label" x="431" y="304" w="-1" h="-1" measuredW="83" measuredH="32" zOrder="71" locked="false" isInGroup="-1">
-      <controlProperties>
-        <size>24</size>
-        <text>Trigger%3A</text>
-      </controlProperties>
-    </control>
-    <control controlID="80" controlTypeID="com.balsamiq.mockups::Button" x="820" y="346" w="-1" h="-1" measuredW="31" measuredH="27" zOrder="72" locked="false" isInGroup="-1">
-      <controlProperties>
-        <text>+</text>
-      </controlProperties>
-    </control>
-    <control controlID="82" controlTypeID="com.balsamiq.mockups::ComboBox" x="526" y="307" w="189" h="-1" measuredW="134" measuredH="31" zOrder="73" locked="false" isInGroup="-1">
-      <controlProperties>
-        <size>20</size>
-        <text>Map%20%3A%20State</text>
-      </controlProperties>
-    </control>
-    <control controlID="85" controlTypeID="com.balsamiq.mockups::CheckBoxGroup" x="447" y="392" w="-1" h="-1" measuredW="194" measuredH="70" zOrder="74" locked="false" isInGroup="-1">
-      <controlProperties>
-        <size>16</size>
-        <text>%5B%20%5D%20state%20%3A%20color%20%3A%20orange%0A%5B%20%5D%20state%20%3A%20show%20name%20%3A%20true%0A%5Bx%5D%20graph%20%3A%20show%20%3A%20true</text>
       </controlProperties>
     </control>
   </controls>

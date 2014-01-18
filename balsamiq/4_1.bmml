@@ -15,8 +15,8 @@
         <borderStyle>square</borderStyle>
       </controlProperties>
     </control>
-    <control controlID="53" controlTypeID="com.balsamiq.mockups::ModalScreen" x="60" y="90" w="1024" h="669" measuredW="320" measuredH="240" zOrder="63" locked="true" isInGroup="-1"/>
-    <control controlID="54" controlTypeID="com.balsamiq.mockups::TitleWindow" x="416" y="238" w="450" h="332" measuredW="450" measuredH="400" zOrder="64" locked="true" isInGroup="-1">
+    <control controlID="53" controlTypeID="com.balsamiq.mockups::ModalScreen" x="60" y="90" w="1024" h="669" measuredW="320" measuredH="240" zOrder="63" locked="false" isInGroup="-1"/>
+    <control controlID="54" controlTypeID="com.balsamiq.mockups::TitleWindow" x="416" y="238" w="450" h="332" measuredW="450" measuredH="400" zOrder="64" locked="false" isInGroup="-1">
       <controlProperties>
         <bottomheight>0</bottomheight>
         <close>true</close>

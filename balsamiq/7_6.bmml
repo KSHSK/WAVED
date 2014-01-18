@@ -416,6 +416,8 @@
     </control>
     <control controlID="301" controlTypeID="com.balsamiq.mockups::Button" x="85" y="513" w="156" h="27" measuredW="110" measuredH="27" zOrder="71" locked="false" isInGroup="-1">
       <controlProperties>
+        <href>8%26bm%3B8.bmml%26bm%3B8.bmml%26bm%3B8.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2225%2C493%2C181%2C520%22%20href%3D%228.bmml%22%20alt%3D%228%22%20id%3D%22301%22/%3E</map>
         <text>Add%20subwidget</text>
       </controlProperties>
     </control>
@@ -436,9 +438,7 @@
     </control>
     <control controlID="305" controlTypeID="com.balsamiq.mockups::CheckBox" x="85" y="449" w="-1" h="-1" measuredW="147" measuredH="22" zOrder="75" locked="false" isInGroup="-1">
       <controlProperties>
-        <href>7_6%26bm%3B7_6.bmml%26bm%3B7_6.bmml%26bm%3B7_6.bmml</href>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2225%2C429%2C172%2C451%22%20href%3D%227_6.bmml%22%20alt%3D%227_6%22%20id%3D%22305%22/%3E</map>
-        <state>up</state>
+        <state>selected</state>
         <text>Log%20Google%20Analytics</text>
       </controlProperties>
     </control>

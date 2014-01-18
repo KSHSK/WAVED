@@ -265,8 +265,8 @@
         <icon>DotIcon%7Cxsmall</icon>
       </controlProperties>
     </control>
-    <control controlID="201" controlTypeID="com.balsamiq.mockups::ModalScreen" x="60" y="90" w="1024" h="669" measuredW="320" measuredH="240" zOrder="45" locked="true" isInGroup="-1"/>
-    <control controlID="202" controlTypeID="com.balsamiq.mockups::TitleWindow" x="383" y="224" w="-1" h="-1" measuredW="450" measuredH="400" zOrder="46" locked="true" isInGroup="-1">
+    <control controlID="201" controlTypeID="com.balsamiq.mockups::ModalScreen" x="60" y="90" w="1024" h="669" measuredW="320" measuredH="240" zOrder="45" locked="false" isInGroup="-1"/>
+    <control controlID="202" controlTypeID="com.balsamiq.mockups::TitleWindow" x="383" y="224" w="-1" h="-1" measuredW="450" measuredH="400" zOrder="46" locked="false" isInGroup="-1">
       <controlProperties>
         <bottomheight>0</bottomheight>
         <close>true</close>
@@ -393,7 +393,7 @@
       </controlProperties>
     </control>
     <control controlID="254" controlTypeID="com.balsamiq.mockups::Canvas" x="603" y="283" w="211" h="282" measuredW="100" measuredH="70" zOrder="66" locked="false" isInGroup="-1"/>
-    <control controlID="255" controlTypeID="com.balsamiq.mockups::Label" x="603" y="262" w="-1" h="-1" measuredW="46" measuredH="21" zOrder="67" locked="true" isInGroup="-1">
+    <control controlID="255" controlTypeID="com.balsamiq.mockups::Label" x="603" y="262" w="-1" h="-1" measuredW="46" measuredH="21" zOrder="67" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Options</text>
       </controlProperties>
@@ -404,7 +404,7 @@
         <text>Map%20%3A%20State</text>
       </controlProperties>
     </control>
-    <control controlID="257" controlTypeID="com.balsamiq.mockups::Label" x="402" y="262" w="-1" h="-1" measuredW="151" measuredH="21" zOrder="69" locked="true" isInGroup="-1">
+    <control controlID="257" controlTypeID="com.balsamiq.mockups::Label" x="402" y="262" w="-1" h="-1" measuredW="151" measuredH="21" zOrder="69" locked="false" isInGroup="-1">
       <controlProperties>
         <size>13</size>
         <text>Affected%20Widget/Element</text>

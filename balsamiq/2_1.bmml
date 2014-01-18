@@ -78,82 +78,87 @@
       <controlProperties>
         <selectedIndex>5</selectedIndex>
         <text>Project%20Tree%0AWidgets%0AData%0AEvents%0AActions%0AProperties%20%28map%29%0AGoogle%20Analytics</text>
-        <verticalScrollbar>true</verticalScrollbar>
+        <verticalScrollbar>false</verticalScrollbar>
       </controlProperties>
     </control>
-    <control controlID="150" controlTypeID="com.balsamiq.mockups::Label" x="85" y="352" w="-1" h="-1" measuredW="42" measuredH="21" zOrder="13" locked="false" isInGroup="-1">
+    <control controlID="166" controlTypeID="com.balsamiq.mockups::Label" x="85" y="352" w="-1" h="-1" measuredW="42" measuredH="21" zOrder="13" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Height%3A</text>
       </controlProperties>
     </control>
-    <control controlID="151" controlTypeID="com.balsamiq.mockups::Label" x="85" y="383" w="-1" h="-1" measuredW="36" measuredH="21" zOrder="14" locked="false" isInGroup="-1">
+    <control controlID="167" controlTypeID="com.balsamiq.mockups::Label" x="85" y="383" w="-1" h="-1" measuredW="36" measuredH="21" zOrder="14" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Width%3A</text>
       </controlProperties>
     </control>
-    <control controlID="152" controlTypeID="com.balsamiq.mockups::TextInput" x="147" y="349" w="79" h="-1" measuredW="52" measuredH="27" zOrder="15" locked="false" isInGroup="-1">
+    <control controlID="168" controlTypeID="com.balsamiq.mockups::TextInput" x="147" y="349" w="94" h="-1" measuredW="52" measuredH="27" zOrder="15" locked="false" isInGroup="-1">
       <controlProperties>
         <text>500px</text>
       </controlProperties>
     </control>
-    <control controlID="153" controlTypeID="com.balsamiq.mockups::TextInput" x="147" y="380" w="79" h="-1" measuredW="52" measuredH="27" zOrder="16" locked="false" isInGroup="-1">
+    <control controlID="169" controlTypeID="com.balsamiq.mockups::TextInput" x="147" y="384" w="94" h="-1" measuredW="52" measuredH="27" zOrder="16" locked="false" isInGroup="-1">
       <controlProperties>
         <text>800px</text>
       </controlProperties>
     </control>
-    <control controlID="154" controlTypeID="com.balsamiq.mockups::Label" x="85" y="415" w="-1" h="-1" measuredW="52" measuredH="21" zOrder="17" locked="false" isInGroup="-1">
+    <control controlID="170" controlTypeID="com.balsamiq.mockups::Label" x="85" y="415" w="-1" h="-1" measuredW="52" measuredH="21" zOrder="17" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Coloring%3A</text>
       </controlProperties>
     </control>
-    <control controlID="155" controlTypeID="com.balsamiq.mockups::ComboBox" x="147" y="413" w="79" h="-1" measuredW="73" measuredH="24" zOrder="18" locked="false" isInGroup="-1">
+    <control controlID="171" controlTypeID="com.balsamiq.mockups::ComboBox" x="147" y="418" w="94" h="-1" measuredW="73" measuredH="24" zOrder="18" locked="false" isInGroup="-1">
       <controlProperties>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2287%2C398%2C181%2C422%22%20href%3D%221_1.bmml%22%20alt%3D%221_1%22%20id%3D%22171%22/%3E</map>
         <text>4-color</text>
       </controlProperties>
     </control>
-    <control controlID="156" controlTypeID="com.balsamiq.mockups::HRule" x="89" y="521" w="139" h="-1" measuredW="100" measuredH="10" zOrder="19" locked="false" isInGroup="-1"/>
-    <control controlID="157" controlTypeID="com.balsamiq.mockups::Label" x="90" y="538" w="-1" h="-1" measuredW="83" measuredH="21" zOrder="20" locked="false" isInGroup="-1">
+    <control controlID="172" controlTypeID="com.balsamiq.mockups::HRule" x="89" y="551" w="139" h="-1" measuredW="100" measuredH="10" zOrder="19" locked="false" isInGroup="-1"/>
+    <control controlID="173" controlTypeID="com.balsamiq.mockups::Label" x="90" y="568" w="-1" h="-1" measuredW="83" measuredH="21" zOrder="20" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Data%20Sources%3A</text>
       </controlProperties>
     </control>
-    <control controlID="158" controlTypeID="com.balsamiq.mockups::List" x="87" y="563" w="141" h="90" measuredW="100" measuredH="126" zOrder="21" locked="false" isInGroup="-1">
+    <control controlID="174" controlTypeID="com.balsamiq.mockups::List" x="87" y="593" w="141" h="90" measuredW="100" measuredH="126" zOrder="21" locked="false" isInGroup="-1">
       <controlProperties>
         <text>climate.csv%0Aheat_index.json</text>
       </controlProperties>
     </control>
-    <control controlID="159" controlTypeID="com.balsamiq.mockups::Button" x="85" y="451" w="141" h="27" measuredW="96" measuredH="27" zOrder="22" locked="false" isInGroup="-1">
+    <control controlID="175" controlTypeID="com.balsamiq.mockups::Button" x="188" y="568" w="21" h="21" measuredW="31" measuredH="27" zOrder="22" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>+</text>
+      </controlProperties>
+    </control>
+    <control controlID="176" controlTypeID="com.balsamiq.mockups::Button" x="85" y="479" w="156" h="27" measuredW="96" measuredH="27" zOrder="23" locked="false" isInGroup="-1">
       <controlProperties>
         <href>2_2%26bm%3B2_2.bmml%26bm%3B2_2.bmml%26bm%3B2_2.bmml</href>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2225%2C431%2C166%2C458%22%20href%3D%222_2.bmml%22%20alt%3D%222_2%22%20id%3D%22159%22/%3E</map>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2225%2C459%2C181%2C486%22%20href%3D%222_2.bmml%22%20alt%3D%222_2%22%20id%3D%22176%22/%3E</map>
         <text>Add%20element</text>
       </controlProperties>
     </control>
-    <control controlID="160" controlTypeID="com.balsamiq.mockups::Button" x="85" y="483" w="141" h="27" measuredW="110" measuredH="27" zOrder="23" locked="false" isInGroup="-1">
+    <control controlID="177" controlTypeID="com.balsamiq.mockups::Button" x="85" y="513" w="156" h="27" measuredW="110" measuredH="27" zOrder="24" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Add%20subwidget</text>
       </controlProperties>
     </control>
-    <control controlID="161" controlTypeID="com.balsamiq.mockups::Label" x="85" y="318" w="-1" h="-1" measuredW="38" measuredH="21" zOrder="24" locked="false" isInGroup="-1">
+    <control controlID="178" controlTypeID="com.balsamiq.mockups::Label" x="85" y="318" w="-1" h="-1" measuredW="38" measuredH="21" zOrder="25" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Name%3A</text>
       </controlProperties>
     </control>
-    <control controlID="162" controlTypeID="com.balsamiq.mockups::TextInput" x="147" y="315" w="79" h="-1" measuredW="39" measuredH="27" zOrder="25" locked="false" isInGroup="-1">
+    <control controlID="179" controlTypeID="com.balsamiq.mockups::TextInput" x="147" y="315" w="94" h="-1" measuredW="39" measuredH="27" zOrder="26" locked="false" isInGroup="-1">
       <controlProperties>
         <text>map</text>
       </controlProperties>
     </control>
-    <control controlID="163" controlTypeID="com.balsamiq.mockups::Button" x="209" y="538" w="21" h="21" measuredW="27" measuredH="27" zOrder="26" locked="false" isInGroup="-1">
+    <control controlID="180" controlTypeID="com.balsamiq.mockups::Button" x="209" y="568" w="21" h="21" measuredW="27" measuredH="27" zOrder="27" locked="false" isInGroup="-1">
       <controlProperties>
         <text>-</text>
       </controlProperties>
     </control>
-    <control controlID="164" controlTypeID="com.balsamiq.mockups::HRule" x="87" y="666" w="139" h="-1" measuredW="100" measuredH="10" zOrder="27" locked="false" isInGroup="-1"/>
-    <control controlID="165" controlTypeID="com.balsamiq.mockups::Button" x="188" y="538" w="21" h="21" measuredW="31" measuredH="27" zOrder="28" locked="false" isInGroup="-1">
+    <control controlID="181" controlTypeID="com.balsamiq.mockups::CheckBox" x="85" y="449" w="-1" h="-1" measuredW="147" measuredH="22" zOrder="28" locked="false" isInGroup="-1">
       <controlProperties>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22128%2C518%2C149%2C539%22%20href%3D%222.bmml%22%20alt%3D%222%22%20id%3D%22165%22/%3E</map>
-        <text>+</text>
+        <state>disabled</state>
+        <text>Log%20Google%20Analytics</text>
       </controlProperties>
     </control>
   </controls>
