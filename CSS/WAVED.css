@@ -64,3 +64,16 @@ html, body {
     min-width: 800px;
     min-height: 557px;
 }
+
+.right {
+    float: right;
+}
+
+.select-full-size {
+    min-width: 100%;
+    max-width: 100%;
+}
+
+.button-small .ui-button-text {
+    padding: 0.1em 0.6em 0.2em 0.6em;
+}
