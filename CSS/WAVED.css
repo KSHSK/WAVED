@@ -1,0 +1,66 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    min-width: 1150px; /* temp */
+}
+
+/*** JQuery UI Overrides ***/
+.ui-widget {
+    font-size: 14px;
+}
+/*** End ***/
+
+.inline {
+    display: inline-block;
+}
+
+.top {
+   vertical-align: top;
+}
+
+.bottom {
+   vertical-align: bottom;
+}
+
+.menu-text {
+    padding: .4em .4em;
+    line-height: normal;
+    font-weight: bold;
+    color: #3BB4BF;
+    font-family: Segoe UI,Arial,sans-serif;
+    font-size: 14px;
+}
+
+#header-logo {
+    padding-top: 10px;
+    width: 300px;
+    height: auto;
+}
+
+#header-container {
+    padding: 10px 10px 10px 10px;
+    display: block;
+}
+
+#header-logo-container {
+    margin-right: 8px;
+}
+
+#accordion-container {
+    padding: 10px 5px 10px 10px;
+    width: 300px;
+}
+
+#project-tree {
+    min-height: 300px;
+}
+
+#workspace-container {
+    padding: 10px 10px 10px 5px;
+}
+
+#waved-workspace {
+    border: 1px solid #3BB4BF;
+    min-width: 800px;
+    min-height: 557px;
+}
