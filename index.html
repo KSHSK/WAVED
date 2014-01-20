@@ -18,6 +18,7 @@
     <!-- UI setup -->
     <script type="text/javascript">
         $(document).ready(function() {
+            // Main Menu Buttons.
             $('#new-button').button();
             $('#undo-button').button();
             $('#redo-button').button();
@@ -25,7 +26,17 @@
             $('#save-button').button();
             $('#export-button').button();
             $('#refresh-button').button();
-            
+
+            // Add/Remove Buttons.
+            $('#add-action-button').button();
+            $('#remove-action-button').button();
+            $('#add-event-button').button();
+            $('#remove-event-button').button();
+            $('#add-data-file-button').button();
+            $('#remove-data-file-button').button();
+            $('#add-data-subset-button').button();
+            $('#remove-data-subset-button').button();
+
             $('#accordion').accordion({
                 animate: false
             });
@@ -66,7 +77,53 @@
             </div>
             <h3>Data</h3>
             <div>
-                // Data data data
+                <div>
+                    <div>
+                        <div class="inline">Source Files</div>
+                        <div class="inline right">
+                            <button id="add-data-file-button" class="button-small">+</button>
+                            <button id="remove-data-file-button" class="button-small">-</button>
+                        </div>
+                    </div>
+                    <select id="data-file-list" size="5" class="select-full-size"></select>
+                </div>
+                <br />
+                <div>
+                    <div>
+                        <div class="inline">Data Subsets</div>
+                        <div class="inline right">
+                            <button id="add-data-subset-button" class="button-small">+</button>
+                            <button id="remove-data-subset-button" class="button-small">-</button>
+                        </div>
+                    </div>
+                    <select id="data-subset-list" size="5" class="select-full-size"></select>
+                </div>
+            </div>
+            <h3>Actions</h3>
+            <div>
+                <div>
+                    <div>
+                        <div class="inline">Actions</div>
+                        <div class="inline right">
+                            <button id="add-action-button" class="button-small">+</button>
+                            <button id="remove-action-button" class="button-small">-</button>
+                        </div>
+                    </div>
+                    <select id="action-list" size="10" class="select-full-size"></select>
+                </div>
+            </div>
+            <h3>Events</h3>
+            <div>
+                <div>
+                    <div>
+                        <div class="inline">Events</div>
+                        <div class="inline right">
+                            <button id="add-event-button" class="button-small">+</button>
+                            <button id="remove-event-button" class="button-small">-</button>
+                        </div>
+                    </div>
+                    <select id="event-list" size="10" class="select-full-size"></select>
+                </div>
             </div>
             <h3>Properties</h3>
             <div>
