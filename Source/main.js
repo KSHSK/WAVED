@@ -1,4 +1,4 @@
-require([], function() {
+require(["WAVED"], function(WAVED) {
 
     // UI Setup
     $(document).ready(function() {
