@@ -70,6 +70,7 @@ html, body {
 }
 
 .select-full-size {
+    margin-top: 0.5em;
     min-width: 100%;
     max-width: 100%;
 }
