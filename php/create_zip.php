@@ -24,7 +24,8 @@ if ($data_files == null) {
 // Go back to the main directory.
 chdir("../");
 
-$folder = $demo . (end(str_split($demo)) == "/" ? "" : "/");
+$split = str_split($demo);
+$folder = $demo . (end($split) == "/" ? "" : "/");
 $zipName = $demo . '.zip';
 
 $generated_location = "generated_files/";
