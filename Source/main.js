@@ -102,5 +102,8 @@ require(["WAVED"], function(WAVED) {
 
     function displayPage() {
         $('.hide-on-load').show();
+        
+        // Accordion must calculate size after it is visible to avoid sizing issues.
+        $('#accordion').accordion("refresh");
     }
 });
