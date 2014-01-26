@@ -20,17 +20,19 @@ class SQLiteProjectSerializer implements ISerializer, IDeserializer
     {
         // Hard code user for now
         $userid=1;
+        $dateTime=time();
 
         // Try an update
         $update = $this->db->prepare("UPDATE " . self::TABLE . "
             SET state = :state,
-                lastModified = CURRENT_TIME,
+                lastModified = :dateTime,
                 lastModifiedBy = :user
             WHERE name = :name");
 
         $update->bindValue(':name', $name, SQLITE3_TEXT);
         $update->bindValue(':state', $state, SQLITE3_BLOB);
         $update->bindValue(':user', $userid, SQLITE3_INTEGER);
+        $update->bindValue(':dateTime', $dateTime, SQLITE3_INTEGER);
         $update->execute();
         $update->close();
 
@@ -39,11 +41,12 @@ class SQLiteProjectSerializer implements ISerializer, IDeserializer
         {
             $insert = $this->db->prepare("INSERT INTO " . self::TABLE .
                 "(name, state, created, createdBy, lastModified, lastModifiedBy)
-                values(:name, :state, CURRENT_TIME, :user, CURRENT_TIME, :user)");
+                values(:name, :state, :dateTime, :user, :dateTime, :user)");
 
             $insert->bindValue(':name', $name, SQLITE3_TEXT);
             $insert->bindValue(':state', $state, SQLITE3_BLOB);
             $insert->bindValue(':user', $userid, SQLITE3_INTEGER);
+            $insert->bindValue(':dateTime', $dateTime, SQLITE3_INTEGER);
             $insert->execute();
             $insert->close();
 
