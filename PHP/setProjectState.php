@@ -23,6 +23,5 @@
         {
             header("HTTP/1.0 500 Internal Error");
         }
-        echo '\nhere3';
     }
 ?>
