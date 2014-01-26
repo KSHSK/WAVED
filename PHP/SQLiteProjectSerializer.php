@@ -5,9 +5,6 @@ include_once('IDeserializer.php');
 /*
     Class to (de)serialize project
     to SQLite3 database
-
-    TODO: Bind statements instead of injecting strings
-    TODO: modified
 */
 class SQLiteProjectSerializer implements ISerializer, IDeserializer
 {
@@ -24,27 +21,46 @@ class SQLiteProjectSerializer implements ISerializer, IDeserializer
         // Hard code user for now
         $userid=1;
 
-        // Try an update than insert
-        $updateSQL = "UPDATE " . self::TABLE . " SET state = '$state' WHERE name='$name'";
-        $insertSQL = "INSERT OR IGNORE INTO  " . self::TABLE . "(name, state) values('$name', '$state')";
+        // Try an update
+        $update = $this->db->prepare("UPDATE " . self::TABLE . "
+            SET state = :state,
+                lastModified = CURRENT_TIME,
+                lastModifiedBy = :user
+            WHERE name = :name");
 
-        // Execute commands and return any error codes
-        if (!$this->db->exec($updateSQL))
+        $update->bindValue(':name', $name, SQLITE3_TEXT);
+        $update->bindValue(':state', $state, SQLITE3_BLOB);
+        $update->bindValue(':user', $userid, SQLITE3_INTEGER);
+        $update->execute();
+        $update->close();
+
+        // Try an insert
+        if ($this->db->changes() <= 0)
         {
-            return FALSE;
-        }
-        else if ($this->db->changes() > 0)
-        {
-            return TRUE;
+            $insert = $this->db->prepare("INSERT INTO " . self::TABLE .
+                "(name, state, created, createdBy, lastModified, lastModifiedBy)
+                values(:name, :state, CURRENT_TIME, :user, CURRENT_TIME, :user)");
+
+            $insert->bindValue(':name', $name, SQLITE3_TEXT);
+            $insert->bindValue(':state', $state, SQLITE3_BLOB);
+            $insert->bindValue(':user', $userid, SQLITE3_INTEGER);
+            $insert->execute();
+            $insert->close();
+
+            return $this->db->changes() > 0;
         }
 
-        return $this->db->exec($insertSQL);
+        return TRUE;
     }
 
     public function get($name)
     {
-        $query = "SELECT state FROM  " . self::TABLE . " WHERE name = '$name'";
-        return $this->db->querySingle($query);
+        $statement = $this->db->prepare("SELECT state FROM  " . self::TABLE . " WHERE name = :name");
+        $statement->bindValue(':name', $name, SQLITE3_TEXT);
+        $value = $statement->execute()->fetchArray(SQLITE3_NUM);
+        $statement->close();
+
+        return $value[0];
     }
 
     public function listId()
