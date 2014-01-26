@@ -99,7 +99,7 @@ require(["WAVED"], function(WAVED) {
     
         $('input').addClass('ui-corner-all');
     }
-    
+
     function displayPage() {
         $('.hide-on-load').show();
     }
