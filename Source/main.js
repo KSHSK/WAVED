@@ -2,6 +2,11 @@ require(["WAVED"], function(WAVED) {
 
     // UI Setup
     $(document).ready(function() {
+        setupUI();
+        displayPage();
+    });
+    
+    function setupUI() {
         $('#new-button').button();
         $('#undo-button').button();
         $('#redo-button').button();
@@ -93,5 +98,9 @@ require(["WAVED"], function(WAVED) {
         });
     
         $('input').addClass('ui-corner-all');
-    });
+    }
+    
+    function displayPage() {
+        $('.hide-on-load').show();
+    }
 });
