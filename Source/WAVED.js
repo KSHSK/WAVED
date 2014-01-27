@@ -2,16 +2,18 @@ define([], function() {
    
     /* ### Local Variables and Functions ### */
     
-    // Dialogs
-    var welcomeDialog = $("#welcome-dialog");
-    var createNewProjectDialog = $('#create-new-project-dialog');
-    
     // True if changes have been made since the last save; otherwise false.
     var dirty = false;
 
+    // jQuery variables
+    var welcomeDialog = $("#welcome-dialog");
+    var createNewProjectDialog = $('#create-new-project-dialog');
+    var createNewProjectName = $('#create-new-project-name');
+    var createNewProjectError = $('#create-new-project-error');
     var unsavedChangesDialog = $('#unsaved-changes-dialog');
+
     
-    function handleUnsavedChanges() {
+    function handleUnsavedChanges(deferred) {
         // TODO: Implement me.
     };
     
@@ -25,14 +27,14 @@ define([], function() {
             closeOnEscape: false,
             buttons: {
                 "New Project": function() {
-                    var deferred = tryToCreateNewProject();
-                    $.when(deferred).done(function() {
+                    var projectCreated = tryToCreateNewProject();
+                    $.when(projectCreated).done(function() {
                         welcomeDialog.dialog("close");
                     });
                 },
                 "Load Project": function() {
-                    var deferred = tryToLoadExistingProject();
-                    deferred.done(function() {
+                    var projectLoaded = tryToLoadExistingProject();
+                    $.when(projectLoaded).done(function() {
                         welcomeDialog.dialog("close");
                     });
                 }
@@ -91,12 +93,50 @@ define([], function() {
         // TODO Implement me.
         
         var deferred = $.Deferred();
+        
+        // Remove this reject when implementing.
         deferred.reject();
+        
         return deferred.promise();
     };
     
     function createNewProject(projectCreated) {
-        projectCreated.resolve();
+        var projectName = createNewProjectName.val();
+        
+        if (!validProjectName(projectName)) {
+            return;
+        }
+        
+        $.ajax({
+            type: "POST",
+            url: "PHP/createProject.php",
+            data: {
+                "project": projectName
+            },
+            success: function(dataString) {
+                var data = JSON.parse(dataString);
+                if (data.success) {
+                    clearError(createNewProjectError);
+                    projectCreated.resolve();
+                }
+                else {
+                    // Display error to user.
+                    displayError(createNewProjectError, data.errorMessage);
+                }
+            }
+        });
+    }
+    
+    function validProjectName(projectName) {
+        return true;
+    }
+    
+    function displayError(element, error) {
+        element.text(error);
+    }
+    
+    function clearError(element) {
+        displayError(element, "");
     }
     
     /* ### WAVED Definition ### */

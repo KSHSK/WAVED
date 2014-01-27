@@ -87,3 +87,13 @@ html, body {
 .dialog {
     display: none;
 }
+
+.error {
+    color: red;
+    font-size: 0.8em;
+}
+
+.required:before {
+    color: red;
+    content: "* ";
+}
