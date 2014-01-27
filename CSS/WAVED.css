@@ -82,3 +82,8 @@ html, body {
 .hide-on-load {
     display: none;
 }
+
+/* Hide dialogs on load */
+.dialog {
+    display: none;
+}
