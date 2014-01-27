@@ -1,10 +1,18 @@
 define([], function() {
    
-    /* ### Local Variables and Functions ### */
+    /* ### Private WAVED Variables ### */
     
     // True if changes have been made since the last save; otherwise false.
-    var dirty = false;
+    var _dirty = false;
 
+    // The current name of the project.
+    var _activeProjectName = "";
+    
+    // Has the application been started yet.
+    var _started = false;
+    
+    /* ### Other Local Variables and Functions ### */
+    
     // jQuery variables
     var welcomeDialog = $("#welcome-dialog");
     var createNewProjectDialog = $('#create-new-project-dialog');
@@ -12,12 +20,30 @@ define([], function() {
     var createNewProjectError = $('#create-new-project-error');
     var unsavedChangesDialog = $('#unsaved-changes-dialog');
 
+    /**
+     * Adds all event listeners for the application.
+     */
+    function registerEventHandlers() {
+        var mainSection = $('#mainSection');
+        mainSection.on('click', '#new-button', function() {
+            tryToCreateNewProject();
+        });
+    }
     
+    /**
+     * Handles when the user tries to close the project when there are unsaved changes.
+     */
     function handleUnsavedChanges(deferred) {
-        // TODO: Implement me.
+        // TODO: This should open a dialog giving the user the option to
+        // "Save Changes", "Discard Changes", or "Cancel" (is "Save As" needed as well?).
+        // "Cancel" should reject the deferred.
+        // "Discard" should resolve the deferred and return.
+        // "Save" (or "Save As") should resolve only if the user saves successfully.
     };
     
-    // Open the welcome dialog.
+    /**
+     * Open the welcome dialog.
+     */
     function openWelcomeDialog() {
         welcomeDialog.dialog({
             resizable: false,
@@ -49,7 +75,9 @@ define([], function() {
         });
     };
     
-    // Open the dialog for creating a new project.
+    /**
+     * Open the dialog for creating a new project.
+     */
     function openCreateNewProjectDialog(projectCreated) {
         createNewProjectDialog.dialog({
             resizable: false,
@@ -70,10 +98,15 @@ define([], function() {
         });
     };
     
+    /**
+     * If the project is clean, the new project dialog is opened.
+     * If the project is dirty, the unsaved changes must be handled before
+     * the new project dialog is opened.
+     */
     function tryToCreateNewProject() {
         var projectClean = $.Deferred();
         
-        if (dirty === true) {
+        if (WAVED.getDirty() === true) {
             handleUnsavedChanges(projectClean);
         }
         else {
@@ -100,6 +133,9 @@ define([], function() {
         return deferred.promise();
     };
     
+    /**
+     * Actually submit the createProject request.
+     */
     function createNewProject(projectCreated) {
         var projectName = createNewProjectName.val();
         
@@ -117,6 +153,7 @@ define([], function() {
                 var data = JSON.parse(dataString);
                 if (data.success) {
                     clearError(createNewProjectError);
+                    _activeProjectName = data.projectName;
                     projectCreated.resolve();
                 }
                 else {
@@ -128,13 +165,20 @@ define([], function() {
     }
     
     function validProjectName(projectName) {
+        // TODO: Should implement some client-side changes.
         return true;
     }
     
+    /**
+     * Adds text to the given element.
+     */
     function displayError(element, error) {
         element.text(error);
     }
     
+    /**
+     * Clears the error for the given element.
+     */
     function clearError(element) {
         displayError(element, "");
     }
@@ -142,15 +186,25 @@ define([], function() {
     /* ### WAVED Definition ### */
     var WAVED = {
         start: function() {
-            openWelcomeDialog();
+            // Can only be called once.
+            
+            if (_started === false) {
+                _started = true;
+                registerEventHandlers();
+                openWelcomeDialog();
+            }
+        },
+
+        getDirty: function() {
+            return _dirty;
         },
 
         setDirty: function() {
-            dirty = true;
+            _dirty = true;
         },
         
         setClean: function() {
-            dirty = false;
+            _dirty = false;
         },
     };
 

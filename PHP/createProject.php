@@ -57,6 +57,11 @@ mkdir("projects/" . $projectName, 0660);
 mkdir("projects/" . $projectName . "/data", 0660);
 
 // TODO: Other setup for a new project with the database.
+// TODO: Should we return an initial state here?
+//       This might make it more consistent with "Load Project"
+
+// Set the name of the project
+$returnValue["projectName"] = $projectName;
 
 reportReturnValue($returnValue);
 ?>
