@@ -97,3 +97,13 @@ html, body {
     color: red;
     content: "* ";
 }
+
+#project-name {
+    width: 100px;
+}
+
+.clip {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
