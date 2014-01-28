@@ -53,8 +53,17 @@ if (projectExists($projectName)) {
 }
 
 // Create the directory for the project.
-mkdir("projects/" . $projectName, 0660);
-mkdir("projects/" . $projectName . "/data", 0660);
+$success = mkdir("projects/" . $projectName, 0660);
+
+if ($success) {
+    $success = mkdir("projects/" . $projectName . "/data", 0660);
+}
+
+if (!$success) {
+    setReturnValueError($returnValue, "Unknown error creating new project.");
+    reportReturnValue($returnValue);
+    return;
+}
 
 // TODO: Other setup for a new project with the database.
 // TODO: Should we return an initial state here?
