@@ -79,6 +79,9 @@ define([], function() {
      * Open the dialog for creating a new project.
      */
     function openCreateNewProjectDialog(projectCreated) {
+        // Clear the input.
+        createNewProjectName.val("");
+        
         createNewProjectDialog.dialog({
             resizable: false,
             height: 250,
@@ -153,7 +156,7 @@ define([], function() {
                 var data = JSON.parse(dataString);
                 if (data.success) {
                     clearError(createNewProjectError);
-                    _activeProjectName = data.projectName;
+                    setProjectName(data.projectName);
                     projectCreated.resolve();
                 }
                 else {
@@ -181,6 +184,14 @@ define([], function() {
      */
     function clearError(element) {
         displayError(element, "");
+    }
+    
+    /**
+     * Sets the project name and displays it on the page.
+     */
+    function setProjectName(projectName) {
+        _activeProjectName = projectName;
+        $('#project-name').text(_activeProjectName);
     }
     
     /* ### WAVED Definition ### */
