@@ -8,6 +8,10 @@ html, body {
 .ui-widget {
     font-size: 14px;
 }
+
+.ui-accordion-header {
+    border: solid 1px #3BB4BF;
+}
 /*** End ***/
 
 .inline {
