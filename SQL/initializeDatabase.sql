@@ -4,9 +4,9 @@ CREATE TABLE project(
     name VARCHAR(255) NOT NULL,
     state BLOB,
     created DATETIME,
-    createdBy INT,
+    createdBy INTEGER,
     lastModified DATETIME,
-    lastModifiedBy INT,
+    lastModifiedBy INTEGER,
 
     UNIQUE (name),
     FOREIGN KEY (createdBy) REFERENCES user(id),
@@ -20,9 +20,9 @@ CREATE TABLE user(
     firstName VARCHAR(50),
     lastName VARCHAR(50),
     created DATETIME,
-    createdBy INT,
+    createdBy INTEGER,
     lastModified DATETIME,
-    lastModifiedBy INT,
+    lastModifiedBy INTEGER,
 
     UNIQUE (login),
     FOREIGN KEY (createdBy) REFERENCES user(id),
