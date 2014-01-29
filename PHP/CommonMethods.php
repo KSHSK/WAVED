@@ -34,7 +34,7 @@ function reportReturnValue($returnValue) {
  * @param string $projectName
  */
 function projectExists($projectName) {
-    $existingProjects = scandir("projects");
-    return (in_array($projectName, $existingProjects));
+    return is_dir("projects/" . $projectName);
 }
+
 ?>

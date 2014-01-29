@@ -19,7 +19,7 @@ function validProjectName($projectName, &$returnValue) {
         return false;
     }
     
-    $pattern = "/^[a-zA-Z0-9_\-]+$/";
+    $pattern = "/^[a-zA-Z0-9_\- ]+$/";
     if (preg_match($pattern, $projectName) !== 1) {
         setReturnValueError($returnValue, "The project name can only include alphanumeric characters, hyphens (-), and underscores (_).");
         return false;
