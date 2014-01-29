@@ -140,7 +140,9 @@ define([], function() {
      * Actually submit the createProject request.
      */
     function createNewProject(projectCreated) {
-        var projectName = createNewProjectName.val();
+        // Don't allow leading or trailing white space.
+        var projectName = createNewProjectName.val().trim();
+        createNewProjectName.val(projectName);
         
         if (!validProjectName(projectName)) {
             return;
