@@ -1,5 +1,5 @@
 define([], function() {
-   
+
     /* ### Private WAVED Variables ### */
     
     // True if changes have been made since the last save; otherwise false.
@@ -11,163 +11,186 @@ define([], function() {
     // Has the application been started yet.
     var _started = false;
     
-    /* ### Other Local Variables and Functions ### */
-    
-    // jQuery variables
-    var welcomeDialog = $("#welcome-dialog");
-    var createNewProjectDialog = $('#create-new-project-dialog');
-    var createNewProjectName = $('#create-new-project-name');
-    var createNewProjectError = $('#create-new-project-error');
-    var unsavedChangesDialog = $('#unsaved-changes-dialog');
+    /* ### Modules ### */
 
     /**
-     * Adds all event listeners for the application.
+     * A module for when the application first launches.
      */
-    function registerEventHandlers() {
-        var mainSection = $('#mainSection');
-        mainSection.on('click', '#new-button', function() {
-            tryToCreateNewProject();
-        });
-    }
-    
-    /**
-     * Handles when the user tries to close the project when there are unsaved changes.
-     */
-    function handleUnsavedChanges(deferred) {
-        // TODO: This should open a dialog giving the user the option to
-        // "Save Changes", "Discard Changes", or "Cancel" (is "Save As" needed as well?).
-        // "Cancel" should reject the deferred.
-        // "Discard" should resolve the deferred and return.
-        // "Save" (or "Save As") should resolve only if the user saves successfully.
-    };
-    
-    /**
-     * Open the welcome dialog.
-     */
-    function openWelcomeDialog() {
-        welcomeDialog.dialog({
-            resizable: false,
-            height: 200,
-            width: 300,
-            modal: true,
-            closeOnEscape: false,
-            buttons: {
-                "New Project": function() {
-                    var projectCreated = tryToCreateNewProject();
-                    $.when(projectCreated).done(function() {
-                        welcomeDialog.dialog("close");
-                    });
+    var WelcomeModule = {
+        welcomeDialog: $("#welcome-dialog"),
+        
+        /**
+         * Open the welcome dialog.
+         */
+        openWelcomeDialog: function() {
+            var self = this;
+            
+            this.welcomeDialog.dialog({
+                resizable: false,
+                height: 200,
+                width: 300,
+                modal: true,
+                closeOnEscape: false,
+                buttons: {
+                    "New Project": function() {
+                        var projectCreated = NewProjectModule.tryToCreateNewProject();
+                        $.when(projectCreated).done(function() {
+                            self.welcomeDialog.dialog("close");
+                        });
+                    },
+                    "Load Project": function() {
+                        var projectLoaded = LoadProjectModule.tryToLoadExistingProject();
+                        $.when(projectLoaded).done(function() {
+                            self.welcomeDialog.dialog("close");
+                        });
+                    }
                 },
-                "Load Project": function() {
-                    var projectLoaded = tryToLoadExistingProject();
-                    $.when(projectLoaded).done(function() {
-                        welcomeDialog.dialog("close");
-                    });
+                open: function(event, ui) {
+                    // Hide the close button so that the user must select a button.
+                    $(".ui-dialog-titlebar-close", $(this).parent()).hide();
+                    
+                    // Don't auto-select the "New Project" option.
+                    $('button', $(this).parent()).blur();
                 }
-            },
-            open: function(event, ui) {
-                // Hide the close button so that the user must select a button.
-                $(".ui-dialog-titlebar-close", $(this).parent()).hide();
-                
-                // Don't auto-select the "New Project" option.
-                $('button', $(this).parent()).blur();
-            }
-        });
+            });
+        }
+        
     };
     
     /**
-     * Open the dialog for creating a new project.
+     * A module for creating a new project.
      */
-    function openCreateNewProjectDialog(projectCreated) {
-        // Clear the input.
-        createNewProjectName.val("");
+    var NewProjectModule = {
+        createNewProjectDialog: $('#create-new-project-dialog'),
+        createNewProjectNameInput: $('#create-new-project-name'),
+        createNewProjectError: $('#create-new-project-error'),
         
-        createNewProjectDialog.dialog({
-            resizable: false,
-            height: 250,
-            width: 400,
-            modal: true,
-            buttons: {
-                "Create Project": function() {
-                    createNewProject(projectCreated);
-                    $.when(projectCreated).done(function() {
-                        createNewProjectDialog.dialog("close");
-                    });
+        
+        /**
+         * Open the dialog for creating a new project.
+         */
+        openCreateNewProjectDialog: function(projectCreated) {
+            var self = this;
+            
+            // Clear the input.
+            this.createNewProjectNameInput.val("");
+            
+            this.createNewProjectDialog.dialog({
+                resizable: false,
+                height: 250,
+                width: 400,
+                modal: true,
+                buttons: {
+                    "Create Project": function() {
+                        self.createNewProject(projectCreated);
+                        $.when(projectCreated).done(function() {
+                            self.createNewProjectDialog.dialog("close");
+                        });
+                    },
+                    "Cancel": function() {
+                        self.createNewProjectDialog.dialog("close");
+                    }
+                }
+            });
+        },
+        
+        /**
+         * If the project is clean, the new project dialog is opened.
+         * If the project is dirty, the unsaved changes must be handled before
+         * the new project dialog is opened.
+         */
+        tryToCreateNewProject: function() {
+            var self = this;
+            
+            var projectClean = $.Deferred();
+            
+            if (WAVED.getDirty() === true) {
+                UnsavedChangesModule.handleUnsavedChanges(projectClean);
+            }
+            else {
+                // Project is already clean.
+                projectClean.resolve();
+            }
+            
+            var projectCreated = $.Deferred();
+            $.when(projectClean).done(function() {
+                self.openCreateNewProjectDialog(projectCreated);
+            });
+            
+            return projectCreated.promise();
+        },
+        
+        /**
+         * Actually submit the createProject request.
+         */
+        createNewProject: function(projectCreated) {
+            var self = this;
+            
+            // Don't allow leading or trailing white space.
+            var projectName = this.createNewProjectNameInput.val().trim();
+            this.createNewProjectNameInput.val(projectName);
+            
+            if (!validProjectName(projectName)) {
+                return;
+            }
+            
+            $.ajax({
+                type: "POST",
+                url: "PHP/createProject.php",
+                data: {
+                    "project": projectName
                 },
-                "Cancel": function() {
-                    $(this).dialog("close");
+                success: function(dataString) {
+                    var data = JSON.parse(dataString);
+                    if (data.success) {
+                        clearError(self.createNewProjectError);
+                        setProjectName(data.projectName);
+                        projectCreated.resolve();
+                    }
+                    else {
+                        // Display error to user.
+                        displayError(self.createNewProjectError, data.errorMessage);
+                    }
                 }
-            }
-        });
+            });
+        }
     };
     
     /**
-     * If the project is clean, the new project dialog is opened.
-     * If the project is dirty, the unsaved changes must be handled before
-     * the new project dialog is opened.
+     * A module for loading an existing project.
      */
-    function tryToCreateNewProject() {
-        var projectClean = $.Deferred();
-        
-        if (WAVED.getDirty() === true) {
-            handleUnsavedChanges(projectClean);
+    var LoadProjectModule = {
+        tryToLoadExistingProject: function() {
+            // TODO Implement me.
+            
+            var deferred = $.Deferred();
+            
+            // Remove this reject when implementing.
+            deferred.reject();
+            
+            return deferred.promise();
         }
-        else {
-            // Project is already clean.
-            projectClean.resolve();
-        }
-        
-        var projectCreated = $.Deferred();
-        $.when(projectClean).done(function() {
-            openCreateNewProjectDialog(projectCreated);
-        });
-        
-        return projectCreated.promise();
     };
-    
-    function tryToLoadExistingProject() {
-        // TODO Implement me.
-        
-        var deferred = $.Deferred();
-        
-        // Remove this reject when implementing.
-        deferred.reject();
-        
-        return deferred.promise();
-    };
-    
+
     /**
-     * Actually submit the createProject request.
+     * A module for handling unsaved changes.
      */
-    function createNewProject(projectCreated) {
-        // Don't allow leading or trailing white space.
-        var projectName = createNewProjectName.val().trim();
-        createNewProjectName.val(projectName);
+    var UnsavedChangesModule = {
+        unsavedChangesDialog: $('#unsaved-changes-dialog'),
         
-        if (!validProjectName(projectName)) {
-            return;
+        /**
+         * Handles when the user tries to close the project when there are unsaved changes.
+         */
+        handleUnsavedChanges: function(deferred) {
+            // TODO: This should open a dialog giving the user the option to
+            // "Save Changes", "Discard Changes", or "Cancel" (is "Save As" needed as well?).
+            // "Cancel" should reject the deferred.
+            // "Discard" should resolve the deferred and return.
+            // "Save" (or "Save As") should resolve only if the user saves successfully.
         }
-        
-        $.ajax({
-            type: "POST",
-            url: "PHP/createProject.php",
-            data: {
-                "project": projectName
-            },
-            success: function(dataString) {
-                var data = JSON.parse(dataString);
-                if (data.success) {
-                    clearError(createNewProjectError);
-                    setProjectName(data.projectName);
-                    projectCreated.resolve();
-                }
-                else {
-                    // Display error to user.
-                    displayError(createNewProjectError, data.errorMessage);
-                }
-            }
-        });
-    }
+    };
+
+    /* ### General use functions ### */
     
     function validProjectName(projectName) {
         // TODO: Should implement some client-side changes.
@@ -194,6 +217,17 @@ define([], function() {
     function setProjectName(projectName) {
         _activeProjectName = projectName;
         $('#project-name').text(_activeProjectName);
+        // TODO: Update to use angular.
+    }
+    
+    /**
+     * Adds all event listeners for the application.
+     */
+    function registerEventHandlers() {
+        var mainSection = $('#mainSection');
+        mainSection.on('click', '#new-button', function() {
+            NewProjectModule.tryToCreateNewProject();
+        });
     }
     
     /* ### WAVED Definition ### */
@@ -204,7 +238,7 @@ define([], function() {
             if (_started === false) {
                 _started = true;
                 registerEventHandlers();
-                openWelcomeDialog();
+                WelcomeModule.openWelcomeDialog();
             }
         },
 

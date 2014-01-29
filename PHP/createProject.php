@@ -2,7 +2,7 @@
 include_once("CommonMethods.php");
 
 /**
- * Checks to see if the proejct name is valid.
+ * Checks to see if the project name is valid.
  * @param string $projectName
  * @param array $returnValue
  * @return boolean
