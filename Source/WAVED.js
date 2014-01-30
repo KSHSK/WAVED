@@ -133,11 +133,7 @@ define([], function() {
             // Don't allow leading or trailing white space.
             var projectName = this.createNewProjectNameInput.val().trim();
             this.createNewProjectNameInput.val(projectName);
-            
-            if (!validProjectName(projectName)) {
-                return;
-            }
-            
+
             $.ajax({
                 type: "POST",
                 url: "PHP/createProject.php",
@@ -187,20 +183,14 @@ define([], function() {
          */
         handleUnsavedChanges: function(deferred) {
             // TODO: This should open a dialog giving the user the option to
-            // "Save Changes", "Discard Changes", or "Cancel" (is "Save As" needed as well?).
+            // "Discard Changes" / "Continue", or "Cancel"
             // "Cancel" should reject the deferred.
             // "Discard" should resolve the deferred and return.
-            // "Save" (or "Save As") should resolve only if the user saves successfully.
         }
     };
 
     /* ### General use functions ### */
-    
-    function validProjectName(projectName) {
-        // TODO: Should implement some client-side changes.
-        return true;
-    }
-    
+
     /**
      * Adds text to the given element.
      */
@@ -212,7 +202,7 @@ define([], function() {
      * Clears the error for the given element.
      */
     function clearError(element) {
-        displayError(element, "");
+        element.text("");
     }
     
     /**
@@ -259,7 +249,8 @@ define([], function() {
             if (minLength) {
                 if (value.length < minLength) {
                     var charText = "character" + (minLength === 1 ? "" : "s");
-                    error.text("Must be at least " + minLength + " " + charText + ".");
+                    var message = "Must be at least " + minLength + " " + charText + ".";
+                    displayError(error, message);
                     disableButton(submitButton);
                     return;
                 }
@@ -268,7 +259,8 @@ define([], function() {
             if (maxLength) {
                 if (value.length > maxLength) {
                     var charText = "character" + (minLength === 1 ? "" : "s");
-                    error.text("Cannot be more than " + maxLength + " " + charText + ".");
+                    var message = "Cannot be more than " + maxLength + " " + charText + ".";
+                    displayError(error, message);
                     disableButton(submitButton);
                     return;
                 }
@@ -276,14 +268,14 @@ define([], function() {
             
             if (regex) {
                 if (!value.match(RegExp("^[ a-zA-Z0-9_\-]+$"))) {
-                    error.text(regexDescription);
+                    displayError(error, regexDescription);
                     disableButton(submitButton);
                     return;
                 }
             }
             
             // Clear error.
-            error.text("");
+            clearError(error);
             enableButton(submitButton);
         });
         
