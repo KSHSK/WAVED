@@ -126,8 +126,12 @@
     
     <div id="create-new-project-dialog" title="New Project" class="dialog">
         <p>Please create a new project</p>
-        <label class="required">Project Name: </label>
-        <input id="create-new-project-name" type="text" />
+        <label class="required" for="create-new-project-name">Project Name: </label>
+        <input id="create-new-project-name" type="text" class="validate" data-min-length="1"
+            data-max-length="50" data-match="^[a-zA-Z0-9_\- ]+$"
+            data-match-desc="Can only include alphanumeric characters,
+                hyphens (-), and underscores (_)." />
+        <div class="error"></div>
         <p id="create-new-project-error" class="error"></p>
     </div>
     

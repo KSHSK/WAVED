@@ -81,11 +81,15 @@ define([], function() {
                 width: 400,
                 modal: true,
                 buttons: {
-                    "Create Project": function() {
-                        self.createNewProject(projectCreated);
-                        $.when(projectCreated).done(function() {
-                            self.createNewProjectDialog.dialog("close");
-                        });
+                    "Create Project": {
+                        text: "Create Project",
+                        "class": "submit-button",
+                        click: function() {
+                            self.createNewProject(projectCreated);
+                            $.when(projectCreated).done(function() {
+                                self.createNewProjectDialog.dialog("close");
+                            });
+                        }
                     },
                     "Cancel": function() {
                         self.createNewProjectDialog.dialog("close");
@@ -220,11 +224,68 @@ define([], function() {
         // TODO: Update to use angular.
     }
     
+    function disableButton(button) {
+        button.attr('disabled', 'disabled').addClass('ui-state-disabled');
+    }
+    
+    function enableButton(button) {
+        button.removeAttr('disabled', 'disabled').removeClass('ui-state-disabled');
+    }
+    
     /**
      * Adds all event listeners for the application.
      */
     function registerEventHandlers() {
         var mainSection = $('#mainSection');
+        
+        // Input validation
+        $(document).on('keyup', 'input.validate', function(event) {
+            var element = $(event.currentTarget);
+            var value = element.val().trim();
+            
+            var error = element.next('div.error');
+            
+            // TODO: This will only be correct for dialogs.
+            //       Update this for non-dialogs when possible.
+            var submitButton = element.parents('.ui-dialog').find('.submit-button');
+            
+            var minLength = element.data("min-length");
+            var maxLength = element.data("max-length");
+            var regex = element.attr("data-match");
+            var regexDescription = element.attr("data-match-desc");
+            
+            if (minLength) {
+                if (value.length < minLength) {
+                    var charText = "character" + (minLength === 1 ? "" : "s");
+                    error.text("Must be at least " + minLength + " " + charText + ".");
+                    disableButton(submitButton);
+                    return;
+                }
+            }
+            
+            if (maxLength) {
+                if (value.length > maxLength) {
+                    var charText = "character" + (minLength === 1 ? "" : "s");
+                    error.text("Cannot be more than " + maxLength + " " + charText + ".");
+                    disableButton(submitButton);
+                    return;
+                }
+            }
+            
+            if (regex) {
+                if (!value.match(RegExp("^[ a-zA-Z0-9_\-]+$"))) {
+                    error.text(regexDescription);
+                    disableButton(submitButton);
+                    return;
+                }
+            }
+            
+            // Clear error.
+            error.text("");
+            enableButton(submitButton);
+        });
+        
+        // New Project
         mainSection.on('click', '#new-button', function() {
             NewProjectModule.tryToCreateNewProject();
         });
