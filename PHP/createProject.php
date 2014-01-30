@@ -15,7 +15,7 @@ function validProjectName($projectName, &$returnValue) {
     
     $len = strlen($projectName);
     if ($len < 1 || $len > 50) {
-        setReturnValueError($returnValue, "The project name must be between 1 and 255 characters.");
+        setReturnValueError($returnValue, "The project name must be between 1 and 50 characters.");
         return false;
     }
     
