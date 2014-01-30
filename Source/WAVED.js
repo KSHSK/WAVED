@@ -219,8 +219,10 @@ define([], function() {
      * Sets the project name and displays it on the page.
      */
     function setProjectName(projectName) {
+        var element = $('#project-name');
         _activeProjectName = projectName;
-        $('#project-name').text(_activeProjectName);
+        element.text(_activeProjectName);
+        element.attr('title', _activeProjectName);
         // TODO: Update to use angular.
     }
     
