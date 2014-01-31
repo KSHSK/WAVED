@@ -37,4 +37,16 @@ function projectExists($projectName) {
     return is_dir("projects/" . $projectName);
 }
 
+/**
+ * Returns all existing projects.
+ */
+function getExistingsProjects() {
+    function filter($var) {
+        return (strpos($var, ".") !== 0);
+    }
+
+    $projects = scandir("projects/");
+    return array_values(array_filter($projects, "filter"));
+}
+
 ?>
