@@ -25,11 +25,11 @@
                 <div class="inline bottom">
                     <div class="inline clip" id="project-name"></div>
                     <button class="inline" id="new-button">New</button>
+                    <button class="inline" id="load-button">Load</button>
                 
                     <button class="inline" id="undo-button">Undo</button>
                     <button class="inline" id="redo-button">Redo</button>
                 
-                    <button class="inline" id="load-button">Load</button>
                     <button class="inline" id="save-button">Save</button>
                     <button class="inline" id="export-button">Export</button>
                 
@@ -133,6 +133,14 @@
                 hyphens (-), underscores (_), and spaces." />
         <div class="error"></div>
         <p id="create-new-project-error" class="error"></p>
+    </div>
+    
+    <div id="load-project-dialog" title="Load Project" class="dialog">
+        <p>Please select an existing project to load.</p>
+        <label class="required" for="load-project-select">Project Name: </label>
+        <select id="load-project-select"></select>
+        <button id="load-project-refresh-list" class="button-small">Refresh List</button>
+        <p id="load-project-error" class="error"></p>
     </div>
     
     <div id="unsaved-changes-dialog" title="Unsaved Changes" class="dialog">

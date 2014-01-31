@@ -93,6 +93,13 @@ require(["WAVED"], function(WAVED) {
                 primary: "ui-icon-trash"
             }
         });
+        
+        $('#load-project-refresh-list').button({
+            text: false,
+            icons: {
+                primary: "ui-icon-arrowrefresh-1-n"
+            }
+        });
     
         // Setup accordion
         $('#accordion').accordion({
