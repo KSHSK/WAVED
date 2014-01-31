@@ -255,7 +255,7 @@ define([], function() {
         var regex = element.attr("data-match");
         var regexDescription = element.attr("data-match-desc");
         
-        if (minLength) {
+        if (typeof minLength === 'number') {
             if (value.length < minLength) {
                 var charText = "character" + (minLength === 1 ? "" : "s");
                 var message = "Must be at least " + minLength + " " + charText + ".";
@@ -265,7 +265,7 @@ define([], function() {
             }
         }
         
-        if (maxLength) {
+        if (typeof maxLength === 'number') {
             if (value.length > maxLength) {
                 var charText = "character" + (minLength === 1 ? "" : "s");
                 var message = "Cannot be more than " + maxLength + " " + charText + ".";
@@ -275,8 +275,8 @@ define([], function() {
             }
         }
         
-        if (regex) {
-            if (!value.match(RegExp("^[ a-zA-Z0-9_\-]+$"))) {
+        if (typeof regex !== 'undefined' && typeof regexDescription !== 'undefined') {
+            if (!value.match(RegExp(regex))) {
                 displayError(error, regexDescription);
                 disableButton(submitButton);
                 return;
