@@ -143,13 +143,13 @@ define([], function() {
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
                     if (data.success) {
-                        clearError(self.createNewProjectError);
+                        clearText(self.createNewProjectError);
                         setProjectName(data.projectName);
                         projectCreated.resolve();
                     }
                     else {
                         // Display error to user.
-                        displayError(self.createNewProjectError, data.errorMessage);
+                        displayText(self.createNewProjectError, data.errorMessage);
                     }
                 }
             });
@@ -194,14 +194,14 @@ define([], function() {
     /**
      * Adds text to the given element.
      */
-    function displayError(element, error) {
-        element.text(error);
+    function displayText(element, text) {
+        element.text(text);
     }
     
     /**
-     * Clears the error for the given element.
+     * Clears the text for the given element.
      */
-    function clearError(element) {
+    function clearText(element) {
         element.text("");
     }
     
@@ -259,7 +259,7 @@ define([], function() {
             if (value.length < minLength) {
                 var charText = "character" + (minLength === 1 ? "" : "s");
                 var message = "Must be at least " + minLength + " " + charText + ".";
-                displayError(error, message);
+                displayText(error, message);
                 disableButton(submitButton);
                 return;
             }
@@ -269,7 +269,7 @@ define([], function() {
             if (value.length > maxLength) {
                 var charText = "character" + (minLength === 1 ? "" : "s");
                 var message = "Cannot be more than " + maxLength + " " + charText + ".";
-                displayError(error, message);
+                displayText(error, message);
                 disableButton(submitButton);
                 return;
             }
@@ -277,14 +277,14 @@ define([], function() {
         
         if (typeof regex !== 'undefined' && typeof regexDescription !== 'undefined') {
             if (!value.match(RegExp(regex))) {
-                displayError(error, regexDescription);
+                displayText(error, regexDescription);
                 disableButton(submitButton);
                 return;
             }
         }
         
         // Clear error.
-        clearError(error);
+        clearText(error);
         enableButton(submitButton);
     }
     
