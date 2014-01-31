@@ -232,57 +232,60 @@ define([], function() {
         
         // Input validation
         $(document).on('keyup', 'input.validate', function(event) {
-            var element = $(event.currentTarget);
-            var value = element.val().trim();
-            
-            var error = element.next('div.error');
-            
-            // TODO: This will only be correct for dialogs.
-            //       Update this for non-dialogs when possible.
-            var submitButton = element.parents('.ui-dialog').find('.submit-button');
-            
-            var minLength = element.data("min-length");
-            var maxLength = element.data("max-length");
-            var regex = element.attr("data-match");
-            var regexDescription = element.attr("data-match-desc");
-            
-            if (minLength) {
-                if (value.length < minLength) {
-                    var charText = "character" + (minLength === 1 ? "" : "s");
-                    var message = "Must be at least " + minLength + " " + charText + ".";
-                    displayError(error, message);
-                    disableButton(submitButton);
-                    return;
-                }
-            }
-            
-            if (maxLength) {
-                if (value.length > maxLength) {
-                    var charText = "character" + (minLength === 1 ? "" : "s");
-                    var message = "Cannot be more than " + maxLength + " " + charText + ".";
-                    displayError(error, message);
-                    disableButton(submitButton);
-                    return;
-                }
-            }
-            
-            if (regex) {
-                if (!value.match(RegExp("^[ a-zA-Z0-9_\-]+$"))) {
-                    displayError(error, regexDescription);
-                    disableButton(submitButton);
-                    return;
-                }
-            }
-            
-            // Clear error.
-            clearError(error);
-            enableButton(submitButton);
+            validateInput($(event.currentTarget));
         });
         
         // New Project
         mainSection.on('click', '#new-button', function() {
             NewProjectModule.tryToCreateNewProject();
         });
+    }
+    
+    function validateInput(element) {
+        var value = element.val().trim();
+        
+        var error = element.next('div.error');
+        
+        // TODO: This will only be correct for dialogs.
+        //       Update this for non-dialogs when possible.
+        var submitButton = element.parents('.ui-dialog').find('.submit-button');
+        
+        var minLength = element.data("min-length");
+        var maxLength = element.data("max-length");
+        var regex = element.attr("data-match");
+        var regexDescription = element.attr("data-match-desc");
+        
+        if (minLength) {
+            if (value.length < minLength) {
+                var charText = "character" + (minLength === 1 ? "" : "s");
+                var message = "Must be at least " + minLength + " " + charText + ".";
+                displayError(error, message);
+                disableButton(submitButton);
+                return;
+            }
+        }
+        
+        if (maxLength) {
+            if (value.length > maxLength) {
+                var charText = "character" + (minLength === 1 ? "" : "s");
+                var message = "Cannot be more than " + maxLength + " " + charText + ".";
+                displayError(error, message);
+                disableButton(submitButton);
+                return;
+            }
+        }
+        
+        if (regex) {
+            if (!value.match(RegExp("^[ a-zA-Z0-9_\-]+$"))) {
+                displayError(error, regexDescription);
+                disableButton(submitButton);
+                return;
+            }
+        }
+        
+        // Clear error.
+        clearError(error);
+        enableButton(submitButton);
     }
     
     /* ### WAVED Definition ### */
