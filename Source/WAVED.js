@@ -74,6 +74,7 @@ define([], function() {
             
             // Clear the input.
             this.createNewProjectNameInput.val("");
+            clearText(this.createNewProjectError);
             
             this.createNewProjectDialog.dialog({
                 resizable: false,
