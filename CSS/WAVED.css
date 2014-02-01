@@ -86,3 +86,28 @@ html, body {
 .hide-on-load {
     display: none;
 }
+
+/* Hide dialogs on load */
+.dialog {
+    display: none;
+}
+
+.error {
+    color: red;
+    font-size: 0.8em;
+}
+
+.required:before {
+    color: red;
+    content: "* ";
+}
+
+#project-name {
+    width: 100px;
+}
+
+.clip {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
