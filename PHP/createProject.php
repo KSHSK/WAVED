@@ -53,10 +53,10 @@ if (projectExists($projectName)) {
 }
 
 // Create the directory for the project.
-$success = mkdir("projects/" . $projectName, 0660);
+$success = mkdir("projects/" . $projectName, 0755);
 
 if ($success) {
-    $success = mkdir("projects/" . $projectName . "/data", 0660);
+    $success = mkdir("projects/" . $projectName . "/data", 0755);
 }
 
 if (!$success) {
