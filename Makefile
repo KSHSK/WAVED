@@ -1,9 +1,13 @@
 .PHONY: setup
 
-setup: DB/waved.db
+setup: DB/waved.db projects
 
 DB:
 	mkdir $@
+
+projects:
+	mkdir $@
+	setfacl -m u:www-data:rwx $@
 
 DB/waved.db: DB
 	sqlite3 -init SQL/initializeDatabase.sql $@ ""
