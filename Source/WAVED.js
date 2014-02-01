@@ -272,6 +272,7 @@ define([], function() {
                     if (data.success) {
                         clearText(self.loadProjectError);
                         setProjectName(data.projectName);
+                        WAVED.setClean();
                         projectLoaded.resolve();
                     }
                     else {
