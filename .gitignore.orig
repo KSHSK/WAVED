@@ -2,6 +2,11 @@
 .metadata
 .project
 .settings
+<<<<<<< HEAD
+waved.db
+
+=======
 projects
 waved.db
 *.swp
+>>>>>>> master

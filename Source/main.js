@@ -4,6 +4,7 @@ require(["WAVED"], function(WAVED) {
     $(document).ready(function() {
         setupUI();
         displayPage();
+        WAVED.start();
     });
     
     function setupUI() {
@@ -93,6 +94,7 @@ require(["WAVED"], function(WAVED) {
             }
         });
     
+        // Setup accordion
         $('#accordion').accordion({
             animate: false
         });
