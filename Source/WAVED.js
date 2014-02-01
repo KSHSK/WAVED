@@ -145,6 +145,7 @@ define([], function() {
                     if (data.success) {
                         clearText(self.createNewProjectError);
                         setProjectName(data.projectName);
+                        WAVED.setClean();
                         projectCreated.resolve();
                     }
                     else {
@@ -182,10 +183,27 @@ define([], function() {
          * Handles when the user tries to close the project when there are unsaved changes.
          */
         handleUnsavedChanges: function(deferred) {
-            // TODO: This should open a dialog giving the user the option to
-            // "Discard Changes" / "Continue", or "Cancel"
-            // "Cancel" should reject the deferred.
-            // "Discard" should resolve the deferred and return.
+            this.unsavedChangesDialog.dialog({
+                resizable: false,
+                height: 225,
+                width: 300,
+                modal: true,
+                buttons: {
+                    "Discard Changes": function() {
+                        deferred.resolve();
+                        $(this).dialog("close");
+                    },
+                    "Cancel": function() {
+                        deferred.reject();
+                        $(this).dialog("close");
+                    }
+                },
+                open: function() {
+                    // Don't auto-select the "Discard Changes" option.
+                    $('button', $(this).parent()).blur();
+                }
+            });
+            
         }
     };
 
@@ -233,6 +251,19 @@ define([], function() {
         // Input validation
         $(document).on('keyup', 'input.validate', function(event) {
             validateInput($(event.currentTarget));
+        });
+        
+        // Confirm if the user wants to leave when they have unsaved changes.
+        $(window).on("beforeunload", function(event) {
+            if (WAVED.getDirty()) {
+                var message = "You have unsaved changes.";
+                
+                // IE/Firefox
+                event.returnValue = message;
+                
+                // Webkit browsers.
+                return message;
+            }
         });
         
         // New Project
