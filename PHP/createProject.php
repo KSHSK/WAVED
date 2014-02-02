@@ -69,7 +69,7 @@ if (!$success) {
 
 
 // TODO: Replace with real initial state
-$projectState="Dummy State";
+$projectState="{}";
 $serializer = new SQLiteProjectSerializer($db);
 $success = $serializer->set($projectName, $projectState);
 
