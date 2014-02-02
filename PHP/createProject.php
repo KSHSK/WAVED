@@ -1,5 +1,7 @@
 <?php
+include_once('connect.php');
 include_once("CommonMethods.php");
+include_once('SQLiteProjectSerializer.php');
 
 /**
  * Checks to see if the project name is valid.
@@ -60,17 +62,31 @@ if ($success) {
 }
 
 if (!$success) {
-    setReturnValueError($returnValue, "Unknown error creating new project.");
+    setReturnValueError($returnValue, "Unknown error creating new project directory.");
     reportReturnValue($returnValue);
     return;
 }
 
-// TODO: Other setup for a new project with the database.
-// TODO: Should we return an initial state here?
-//       This might make it more consistent with "Load Project"
 
-// Set the name of the project
+// TODO: Replace with real initial state
+$projectState="Dummy State";
+$serializer = new SQLiteProjectSerializer($db);
+$success = $serializer->set($projectName, $projectState);
+
+if(!$success) {
+    // Attempt to remove traces from the filesystem
+    rmdir("projects/". $projectName . "/data");
+    rmdir("projects/". $projectName);
+
+    // Report error
+    setReturnValueError($returnValue, "Unknown error creating new project database entry.");
+    reportReturnValue($returnValue);
+    return;
+}
+
+// Set the name and state of the project
 $returnValue["projectName"] = $projectName;
+$returnValue["projectState"] = $projectState;
 
 reportReturnValue($returnValue);
 ?>
