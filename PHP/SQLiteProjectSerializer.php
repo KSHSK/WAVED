@@ -56,6 +56,16 @@ class SQLiteProjectSerializer implements ISerializer, IDeserializer
         return TRUE;
     }
 
+    public function exists($name)
+    {
+        $statement = $this->db->prepare("SELECT COUNT(*) FROM  " . self::TABLE . " WHERE LOWER(name) = LOWER(:name)");
+        $statement->bindValue(':name', $name, SQLITE3_TEXT);
+        $value = $statement->execute()->fetchArray(SQLITE3_NUM);
+        $statement->close();
+
+        return $value[0] > 0;
+    }
+
     public function get($name)
     {
         $statement = $this->db->prepare("SELECT state FROM  " . self::TABLE . " WHERE name = :name");
