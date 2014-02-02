@@ -1,4 +1,7 @@
 <?php
+include_once("SQLiteProjectSerializer.php");
+include_once("connect.php");
+
 /**
  * Initializes the return array with default values.
  * @return The initial return value array.
@@ -34,7 +37,8 @@ function reportReturnValue($returnValue) {
  * @param string $projectName
  */
 function projectExists($projectName) {
-    return is_dir("projects/" . $projectName);
+    global $db;
+    $deserializer = new SQLiteProjectSerializer($db);
+    return $deserializer->exists($projectName);
 }
-
 ?>
