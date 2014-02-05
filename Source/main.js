@@ -2,6 +2,12 @@ require(["WAVED"], function(WAVED) {
 
     // UI Setup
     $(document).ready(function() {
+        setupUI();
+        displayPage();
+        WAVED.start();
+    });
+    
+    function setupUI() {
         $('#new-button').button();
         $('#undo-button').button();
         $('#redo-button').button();
@@ -88,10 +94,18 @@ require(["WAVED"], function(WAVED) {
             }
         });
     
+        // Setup accordion
         $('#accordion').accordion({
             animate: false
         });
     
         $('input').addClass('ui-corner-all');
-    });
+    }
+
+    function displayPage() {
+        $('.hide-on-load').removeClass("hide-on-load");
+        
+        // Accordion must calculate size after it is visible to avoid sizing issues.
+        $('#accordion').accordion("refresh");
+    }
 });

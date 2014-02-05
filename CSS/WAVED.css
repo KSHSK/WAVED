@@ -8,6 +8,10 @@ html, body {
 .ui-widget {
     font-size: 14px;
 }
+
+.ui-accordion-header {
+    border: solid 1px #3BB4BF;
+}
 /*** End ***/
 
 .inline {
@@ -77,4 +81,33 @@ html, body {
 
 .button-small .ui-button-text {
     padding: 0.1em 0.6em 0.2em 0.6em;
+}
+
+.hide-on-load {
+    display: none;
+}
+
+/* Hide dialogs on load */
+.dialog {
+    display: none;
+}
+
+.error {
+    color: red;
+    font-size: 0.8em;
+}
+
+.required:before {
+    color: red;
+    content: "* ";
+}
+
+#project-name {
+    width: 100px;
+}
+
+.clip {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
