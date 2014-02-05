@@ -79,7 +79,7 @@ if(!$success) {
     rmdir("projects/". $projectName);
 
     // Report error
-    setReturnValueError($returnValue, "Unknown error creating new project database entry.");
+    setReturnValueError($returnValue, "Unknown error registering new project.");
     reportReturnValue($returnValue);
     return;
 }
