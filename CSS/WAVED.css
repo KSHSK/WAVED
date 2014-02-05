@@ -102,6 +102,10 @@ html, body {
     content: "* ";
 }
 
+#project-name {
+    padding: 0 0 0.75em 0.2em;
+}
+
 .clip {
     white-space: nowrap;
     overflow: hidden;
