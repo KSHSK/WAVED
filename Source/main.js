@@ -1,4 +1,14 @@
-require(["WAVED"], function(WAVED) {
+require.config({
+    paths: {
+        angular: '../ThirdParty/angularjs/angular.min'
+    },
+    shim: {
+        'angular' : {'exports' : 'angular'}
+    },
+    deps: ['./bootstrap']
+});
+
+require(['angular', 'WAVED'], function(angular, WAVED) {
 
     // UI Setup
     $(document).ready(function() {
