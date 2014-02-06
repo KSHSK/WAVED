@@ -86,11 +86,10 @@ define(['jquery'], function($) {
                 
                 // TODO: We can get rid of this when we update validation to use AngularJS
                 registerEventHandlers();
-                
             }
         },
 
-        getDirty: function() {
+        isDirty: function() {
             return _dirty;
         },
 

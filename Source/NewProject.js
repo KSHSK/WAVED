@@ -26,7 +26,7 @@
             var self = this;
             var projectClean = $.Deferred();
         
-            if (WAVED.getDirty() === true) {
+            if (WAVED.isDirty() === true) {
                 UnsavedChangesModule.handleUnsavedChanges(projectClean);
             }
             else {
