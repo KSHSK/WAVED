@@ -1,3 +1,7 @@
+/**
+ * Wraps the definition of the top-level app module.
+ * Loads submodule dependencies.
+ */
 define([
     'angular',
     './controllers/index'

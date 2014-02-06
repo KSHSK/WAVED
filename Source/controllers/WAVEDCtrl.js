@@ -1,3 +1,6 @@
+/**
+ * Create the WAVED Controller and add it to the controllers module.
+ */
 define([
     './module',
     '../WAVED'
