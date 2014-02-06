@@ -5,12 +5,14 @@
  define([
     'require',
     'angular',
-    'app'
- ], function (require, ng) {
+    'app',
+    'WAVED'
+ ], function (require, ng, app, WAVED) {
     require(['../ThirdParty/domReady!'], function (document) {
         ng.bootstrap(document, ['app']);
         setupUI();
         displayPage();
+        WAVED.start();
     });
     
     function setupUI() {
