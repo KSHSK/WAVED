@@ -49,7 +49,6 @@
             var self = this;
             var createNewProjectDialog = $('#create-new-project-dialog');
             
-            // TODO: use scope project name variable
             // Clear the input.
             this.createNewProjectNameInput.val("");
         
