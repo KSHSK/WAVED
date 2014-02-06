@@ -1,4 +1,4 @@
-define([], function() {
+define(['jquery'], function($) {
 
     /* ### Private WAVED Variables ### */
     

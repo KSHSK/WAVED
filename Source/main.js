@@ -1,6 +1,7 @@
 require.config({
     paths: {
-        angular: '../ThirdParty/angularjs/angular.min'
+        angular: '../ThirdParty/angularjs/angular.min',
+        jquery: 'require-jquery'
     },
     
     // AngularJS doesn't use define(), so we configure it as a module here.
@@ -12,7 +13,7 @@ require.config({
     deps: ['./bootstrap']
 });
 
-require(['angular', 'WAVED'], function(angular, WAVED) {
+require(['jquery', 'WAVED'], function($, WAVED) {
 
     // UI Setup
     $(document).ready(function() {
