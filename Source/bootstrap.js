@@ -1,5 +1,6 @@
 /**
- * bootstraps angular onto the window.document node
+ * Bootstraps Angular onto the window.document node
+ * http://www.startersquad.com/blog/angularjs-requirejs/
  */
  define([
     'require',
