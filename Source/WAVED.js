@@ -4,9 +4,6 @@ define([], function() {
     
     // True if changes have been made since the last save; otherwise false.
     var _dirty = false;
-
-    // The current name of the project.
-    var _activeProjectName = "";
     
     // Has the application been started yet.
     var _started = false;
@@ -145,7 +142,6 @@ define([], function() {
                     var data = JSON.parse(dataString);
                     if (data.success) {
                         clearText(self.createNewProjectError);
-                        setProjectName(data.projectName);
                         projectCreated.resolve();
                     }
                     else {
@@ -204,17 +200,6 @@ define([], function() {
      */
     function clearText(element) {
         element.text("");
-    }
-    
-    /**
-     * Sets the project name and displays it on the page.
-     */
-    function setProjectName(projectName) {
-        var element = $('#project-name');
-        _activeProjectName = projectName;
-        element.text(_activeProjectName);
-        element.attr('title', _activeProjectName);
-        // TODO: Update to use angular.
     }
     
     function disableButton(button) {
