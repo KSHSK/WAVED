@@ -81,12 +81,12 @@ define(['jquery'], function($) {
     var WAVED = {
         start: function() {
             // Can only be called once.
-            
             if (_started === false) {
                 _started = true;
                 
                 // TODO: We can get rid of this when we update validation to use AngularJS
                 registerEventHandlers();
+                
             }
         },
 
