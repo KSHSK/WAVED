@@ -100,7 +100,7 @@ define(['jquery'], function($) {
         
         setClean: function() {
             _dirty = false;
-        },
+        }
     };
 
     return WAVED;
