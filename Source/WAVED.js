@@ -160,45 +160,74 @@ define([], function() {
     var GoogleAnalyticsModule = {
         unboundDisplay: $('#google-analytics-unbound'),
         boundDisplay: $('#google-analytics-bound'),
-        preview: $('#analytics-ua-preview'),
-        inputField: $('#google-analytics-box'),
+        uaPreview: $('#google-analytics-ua-preview'),
+        categoryPreview: $('#google-analytics-category-preview'),
+        uaInputField: $('#google-analytics-ua'),
+        categoryInputField: $('#google-analytics-category'),
+        uaError: $('#google-analytics-ua-error'),
+        categoryError: $('#google-analytics-category-error'),
         ua: '',
+        category: '',
         
-        isGoogleAnalyticsUAValid: function() {
+        isGoogleAnalyticsValid: function() {
+            var isValid = true;
             
             // Regex for matching Google Analytics codes (case-insensitive)
             // Code match pattern UA-XXXXXXX-YY where X and Y are integers with arbitrary length 
-            var regex = new RegExp('((UA)(-)(\\d+)(-)(\\d+))', 'i');
-            if(!$(this.inputField).val().match(regex)){
-                return false;
+            var uaRegex = new RegExp('((UA)(-)(\\d+)(-)(\\d+))', 'i');
+            var categoryRegex = new RegExp('[a-zA-Z0-9_\\- ]+');
+            
+            if(!$(this.uaInputField).val().match(uaRegex)){
+                displayText(this.uaError, "UA code is not in the correct format.");
+                isValid = false;
             }
             
-            return true;
-        },
-    
-        addUACode: function() {
-            var error = $("#analytics-error");
-            if(!this.isGoogleAnalyticsUAValid()){
-                // Display error
-                displayText(error, "UA code is not in the correct format.");
+            if(!$(this.categoryInputField).val().match(categoryRegex)){
+                displayText(this.categoryError, "May only contain alphanumerics, hypens (-), underscores(_) and spaces.");
+                isValid = false;
             }
-            else{
-                this.ua = $(this.inputField).val();
+            
+            return isValid;
+        },
+        
+        addGoogleAnalytics: function() {
+            if(this.isGoogleAnalyticsValid()){
+                this.ua = $(this.uaInputField).val();
+                this.category = $(this.categoryInputField).val();
                 
                 // Clear error
-                clearText(error);
+                clearText(this.uaError);
+                clearText(this.categoryError);
+                
+                // Swap the visibility of the divs
                 this.unboundDisplay.hide();
                 this.boundDisplay.show();
-                $(this.preview).html(this.ua);
+                
+                // Update the previews
+                $(this.uaPreview).html(this.ua);
+                $(this.categoryPreview).html(this.category);
             }
         },
         
-        removeUACode: function() {
+        removeGoogleAnalytics: function() {
             this.unboundDisplay.show();
             this.boundDisplay.hide();
-            $(this.preview).html('');
+            
+            $(this.uaPreview).html('');
+            $(this.categoryPreview).html('');
+            
             this.ua = '';
-            $(this.inputField).val('');
+            this.category = '';
+            
+            $(this.uaInputField).val('');
+            $(this.categoryInputField).val('');
+        },
+        
+        resetInputFields: function() {
+            $(this.uaInputField).val('');
+            $(this.categoryInputField).val('');
+            clearText(this.uaError);
+            clearText(this.categoryError);
         }
     };
     
@@ -286,12 +315,16 @@ define([], function() {
             NewProjectModule.tryToCreateNewProject();
         });
         
-        $('#analytics-add-button').click(function(){
-            GoogleAnalyticsModule.addUACode();
+        $('#google-analytics-add-button').click(function(){
+            GoogleAnalyticsModule.addGoogleAnalytics();
         });
         
-        $('#analytics-remove-button').click(function(){
-           GoogleAnalyticsModule.removeUACode(); 
+        $('#google-analytics-remove-button').click(function(){
+           GoogleAnalyticsModule.removeGoogleAnalytics(); 
+        });
+        
+        $('#google-analytics-clear-button').click(function() {
+           GoogleAnalyticsModule.resetInputFields(); 
         });
     }
     
