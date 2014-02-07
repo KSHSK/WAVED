@@ -15,6 +15,8 @@ require(["WAVED"], function(WAVED) {
         $('#save-button').button();
         $('#export-button').button();
         $('#refresh-button').button();
+        $('#analytics-add-button').button();
+        $('#analytics-remove-button').button();
         
         // Add/Edit/Remove Buttons.
         $('#add-action-button').button({
@@ -93,7 +95,7 @@ require(["WAVED"], function(WAVED) {
                 primary: "ui-icon-trash"
             }
         });
-    
+        
         // Setup accordion
         $('#accordion').accordion({
             animate: false

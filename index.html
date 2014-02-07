@@ -107,7 +107,20 @@
                 </div>
                 <h3>Google Analytics</h3>
                 <div>
-                    // Google Analytics
+                    <div>
+                        <div class="inline">Google Analytics UA Code</div>
+                        <div class="inline" id="google-analytics-unbound">
+	                        <input type="text" id="google-analytics-box" placeholder="Enter UA code" />
+	                            <button id="analytics-add-button" class="button-small">Add</button>
+	                        <br>
+	                        <div id="analytics-error" class="error"></div>
+                        </div>
+                        <div class="inline" id="google-analytics-bound" style="display:none;">
+                            <span id="analytics-ua-preview"></span>
+                                <button id="analytics-remove-button" class="button-small">Remove</button>
+                            <br>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

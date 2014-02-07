@@ -157,6 +157,51 @@ define([], function() {
         }
     };
     
+    var GoogleAnalyticsModule = {
+        unboundDisplay: $('#google-analytics-unbound'),
+        boundDisplay: $('#google-analytics-bound'),
+        preview: $('#analytics-ua-preview'),
+        inputField: $('#google-analytics-box'),
+        ua: '',
+        
+        isGoogleAnalyticsUAValid: function() {
+            
+            // Regex for matching Google Analytics codes (case-insensitive)
+            // Code match pattern UA-XXXXXXX-YY where X and Y are integers with arbitrary length 
+            var regex = new RegExp('((UA)(-)(\\d+)(-)(\\d+))', 'i');
+            if(!$(this.inputField).val().match(regex)){
+                return false;
+            }
+            
+            return true;
+        },
+    
+        addUACode: function() {
+            var error = $("#analytics-error");
+            if(!this.isGoogleAnalyticsUAValid()){
+                // Display error
+                displayText(error, "UA code is not in the correct format.");
+            }
+            else{
+                this.ua = $(this.inputField).val();
+                
+                // Clear error
+                clearText(error);
+                this.unboundDisplay.hide();
+                this.boundDisplay.show();
+                $(this.preview).html(this.ua);
+            }
+        },
+        
+        removeUACode: function() {
+            this.unboundDisplay.show();
+            this.boundDisplay.hide();
+            $(this.preview).html('');
+            this.ua = '';
+            $(this.inputField).val('');
+        }
+    };
+    
     /**
      * A module for loading an existing project.
      */
@@ -239,6 +284,14 @@ define([], function() {
         // New Project
         mainSection.on('click', '#new-button', function() {
             NewProjectModule.tryToCreateNewProject();
+        });
+        
+        $('#analytics-add-button').click(function(){
+            GoogleAnalyticsModule.addUACode();
+        });
+        
+        $('#analytics-remove-button').click(function(){
+           GoogleAnalyticsModule.removeUACode(); 
         });
     }
     
