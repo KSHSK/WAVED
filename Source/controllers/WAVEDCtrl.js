@@ -3,11 +3,11 @@
  */
 define([
         './module',
-        '../NewProject',
+        '../modules/Welcome',
         'jquery'
     ], function(
         controllers, 
-        NewProjectModule, 
+        WelcomeModule, 
         $) {
     
     controllers.controller('WAVEDCtrl', function ($scope) {
@@ -19,9 +19,9 @@ define([
             console.log('Selected Widget: ' + $scope.selectedWidget.name);
         };
 
-        NewProjectModule.openWelcomeDialog();
+        WelcomeModule.openWelcomeDialog();
         $scope.tryToCreateNewProject = function() {
-            NewProjectModule.tryToCreateNewProject();
+            WelcomeModule.tryToCreateNewProject();
         };
     });
 });
