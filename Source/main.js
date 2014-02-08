@@ -1,5 +1,7 @@
+/*global require, $*/
 require(["WAVED"], function(WAVED) {
-
+	"use strict";
+	
     // UI Setup
     $(document).ready(function() {
         setupUI();

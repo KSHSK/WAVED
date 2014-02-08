@@ -1,0 +1,4 @@
+eclipse.preferences.version=1
+excluded=Source/require.js\:ThirdParty//*
+included=//*.js
+projectSpecificOptions=true
