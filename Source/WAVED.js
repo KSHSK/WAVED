@@ -157,6 +157,80 @@ define([], function() {
         }
     };
     
+    var GoogleAnalyticsModule = {
+        unboundDisplay: $('#google-analytics-unbound'),
+        boundDisplay: $('#google-analytics-bound'),
+        uaPreview: $('#google-analytics-ua-preview'),
+        categoryPreview: $('#google-analytics-category-preview'),
+        uaInputField: $('#google-analytics-ua'),
+        categoryInputField: $('#google-analytics-category'),
+        uaError: $('#google-analytics-ua-error'),
+        categoryError: $('#google-analytics-category-error'),
+        ua: '',
+        category: '',
+        
+        isGoogleAnalyticsValid: function() {
+            var isValid = true;
+            
+            // Regex for matching Google Analytics codes (case-insensitive)
+            // Code match pattern UA-XXXXXXX-YY where X and Y are integers with arbitrary length 
+            var uaRegex = new RegExp('((UA)(-)(\\d+)(-)(\\d+))', 'i');
+            var categoryRegex = new RegExp('[a-zA-Z0-9_\\- ]+');
+            
+            if(!$(this.uaInputField).val().match(uaRegex)){
+                displayText(this.uaError, "UA code is not in the correct format.");
+                isValid = false;
+            }
+            
+            if(!$(this.categoryInputField).val().match(categoryRegex)){
+                displayText(this.categoryError, "May only contain alphanumerics, hypens (-), underscores(_) and spaces.");
+                isValid = false;
+            }
+            
+            return isValid;
+        },
+        
+        addGoogleAnalytics: function() {
+            if(this.isGoogleAnalyticsValid()){
+                this.ua = $(this.uaInputField).val();
+                this.category = $(this.categoryInputField).val();
+                
+                // Clear error
+                clearText(this.uaError);
+                clearText(this.categoryError);
+                
+                // Swap the visibility of the divs
+                this.unboundDisplay.hide();
+                this.boundDisplay.show();
+                
+                // Update the previews
+                $(this.uaPreview).html(this.ua);
+                $(this.categoryPreview).html(this.category);
+            }
+        },
+        
+        removeGoogleAnalytics: function() {
+            this.unboundDisplay.show();
+            this.boundDisplay.hide();
+            
+            $(this.uaPreview).html('');
+            $(this.categoryPreview).html('');
+            
+            this.ua = '';
+            this.category = '';
+            
+            $(this.uaInputField).val('');
+            $(this.categoryInputField).val('');
+        },
+        
+        resetInputFields: function() {
+            $(this.uaInputField).val('');
+            $(this.categoryInputField).val('');
+            clearText(this.uaError);
+            clearText(this.categoryError);
+        }
+    };
+    
     /**
      * A module for loading an existing project.
      */
@@ -239,6 +313,18 @@ define([], function() {
         // New Project
         mainSection.on('click', '#new-button', function() {
             NewProjectModule.tryToCreateNewProject();
+        });
+        
+        $('#google-analytics-add-button').click(function(){
+            GoogleAnalyticsModule.addGoogleAnalytics();
+        });
+        
+        $('#google-analytics-remove-button').click(function(){
+           GoogleAnalyticsModule.removeGoogleAnalytics(); 
+        });
+        
+        $('#google-analytics-clear-button').click(function() {
+           GoogleAnalyticsModule.resetInputFields(); 
         });
     }
     

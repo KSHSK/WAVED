@@ -107,7 +107,27 @@
                 </div>
                 <h3>Google Analytics</h3>
                 <div>
-                    // Google Analytics
+                    <div>
+                        <div class="inline" id="google-analytics-unbound">
+                            <div class="inline">Google Analytics UA Code</div>
+	                        <input type="text" id="google-analytics-ua" placeholder="Enter UA code" />
+	                        <div id="google-analytics-ua-error" class="error"></div>
+	                        <div class="inline">Google Analytics Event Category</div>
+	                        <input type="text" id="google-analytics-category" placeholder="Enter event category" />
+	                        <div id="google-analytics-category-error" class="error"></div>
+	                        <br>
+	                        <button id="google-analytics-add-button" class="button-small">Add</button>
+	                        <button id="google-analytics-clear-button" class="button-small">Clear</button>
+                        </div>
+                        <div class="inline" id="google-analytics-bound" style="display:none;">
+                            <span>UA: </span><span id="google-analytics-ua-preview"></span>
+                            <br>
+                            <span>Event Category: </span><span id="google-analytics-category-preview"></span>
+                            <br>
+                            <button id="google-analytics-remove-button" class="button-small">Remove</button>
+                            <br>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
