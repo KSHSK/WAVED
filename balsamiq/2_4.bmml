@@ -290,13 +290,7 @@
         <icon>ReloadIcon%7Csmall</icon>
       </controlProperties>
     </control>
-    <control controlID="182" controlTypeID="com.balsamiq.mockups::Label" x="263" y="113" w="-1" h="-1" measuredW="100" measuredH="22" zOrder="48" locked="false" isInGroup="-1">
-      <controlProperties>
-        <size>14</size>
-        <text>Untitled%20Project</text>
-      </controlProperties>
-    </control>
-    <control controlID="183" controlTypeID="com.balsamiq.mockups::ButtonBar" x="693" y="111" w="102" h="25" measuredW="102" measuredH="25" zOrder="49" locked="false" isInGroup="-1">
+    <control controlID="183" controlTypeID="com.balsamiq.mockups::ButtonBar" x="693" y="111" w="102" h="25" measuredW="102" measuredH="25" zOrder="48" locked="false" isInGroup="-1">
       <controlProperties>
         <hrefs>%2C</hrefs>
         <selectedIndex>-1</selectedIndex>
@@ -304,46 +298,52 @@
         <text>Load%2C%20Export</text>
       </controlProperties>
     </control>
-    <control controlID="184" controlTypeID="com.balsamiq.mockups::List" x="85" y="263" w="156" h="159" measuredW="100" measuredH="126" zOrder="50" locked="false" isInGroup="-1">
+    <control controlID="184" controlTypeID="com.balsamiq.mockups::List" x="85" y="263" w="156" h="159" measuredW="100" measuredH="126" zOrder="49" locked="false" isInGroup="-1">
       <controlProperties>
         <text>climate.csv%0Aheat_index.json</text>
       </controlProperties>
     </control>
-    <control controlID="185" controlTypeID="com.balsamiq.mockups::Button" x="208" y="236" w="33" h="27" measuredW="27" measuredH="27" zOrder="51" locked="false" isInGroup="-1">
+    <control controlID="185" controlTypeID="com.balsamiq.mockups::Button" x="208" y="236" w="33" h="27" measuredW="27" measuredH="27" zOrder="50" locked="false" isInGroup="-1">
       <controlProperties>
         <text>-</text>
       </controlProperties>
     </control>
-    <control controlID="186" controlTypeID="com.balsamiq.mockups::Button" x="175" y="236" w="33" h="27" measuredW="31" measuredH="27" zOrder="52" locked="false" isInGroup="-1">
+    <control controlID="186" controlTypeID="com.balsamiq.mockups::Button" x="175" y="236" w="33" h="27" measuredW="31" measuredH="27" zOrder="51" locked="false" isInGroup="-1">
       <controlProperties>
         <text>+</text>
       </controlProperties>
     </control>
-    <control controlID="187" controlTypeID="com.balsamiq.mockups::Label" x="87" y="239" w="-1" h="-1" measuredW="73" measuredH="21" zOrder="53" locked="false" isInGroup="-1">
+    <control controlID="187" controlTypeID="com.balsamiq.mockups::Label" x="87" y="239" w="-1" h="-1" measuredW="73" measuredH="21" zOrder="52" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Source%20Files</text>
       </controlProperties>
     </control>
-    <control controlID="188" controlTypeID="com.balsamiq.mockups::List" x="85" y="456" w="156" h="155" measuredW="100" measuredH="126" zOrder="54" locked="false" isInGroup="-1">
+    <control controlID="188" controlTypeID="com.balsamiq.mockups::List" x="85" y="456" w="156" h="155" measuredW="100" measuredH="126" zOrder="53" locked="false" isInGroup="-1">
       <controlProperties>
         <text/>
       </controlProperties>
     </control>
-    <control controlID="189" controlTypeID="com.balsamiq.mockups::Button" x="208" y="429" w="33" h="27" measuredW="27" measuredH="27" zOrder="55" locked="false" isInGroup="-1">
+    <control controlID="189" controlTypeID="com.balsamiq.mockups::Button" x="208" y="429" w="33" h="27" measuredW="27" measuredH="27" zOrder="54" locked="false" isInGroup="-1">
       <controlProperties>
         <text>-</text>
       </controlProperties>
     </control>
-    <control controlID="190" controlTypeID="com.balsamiq.mockups::Button" x="175" y="429" w="33" h="27" measuredW="31" measuredH="27" zOrder="56" locked="false" isInGroup="-1">
+    <control controlID="190" controlTypeID="com.balsamiq.mockups::Button" x="175" y="429" w="33" h="27" measuredW="31" measuredH="27" zOrder="55" locked="false" isInGroup="-1">
       <controlProperties>
         <href>3%26bm%3B3.bmml%26bm%3B3.bmml%26bm%3B3.bmml</href>
         <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22115%2C409%2C148%2C436%22%20href%3D%223.bmml%22%20alt%3D%223%22%20id%3D%22190%22/%3E</map>
         <text>+</text>
       </controlProperties>
     </control>
-    <control controlID="191" controlTypeID="com.balsamiq.mockups::Label" x="87" y="432" w="-1" h="-1" measuredW="80" measuredH="21" zOrder="57" locked="false" isInGroup="-1">
+    <control controlID="191" controlTypeID="com.balsamiq.mockups::Label" x="87" y="432" w="-1" h="-1" measuredW="80" measuredH="21" zOrder="56" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Data%20subsets</text>
+      </controlProperties>
+    </control>
+    <control controlID="192" controlTypeID="com.balsamiq.mockups::Label" x="263" y="113" w="-1" h="-1" measuredW="101" measuredH="22" zOrder="57" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>14</size>
+        <text>My%20Climate%20App</text>
       </controlProperties>
     </control>
   </controls>
