@@ -143,12 +143,6 @@
         }
     };
     
-    
-    // Load Project
-    $(document).on('click', '#load-button', function() {
-        LoadProjectModule.tryToLoadProject();
-    });
-    
     // Refresh list of projects to load from.
     $(document).on('click', '#load-project-refresh-list', function() {
         LoadProjectModule.updateProjectList();
