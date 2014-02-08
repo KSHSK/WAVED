@@ -12,19 +12,17 @@
     
     <!-- JavaScript-->
     <!-- <script src="ThirdParty/d3/d3.v3.min.js" type="text/javascript" type="text/javascript"/> -->
-    <script src="ThirdParty/jquery-ui-1.10.4.custom/js/jquery-1.10.2.js" type="text/javascript"></script>
-    <script src="ThirdParty/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js" type="text/javascript"></script>
     <script data-main="Source/main" src="Source/require.js"></script>
 </head>
-<body>
+<body data-ng-controller="WAVEDCtrl">
     <div id="mainSection" class="hide-on-load">
         <div id="header-container">
                 <div class="inline bottom" id="header-logo-container">
                     <a href="http://kshsk.github.io/WAVED/" target="_blank"><img id="header-logo" src="images/logo/WAVED_HighRes_Color_NoText.png" ondragstart="return false;" /></a>
                 </div>
                 <div class="inline bottom">
-                    <div class="inline clip" id="project-name"></div>
-                    <button class="inline" id="new-button">New</button>
+                    <div class="menu-text" id="project-name" data-ng-bind="projectName"></div>
+                    <button class="inline" id="new-button" data-ng-click="tryToCreateNewProject();">New</button>
                 
                     <button class="inline" id="undo-button">Undo</button>
                     <button class="inline" id="redo-button">Redo</button>
@@ -33,7 +31,15 @@
                     <button class="inline" id="save-button">Save</button>
                     <button class="inline" id="export-button">Export</button>
                 
-                    <span class="menu-text">Select: </span><select class="inline" id="widget-select"></select>
+                    <span class="menu-text">Select: </span>
+                    <select class="inline" 
+                            id="widget-select" 
+                            data-ng-model="selectedWidget"
+                            data-ng-options="widget.name for widget in widgets"
+                            data-ng-change="selectedWidgetChanged()">
+                            <option value="">-- Select widget --</option>        
+                    </select>
+                    
                     <button class="inline" id="refresh-button">Refresh</button>
                 </div>                
         </div>
@@ -147,10 +153,12 @@
     <div id="create-new-project-dialog" title="New Project" class="dialog">
         <p>Please create a new project</p>
         <label class="required" for="create-new-project-name">Project Name: </label>
-        <input id="create-new-project-name" type="text" class="validate" data-min-length="1"
-            data-max-length="50" data-match="^[a-zA-Z0-9_\- ]+$"
-            data-match-desc="Can only include alphanumeric characters,
-                hyphens (-), underscores (_), and spaces." />
+        <input id="create-new-project-name" type="text" class="validate"
+            data-ng-model="projectName" 
+            data-min-length="1"
+            data-max-length="50" 
+            data-match="^[a-zA-Z0-9_\- ]+$"
+            data-match-desc="Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces." />
         <div class="error"></div>
         <p id="create-new-project-error" class="error"></p>
     </div>
