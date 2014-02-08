@@ -58,7 +58,7 @@
     <control controlID="43" controlTypeID="com.balsamiq.mockups::Tree" x="85" y="199" w="156" h="370" measuredW="300" measuredH="225" zOrder="9" locked="false" isInGroup="-1">
       <controlProperties>
         <selectedIndex>0</selectedIndex>
-        <text>F%20</text>
+        <text>F</text>
       </controlProperties>
     </control>
     <control controlID="44" controlTypeID="com.balsamiq.mockups::Icon" x="1031" y="112" w="-1" h="-1" measuredW="24" measuredH="24" zOrder="10" locked="false" isInGroup="-1">
@@ -82,29 +82,32 @@
       </controlProperties>
     </control>
     <control controlID="48" controlTypeID="com.balsamiq.mockups::ModalScreen" x="60" y="95" w="1024" h="669" measuredW="320" measuredH="240" zOrder="13" locked="true" isInGroup="-1"/>
-    <control controlID="49" controlTypeID="com.balsamiq.mockups::TitleWindow" x="458" y="270" w="309" h="247" measuredW="450" measuredH="400" zOrder="14" locked="false" isInGroup="-1">
+    <control controlID="49" controlTypeID="com.balsamiq.mockups::TitleWindow" x="458" y="270" w="309" h="168" measuredW="450" measuredH="400" zOrder="14" locked="true" isInGroup="-1">
       <controlProperties>
         <bottomheight>0</bottomheight>
         <text>Wecome%21</text>
       </controlProperties>
     </control>
-    <control controlID="54" controlTypeID="com.balsamiq.mockups::Button" x="499" y="448" w="-1" h="-1" measuredW="94" measuredH="27" zOrder="15" locked="false" isInGroup="-1">
+    <control controlID="54" controlTypeID="com.balsamiq.mockups::Button" x="496" y="385" w="-1" h="-1" measuredW="53" measuredH="27" zOrder="15" locked="false" isInGroup="-1">
       <controlProperties>
-        <href>0_0_1%26bm%3B0_0_1.bmml%26bm%3B0_0_1.bmml%26bm%3B0_0_1.bmml</href>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22439%2C428%2C533%2C455%22%20href%3D%220_0_1.bmml%22%20alt%3D%220_0_1%22%20id%3D%2254%22/%3E</map>
-        <text>New%20Project</text>
+        <href>0_0_2%26bm%3B0_0_2.bmml%26bm%3B0_0_2.bmml%26bm%3B0_0_2.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22436%2C365%2C489%2C392%22%20href%3D%220_0_2.bmml%22%20alt%3D%220_0_2%22%20id%3D%2254%22/%3E</map>
+        <text>Okay</text>
       </controlProperties>
     </control>
-    <control controlID="55" controlTypeID="com.balsamiq.mockups::Button" x="627" y="448" w="-1" h="-1" measuredW="98" measuredH="27" zOrder="16" locked="false" isInGroup="-1">
+    <control controlID="55" controlTypeID="com.balsamiq.mockups::Button" x="624" y="385" w="-1" h="-1" measuredW="64" measuredH="27" zOrder="16" locked="false" isInGroup="-1">
       <controlProperties>
-        <text>Load%20Project</text>
+        <text>Cancel</text>
       </controlProperties>
     </control>
-    <control controlID="56" controlTypeID="com.balsamiq.mockups::Paragraph" x="513" y="325" w="200" h="99" measuredW="200" measuredH="80" zOrder="17" locked="false" isInGroup="-1">
+    <control controlID="57" controlTypeID="com.balsamiq.mockups::Label" x="496" y="307" w="-1" h="-1" measuredW="84" measuredH="21" zOrder="17" locked="false" isInGroup="-1">
       <controlProperties>
-        <align>center</align>
-        <size>14</size>
-        <text>Welcome%20to%20WAVED%21%0A%20%0AWould%20you%20like%20to%20create%20a%20new%20project%2C%20or%20laod%20an%20existing%20project%3F</text>
+        <text>Project%20Name%3A</text>
+      </controlProperties>
+    </control>
+    <control controlID="58" controlTypeID="com.balsamiq.mockups::TextInput" x="496" y="333" w="217" h="-1" measuredW="107" measuredH="27" zOrder="18" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>My%20Climate%20App</text>
       </controlProperties>
     </control>
   </controls>
