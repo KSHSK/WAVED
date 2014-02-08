@@ -1,4 +1,7 @@
 <?php
+include_once("SQLiteProjectSerializer.php");
+include_once("connect.php");
+
 /**
  * Initializes the return array with default values.
  * @return The initial return value array.
@@ -41,12 +44,18 @@ function projectExists($projectName) {
  * Returns all existing projects.
  */
 function getExistingsProjects() {
-    function filter($var) {
-        return (strpos($var, ".") !== 0);
-    }
-
-    $projects = scandir("projects/");
-    return array_values(array_filter($projects, "filter"));
+    global $db;
+    $deserializer = new SQLiteProjectSerializer($db);
+    return $deserializer->listId();
 }
 
+/**
+ * Returns the stored state of a project.
+ * @param string $projectName
+ */
+function getProjectState($projectName) {
+    global $db;
+    $deserializer = new SQLiteProjectSerializer($db);
+    return $deserializer->get($projectName);
+}
 ?>
