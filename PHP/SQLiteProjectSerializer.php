@@ -58,11 +58,15 @@ class SQLiteProjectSerializer implements ISerializer, IDeserializer
 
     public function exists($name)
     {
-        $statement = $this->db->prepare("SELECT COUNT(*) FROM  " . self::TABLE . " WHERE LOWER(name) = LOWER(:name)");
+        // Use COUNT(*) to find if a project exists by name
+        $statement = $this->db->prepare("SELECT COUNT(*) FROM  " . self::TABLE .
+            " WHERE LOWER(name) = LOWER(:name) LIMIT 1");
         $statement->bindValue(':name', $name, SQLITE3_TEXT);
         $value = $statement->execute()->fetchArray(SQLITE3_NUM);
         $statement->close();
 
+        // A project exists if the count is greater
+        // than zero
         return $value[0] > 0;
     }
 
