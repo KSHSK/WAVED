@@ -14,4 +14,6 @@ define(['jquery'], function($) {
             return deferred.promise();
         }
     };
+	
+	return LoadProjectModule;
 });

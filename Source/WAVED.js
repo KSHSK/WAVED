@@ -44,10 +44,12 @@ define(['jquery'], function($) {
         var regex = element.attr("data-match");
         var regexDescription = element.attr("data-match-desc");
         
+		var charText;
+		var message;
         if (typeof minLength === 'number') {
             if (value.length < minLength) {
-                var charText = "character" + (minLength === 1 ? "" : "s");
-                var message = "Must be at least " + minLength + " " + charText + ".";
+                charText = "character" + (minLength === 1 ? "" : "s");
+                message = "Must be at least " + minLength + " " + charText + ".";
                 error.text(message);
                 disableButton(submitButton);
                 return;
@@ -56,8 +58,8 @@ define(['jquery'], function($) {
         
         if (typeof maxLength === 'number') {
             if (value.length > maxLength) {
-                var charText = "character" + (minLength === 1 ? "" : "s");
-                var message = "Cannot be more than " + maxLength + " " + charText + ".";
+                charText = "character" + (minLength === 1 ? "" : "s");
+                message = "Cannot be more than " + maxLength + " " + charText + ".";
                 error.text(message);
                 disableButton(submitButton);
                 return;
