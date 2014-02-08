@@ -1,5 +1,7 @@
+/*global define, $*/
 define([], function() {
-
+	"use strict";
+	
     /* ### Private WAVED Variables ### */
     
     // True if changes have been made since the last save; otherwise false.
@@ -256,10 +258,12 @@ define([], function() {
         var regex = element.attr("data-match");
         var regexDescription = element.attr("data-match-desc");
         
+        var charText;
+        var message;
         if (typeof minLength === 'number') {
             if (value.length < minLength) {
-                var charText = "character" + (minLength === 1 ? "" : "s");
-                var message = "Must be at least " + minLength + " " + charText + ".";
+                charText = "character" + (minLength === 1 ? "" : "s");
+                message = "Must be at least " + minLength + " " + charText + ".";
                 displayText(error, message);
                 disableButton(submitButton);
                 return;
@@ -268,8 +272,8 @@ define([], function() {
         
         if (typeof maxLength === 'number') {
             if (value.length > maxLength) {
-                var charText = "character" + (minLength === 1 ? "" : "s");
-                var message = "Cannot be more than " + maxLength + " " + charText + ".";
+                charText = "character" + (minLength === 1 ? "" : "s");
+                message = "Cannot be more than " + maxLength + " " + charText + ".";
                 displayText(error, message);
                 disableButton(submitButton);
                 return;
@@ -277,7 +281,7 @@ define([], function() {
         }
         
         if (typeof regex !== 'undefined' && typeof regexDescription !== 'undefined') {
-            if (!value.match(RegExp(regex))) {
+            if (!value.match(new RegExp(regex))) {
                 displayText(error, regexDescription);
                 disableButton(submitButton);
                 return;
@@ -311,7 +315,7 @@ define([], function() {
         
         setClean: function() {
             _dirty = false;
-        },
+        }
     };
 
     return WAVED;
