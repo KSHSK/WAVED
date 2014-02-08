@@ -372,18 +372,18 @@
         <icon>ReloadIcon%7Csmall</icon>
       </controlProperties>
     </control>
-    <control controlID="182" controlTypeID="com.balsamiq.mockups::Label" x="263" y="113" w="-1" h="-1" measuredW="100" measuredH="22" zOrder="62" locked="false" isInGroup="-1">
-      <controlProperties>
-        <size>14</size>
-        <text>Untitled%20Project</text>
-      </controlProperties>
-    </control>
-    <control controlID="183" controlTypeID="com.balsamiq.mockups::ButtonBar" x="693" y="111" w="102" h="25" measuredW="102" measuredH="25" zOrder="63" locked="false" isInGroup="-1">
+    <control controlID="183" controlTypeID="com.balsamiq.mockups::ButtonBar" x="693" y="111" w="102" h="25" measuredW="102" measuredH="25" zOrder="62" locked="false" isInGroup="-1">
       <controlProperties>
         <hrefs>%2C</hrefs>
         <selectedIndex>-1</selectedIndex>
         <size>11</size>
         <text>Load%2C%20Export</text>
+      </controlProperties>
+    </control>
+    <control controlID="184" controlTypeID="com.balsamiq.mockups::Label" x="263" y="113" w="-1" h="-1" measuredW="101" measuredH="22" zOrder="63" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>14</size>
+        <text>My%20Climate%20App</text>
       </controlProperties>
     </control>
   </controls>

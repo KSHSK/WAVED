@@ -22,10 +22,10 @@
         <borderStyle>square</borderStyle>
       </controlProperties>
     </control>
-    <control controlID="32" controlTypeID="com.balsamiq.mockups::Image" x="275" y="200" w="774" h="488" measuredW="530" measuredH="331" zOrder="4" locked="true" isInGroup="-1">
+    <control controlID="32" controlTypeID="com.balsamiq.mockups::Image" x="275" y="200" w="774" h="488" measuredW="530" measuredH="331" zOrder="4" locked="false" isInGroup="-1">
       <controlProperties>
         <borderStyle>square</borderStyle>
-        <src>./usa-vector-outline-hi.png</src>
+        <src>./assets/usa-vector-outline-hi.png</src>
         <text/>
       </controlProperties>
     </control>
@@ -140,13 +140,7 @@
         <icon>ReloadIcon%7Csmall</icon>
       </controlProperties>
     </control>
-    <control controlID="99" controlTypeID="com.balsamiq.mockups::Label" x="263" y="113" w="-1" h="-1" measuredW="100" measuredH="22" zOrder="26" locked="false" isInGroup="-1">
-      <controlProperties>
-        <size>14</size>
-        <text>Untitled%20Project</text>
-      </controlProperties>
-    </control>
-    <control controlID="100" controlTypeID="com.balsamiq.mockups::ButtonBar" x="693" y="111" w="102" h="25" measuredW="102" measuredH="25" zOrder="27" locked="false" isInGroup="-1">
+    <control controlID="100" controlTypeID="com.balsamiq.mockups::ButtonBar" x="693" y="111" w="102" h="25" measuredW="102" measuredH="25" zOrder="26" locked="false" isInGroup="-1">
       <controlProperties>
         <hrefs>%2C</hrefs>
         <selectedIndex>-1</selectedIndex>
@@ -154,10 +148,16 @@
         <text>Load%2C%20Export</text>
       </controlProperties>
     </control>
-    <control controlID="101" controlTypeID="com.balsamiq.mockups::CheckBox" x="85" y="449" w="-1" h="-1" measuredW="147" measuredH="22" zOrder="28" locked="false" isInGroup="-1">
+    <control controlID="101" controlTypeID="com.balsamiq.mockups::CheckBox" x="85" y="449" w="-1" h="-1" measuredW="147" measuredH="22" zOrder="27" locked="false" isInGroup="-1">
       <controlProperties>
         <state>disabled</state>
         <text>Log%20Google%20Analytics</text>
+      </controlProperties>
+    </control>
+    <control controlID="102" controlTypeID="com.balsamiq.mockups::Label" x="263" y="113" w="-1" h="-1" measuredW="101" measuredH="22" zOrder="28" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>14</size>
+        <text>My%20Climate%20App</text>
       </controlProperties>
     </control>
   </controls>
