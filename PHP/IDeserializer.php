@@ -5,6 +5,7 @@
 */
 interface IDeserializer
 {
+    public function exists($id);
     public function get($id);
     public function listId();
 }

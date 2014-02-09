@@ -93,6 +93,8 @@ define(['angular', 'WAVED', '../modules/UnsavedChanges', 'jquery'], function(ang
                         scope.$apply(function() {
                             scope.projectName = data.projectName;
                         });
+                        
+                        WAVED.setClean();
                         projectCreated.resolve();
                     } else {
                         // Display error to user.
