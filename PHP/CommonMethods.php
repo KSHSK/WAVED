@@ -37,7 +37,9 @@ function reportReturnValue($returnValue) {
  * @param string $projectName
  */
 function projectExists($projectName) {
-    return is_dir("projects/" . $projectName);
+    global $db;
+    $deserializer = new SQLiteProjectSerializer($db);
+    return $deserializer->exists($projectName);
 }
 
 /**
