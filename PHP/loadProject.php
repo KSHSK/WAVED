@@ -6,6 +6,7 @@ $returnValue = getInitialReturnValue();
 
 $projectName = $_POST["project"];
 
+// TODO : remove once db existence is merged in
 // Go back to the main directory.
 chdir("../");
 
@@ -19,8 +20,8 @@ if (!projectExists($projectName)) {
 // Set the name of the project
 $returnValue["projectName"] = $projectName;
 
-// TODO: set state of project and anything else needed.
-$returnValue["projectState"] = "";
+// Set state of project
+$returnValue["projectState"] = getProjectState($projectName);
 
 reportReturnValue($returnValue);
 ?>
