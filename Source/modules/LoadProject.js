@@ -143,10 +143,5 @@
         }
     };
     
-    // Refresh list of projects to load from.
-    $(document).on('click', '#load-project-refresh-list', function() {
-        LoadProjectModule.updateProjectList();
-    });
-	
 	return LoadProjectModule;
 });

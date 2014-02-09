@@ -6,13 +6,16 @@
     'require',
     'angular',
     'app',
-    'WAVED'
- ], function (require, ng, app, WAVED) {
+    'WAVED',
+    'modules/Welcome',
+    'jquery'
+ ], function (require, ng, app, WAVED, WelcomeModule, $) {
     require(['../ThirdParty/domReady!'], function (document) {
         ng.bootstrap(document, ['app']);
         setupUI();
         displayPage();
         WAVED.start();
+        WelcomeModule.openWelcomeDialog();
     });
     
     function setupUI() {

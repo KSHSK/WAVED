@@ -22,8 +22,6 @@ define([
         $scope.selectedWidgetChanged = function() {
             console.log('Selected Widget: ' + $scope.selectedWidget.name);
         };
-
-        WelcomeModule.openWelcomeDialog();
         
         $scope.tryToCreateNewProject = function() {
             NewProjectModule.tryToCreateNewProject();
@@ -31,6 +29,10 @@ define([
         
         $scope.tryToLoadProject = function() {
             LoadProjectModule.tryToLoadProject();
+        };
+        
+        $scope.updateProjectList = function() {
+            LoadProjectModule.updateProjectList();
         };
 
     });
