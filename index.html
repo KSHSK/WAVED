@@ -134,7 +134,6 @@
         <p>Please create a new project</p>
         <label class="required" for="create-new-project-name">Project Name: </label>
         <input id="create-new-project-name" type="text" class="validate"
-            data-ng-model="projectName" 
             data-min-length="1"
             data-max-length="50" 
             data-match="^[a-zA-Z0-9_\- ]+$"
@@ -146,7 +145,10 @@
     <div id="load-project-dialog" title="Load Project" class="dialog">
         <p>Please select an existing project to load.</p>
         <label class="required" for="load-project-select">Project Name: </label>
-        <select id="load-project-select"></select>
+        <select id="load-project-select"
+            data-ng-model="selectedProjectToLoad"
+            data-ng-options="project for project in projectList">
+        </select>
         <button id="load-project-refresh-list" class="button-small" data-ng-click="updateProjectList();">Refresh List</button>
         <p id="load-project-error" class="error"></p>
     </div>
