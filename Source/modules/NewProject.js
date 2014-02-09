@@ -11,9 +11,8 @@ define(['angular', 'WAVED', '../modules/UnsavedChanges', 'jquery'], function(ang
         createNewProjectError: $('#create-new-project-error'),
 
         /**
-         * If the project is clean, the new project dialog is opened. If the
-         * project is dirty, the unsaved changes must be handled before the new
-         * project dialog is opened.
+         * If the project is clean, the new project dialog is opened. If the project is dirty, the unsaved changes must
+         * be handled before the new project dialog is opened.
          */
         tryToCreateNewProject: function() {
             var self = this;
@@ -21,7 +20,8 @@ define(['angular', 'WAVED', '../modules/UnsavedChanges', 'jquery'], function(ang
 
             if (WAVED.isDirty() === true) {
                 UnsavedChangesModule.handleUnsavedChanges(projectClean);
-            } else {
+            }
+            else {
                 // Project is already clean.
                 projectClean.resolve();
             }
@@ -93,10 +93,11 @@ define(['angular', 'WAVED', '../modules/UnsavedChanges', 'jquery'], function(ang
                         scope.$apply(function() {
                             scope.projectName = data.projectName;
                         });
-                        
+
                         WAVED.setClean();
                         projectCreated.resolve();
-                    } else {
+                    }
+                    else {
                         // Display error to user.
                         self.createNewProjectError.text(data.errorMessage);
                     }

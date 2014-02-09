@@ -34,7 +34,7 @@ define(['jquery'], function($) {
         var error = element.next('div.error');
 
         // TODO: This will only be correct for dialogs.
-        //       Update this for non-dialogs when possible.
+        // Update this for non-dialogs when possible.
         var submitButton = element.parents('.ui-dialog').find('.submit-button');
 
         var minLength = element.data('min-length');
@@ -42,8 +42,8 @@ define(['jquery'], function($) {
         var regex = element.attr('data-match');
         var regexDescription = element.attr('data-match-desc');
 
-		var charText;
-		var message;
+        var charText;
+        var message;
         if (typeof minLength === 'number') {
             if (value.length < minLength) {
                 charText = 'character' + (minLength === 1 ? '' : 's');
