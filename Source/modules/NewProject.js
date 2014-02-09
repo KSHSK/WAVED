@@ -2,7 +2,16 @@
 /**
  * A module for creating a new project.
  */
-define(['angular', 'WAVED', '../modules/UnsavedChanges', 'jquery'], function(angular, WAVED, UnsavedChangesModule, $) {
+define([
+        'angular',
+        'WAVED',
+        '../modules/UnsavedChanges',
+        'jquery'
+    ], function(
+        angular,
+        WAVED,
+        UnsavedChangesModule,
+        $) {
     'use strict';
 
     var NewProjectModule = {
