@@ -22,8 +22,6 @@ define(['jquery'], function($) {
      * Adds all event listeners for the application.
      */
     function registerEventHandlers() {
-        var mainSection = $('#mainSection');
-
         // Input validation
         $(document).on('keyup', 'input.validate', function(event) {
             validateInput($(event.currentTarget));
