@@ -5,11 +5,13 @@ define([
         './module',
         '../modules/Welcome',
         '../modules/NewProject',
+        '../modules/GoogleAnalytics',
         'jquery'
     ], function(
         controllers, 
         WelcomeModule, 
         NewProjectModule,
+        GoogleAnalyticsModule, 
         $) {
     
     controllers.controller('WAVEDCtrl', function ($scope) {
@@ -24,6 +26,18 @@ define([
         WelcomeModule.openWelcomeDialog();
         $scope.tryToCreateNewProject = function() {
             NewProjectModule.tryToCreateNewProject();
+        };
+        
+        $scope.addGoogleAnalytics = function() {
+            GoogleAnalyticsModule.addGoogleAnalytics();
+        };
+        
+        $scope.removeGoogleAnalytics = function() {
+            GoogleAnalyticsModule.removeGoogleAnalytics();
+        };
+        
+        $scope.clearGoogleAnalyticsFields = function() {
+            GoogleAnalyticsModule.clearGoogleAnalyticsFields();
         };
     });
 });

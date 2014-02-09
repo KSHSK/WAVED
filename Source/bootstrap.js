@@ -23,6 +23,9 @@
         $('#save-button').button();
         $('#export-button').button();
         $('#refresh-button').button();
+        $('#google-analytics-add-button').button();
+        $('#google-analytics-remove-button').button();
+        $('#google-analytics-clear-button').button();
         
         // Add/Edit/Remove Buttons.
         $('#add-action-button').button({

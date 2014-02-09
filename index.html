@@ -116,22 +116,31 @@
                     <div>
                         <div class="inline" id="google-analytics-unbound">
                             <div class="inline">Google Analytics UA Code</div>
-	                        <input type="text" id="google-analytics-ua" placeholder="Enter UA code" />
+	                        <input type="text" id="google-analytics-ua" class="validate" 
+                               data-min-length="1" 
+                               data-match="((UA)(-)(\d+)(\-)(\d+))" 
+                               data-match-modifier="i" 
+                               data-match-desc="UA code is not in the correct format." />
 	                        <div id="google-analytics-ua-error" class="error"></div>
 	                        <div class="inline">Google Analytics Event Category</div>
-	                        <input type="text" id="google-analytics-category" placeholder="Enter event category" />
+	                        <input type="text" id="google-analytics-category" class="validate" 
+	                           data-min-length="1" 
+	                           data-match="^[a-zA-Z0-9_\- ]+$" 
+	                           data-match-modifier="i" 
+	                           data-match-desc="May only contain alphanumerics, hypens (\-), underscores(_) and spaces."/>
 	                        <div id="google-analytics-category-error" class="error"></div>
-	                        <br>
-	                        <button id="google-analytics-add-button" class="button-small">Add</button>
-	                        <button id="google-analytics-clear-button" class="button-small">Clear</button>
+	                        <div id="google-analytics-add-button-panel" class="submit-button-panel">
+	                           <button id="google-analytics-add-button" class="button-small submit-button" data-ng-click="addGoogleAnalytics();">Add</button>
+	                           <button id="google-analytics-clear-button" class="button-small" data-ng-click="clearGoogleAnalyticsFields();">Clear</button>
+                            </div>
                         </div>
                         <div class="inline" id="google-analytics-bound" style="display:none;">
                             <span>UA: </span><span id="google-analytics-ua-preview"></span>
                             <br>
                             <span>Event Category: </span><span id="google-analytics-category-preview"></span>
-                            <br>
-                            <button id="google-analytics-remove-button" class="button-small">Remove</button>
-                            <br>
+                            <div id="google-analytics-remove-button-panel">
+                                <button id="google-analytics-remove-button" class="button-small" data-ng-click="removeGoogleAnalytics();" style="float:center;">Remove</button>
+                            </div>
                         </div>
                     </div>
                 </div>
