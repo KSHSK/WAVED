@@ -2,7 +2,8 @@
 /**
  * Create the WAVED Controller and add it to the controllers module.
  */
-define(['./module', '../modules/Welcome', '../modules/NewProject', 'jquery'], function(controllers, WelcomeModule, NewProjectModule, $) {
+define(['./module', '../modules/Welcome', '../modules/NewProject', 'jquery'],
+function(controllers, WelcomeModule, NewProjectModule, $) {
     'use strict';
 
     controllers.controller('WAVEDCtrl', function($scope) {

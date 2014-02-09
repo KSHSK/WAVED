@@ -1,7 +1,6 @@
 /*global define, $*/
 /**
- * Bootstraps Angular onto the window.document node
- * http://www.startersquad.com/blog/angularjs-requirejs/
+ * Bootstraps Angular onto the window.document node http://www.startersquad.com/blog/angularjs-requirejs/
  */
 define(['require', 'angular', 'app', 'WAVED'], function(require, ng, app, WAVED) {
     'use strict';
