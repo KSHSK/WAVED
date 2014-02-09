@@ -22,10 +22,9 @@ define(['jquery'], function($) {
      * Adds all event listeners for the application.
      */
     function registerEventHandlers() {
-        var mainSection = $('#mainSection');
         
-        // Input validation
-        $(document).on('keyup', 'input.validate', function(event) {
+        // Input validation (keyup for keypresses, input for right-click pasting)
+        $(document).on('keyup input', 'input.validate', function(event) {
             validateInput($(event.currentTarget));
         });
     }
@@ -35,14 +34,15 @@ define(['jquery'], function($) {
         
         var error = element.next('div.error');
         
-        // TODO: This will only be correct for dialogs.
-        //       Update this for non-dialogs when possible.
-        var submitButton = element.parents('.ui-dialog').find('.submit-button');
+        // Prevents messing with other submit-buttons on the page (as long as body is the only common ancestor)
+        // TODO: Fix: Still messes with any parent elements with submit-buttons
+        var submitButton = element.parentsUntil('body').find('.submit-button');
         
         var minLength = element.data("min-length");
         var maxLength = element.data("max-length");
         var regex = element.attr("data-match");
         var regexDescription = element.attr("data-match-desc");
+        var regexModifier = element.attr("data-match-modifier");
         
 		var charText;
 		var message;
@@ -52,7 +52,7 @@ define(['jquery'], function($) {
                 message = "Must be at least " + minLength + " " + charText + ".";
                 error.text(message);
                 disableButton(submitButton);
-                return;
+                return false;
             }
         }
         
@@ -62,21 +62,22 @@ define(['jquery'], function($) {
                 message = "Cannot be more than " + maxLength + " " + charText + ".";
                 error.text(message);
                 disableButton(submitButton);
-                return;
+                return false;
             }
         }
         
         if (typeof regex !== 'undefined' && typeof regexDescription !== 'undefined') {
-            if (!value.match(RegExp(regex))) {
+            if (!value.match(RegExp(regex, regexModifier))) {
                 error.text(regexDescription);
                 disableButton(submitButton);
-                return;
+                return false;
             }
         }
         
         // Clear error.
         error.text("");
         enableButton(submitButton);
+        return true;
     }
     
     /* ### WAVED Definition ### */
@@ -91,6 +92,10 @@ define(['jquery'], function($) {
             }
         },
 
+        validateInputField: function(element) {
+            return validateInput(element);
+        },
+        
         isDirty: function() {
             return _dirty;
         },
