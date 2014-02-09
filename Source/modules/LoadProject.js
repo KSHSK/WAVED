@@ -53,8 +53,8 @@
             var self = this;
             
             return $.ajax({
-                type: "POST",
-                url: "PHP/getExistingProjectNames.php",
+                type: 'POST',
+                url: 'PHP/getExistingProjectNames.php',
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
                     if (data.success) {
@@ -70,12 +70,13 @@
         },
         
         setProjectList: function(projects) {
-            var select = this.loadProjectSelect;
-            select.empty();
-            
-            $.each(projects, function(index, value) {
-                var option = $('<option>').val(value).text(value);
-                select.append(option);
+            var scope = angular.element($('body')).scope();
+            scope.$apply(function() {
+                scope.projectList = projects;
+                
+                if (projects.length > 0) {
+                    scope.selectedProjectToLoad = projects[0];
+                }
             });
         },
 
@@ -91,18 +92,20 @@
                 width: 400,
                 modal: true,
                 buttons: {
-                    "Load Project": {
-                        text: "Load Project",
-                        "class": "submit-button",
+                    'Load Project': {
+                        text: 'Load Project',
+                        'class': 'submit-button',
                         click: function() {
-                            self.loadProject(projectLoaded, self.loadProjectSelect.val());
+                            var scope = angular.element($('body')).scope();
+                            var projectName = scope.selectedProjectToLoad;
+                            self.loadProject(projectLoaded, projectName);
                             $.when(projectLoaded).done(function() {
-                                self.loadProjectDialog.dialog("close");
+                                self.loadProjectDialog.dialog('close');
                             });
                         }
                     },
-                    "Cancel": function() {
-                        self.loadProjectDialog.dialog("close");
+                    'Cancel': function() {
+                        self.loadProjectDialog.dialog('close');
                     }
                 }
             });
@@ -115,17 +118,17 @@
             var self = this;
 
             $.ajax({
-                type: "POST",
-                url: "PHP/loadProject.php",
+                type: 'POST',
+                url: 'PHP/loadProject.php',
                 data: {
-                    "project": projectName
+                    'project': projectName
                 },
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
                     if (data.success) {
                         self.loadProjectError.text('');
                         
-                        // Set the proejct name.
+                        // Set the project name.
                         var scope = angular.element($('body')).scope();
                         scope.$apply(function() {
                             scope.projectName = data.projectName;

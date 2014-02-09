@@ -18,7 +18,8 @@ define([
     
         $scope.widgets = [];
         $scope.projectName = "";
-    
+        $scope.projectList = [];
+        
         $scope.selectedWidgetChanged = function() {
             console.log('Selected Widget: ' + $scope.selectedWidget.name);
         };
