@@ -2,7 +2,16 @@
 /**
  * Bootstraps Angular onto the window.document node http://www.startersquad.com/blog/angularjs-requirejs/
  */
-define(['require', 'angular', 'app', 'WAVED'], function(require, ng, app, WAVED) {
+define([
+        'require',
+        'angular',
+        'app',
+        'WAVED'
+    ], function(
+        require,
+        ng,
+        app,
+        WAVED) {
     'use strict';
 
     require(['../ThirdParty/domReady!'], function(document) {

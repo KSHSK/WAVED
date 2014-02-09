@@ -2,8 +2,18 @@
 /**
  * A module for creating a new project.
  */
-define(['angular', 'WAVED', '../modules/NewProject', '../modules/LoadProject', 'jquery'],
-function(angular, WAVED, NewProjectModule, LoadProjectModule, $) {
+define([
+        'angular',
+        'WAVED',
+        '../modules/NewProject',
+        '../modules/LoadProject',
+        'jquery'
+    ], function(
+        angular,
+        WAVED,
+        NewProjectModule,
+        LoadProjectModule,
+        $) {
     'use strict';
 
     var WelcomeModule = {
