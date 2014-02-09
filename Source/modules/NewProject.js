@@ -101,6 +101,8 @@
                         scope.$apply(function() {
                             scope.projectName = data.projectName;
                         });
+                        
+                        WAVED.setClean();
                         projectCreated.resolve();
                     }
                     else {
