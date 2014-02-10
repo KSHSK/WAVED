@@ -41,23 +41,4 @@ function projectExists($projectName) {
     $deserializer = new SQLiteProjectSerializer($db);
     return $deserializer->exists($projectName);
 }
-
-/**
- * Returns all existing projects.
- */
-function getExistingsProjects() {
-    global $db;
-    $deserializer = new SQLiteProjectSerializer($db);
-    return $deserializer->listId();
-}
-
-/**
- * Returns the stored state of a project.
- * @param string $projectName
- */
-function getProjectState($projectName) {
-    global $db;
-    $deserializer = new SQLiteProjectSerializer($db);
-    return $deserializer->get($projectName);
-}
 ?>

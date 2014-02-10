@@ -83,7 +83,7 @@ class SQLiteProjectSerializer implements ISerializer, IDeserializer
     public function listId()
     {
         $row = array();
-        $query = "SELECT name FROM  " . self::TABLE . " ORDER BY UPPER(name)";
+        $query = "SELECT name FROM  " . self::TABLE;
         $result = $this->db->query($query);
 
         while ($res = $result->fetchArray(SQLITE3_NUM))

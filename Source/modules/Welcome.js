@@ -38,7 +38,7 @@
                         });
                     },
                     "Load Project": function() {
-                        var projectLoaded = LoadProjectModule.tryToLoadProject();
+                        var projectLoaded = LoadProjectModule.tryToLoadExistingProject();
                         $.when(projectLoaded).done(function() {
                             self.welcomeDialog.dialog("close");
                         });
