@@ -1,7 +1,8 @@
+/*global define*/
 /**
  * A module for loading an existing project.
  */
- define([
+define([
         'angular',
         'WAVED',
         '../modules/UnsavedChanges',
@@ -9,24 +10,24 @@
     ], function(
         angular,
         WAVED,
-        UnsavedChangesModule, 
+        UnsavedChangesModule,
         $) {
-     
+    'use strict';
+
     var LoadProjectModule = {
         loadProjectDialog: $('#load-project-dialog'),
         loadProjectSelect: $('#load-project-select'),
         loadProjectError: $('#load-project-error'),
-        
+
         /**
-         * If the project is clean, the load project dialog is opened.
-         * If the project is dirty, the unsaved changes must be handled before
-         * the load project dialog is opened.
+         * If the project is clean, the load project dialog is opened. If the project is dirty, the unsaved changes must
+         * be handled before the load project dialog is opened.
          */
         tryToLoadProject: function() {
             var self = this;
-            
+
             var projectClean = $.Deferred();
-            
+
             if (WAVED.isDirty() === true) {
                 UnsavedChangesModule.handleUnsavedChanges(projectClean);
             }
@@ -34,7 +35,7 @@
                 // Project is already clean.
                 projectClean.resolve();
             }
-            
+
             var projectLoaded = $.Deferred();
             $.when(projectClean).done(function() {
                 var projectListLoaded = self.updateProjectList();
@@ -42,16 +43,16 @@
                     self.openLoadProjectDialog(projectLoaded);
                 });
             });
-            
+
             return projectLoaded.promise();
         },
-        
+
         /**
          * Updates the list of projects displayed in the dialog.
          */
         updateProjectList: function() {
             var self = this;
-            
+
             return $.ajax({
                 type: 'POST',
                 url: 'PHP/getExistingProjectNames.php',
@@ -68,12 +69,12 @@
                 }
             }).promise();
         },
-        
+
         setProjectList: function(projects) {
             var scope = angular.element($('body')).scope();
             scope.$apply(function() {
                 scope.projectList = projects;
-                
+
                 if (projects.length > 0) {
                     scope.selectedProjectToLoad = projects[0];
                 }
@@ -85,7 +86,7 @@
          */
         openLoadProjectDialog: function(projectLoaded) {
             var self = this;
-            
+
             this.loadProjectDialog.dialog({
                 resizable: false,
                 height: 250,
@@ -110,7 +111,7 @@
                 }
             });
         },
-        
+
         /**
          * Actually submit the load project request.
          */
@@ -127,13 +128,13 @@
                     var data = JSON.parse(dataString);
                     if (data.success) {
                         self.loadProjectError.text('');
-                        
+
                         // Set the project name.
                         var scope = angular.element($('body')).scope();
                         scope.$apply(function() {
                             scope.projectName = data.projectName;
                         });
-                        
+
                         WAVED.setClean();
                         projectLoaded.resolve();
                     }
@@ -145,6 +146,6 @@
             });
         }
     };
-    
-	return LoadProjectModule;
+
+    return LoadProjectModule;
 });
