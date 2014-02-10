@@ -1,17 +1,22 @@
-/*global define, $*/
+/*global define*/
 /**
- * Bootstraps Angular onto the window.document node http://www.startersquad.com/blog/angularjs-requirejs/
+ * Bootstraps Angular onto the window.document node
+ * http://www.startersquad.com/blog/angularjs-requirejs/
  */
-define([
+ define([
         'require',
         'angular',
         'app',
-        'WAVED'
-    ], function(
+        'WAVED',
+        'modules/Welcome',
+        'jquery'
+    ], function (
         require,
         ng,
         app,
-        WAVED) {
+        WAVED,
+        WelcomeModule,
+        $) {
     'use strict';
 
     require(['../ThirdParty/domReady!'], function(document) {
@@ -19,6 +24,7 @@ define([
         setupUI();
         displayPage();
         WAVED.start();
+        WelcomeModule.openWelcomeDialog();
     });
 
     function setupUI() {
@@ -108,6 +114,13 @@ define([
             }
         });
 
+        $('#load-project-refresh-list').button({
+            text: false,
+            icons: {
+                primary: 'ui-icon-arrowrefresh-1-n'
+            }
+        });
+
         // Setup accordion
         $('#accordion').accordion({
             animate: false
@@ -119,8 +132,7 @@ define([
     function displayPage() {
         $('.hide-on-load').removeClass('hide-on-load');
 
-        // Accordion must calculate size after it is visible to avoid sizing
-        // issues.
+        // Accordion must calculate size after it is visible to avoid sizing issues.
         $('#accordion').accordion('refresh');
     }
 });

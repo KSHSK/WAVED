@@ -12,11 +12,11 @@ define([
         angular,
         WAVED,
         NewProjectModule,
-        LoadProjectModule,
-        $) {
+        LoadProjectModule, $) {
     'use strict';
 
     var WelcomeModule = {
+
         welcomeDialog: $('#welcome-dialog'),
 
         /**
@@ -39,15 +39,14 @@ define([
                         });
                     },
                     'Load Project': function() {
-                        var projectLoaded = LoadProjectModule.tryToLoadExistingProject();
+                        var projectLoaded = LoadProjectModule.tryToLoadProject();
                         $.when(projectLoaded).done(function() {
                             self.welcomeDialog.dialog('close');
                         });
                     }
                 },
                 open: function(event, ui) {
-                    // Hide the close button so that the user must select a
-                    // button.
+                    // Hide the close button so that the user must select a button.
                     $('.ui-dialog-titlebar-close', $(this).parent()).hide();
 
                     // Don't auto-select the 'New Project' option.

@@ -23,11 +23,11 @@
                 <div class="inline bottom">
                     <div class="menu-text" id="project-name" data-ng-bind="projectName"></div>
                     <button class="inline" id="new-button" data-ng-click="tryToCreateNewProject();">New</button>
-                
+                    <button class="inline" id="load-button" data-ng-click="tryToLoadProject();">Load</button>
+
                     <button class="inline" id="undo-button">Undo</button>
                     <button class="inline" id="redo-button">Redo</button>
                 
-                    <button class="inline" id="load-button">Load</button>
                     <button class="inline" id="save-button">Save</button>
                     <button class="inline" id="export-button">Export</button>
                 
@@ -134,13 +134,23 @@
         <p>Please create a new project</p>
         <label class="required" for="create-new-project-name">Project Name: </label>
         <input id="create-new-project-name" type="text" class="validate"
-            data-ng-model="projectName" 
             data-min-length="1"
             data-max-length="50" 
             data-match="^[a-zA-Z0-9_\- ]+$"
             data-match-desc="Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces." />
         <div class="error"></div>
         <p id="create-new-project-error" class="error"></p>
+    </div>
+    
+    <div id="load-project-dialog" title="Load Project" class="dialog">
+        <p>Please select an existing project to load.</p>
+        <label class="required" for="load-project-select">Project Name: </label>
+        <select id="load-project-select"
+            data-ng-model="selectedProjectToLoad"
+            data-ng-options="project for project in projectList">
+        </select>
+        <button id="load-project-refresh-list" class="button-small" data-ng-click="updateProjectList();">Refresh List</button>
+        <p id="load-project-error" class="error"></p>
     </div>
     
     <div id="unsaved-changes-dialog" title="Unsaved Changes" class="dialog">
