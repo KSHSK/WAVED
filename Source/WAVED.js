@@ -28,6 +28,7 @@ define(['jquery'], function($) {
         $(document).on('keyup', 'input.validate', function(event) {
             validateInput($(event.currentTarget));
         });
+
     }
     
     function validateInput(element) {
