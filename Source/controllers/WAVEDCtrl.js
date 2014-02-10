@@ -6,11 +6,13 @@ define([
         './module',
         '../modules/Welcome',
         '../modules/NewProject',
+        '../modules/LoadProject',
         'jquery'
     ], function(
         controllers,
         WelcomeModule,
         NewProjectModule,
+        LoadProjectModule,
         $) {
     'use strict';
 
@@ -18,14 +20,23 @@ define([
 
         $scope.widgets = [];
         $scope.projectName = '';
+        $scope.projectList = [];
 
         $scope.selectedWidgetChanged = function() {
             console.log('Selected Widget: ' + $scope.selectedWidget.name);
         };
 
-        WelcomeModule.openWelcomeDialog();
         $scope.tryToCreateNewProject = function() {
             NewProjectModule.tryToCreateNewProject();
         };
+
+        $scope.tryToLoadProject = function() {
+            LoadProjectModule.tryToLoadProject();
+        };
+
+        $scope.updateProjectList = function() {
+            LoadProjectModule.updateProjectList();
+        };
+
     });
 });
