@@ -1,3 +1,4 @@
+/*global define*/
 /**
  * Create the WAVED Controller and add it to the controllers module.
  */
@@ -6,24 +7,27 @@ define([
         '../modules/Welcome',
         '../modules/NewProject',
         '../modules/GoogleAnalytics',
+        '../modules/LoadProject',
         'jquery'
     ], function(
-        controllers, 
-        WelcomeModule, 
+        controllers,
+        WelcomeModule,
         NewProjectModule,
         GoogleAnalyticsModule, 
+        LoadProjectModule,
         $) {
-    
-    controllers.controller('WAVEDCtrl', function ($scope) {
-    
+    'use strict';
+
+    controllers.controller('WAVEDCtrl', function($scope) {
+
         $scope.widgets = [];
-        $scope.projectName = "";
-    
+        $scope.projectName = '';
+        $scope.projectList = [];
+
         $scope.selectedWidgetChanged = function() {
             console.log('Selected Widget: ' + $scope.selectedWidget.name);
         };
 
-        WelcomeModule.openWelcomeDialog();
         $scope.tryToCreateNewProject = function() {
             NewProjectModule.tryToCreateNewProject();
         };
@@ -39,5 +43,14 @@ define([
         $scope.clearGoogleAnalyticsFields = function() {
             GoogleAnalyticsModule.clearGoogleAnalyticsFields();
         };
+        
+        $scope.tryToLoadProject = function() {
+            LoadProjectModule.tryToLoadProject();
+        };
+
+        $scope.updateProjectList = function() {
+            LoadProjectModule.updateProjectList();
+        };
+
     });
 });
