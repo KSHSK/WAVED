@@ -1,3 +1,4 @@
+/*global require*/
 require.config({
     paths: {
         angular: '../ThirdParty/angularjs/angular.min',
@@ -6,9 +7,11 @@ require.config({
 
     // AngularJS doesn't use define(), so we configure it as a module here.
     shim: {
-        'angular' : {'exports' : 'angular'}
+        'angular': {
+            'exports': 'angular'
+        }
     },
-    
+
     // Load bootstrap.js to start the application.
     deps: ['./bootstrap']
 });
