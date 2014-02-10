@@ -34,37 +34,37 @@ define([
             this.setCategory($(this.categoryInputField).val());
             
             // Clear error
-            this.categoryError.text("");
-            this.uaError.text("");
+            this.categoryError.text('');
+            this.uaError.text('');
             
             // Swap the visibility of the divs
             this.unboundDisplay.hide();
             this.boundDisplay.show();
             
             // Update the previews
-            $(this.uaPreview).html(this.ua);
-            $(this.categoryPreview).html(this.category);
+            this.uaPreview.text(this.ua);
+            this.categoryPreview.text(this.category);
         },
         
         removeGoogleAnalytics: function() {
             this.unboundDisplay.show();
             this.boundDisplay.hide();
             
-            $(this.uaPreview).html('');
-            $(this.categoryPreview).html('');
+            this.uaPreview.text('');
+            this.categoryPreview.text('');
             
             this.setUA('');
             this.setCategory('');
             
-            $(this.uaInputField).val('');
-            $(this.categoryInputField).val('');
+            this.uaInputField.val('');
+            this.categoryInputField.val('');
         },
         
         clearGoogleAnalyticsFields: function() {
-            $(this.uaInputField).val('');
-            $(this.categoryInputField).val('');
-            this.categoryError.text("");
-            this.uaError.text("");
+            this.uaInputField.val('');
+            this.categoryInputField.val('');
+            this.categoryError.text('');
+            this.uaError.text('');
         },
         
         getUA: function() {
