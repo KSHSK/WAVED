@@ -5,14 +5,14 @@
  */
  define([
         'require',
-        'angular',
+        'util/koExtenders',
         'app',
         'WAVED',
         'modules/Welcome',
         'jquery'
     ], function (
         require,
-        ng,
+        koExtenders,
         app,
         WAVED,
         WelcomeModule,
@@ -20,11 +20,10 @@
     'use strict';
 
     require(['../ThirdParty/domReady!'], function(document) {
-        ng.bootstrap(document, ['app']);
         setupUI();
         displayPage();
         WAVED.start();
-        WelcomeModule.openWelcomeDialog();
+        WelcomeModule.openWelcomeDialog(WAVED.viewModel);
     });
 
     function setupUI() {

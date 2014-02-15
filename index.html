@@ -7,23 +7,23 @@
     <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
     
     <!-- CSS -->
-    <link rel="stylesheet" href="ThirdParty/jquery-ui-1.10.4.custom/css/waved-theme/jquery-ui-1.10.4.custom.min.css">
+    <link rel="stylesheet" href="ThirdParty/jquery/css/waved-theme/jquery-ui-1.10.4.custom.min.css">
     <link rel="stylesheet" type="text/css" href="CSS/WAVED.css">
     
     <!-- JavaScript-->
     <!-- <script src="ThirdParty/d3/d3.v3.min.js" type="text/javascript" type="text/javascript"/> -->
-    <script data-main="Source/main" src="Source/require.js"></script>
+    <script data-main="Source/main" src="ThirdParty/requirejs/require.js"></script>
 </head>
-<body data-ng-controller="WAVEDCtrl">
+<body>
     <div id="mainSection" class="hide-on-load">
         <div id="header-container">
                 <div class="inline bottom" id="header-logo-container">
                     <a href="http://kshsk.github.io/WAVED/" target="_blank"><img id="header-logo" src="images/logo/WAVED_HighRes_Color_NoText.png" ondragstart="return false;" /></a>
                 </div>
                 <div class="inline bottom">
-                    <div class="menu-text" id="project-name" data-ng-bind="projectName"></div>
-                    <button class="inline" id="new-button" data-ng-click="tryToCreateNewProject();">New</button>
-                    <button class="inline" id="load-button" data-ng-click="tryToLoadProject();">Load</button>
+                    <div class="menu-text" id="project-name" data-bind="text: projectName"></div>
+                    <button class="inline" id="new-button" data-bind="click: tryToCreateNewProject">New</button>
+                    <button class="inline" id="load-button" data-click="tryToLoadProject">Load</button>
 
                     <button class="inline" id="undo-button">Undo</button>
                     <button class="inline" id="redo-button">Redo</button>
