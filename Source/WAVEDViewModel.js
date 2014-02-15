@@ -19,7 +19,17 @@ define([
         this._projectList = [];
         this._projectToLoad = '';
         this._selectedWidget = '';
-        this._currentProject = {name: ''};
+        this._currentProject = {
+            name: '',
+            workspace: {
+                height: {
+                    value: 100
+                },
+                width: {
+                    value: 100
+                }
+            }
+        };
         this._availableWidgets = [{
             name: 'Button Widget',
             o: ButtonWidget,

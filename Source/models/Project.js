@@ -68,6 +68,11 @@ define([
             get: function() {
                 return this._actions;
             }
+        },
+        workspace: {
+            get: function() {
+                return this._workspace;
+            }
         }
     });
 
