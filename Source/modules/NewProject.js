@@ -4,9 +4,11 @@
  */
 define([
         '../modules/UnsavedChanges',
+        '../models/Project',
         'jquery'
     ], function(
         UnsavedChangesModule,
+        Project,
         $) {
     'use strict';
 
@@ -49,7 +51,6 @@ define([
             // Clear the input.
             this.createNewProjectNameInput.val('');
 
-            // TODO: Use AngularJS Validation
             this.createNewProjectError.text('');
 
             createNewProjectDialog.dialog({
@@ -94,7 +95,7 @@ define([
                     var data = JSON.parse(dataString);
                     if (data.success) {
                         self.createNewProjectError.text('');
-                        viewModel.projectName = data.projectName;
+                        viewModel.currentProject = new Project({name: projectName});
 
                         viewModel.dirty = false;
                         projectCreated.resolve();
