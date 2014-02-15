@@ -4,17 +4,15 @@
  */
 define([
         'angular',
-        'WAVED',
         '../modules/UnsavedChanges',
         'jquery'
     ], function(
         angular,
-        WAVED,
         UnsavedChangesModule,
         $) {
     'use strict';
 
-    var LoadProjectModule = {
+    var LoadProject = {
         loadProjectDialog: $('#load-project-dialog'),
         loadProjectSelect: $('#load-project-select'),
         loadProjectError: $('#load-project-error'),
@@ -23,12 +21,12 @@ define([
          * If the project is clean, the load project dialog is opened. If the project is dirty, the unsaved changes must
          * be handled before the load project dialog is opened.
          */
-        tryToLoadProject: function() {
+        tryToLoadProject: function(viewModel) {
             var self = this;
 
             var projectClean = $.Deferred();
 
-            if (WAVED.isDirty() === true) {
+            if (viewModel.dirty) {
                 UnsavedChangesModule.handleUnsavedChanges(projectClean);
             }
             else {
@@ -40,7 +38,7 @@ define([
             $.when(projectClean).done(function() {
                 var projectListLoaded = self.updateProjectList();
                 $.when(projectListLoaded).done(function() {
-                    self.openLoadProjectDialog(projectLoaded);
+                    self.openLoadProjectDialog(projectLoaded, viewModel);
                 });
             });
 
@@ -84,7 +82,7 @@ define([
         /**
          * Open the dialog for loading an existing project.
          */
-        openLoadProjectDialog: function(projectLoaded) {
+        openLoadProjectDialog: function(projectLoaded, viewModel) {
             var self = this;
 
             this.loadProjectDialog.dialog({
@@ -99,7 +97,7 @@ define([
                         click: function() {
                             var scope = angular.element($('body')).scope();
                             var projectName = scope.selectedProjectToLoad;
-                            self.loadProject(projectLoaded, projectName);
+                            self.loadProject(projectLoaded, projectName, viewModel);
                             $.when(projectLoaded).done(function() {
                                 self.loadProjectDialog.dialog('close');
                             });
@@ -115,7 +113,7 @@ define([
         /**
          * Actually submit the load project request.
          */
-        loadProject: function(projectLoaded, projectName) {
+        loadProject: function(projectLoaded, projectName, viewModel) {
             var self = this;
 
             $.ajax({
@@ -135,7 +133,7 @@ define([
                             scope.projectName = data.projectName;
                         });
 
-                        WAVED.setClean();
+                        viewModel.dirty = false;
                         projectLoaded.resolve();
                     }
                     else {
@@ -147,5 +145,5 @@ define([
         }
     };
 
-    return LoadProjectModule;
+    return LoadProject;
 });

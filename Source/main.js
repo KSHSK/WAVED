@@ -2,7 +2,8 @@
 require.config({
     paths: {
         angular: '../ThirdParty/angularjs/angular.min',
-        jquery: 'require-jquery'
+        jquery: '../ThirdParty/jquery/require-jquery',
+        knockout: '../ThirdParty/knockout/knockout'
     },
 
     // AngularJS doesn't use define(), so we configure it as a module here.

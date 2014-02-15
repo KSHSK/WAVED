@@ -1,106 +1,43 @@
 /*global define*/
-define(['jquery'], function($) {
+define(['WAVEDViewModel',
+        'knockout',
+        'jquery'
+    ], function(
+        WAVEDViewModel,
+        ko,
+        $) {
     'use strict';
 
-    /* ### Private WAVED Variables ### */
-    // True if changes have been made since the last save; otherwise false.
-    var _dirty = false;
-
-    // Has the application been started yet.
+    var _container = document.body;
     var _started = false;
+    var viewModel = new WAVEDViewModel();
 
-    /* ### General use functions ### */
-    function disableButton(button) {
-        button.attr('disabled', 'disabled').addClass('ui-state-disabled');
-    }
+    // Confirm if the user wants to leave when they have unsaved changes.
+    $(window).on('beforeunload', function(event) {
+        if (viewModel.dirty) {
+            var message = 'You have unsaved changes.';
 
-    function enableButton(button) {
-        button.removeAttr('disabled', 'disabled').removeClass('ui-state-disabled');
-    }
+            // IE/Firefox
+            event.returnValue = message;
 
-    /**
-     * Adds all event listeners for the application.
-     */
-    function registerEventHandlers() {
-        // Input validation
-        $(document).on('keyup', 'input.validate', function(event) {
-            validateInput($(event.currentTarget));
-        });
-
-    }
-
-    function validateInput(element) {
-        var value = element.val().trim();
-
-        var error = element.next('div.error');
-
-        // TODO: This will only be correct for dialogs.
-        // Update this for non-dialogs when possible.
-        var submitButton = element.parents('.ui-dialog').find('.submit-button');
-
-        var minLength = element.data('min-length');
-        var maxLength = element.data('max-length');
-        var regex = element.attr('data-match');
-        var regexDescription = element.attr('data-match-desc');
-
-        var charText;
-        var message;
-        if (typeof minLength === 'number') {
-            if (value.length < minLength) {
-                charText = 'character' + (minLength === 1 ? '' : 's');
-                message = 'Must be at least ' + minLength + ' ' + charText + '.';
-                error.text(message);
-                disableButton(submitButton);
-                return;
-            }
+            // Webkit browsers.
+            return message;
         }
+    });
 
-        if (typeof maxLength === 'number') {
-            if (value.length > maxLength) {
-                charText = 'character' + (minLength === 1 ? '' : 's');
-                message = 'Cannot be more than ' + maxLength + ' ' + charText + '.';
-                error.text(message);
-                disableButton(submitButton);
-                return;
-            }
-        }
-
-        if (typeof regex !== 'undefined' && typeof regexDescription !== 'undefined') {
-            if (!value.match(new RegExp(regex))) {
-                error.text(regexDescription);
-                disableButton(submitButton);
-                return;
-            }
-        }
-
-        // Clear error.
-        error.text('');
-        enableButton(submitButton);
-    }
 
     /* ### WAVED Definition ### */
     var WAVED = {
+
         start: function() {
             // Can only be called once.
             if (_started === false) {
                 _started = true;
-
-                // TODO: We can get rid of this when we update validation to use AngularJS
-                registerEventHandlers();
+                ko.applyBindings(WAVED.viewModel, _container);
             }
         },
 
-        isDirty: function() {
-            return _dirty;
-        },
-
-        setDirty: function() {
-            _dirty = true;
-        },
-
-        setClean: function() {
-            _dirty = false;
-        }
+        viewModel: viewModel
     };
 
     return WAVED;

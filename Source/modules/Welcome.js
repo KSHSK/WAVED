@@ -3,26 +3,23 @@
  * A module for creating a new project.
  */
 define([
-        'angular',
-        'WAVED',
         '../modules/NewProject',
         '../modules/LoadProject',
         'jquery'
     ], function(
-        angular,
-        WAVED,
-        NewProjectModule,
-        LoadProjectModule, $) {
+        NewProject,
+        LoadProject,
+        $) {
     'use strict';
 
-    var WelcomeModule = {
+    var Welcome = {
 
         welcomeDialog: $('#welcome-dialog'),
 
         /**
          * Open the welcome dialog.
          */
-        openWelcomeDialog: function() {
+        openWelcomeDialog: function(viewModel) {
             var self = this;
 
             this.welcomeDialog.dialog({
@@ -33,13 +30,13 @@ define([
                 closeOnEscape: false,
                 buttons: {
                     'New Project': function() {
-                        var projectCreated = NewProjectModule.tryToCreateNewProject();
+                        var projectCreated = NewProject.tryToCreateNewProject(viewModel);
                         $.when(projectCreated).done(function() {
                             self.welcomeDialog.dialog('close');
                         });
                     },
                     'Load Project': function() {
-                        var projectLoaded = LoadProjectModule.tryToLoadProject();
+                        var projectLoaded = LoadProject.tryToLoadProject(viewModel);
                         $.when(projectLoaded).done(function() {
                             self.welcomeDialog.dialog('close');
                         });
@@ -56,5 +53,5 @@ define([
         }
     };
 
-    return WelcomeModule;
+    return Welcome;
 });

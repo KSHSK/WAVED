@@ -3,18 +3,14 @@
  * A module for creating a new project.
  */
 define([
-        'angular',
-        'WAVED',
         '../modules/UnsavedChanges',
         'jquery'
     ], function(
-        angular,
-        WAVED,
         UnsavedChangesModule,
         $) {
     'use strict';
 
-    var NewProjectModule = {
+    var NewProject = {
         projectNameDiv: $('#project-name'),
         createNewProjectNameInput: $('#create-new-project-name'),
         createNewProjectError: $('#create-new-project-error'),
@@ -23,11 +19,11 @@ define([
          * If the project is clean, the new project dialog is opened. If the project is dirty, the unsaved changes must
          * be handled before the new project dialog is opened.
          */
-        tryToCreateNewProject: function() {
+        tryToCreateNewProject: function(viewModel) {
             var self = this;
             var projectClean = $.Deferred();
 
-            if (WAVED.isDirty() === true) {
+            if (viewModel.dirty) {
                 UnsavedChangesModule.handleUnsavedChanges(projectClean);
             }
             else {
@@ -37,7 +33,7 @@ define([
 
             var projectCreated = $.Deferred();
             $.when(projectClean).done(function() {
-                self.openCreateNewProjectDialog(projectCreated);
+                self.openCreateNewProjectDialog(projectCreated, viewModel);
             });
 
             return projectCreated.promise();
@@ -46,7 +42,7 @@ define([
         /**
          * Open the dialog for creating a new project.
          */
-        openCreateNewProjectDialog: function(projectCreated) {
+        openCreateNewProjectDialog: function(projectCreated, viewModel) {
             var self = this;
             var createNewProjectDialog = $('#create-new-project-dialog');
 
@@ -66,7 +62,7 @@ define([
                         text: 'Create Project',
                         'class': 'submit-button',
                         click: function() {
-                            self.createNewProject(projectCreated);
+                            self.createNewProject(projectCreated, viewModel);
                             $.when(projectCreated).done(function() {
                                 createNewProjectDialog.dialog('close');
                             });
@@ -82,7 +78,7 @@ define([
         /**
          * Actually submit the createProject request.
          */
-        createNewProject: function(projectCreated) {
+        createNewProject: function(projectCreated, viewModel) {
             var self = this;
             // Don't allow leading or trailing white space.
             var projectName = this.createNewProjectNameInput.val().trim();
@@ -98,12 +94,9 @@ define([
                     var data = JSON.parse(dataString);
                     if (data.success) {
                         self.createNewProjectError.text('');
-                        var scope = angular.element(self.projectNameDiv).scope();
-                        scope.$apply(function() {
-                            scope.projectName = data.projectName;
-                        });
+                        viewModel.projectName = data.projectName;
 
-                        WAVED.setClean();
+                        viewModel.dirty = false;
                         projectCreated.resolve();
                     }
                     else {
@@ -115,5 +108,5 @@ define([
         }
     };
 
-    return NewProjectModule;
+    return NewProject;
 });
