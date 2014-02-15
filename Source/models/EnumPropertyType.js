@@ -2,17 +2,12 @@
 define([],function(){
     'use strict';
 
-    var EnumPropertyType = function(name){
-        this._template = '<div>' +
-            '<div>' + name + '</div>' +
-            '<input type="text" ng-model="' + name.replace(' ', '') + '"></input>' +
-            '</div>';
-    };
+    var EnumPropertyType = {};
 
-    Object.defineProperties(EnumPropertyType.prototype, {
+    Object.defineProperties(EnumPropertyType, {
         template: {
             get: function() {
-                return this._template;
+                return 'enumPropertyTemplate';
             }
         }
     });

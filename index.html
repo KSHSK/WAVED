@@ -157,10 +157,28 @@
         <p id="error-dialog-message"></p>
     </div>
     
+    <script type="text/html" id="textPropertyTemplate">
+        <div>
+            <span data-bind="text:displayName"></span>
+            <input type="text" data-bind="value:value"></input>
+        </div>
+    </script>
     <script type="text/html" id="numberPropertyTemplate">
         <div>
             <span data-bind="text:displayName"></span>
             <input type="text" data-bind="value:value"></input>
+        </div>
+    </script>
+    <script type="text/html" id="enumPropertyTemplate">
+        <div>
+            <span data-bind="text:displayName"></span>
+            <input type="text" data-bind="value:value"></input>
+        </div>
+    </script>
+    <script type="text/html" id="booleanPropertyTemplate">
+        <div>
+            <input type="checkbox" data-bind="value:value"></input>
+            <span data-bind="text:displayName"></span>
         </div>
     </script>
 </body>

@@ -2,17 +2,12 @@
 define([],function(){
     'use strict';
 
-    var BooleanPropertyType = function(name){
-        this._template = '<div>' +
-            '<div>' + name + '</div>' +
-    // '<input type="text" ng-model="' + name.replace(' ', '') + '"></input>' +
-            '</div>';
-    };
+    var BooleanPropertyType = {};
 
-    Object.defineProperties(BooleanPropertyType.prototype, {
+    Object.defineProperties(BooleanPropertyType, {
         template: {
             get: function() {
-                return this._template;
+                return 'booleanPropertyTemplate';
             }
         }
     });
