@@ -5,18 +5,18 @@
  */
  define([
         'require',
-        'angular',
-        'app',
         'WAVED',
         'modules/Welcome',
-        'jquery'
+        'jqueryUI',
+        'angular',
+        'app'
     ], function (
         require,
-        ng,
-        app,
         WAVED,
         WelcomeModule,
-        $) {
+        $,
+        ng,
+        app) {
     'use strict';
 
     require(['../ThirdParty/domReady!'], function(document) {
