@@ -1,6 +1,6 @@
 /*global define*/
 define([
-        'models/NumberPropertyType',
+        'models/PropertyType/NumberPropertyType',
         'models/Property',
         'util/defined',
         'knockout'
@@ -40,9 +40,14 @@ define([
     };
 
     Object.defineProperties(Workspace.prototype, {
+        viewModel: {
+            get: function() {
+                return  this;
+            }
+        },
         name: {
             get: function() {
-                return {displayName: 'Workspace'};
+                return {value: 'Workspace'};
             }
         },
         width: {

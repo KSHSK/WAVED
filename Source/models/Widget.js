@@ -2,9 +2,9 @@
 define([
         'jquery',
         'models/Property',
-        'models/TextPropertyType',
-        'models/NumberPropertyType',
-        'models/BooleanPropertyType',
+        'models/PropertyType/TextPropertyType',
+        'models/PropertyType/NumberPropertyType',
+        'models/PropertyType/BooleanPropertyType',
         'util/defined',
         'util/defaultValue'
     ], function(

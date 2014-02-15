@@ -111,3 +111,9 @@ html, body {
 #project-name {
     padding: 0 0 0.75em 0.2em;
 }
+
+.widget-container {
+    height: inherit;
+    width: inherit;
+    position: absolute;
+}
