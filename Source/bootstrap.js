@@ -1,14 +1,11 @@
 /*global define*/
-/**
- * Bootstraps Angular onto the window.document node
- * http://www.startersquad.com/blog/angularjs-requirejs/
- */
  define([
         'require',
         'util/koExtenders',
         'app',
         'WAVED',
         'modules/Welcome',
+        'knockout',
         'jquery'
     ], function (
         require,
@@ -16,6 +13,7 @@
         app,
         WAVED,
         WelcomeModule,
+        ko,
         $) {
     'use strict';
 
@@ -126,6 +124,22 @@
         });
 
         $('input').addClass('ui-corner-all');
+
+        var viewModel = WAVED.viewModel;
+
+        var $widgetsPanel = $('#widgets-panel');
+        $widgetsPanel.attr('data-bind', 'foreach: availableWidgets');
+        var widgetButton = document.createElement('button');
+        $(widgetButton).attr('data-bind', 'text: $data.name, click: $parent.addNewWidget');
+        $widgetsPanel.append(widgetButton);
+
+        var $propertiesPanel = $('#properties-panel');
+        $propertiesPanel.attr('data-bind', 'foreach: currentProject.widgets');
+        var widgetProperties = document.createElement('div');
+        $(widgetProperties).attr('data-bind', 'template: {name : \'numberPropertyTemplate\', foreach: $data.properties}, visible: $parent.selectedWidget == $data');
+        $propertiesPanel.append(widgetProperties);
+
+        ko.applyBindings(viewModel, document.body);
     }
 
     function displayPage() {

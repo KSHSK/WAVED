@@ -33,7 +33,6 @@ define(['WAVEDViewModel',
             // Can only be called once.
             if (_started === false) {
                 _started = true;
-                ko.applyBindings(WAVED.viewModel, _container);
             }
         },
 

@@ -3,12 +3,12 @@
  * A module for loading an existing project.
  */
 define([
-        'angular',
         '../modules/UnsavedChanges',
+        '../models/Project',
         'jquery'
     ], function(
-        angular,
         UnsavedChangesModule,
+        Project,
         $) {
     'use strict';
 
@@ -36,7 +36,7 @@ define([
 
             var projectLoaded = $.Deferred();
             $.when(projectClean).done(function() {
-                var projectListLoaded = self.updateProjectList();
+                var projectListLoaded = self.updateProjectList(viewModel);
                 $.when(projectListLoaded).done(function() {
                     self.openLoadProjectDialog(projectLoaded, viewModel);
                 });
@@ -48,7 +48,7 @@ define([
         /**
          * Updates the list of projects displayed in the dialog.
          */
-        updateProjectList: function() {
+        updateProjectList: function(viewModel) {
             var self = this;
 
             return $.ajax({
@@ -58,7 +58,7 @@ define([
                     var data = JSON.parse(dataString);
                     if (data.success) {
                         self.loadProjectError.text('');
-                        self.setProjectList(data.projects);
+                        viewModel.projectList = data.projects;
                     }
                     else {
                         // Display error to user.
@@ -66,17 +66,6 @@ define([
                     }
                 }
             }).promise();
-        },
-
-        setProjectList: function(projects) {
-            var scope = angular.element($('body')).scope();
-            scope.$apply(function() {
-                scope.projectList = projects;
-
-                if (projects.length > 0) {
-                    scope.selectedProjectToLoad = projects[0];
-                }
-            });
         },
 
         /**
@@ -95,8 +84,7 @@ define([
                         text: 'Load Project',
                         'class': 'submit-button',
                         click: function() {
-                            var scope = angular.element($('body')).scope();
-                            var projectName = scope.selectedProjectToLoad;
+                            var projectName = viewModel.projectToLoad;
                             self.loadProject(projectLoaded, projectName, viewModel);
                             $.when(projectLoaded).done(function() {
                                 self.loadProjectDialog.dialog('close');
@@ -128,11 +116,7 @@ define([
                         self.loadProjectError.text('');
 
                         // Set the project name.
-                        var scope = angular.element($('body')).scope();
-                        scope.$apply(function() {
-                            scope.projectName = data.projectName;
-                        });
-
+                        viewModel.currentProject = new Project({name: data.projectName});
                         viewModel.dirty = false;
                         projectLoaded.resolve();
                     }
