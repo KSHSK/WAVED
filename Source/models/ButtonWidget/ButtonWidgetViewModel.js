@@ -2,16 +2,18 @@
 define([
         'models/Widget',
         'models/Property',
-        'models/TextPropertyType',
-        'util/defined'
+        'models/PropertyType/TextPropertyType',
+        'util/defined',
+        'knockout'
     ],function(
         Widget,
         Property,
         TextPropertyType,
-        defined){
+        defined,
+        ko){
     'use strict';
 
-    var ButtonWidget = function(options) {
+    var ButtonWidgetViewModel = function(options) {
         options = (defined(options)) ? options : {};
         var hasHeight = defined(options.height);
         var hasWidth = defined(options.width);
@@ -36,12 +38,13 @@ define([
         if (!hasWidth) {
             this.width.value = 10;
         }
+        ko.track(this);
     };
 
-    ButtonWidget.prototype = new Widget({name:''});
-    ButtonWidget.prototype.constructor = ButtonWidget;
+    ButtonWidgetViewModel.prototype = new Widget({name:''});
+    ButtonWidgetViewModel.prototype.constructor = ButtonWidgetViewModel;
 
-    Object.defineProperties(ButtonWidget.prototype, {
+    Object.defineProperties(ButtonWidgetViewModel.prototype, {
         properties: {
             get: function() {
                 return [this.name, this.label, this.x, this.y, this.height,
@@ -51,5 +54,5 @@ define([
     });
 
 
-    return ButtonWidget;
+    return ButtonWidgetViewModel;
 });

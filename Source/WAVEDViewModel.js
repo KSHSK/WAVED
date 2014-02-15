@@ -2,7 +2,7 @@
 define([
         './modules/NewProject',
         './modules/LoadProject',
-        './models/ButtonWidget',
+        './models/ButtonWidget/ButtonWidget',
         'knockout'
     ], function(
         NewProject,
@@ -32,12 +32,10 @@ define([
         };
         this._availableWidgets = [{
             name: 'Button Widget',
-            o: ButtonWidget,
-            b: new ButtonWidget()
+            o: ButtonWidget
         }, {
             name: 'Another Buttton',
-            o: ButtonWidget,
-            b: new ButtonWidget()
+            o: ButtonWidget
         }];
 
         ko.track(this);
@@ -59,6 +57,7 @@ define([
         var widget = new w.o();
         self._currentProject.addWidget(widget);
         self._selectedWidget = widget;
+
     };
 
     Object.defineProperties(WAVEDViewModel.prototype, {
@@ -67,7 +66,7 @@ define([
                 return this._dirty;
             },
             set: function(value) {
-                if (typeof value === Boolean){
+                if (typeof value === 'boolean'){
                     this._dirty = value;
                 }
             }
