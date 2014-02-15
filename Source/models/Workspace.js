@@ -2,11 +2,13 @@
 define([
         'models/NumberPropertyType',
         'models/Property',
-        'util/defined'
+        'util/defined',
+        'knockout'
     ], function(
         NumberPropertyType,
         Property,
-        defined){
+        defined,
+        ko){
     'use strict';
 
     var Workspace = function(width, height) {
@@ -34,6 +36,7 @@ define([
                 }
             });
         }
+        ko.track(this);
     };
 
     Object.defineProperties(Workspace.prototype, {

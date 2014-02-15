@@ -1,5 +1,5 @@
 /*global define*/
-define([],function(){
+define(['knockout'],function(ko){
     'use strict';
 
     var Property = function(options) {
@@ -7,6 +7,8 @@ define([],function(){
         this._value = options.value;
         this._propertyType = options.propertyType;
         this._isValidValue = options.isValidValue;
+
+        ko.track(this);
     };
 
     Object.defineProperties(Property.prototype, {
@@ -20,9 +22,7 @@ define([],function(){
                 return this._value;
             },
             set: function(v) {
-                if (this._isValidValue(v)) {
-                    this._value = v;
-                }
+                this._value = v;
             }
         },
         propertyType: {
