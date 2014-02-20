@@ -12,7 +12,8 @@ define([
         angular,
         WAVED,
         NewProjectModule,
-        LoadProjectModule, $) {
+        LoadProjectModule,
+        $) {
     'use strict';
 
     var WelcomeModule = {
