@@ -2,13 +2,18 @@
 require.config({
     paths: {
         angular: '../ThirdParty/angularjs/angular.min',
-        jquery: 'require-jquery'
+        jquery: '../ThirdParty/jquery-ui-1.10.4.custom/js/jquery-1.10.2',
+        jqueryUI: '../ThirdParty/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.min'
     },
 
-    // AngularJS doesn't use define(), so we configure it as a module here.
     shim: {
+        'jqueryUI': {
+            'exports': '$',
+            deps: ['jquery']
+        },
         'angular': {
-            'exports': 'angular'
+            'exports': 'angular',
+            deps: ['jquery']
         }
     },
 
