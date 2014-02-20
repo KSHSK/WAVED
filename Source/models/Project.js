@@ -25,12 +25,9 @@ define([
         this._actions = defaultValue(options.actions, []);
         this._googleAnalytics = defaultValue(options.googleAnalytics, undefined);
         this._workspace = new Workspace(options.width, options.height);
-        this._history = [];
-        this._historyIndex = -1;
         this._dirty = false;
 
         this._widgets.push(this._workspace);
-        this._selectedWidget = this._workspace;
 
         ko.track(this);
     };
@@ -49,14 +46,17 @@ define([
                 return this._widgets;
             }
         },
-        dataSet: {
+        dataSets: {
             get: function(){
-                return this._dataSet;
+                return this._dataSets;
             }
         },
         googleAnalytics: {
             get: function() {
                 return this._googleAnaytics;
+            },
+            set: function(value) {
+                this._googleAnalytics = value;
             }
         },
         events: {

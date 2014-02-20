@@ -94,6 +94,7 @@ define([
             },
             set: function(value) {
                 this._currentProject = value;
+                this._selectedWidget = value.workspace;
             }
         },
         availableWidgets: {
