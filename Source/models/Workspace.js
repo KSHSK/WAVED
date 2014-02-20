@@ -45,7 +45,7 @@ define([
                 return  this;
             }
         },
-        name: {
+        name: { /*TODO: make this a Property*/
             get: function() {
                 return {value: 'Workspace'};
             }

@@ -1,7 +1,7 @@
 /*global define*/
 define([],function(){
     'use strict';
-
+    /*TODO: Refactor*/
     var NumberPropertyType = {};
 
     Object.defineProperties(NumberPropertyType, {

@@ -13,6 +13,7 @@ define([
     'use strict';
 
     var LoadProject = {
+        /*TODO: validation*/
         loadProjectDialog: $('#load-project-dialog'),
         loadProjectSelect: $('#load-project-select'),
         loadProjectError: $('#load-project-error'),

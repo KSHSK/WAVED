@@ -13,6 +13,7 @@ define([
     'use strict';
 
     var NewProject = {
+        /*TODO: validation*/
         projectNameDiv: $('#project-name'),
         createNewProjectNameInput: $('#create-new-project-name'),
         createNewProjectError: $('#create-new-project-error'),

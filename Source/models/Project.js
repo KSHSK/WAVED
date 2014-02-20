@@ -12,7 +12,7 @@ define([
         Workspace,
         ko) {
     'use strict';
-
+    /*TODO: Rename*/
     var Project = function(options) {
         if (typeof options.name === undefined) {
             throw new Error('Project name is required');
