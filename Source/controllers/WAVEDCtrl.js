@@ -6,12 +6,14 @@ define([
         './module',
         '../modules/Welcome',
         '../modules/NewProject',
+        '../modules/GoogleAnalytics',
         '../modules/LoadProject',
         'jquery'
     ], function(
         controllers,
         WelcomeModule,
         NewProjectModule,
+        GoogleAnalyticsModule, 
         LoadProjectModule,
         $) {
     'use strict';
@@ -29,7 +31,19 @@ define([
         $scope.tryToCreateNewProject = function() {
             NewProjectModule.tryToCreateNewProject();
         };
-
+        
+        $scope.addGoogleAnalytics = function() {
+            GoogleAnalyticsModule.addGoogleAnalytics();
+        };
+        
+        $scope.removeGoogleAnalytics = function() {
+            GoogleAnalyticsModule.removeGoogleAnalytics();
+        };
+        
+        $scope.clearGoogleAnalyticsFields = function() {
+            GoogleAnalyticsModule.clearGoogleAnalyticsFields();
+        };
+        
         $scope.tryToLoadProject = function() {
             LoadProjectModule.tryToLoadProject();
         };
