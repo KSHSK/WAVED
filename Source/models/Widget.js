@@ -121,5 +121,7 @@ define([
         return [this.name, this.x, this.y, this.height, this.width, this.visible, this.logGoogleAnalytics];
     };
 
+    /*TODO: Missing functions*/
+
     return Widget;
 });
