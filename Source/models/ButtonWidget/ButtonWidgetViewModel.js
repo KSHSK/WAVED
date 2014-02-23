@@ -1,14 +1,12 @@
 /*global define*/
 define([
         'models/Widget',
-        'models/Property',
-        'models/PropertyType/TextPropertyType',
+        'models/Property/StringProperty',
         'util/defined',
         'knockout'
     ],function(
         Widget,
-        Property,
-        TextPropertyType,
+        StringProperty,
         defined,
         ko){
     'use strict';
@@ -22,13 +20,11 @@ define([
             this.label = options.label;
         } else {
             var displayName = 'Label';
-            this.label = new Property({
+            this.label = new StringProperty({
                 displayName: displayName,
                 value: '',
-                propertyType: TextPropertyType,
                 isValidValue: function(value) {
-                    return typeof value === 'string' &&
-                        value.length > 0 && value.length < 50;
+                    return value.length > 0 && value.length < 50;
                 }
             });
         }
