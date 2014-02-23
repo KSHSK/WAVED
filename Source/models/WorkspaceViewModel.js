@@ -11,7 +11,7 @@ define([
         ko){
     'use strict';
 
-    var Workspace = function(width, height) {
+    var WorkspaceViewModel = function(width, height) {
         this.name = new StringProperty({
             displayName: 'Name',
             value: 'Workspace'
@@ -35,7 +35,7 @@ define([
         ko.track(this);
     };
 
-    Object.defineProperties(Workspace.prototype, {
+    Object.defineProperties(WorkspaceViewModel.prototype, {
         viewModel: {
             get: function() {
                 return  this;
@@ -48,6 +48,6 @@ define([
         }
     });
 
-    return Workspace;
+    return WorkspaceViewModel;
 
 });
