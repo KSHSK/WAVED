@@ -12,8 +12,10 @@ define([
     ){
     'use strict';
     var BooleanProperty = function(state) {
+        Property.call(this, state);
+
         state = defined(state) ? state : {};
-//        Property.call(this, state);
+
         this._value = state.value;
         if (defined(state.validValue)) {
             this.isValidValue = state.validValue;
@@ -24,13 +26,11 @@ define([
         }
 
         this._templateName = PropertyTemplateName.BOOLEAN;
-        this._displayName = state.displayName;
 
         ko.track(this);
     };
 
-//    BooleanProperty.prototype = new Property();
-//    BooleanProperty.prototype.constructor = BooleanProperty;
+    BooleanProperty.prototype = Object.create(Property.prototype);
 
     Object.defineProperties(BooleanProperty.prototype, {
         value: {
@@ -41,16 +41,6 @@ define([
                 if (typeof value === 'boolean' && this.isValidValue(value)) {
                     this._value = value;
                 }
-            }
-        },
-        displayName: {
-            get: function() {
-                return this._displayName;
-            }
-        },
-        templateName : {
-            get: function() {
-                return this._templateName;
             }
         }
     });

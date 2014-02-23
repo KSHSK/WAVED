@@ -12,8 +12,10 @@ define([
     ){
     'use strict';
     var ArrayProperty = function(state) {
-        state = defined(state) ? state : {};
         Property.call(this, state);
+
+        state = defined(state) ? state : {};
+
         this._value = state.value;
         this._options = state.options;
         if (defined(state.validValue)) {
@@ -32,8 +34,7 @@ define([
         ko.track(this);
     };
 
-    ArrayProperty.prototype = new Property();
-    ArrayProperty.prototype.constructor = ArrayProperty;
+    ArrayProperty.prototype = Object.create(Property.prototype);
 
     Object.defineProperties(ArrayProperty.prototype, {
         options: {

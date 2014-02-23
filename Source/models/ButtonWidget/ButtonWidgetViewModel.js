@@ -37,8 +37,7 @@ define([
         ko.track(this);
     };
 
-    ButtonWidgetViewModel.prototype = new Widget({name:''});
-    ButtonWidgetViewModel.prototype.constructor = ButtonWidgetViewModel;
+    ButtonWidgetViewModel.prototype = Object.create(Widget.prototype);
 
     Object.defineProperties(ButtonWidgetViewModel.prototype, {
         properties: {
