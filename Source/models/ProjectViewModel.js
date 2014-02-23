@@ -3,13 +3,13 @@ define([
         'jquery',
         'util/defined',
         'util/defaultValue',
-        'models/Workspace',
+        'models/WorkspaceViewModel',
         'knockout'
     ], function(
         $,
         defined,
         defaultValue,
-        Workspace,
+        WorkspaceViewModel,
         ko) {
     'use strict';
     /*TODO: Rename*/
@@ -24,7 +24,7 @@ define([
         this._events = defaultValue(options.events, []);
         this._actions = defaultValue(options.actions, []);
         this._googleAnalytics = defaultValue(options.googleAnalytics, undefined);
-        this._workspace = new Workspace(options.width, options.height);
+        this._workspace = new WorkspaceViewModel(options.width, options.height);
         this._dirty = false;
 
         this._widgets.push(this._workspace);

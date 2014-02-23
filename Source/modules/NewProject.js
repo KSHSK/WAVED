@@ -4,11 +4,11 @@
  */
 define([
         '../modules/UnsavedChanges',
-        '../models/Project',
+        '../models/ProjectViewModel',
         'jquery'
     ], function(
         UnsavedChangesModule,
-        Project,
+        ProjectViewModel,
         $) {
     'use strict';
 
@@ -96,7 +96,7 @@ define([
                     var data = JSON.parse(dataString);
                     if (data.success) {
                         self.createNewProjectError.text('');
-                        viewModel.currentProject = new Project({name: projectName});
+                        viewModel.currentProject = new ProjectViewModel({name: projectName});
 
                         viewModel.dirty = false;
                         projectCreated.resolve();
