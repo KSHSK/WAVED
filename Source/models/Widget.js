@@ -1,18 +1,16 @@
 /*global define*/
 define([
         'jquery',
-        'models/Property',
-        'models/PropertyType/TextPropertyType',
-        'models/PropertyType/NumberPropertyType',
-        'models/PropertyType/BooleanPropertyType',
+        'models/Property/StringProperty',
+        'models/Property/NumberProperty',
+        'models/Property/BooleanProperty',
         'util/defined',
         'util/defaultValue'
     ], function(
         $,
-        Property,
-        TextPropertyType,
-        NumberPropertyType,
-        BooleanPropertyType,
+        StringProperty,
+        NumberProperty,
+        BooleanProperty,
         defined,
         defaultValue) {
     'use strict';
@@ -22,13 +20,11 @@ define([
         if (defined(options.name)) {
             this.name = options.name;
         } else {
-            this.name = new Property({
+            this.name = new StringProperty({
                 displayName: 'Name',
                 value: '',
-                propertyType: TextPropertyType,
                 isValidValue: function(value) {
-                    return typeof value === 'string' &&
-                        value.match(new RegExp('^[a-zA-Z0-9_\\- ]+$')) &&
+                    return value.match(new RegExp('^[a-zA-Z0-9_\\- ]+$')) &&
                         value.length > 0 && value.length < 51;
                 }
             });
@@ -36,77 +32,61 @@ define([
         if (defined(options.height)) {
             this.height = options.height;
         } else {
-            this.height = new Property({
+            this.height = new NumberProperty({
                 displayName: 'Height',
                 value: 50,
-                propertyType: NumberPropertyType,
                 isValidValue: function(value) {
-                    return typeof value === 'number' &&
-                        value >= 0 && value <= 100;
+                    return value >= 0 && value <= 100;
                 }
             });
         }
         if (defined(options.width)) {
             this.width = options.width;
         } else {
-            this.width = new Property({
+            this.width = new NumberProperty({
                 displayName: 'Width',
                 value: 50,
-                propertyType: NumberPropertyType,
                 isValidValue: function(value) {
-                    return typeof value === 'number' &&
-                        value >= 0 && value <= 100;
+                    return value >= 0 && value <= 100;
                 }
             });
         }
         if (defined(options.x)) {
             this.x = options.x;
         } else {
-            this.x = new Property({
+            this.x = new NumberProperty({
                 displayName: 'X',
                 value: 0,
-                propertyType: NumberPropertyType,
                 isValidValue: function(value) {
-                    return typeof value === 'number' &&
-                        value >= 0 && value <= 100;
+                    return value >= 0 && value <= 100;
                 }
             });
         }
         if (defined(options.y)) {
             this.y= options.y;
         } else {
-            this.y = new Property({
+            this.y = new NumberProperty({
                 displayName: 'Y',
                 value: 0,
-                propertyType: NumberPropertyType,
                 isValidValue: function(value) {
-                    return typeof value === 'number' &&
-                        value >= 0 && value <= 100;
+                    return value >= 0 && value <= 100;
                 }
             });
         }
         if (defined(options.visible)) {
             this.visible = options.visible;
         } else {
-            this.visible = new Property({
+            this.visible = new BooleanProperty({
                 displayName: 'Visible',
-                value: true,
-                propertyType: BooleanPropertyType,
-                isValidValue: function(value) {
-                    return typeof value === 'boolean';
-                }
+                value: true
             });
         }
         if (defined(options.logGoogleAnalytics)) {
             this.logGoogleAnalytics = options.logGoogleAnalytics;
         } else {
-            this.logGoogleAnalytics = new Property({
+            this.logGoogleAnalytics = new BooleanProperty({
                 displayName: 'Log Google Analytics',
-                value: false,
-                propertyType: BooleanPropertyType,
-                isValidValue: function(value) {
-                    return typeof value === 'boolean';
-                }
+                value: false
             });
         }
 

@@ -23,18 +23,15 @@ define([
             name: '',
             workspace: {
                 height: {
-                    value: 100
+                    value: 600
                 },
                 width: {
-                    value: 100
+                    value: 750
                 }
             }
         };
         this._availableWidgets = [{
             name: 'Button Widget',
-            o: ButtonWidget
-        }, {
-            name: 'Another Buttton',
             o: ButtonWidget
         }];
 
@@ -57,7 +54,6 @@ define([
         var widget = new w.o();
         self._currentProject.addWidget(widget);
         self._selectedWidget = widget;
-
     };
 
     Object.defineProperties(WAVEDViewModel.prototype, {

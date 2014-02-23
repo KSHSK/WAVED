@@ -1,39 +1,35 @@
 /*global define*/
 define([
-        'models/PropertyType/NumberPropertyType',
-        'models/Property',
+        'models/Property/StringProperty',
+        'models/Property/NumberProperty',
         'util/defined',
         'knockout'
     ], function(
-        NumberPropertyType,
-        Property,
+        StringProperty,
+        NumberProperty,
         defined,
         ko){
     'use strict';
 
     var Workspace = function(width, height) {
+        this.name = new StringProperty({
+            displayName: 'Name',
+            value: 'Workspace'
+        });
         if (defined(width)) {
-            this._width = width;
+            this.width = width;
         } else {
-            this._width = new Property({
+            this.width = new NumberProperty({
                 displayName: 'Width',
-                value: 750,
-                propertyType: NumberPropertyType,
-                isValidValue: function(value) {
-                    return (typeof value === 'number');
-                }
+                value: 750
             });
         }
         if (defined(height)) {
-            this._height = height;
+            this.height = height;
         } else {
-            this._height = new Property({
+            this.height = new NumberProperty({
                 displayName: 'Height',
-                value: 600,
-                propertyType: NumberPropertyType,
-                isValidValue: function(value) {
-                    return (typeof value === 'number');
-                }
+                value: 600
             });
         }
         ko.track(this);
@@ -43,27 +39,6 @@ define([
         viewModel: {
             get: function() {
                 return  this;
-            }
-        },
-        name: { /*TODO: make this a Property*/
-            get: function() {
-                return {value: 'Workspace'};
-            }
-        },
-        width: {
-            get: function() {
-                return this._width;
-            },
-            set: function(value) {
-                this._width = value;
-            }
-        },
-        height: {
-            get: function(){
-                return this._height;
-            },
-            set: function(value) {
-                this._height = value;
             }
         },
         properties: {

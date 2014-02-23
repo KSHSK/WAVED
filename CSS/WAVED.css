@@ -86,7 +86,7 @@ html, body {
 }
 
 .show {
-    display: bloack;
+    display: block;
 }
 
 .hide-on-load {

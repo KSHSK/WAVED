@@ -141,7 +141,7 @@
         var widgetProperties = document.createElement('div');
         $(widgetProperties).attr('data-bind', 'foreach: $data.viewModel.properties, visible: $parent.selectedWidget == $data');
         var property = document.createElement('div');
-        $(property).attr('data-bind', 'template: {name : $data.propertyType.template, data: $data}');
+        $(property).attr('data-bind', 'template: {name : $data.templateName, data: $data}');
         $(widgetProperties).append(property);
         $propertiesPanel.append(widgetProperties);
 
