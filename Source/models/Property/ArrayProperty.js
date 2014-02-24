@@ -2,11 +2,13 @@
 define([
         './Property',
         'util/defined',
+        'util/defaultValue',
         '../PropertyTemplateName',
         'knockout'
     ],function(
         Property,
         defined,
+        defaultValue,
         PropertyTemplateName,
         ko
     ){
@@ -17,7 +19,7 @@ define([
         state = defined(state) ? state : {};
 
         this._value = state.value;
-        this._options = state.options;
+        this._options = defaultValue(state.options, []);
         if (defined(state.validValue)) {
             this.isValidValue = state.validValue;
         }
