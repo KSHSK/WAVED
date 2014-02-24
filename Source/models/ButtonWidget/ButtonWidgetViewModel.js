@@ -1,11 +1,11 @@
 /*global define*/
 define([
-        'models/Widget',
+        'models/WidgetViewModel',
         'models/Property/StringProperty',
         'util/defined',
         'knockout'
     ],function(
-        Widget,
+        WidgetViewModel,
         StringProperty,
         defined,
         ko){
@@ -15,10 +15,11 @@ define([
         options = (defined(options)) ? options : {};
         var hasHeight = defined(options.height);
         var hasWidth = defined(options.width);
-        Widget.call(this, options);
+        WidgetViewModel.call(this, options);
         if (defined(options.label)) {
             this.label = options.label;
-        } else {
+        }
+        else {
             var displayName = 'Label';
             this.label = new StringProperty({
                 displayName: displayName,
@@ -37,17 +38,16 @@ define([
         ko.track(this);
     };
 
-    ButtonWidgetViewModel.prototype = Object.create(Widget.prototype);
+    ButtonWidgetViewModel.prototype = Object.create(WidgetViewModel.prototype);
 
     Object.defineProperties(ButtonWidgetViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.label, this.x, this.y, this.height,
-                       this.width, this.visible, this.logGoogleAnalytics];
+                return [this.name, this.label, this.x, this.y, this.height, this.width, this.visible,
+                this.logGoogleAnalytics];
             }
         }
     });
-
 
     return ButtonWidgetViewModel;
 });

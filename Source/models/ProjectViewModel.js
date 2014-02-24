@@ -12,7 +12,7 @@ define([
         WorkspaceViewModel,
         ko) {
     'use strict';
-    /*TODO: Rename*/
+
     var Project = function(options) {
         if (typeof options.name === undefined) {
             throw new Error('Project name is required');
@@ -42,12 +42,12 @@ define([
             }
         },
         widgets: {
-            get: function(){
+            get: function() {
                 return this._widgets;
             }
         },
         dataSets: {
-            get: function(){
+            get: function() {
                 return this._dataSets;
             }
         },

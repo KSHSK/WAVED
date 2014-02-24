@@ -18,7 +18,8 @@ define([
         });
         if (defined(width)) {
             this.width = width;
-        } else {
+        }
+        else {
             this.width = new NumberProperty({
                 displayName: 'Width',
                 value: 750
@@ -26,7 +27,8 @@ define([
         }
         if (defined(height)) {
             this.height = height;
-        } else {
+        }
+        else {
             this.height = new NumberProperty({
                 displayName: 'Height',
                 value: 600
@@ -38,7 +40,7 @@ define([
     Object.defineProperties(WorkspaceViewModel.prototype, {
         viewModel: {
             get: function() {
-                return  this;
+                return this;
             }
         },
         properties: {
@@ -49,5 +51,4 @@ define([
     });
 
     return WorkspaceViewModel;
-
 });

@@ -13,7 +13,7 @@ define([
     'use strict';
 
     var NewProject = {
-        /*TODO: validation*/
+        /* TODO: validation */
         projectNameDiv: $('#project-name'),
         createNewProjectNameInput: $('#create-new-project-name'),
         createNewProjectError: $('#create-new-project-error'),
@@ -96,7 +96,9 @@ define([
                     var data = JSON.parse(dataString);
                     if (data.success) {
                         self.createNewProjectError.text('');
-                        viewModel.currentProject = new ProjectViewModel({name: projectName});
+                        viewModel.currentProject = new ProjectViewModel({
+                            name: projectName
+                        });
 
                         viewModel.dirty = false;
                         projectCreated.resolve();

@@ -11,6 +11,7 @@ define([
         ko
     ){
     'use strict';
+
     var NumberProperty = function(state) {
         Property.call(this, state);
 
@@ -19,7 +20,8 @@ define([
         this._value = state.value;
         if (defined(state.validValue)) {
             this.isValidValue = state.validValue;
-        } else {
+        }
+        else {
             this.isValidValue = function(value) {
                 return true;
             };

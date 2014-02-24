@@ -8,9 +8,10 @@ define([
     ], function(
         WAVED,
         $) {
-
     'use strict';
-/*TODO: Convert to GoogleAnalyitcs class,  hook up to WAVEDViewModel/ProjectViewModel*/
+
+
+/* TODO: Convert to GoogleAnalyitcs class, hook up to WAVEDViewModel/ProjectViewModel */
     var GoogleAnalyticsModule = {
         unboundDisplay: $('#google-analytics-unbound'),
         boundDisplay: $('#google-analytics-bound'),
@@ -24,7 +25,7 @@ define([
         category: '',
 
         addGoogleAnalytics: function() {
-            /*TODO: Validation*/
+            /* TODO: Validation */
             this.setUA($(this.uaInputField).val());
             this.setCategory($(this.categoryInputField).val());
 

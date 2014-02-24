@@ -15,23 +15,24 @@ define([
         defaultValue) {
     'use strict';
 
-    var Widget = function(options){
+    var WidgetViewModel = function(options) {
         options = (defined(options)) ? options : {};
         if (defined(options.name)) {
             this.name = options.name;
-        } else {
+        }
+        else {
             this.name = new StringProperty({
                 displayName: 'Name',
                 value: '',
                 isValidValue: function(value) {
-                    return value.match(new RegExp('^[a-zA-Z0-9_\\- ]+$')) &&
-                        value.length > 0 && value.length < 51;
+                    return value.match(new RegExp('^[a-zA-Z0-9_\\- ]+$')) && value.length > 0 && value.length < 51;
                 }
             });
         }
         if (defined(options.height)) {
             this.height = options.height;
-        } else {
+        }
+        else {
             this.height = new NumberProperty({
                 displayName: 'Height',
                 value: 50,
@@ -42,7 +43,8 @@ define([
         }
         if (defined(options.width)) {
             this.width = options.width;
-        } else {
+        }
+        else {
             this.width = new NumberProperty({
                 displayName: 'Width',
                 value: 50,
@@ -53,7 +55,8 @@ define([
         }
         if (defined(options.x)) {
             this.x = options.x;
-        } else {
+        }
+        else {
             this.x = new NumberProperty({
                 displayName: 'X',
                 value: 0,
@@ -63,8 +66,9 @@ define([
             });
         }
         if (defined(options.y)) {
-            this.y= options.y;
-        } else {
+            this.y = options.y;
+        }
+        else {
             this.y = new NumberProperty({
                 displayName: 'Y',
                 value: 0,
@@ -75,7 +79,8 @@ define([
         }
         if (defined(options.visible)) {
             this.visible = options.visible;
-        } else {
+        }
+        else {
             this.visible = new BooleanProperty({
                 displayName: 'Visible',
                 value: true
@@ -83,7 +88,8 @@ define([
         }
         if (defined(options.logGoogleAnalytics)) {
             this.logGoogleAnalytics = options.logGoogleAnalytics;
-        } else {
+        }
+        else {
             this.logGoogleAnalytics = new BooleanProperty({
                 displayName: 'Log Google Analytics',
                 value: false
@@ -91,17 +97,43 @@ define([
         }
 
         this._parent = defaultValue(options.parent, undefined);
-        this._subwidgets = defaultValue(options.subwidgets, []);
-        this._elements = defaultValue(options.elements, []);
+        this._subwidgetNames = defaultValue(options.subwidgets, []);
+        this._elementNames = defaultValue(options.elements, []);
         this._boundData = defaultValue(options.boundData, []);
         this._triggers = [];
     };
 
-    Widget.prototype.getProperties = function() {
+    WidgetViewModel.prototype.getProperties = function() {
         return [this.name, this.x, this.y, this.height, this.width, this.visible, this.logGoogleAnalytics];
     };
 
-    /*TODO: Missing functions*/
+    WidgetViewModel.prototype.getState = function() {
+        return {};
+    };
 
-    return Widget;
+    WidgetViewModel.prototype.addElement = function(elementName) {
+        this._elementNames.push(elementName);
+    };
+
+    WidgetViewModel.prototype.removeElement = function(element) {
+    };
+
+    WidgetViewModel.prototype.addSubwidget = function(name) {
+        this._subwidgetnames.push(name);
+    };
+
+    WidgetViewModel.prototype.removeSubwidget = function(name) {
+    };
+
+    WidgetViewModel.prototype.getAvailableElements = function() {
+    };
+
+    WidgetViewModel.prototype.bindData = function(name) {
+        this._boundData.push(name);
+    };
+
+    WidgetViewModel.prototype.unbindData = function(name) {
+    };
+
+    return WidgetViewModel;
 });
