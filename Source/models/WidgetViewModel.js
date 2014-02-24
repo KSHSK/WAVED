@@ -103,9 +103,13 @@ define([
         this._triggers = [];
     };
 
-    WidgetViewModel.prototype.getProperties = function() {
-        return [this.name, this.x, this.y, this.width, this.height, this.visible, this.logGoogleAnalytics];
-    };
+    Object.defineProperties(WidgetViewModel.prototype, {
+        properties: {
+            get: function() {
+                return [this.name, this.x, this.y, this.width, this.height, this.visible, this.logGoogleAnalytics];
+            }
+        }
+    });
 
     WidgetViewModel.prototype.setState = function(){
         //TODO
