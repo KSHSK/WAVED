@@ -10,6 +10,7 @@ define([
         ButtonWidget,
         ko) {
     'use strict';
+
     var self;
 
     var WAVEDViewModel = function() {
@@ -38,7 +39,7 @@ define([
         ko.track(this);
     };
 
-    WAVEDViewModel.prototype.tryToCreateNewProject = function(){
+    WAVEDViewModel.prototype.tryToCreateNewProject = function() {
         return NewProject.tryToCreateNewProject(self);
     };
 
@@ -62,7 +63,7 @@ define([
                 return this._dirty;
             },
             set: function(value) {
-                if (typeof value === 'boolean'){
+                if (typeof value === 'boolean') {
                     this._dirty = value;
                 }
             }
@@ -102,7 +103,7 @@ define([
             get: function() {
                 return this._selectedWidget;
             },
-            set: function(value){
+            set: function(value) {
                 this._selectedWidget = value;
             }
         }

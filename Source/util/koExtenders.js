@@ -8,11 +8,11 @@ define(['knockout','util/defined'],function(ko, defined){
         var minLength = options.minLength;
         var maxLength = options.maxLength;
 
-        //add some sub-observables to our observable
+        // add some sub-observables to our observable
         target.hasError = ko.observable();
         target.message = ko.observable();
 
-        //define a function to do validation
+        // define a function to do validation
         function validate(newValue) {
             var hasError = false;
             var errorMessage = '';
@@ -26,7 +26,7 @@ define(['knockout','util/defined'],function(ko, defined){
             }
             if (defined(regex)) {
                 hasError = hasError || !(regex.test(newValue));
-                if (defined(message)){
+                if (defined(message)) {
                     errorMessage += '\n' + message;
                 }
             }
@@ -36,13 +36,13 @@ define(['knockout','util/defined'],function(ko, defined){
             target.message(errorMessage);
         }
 
-        //initial validation
+        // initial validation
         validate(target());
 
-        //validate whenever the value changes
+        // validate whenever the value changes
         target.subscribe(validate);
 
-        //return the original observable
+        // return the original observable
         return target;
     };
 

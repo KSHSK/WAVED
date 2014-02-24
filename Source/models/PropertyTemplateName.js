@@ -3,7 +3,7 @@ define([], function(){
     'use strict';
 
     var PropertyTemplateName = {
-        STRING : 'stringPropertyTemplate',
+        STRING: 'stringPropertyTemplate',
         NUMBER: 'numberPropertyTemplate',
         BOOLEAN: 'booleanPropertyTemplate',
         ARRAY: 'arrayPropertyTemplate',

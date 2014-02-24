@@ -25,7 +25,6 @@ define(['WAVEDViewModel',
         }
     });
 
-
     /* ### WAVED Definition ### */
     var WAVED = {
 

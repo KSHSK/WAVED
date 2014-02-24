@@ -20,7 +20,8 @@ define([
         this._options = state.options;
         if (defined(state.validValue)) {
             this.isValidValue = state.validValue;
-        } else {
+        }
+        else {
             this.isValidValue = function(value) {
                 if (defined(this._options)) {
                     return (this._options.indexOf(value) !== -1);

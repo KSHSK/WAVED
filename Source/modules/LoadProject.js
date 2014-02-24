@@ -13,7 +13,7 @@ define([
     'use strict';
 
     var LoadProject = {
-        /*TODO: validation*/
+        /* TODO: validation */
         loadProjectDialog: $('#load-project-dialog'),
         loadProjectSelect: $('#load-project-select'),
         loadProjectError: $('#load-project-error'),
@@ -117,7 +117,9 @@ define([
                         self.loadProjectError.text('');
 
                         // Set the project name.
-                        viewModel.currentProject = new ProjectViewModel({name: data.projectName});
+                        viewModel.currentProject = new ProjectViewModel({
+                            name: data.projectName
+                        });
                         viewModel.dirty = false;
                         projectLoaded.resolve();
                     }
