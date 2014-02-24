@@ -1,18 +1,20 @@
 /*global define*/
 define([
-        'models/ButtonWidget/ButtonWidgetViewModel',
+        'models/ButtonWidget/ButtonViewModel',
+        'models/ComponentTemplateName',
         'knockout',
         'jquery'
     ],function(
-        ButtonWidgetViewModel,
+        ButtonViewModel,
+        ComponentTemplateName,
         ko,
         $){
     'use strict';
 
-    var ButtonWidget = function(options) {
-        this._templateName = 'buttonWidgetTemplate';
+    var Button = function(options) {
+        this._templateName = ComponentTemplateName.BUTTON;
 
-        var viewModel = new ButtonWidgetViewModel(options);
+        var viewModel = new ButtonViewModel(options);
 
         var $workspace = $('#waved-workspace');
         var button = document.createElement('div');
@@ -24,5 +26,5 @@ define([
         ko.applyBindings(viewModel, button);
     };
 
-    return ButtonWidget;
+    return Button;
 });

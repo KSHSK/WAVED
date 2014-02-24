@@ -20,7 +20,6 @@
     require(['../ThirdParty/domReady!'], function(document) {
         setupUI();
         displayPage();
-        WAVED.start();
         WelcomeModule.openWelcomeDialog(WAVED.viewModel);
     });
 

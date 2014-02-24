@@ -2,12 +2,12 @@
 define([
         './modules/NewProject',
         './modules/LoadProject',
-        './models/ButtonWidget/ButtonWidget',
+        './models/ButtonWidget/Button',
         'knockout'
     ], function(
         NewProject,
         LoadProject,
-        ButtonWidget,
+        Button,
         ko) {
     'use strict';
 
@@ -32,8 +32,8 @@ define([
             }
         };
         this._availableWidgets = [{
-            name: 'Button Widget',
-            o: ButtonWidget
+            name: 'Button',
+            o: Button
         }];
 
         ko.track(this);
@@ -74,7 +74,7 @@ define([
             },
             set: function(value) {
                 this._projectList = value;
-                this._projectToLoad = value[0];
+                this.projectToLoad = value[0];
             }
         },
         projectToLoad: {
