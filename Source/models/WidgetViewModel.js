@@ -104,35 +104,44 @@ define([
     };
 
     WidgetViewModel.prototype.getProperties = function() {
-        return [this.name, this.x, this.y, this.height, this.width, this.visible, this.logGoogleAnalytics];
+        return [this.name, this.x, this.y, this.width, this.height, this.visible, this.logGoogleAnalytics];
+    };
+
+    WidgetViewModel.prototype.setState = function(){
+        //TODO
     };
 
     WidgetViewModel.prototype.getState = function() {
+        //TODO
         return {};
     };
 
     WidgetViewModel.prototype.addElement = function(elementName) {
-        this._elementNames.push(elementName);
+        //TODO
     };
 
     WidgetViewModel.prototype.removeElement = function(element) {
+        //TODO
     };
 
     WidgetViewModel.prototype.addSubwidget = function(name) {
-        this._subwidgetnames.push(name);
+        //TODO
     };
 
     WidgetViewModel.prototype.removeSubwidget = function(name) {
+        //TODO
     };
 
     WidgetViewModel.prototype.getAvailableElements = function() {
+        //TODO
     };
 
     WidgetViewModel.prototype.bindData = function(name) {
-        this._boundData.push(name);
+        //TODO
     };
 
     WidgetViewModel.prototype.unbindData = function(name) {
+        //TODO
     };
 
     return WidgetViewModel;

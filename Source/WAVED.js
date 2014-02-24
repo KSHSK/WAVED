@@ -8,8 +8,6 @@ define(['WAVEDViewModel',
         $) {
     'use strict';
 
-    var _container = document.body;
-    var _started = false;
     var viewModel = new WAVEDViewModel();
 
     // Confirm if the user wants to leave when they have unsaved changes.
@@ -27,14 +25,6 @@ define(['WAVEDViewModel',
 
     /* ### WAVED Definition ### */
     var WAVED = {
-
-        start: function() {
-            // Can only be called once.
-            if (_started === false) {
-                _started = true;
-            }
-        },
-
         viewModel: viewModel
     };
 

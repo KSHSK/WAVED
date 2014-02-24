@@ -13,9 +13,9 @@ define([
         ko) {
     'use strict';
 
-    var Project = function(options) {
+    var ProjectViewModel = function(options) {
         if (typeof options.name === undefined) {
-            throw new Error('Project name is required');
+            throw new Error('ProjectViewModel name is required');
         }
 
         this._name = options.name;
@@ -32,7 +32,7 @@ define([
         ko.track(this);
     };
 
-    Object.defineProperties(Project.prototype, {
+    Object.defineProperties(ProjectViewModel.prototype, {
         name: {
             get: function() {
                 return this._name;
@@ -76,11 +76,11 @@ define([
         }
     });
 
-    Project.prototype.addWidget = function(widget) {
+    ProjectViewModel.prototype.addWidget = function(widget) {
         this._widgets.push(widget);
     };
 
-    Project.prototype.removeWidget = function(widget) {
+    ProjectViewModel.prototype.removeWidget = function(widget) {
         if (widget !== this._workspace) {
             var index = this._widgets.indexOf(widget);
             if (index > -1) {
@@ -89,5 +89,49 @@ define([
         }
     };
 
-    return Project;
+    ProjectViewModel.prototype.getState = function(){
+        //TODO
+    };
+
+    ProjectViewModel.prototype.setState = function(state) {
+        //TODO
+    };
+
+    ProjectViewModel.prototype.addDataSet = function(data) {
+        //TODO
+    };
+
+    ProjectViewModel.prototype.addComponent = function(component) {
+        //TODO
+    };
+
+    ProjectViewModel.prototype.addEvent = function(event) {
+        //TODO
+    };
+
+    ProjectViewModel.prototype.addAction = function(action) {
+        //TODO
+    };
+
+    ProjectViewModel.prototype.removeDataSet = function(data) {
+        //TODO
+    };
+
+    ProjectViewModel.prototype.removeComponent = function(component) {
+        //TODO
+    };
+
+    ProjectViewModel.prototype.removeEvent = function(event) {
+        //TODO
+    };
+
+    ProjectViewModel.prototype.removeAction = function(action) {
+        //TODO
+    };
+
+    ProjectViewModel.prototype.refreshWorkspace = function() {
+        //TODO
+    };
+
+    return ProjectViewModel;
 });

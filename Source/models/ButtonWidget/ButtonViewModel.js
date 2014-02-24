@@ -11,7 +11,7 @@ define([
         ko){
     'use strict';
 
-    var ButtonWidgetViewModel = function(options) {
+    var ButtonViewModel = function(options) {
         options = (defined(options)) ? options : {};
         var hasHeight = defined(options.height);
         var hasWidth = defined(options.width);
@@ -38,16 +38,24 @@ define([
         ko.track(this);
     };
 
-    ButtonWidgetViewModel.prototype = Object.create(WidgetViewModel.prototype);
+    ButtonViewModel.prototype = Object.create(WidgetViewModel.prototype);
 
-    Object.defineProperties(ButtonWidgetViewModel.prototype, {
+    ButtonViewModel.prototype.getState = function() {
+        //TODO;
+    };
+
+    ButtonViewModel.prototype.setState = function(state) {
+        //TODO;
+    };
+
+    Object.defineProperties(ButtonViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.label, this.x, this.y, this.height, this.width, this.visible,
+                return [this.name, this.label, this.x, this.y, this.width, this.height, this.visible,
                 this.logGoogleAnalytics];
             }
         }
     });
 
-    return ButtonWidgetViewModel;
+    return ButtonViewModel;
 });
