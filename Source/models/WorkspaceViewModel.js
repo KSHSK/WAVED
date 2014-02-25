@@ -16,24 +16,37 @@ define([
             displayName: 'Name',
             value: 'Workspace'
         });
+
+        var widthOptions;
         if (defined(width)) {
-            this.width = width;
+            widthOptions = {
+                displayName: width.displayName,
+                value: width.value
+            };
         }
         else {
-            this.width = new NumberProperty({
+            widthOptions = {
                 displayName: 'Width',
                 value: 750
-            });
+            };
         }
+        this.width = new NumberProperty(widthOptions);
+
+        var heightOptions;
         if (defined(height)) {
-            this.height = height;
+            heightOptions = {
+                displayName: height.displayName,
+                value: height.value
+            };
         }
         else {
-            this.height = new NumberProperty({
+            heightOptions = {
                 displayName: 'Height',
                 value: 600
-            });
+            };
         }
+        this.height = new NumberProperty(heightOptions);
+
         ko.track(this);
     };
 
