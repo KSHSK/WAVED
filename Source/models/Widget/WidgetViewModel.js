@@ -18,7 +18,7 @@ define([
     var WidgetViewModel = function(options) {
         options = (defined(options)) ? options : {};
         if (defined(options.name)) {
-            this.name = options.name;
+            this.name = new StringProperty(options.name);
         }
         else {
             this.name = new StringProperty({
@@ -30,7 +30,7 @@ define([
             });
         }
         if (defined(options.height)) {
-            this.height = options.height;
+            this.height = new NumberProperty(options.height);
         }
         else {
             this.height = new NumberProperty({
@@ -42,7 +42,7 @@ define([
             });
         }
         if (defined(options.width)) {
-            this.width = options.width;
+            this.width = new NumberProperty(options.width);
         }
         else {
             this.width = new NumberProperty({
@@ -54,7 +54,7 @@ define([
             });
         }
         if (defined(options.x)) {
-            this.x = options.x;
+            this.x = new NumberProperty(options.x);
         }
         else {
             this.x = new NumberProperty({
@@ -66,7 +66,7 @@ define([
             });
         }
         if (defined(options.y)) {
-            this.y = options.y;
+            this.y = new NumberProperty(options.y);
         }
         else {
             this.y = new NumberProperty({
@@ -78,7 +78,7 @@ define([
             });
         }
         if (defined(options.visible)) {
-            this.visible = options.visible;
+            this.visible = new BooleanProperty(options.visible);
         }
         else {
             this.visible = new BooleanProperty({
@@ -87,7 +87,7 @@ define([
             });
         }
         if (defined(options.logGoogleAnalytics)) {
-            this.logGoogleAnalytics = options.logGoogleAnalytics;
+            this.logGoogleAnalytics = new BooleanProperty(options.logGoogleAnalytics);
         }
         else {
             this.logGoogleAnalytics = new BooleanProperty({

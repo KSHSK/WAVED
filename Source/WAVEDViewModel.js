@@ -2,7 +2,7 @@
 define([
         './modules/NewProject',
         './modules/LoadProject',
-        './models/ButtonWidget/Button',
+        './models/Widget/ButtonWidget/Button',
         'knockout'
     ], function(
         NewProject,
