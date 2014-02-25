@@ -2,7 +2,7 @@
 /**
  * A module for handling unsaved changes.
  */
-define(['angular', 'WAVED', 'jquery'], function(angular, WAVED, $) {
+define(['jquery'], function($) {
     'use strict';
 
     var UnsavedChangesModule = {
@@ -35,19 +35,6 @@ define(['angular', 'WAVED', 'jquery'], function(angular, WAVED, $) {
 
         }
     };
-
-    // Confirm if the user wants to leave when they have unsaved changes.
-    $(window).on('beforeunload', function(event) {
-        if (WAVED.isDirty()) {
-            var message = 'You have unsaved changes.';
-
-            // IE/Firefox
-            event.returnValue = message;
-
-            // Webkit browsers.
-            return message;
-        }
-    });
 
     return UnsavedChangesModule;
 });
