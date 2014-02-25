@@ -2,7 +2,7 @@
 define([
         './Property',
         'util/defined',
-        '../PropertyTemplateName',
+        'models/Constants/PropertyTemplateName',
         'knockout'
     ],function(
         Property,
