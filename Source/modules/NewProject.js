@@ -26,7 +26,7 @@ define([
             var self = this;
             var projectClean = $.Deferred();
 
-            if (viewModel.dirty) {
+            if (viewModel.dirty === true) {
                 UnsavedChangesModule.handleUnsavedChanges(projectClean);
             }
             else {

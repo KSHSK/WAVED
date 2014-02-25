@@ -14,7 +14,7 @@ define([
     'use strict';
 
     var ProjectViewModel = function(options) {
-        if (typeof options.name === undefined) {
+        if (typeof options.name === 'undefined') {
             throw new Error('ProjectViewModel name is required');
         }
 
