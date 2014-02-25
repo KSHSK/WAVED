@@ -7,23 +7,25 @@
     <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
     
     <!-- CSS -->
-    <link rel="stylesheet" href="ThirdParty/jquery-ui-1.10.4.custom/css/waved-theme/jquery-ui-1.10.4.custom.min.css">
+    <link rel="stylesheet" href="ThirdParty/jquery/css/waved-theme/jquery-ui-1.10.4.custom.min.css">
     <link rel="stylesheet" type="text/css" href="CSS/WAVED.css">
     
     <!-- JavaScript-->
     <!-- <script src="ThirdParty/d3/d3.v3.min.js" type="text/javascript" type="text/javascript"/> -->
-    <script data-main="Source/main" src="Source/require.js"></script>
+    <script data-main="Source/main" src="ThirdParty/requirejs/require.js"></script>
 </head>
-<body data-ng-controller="WAVEDCtrl">
+<body>
     <div id="mainSection" class="hide-on-load">
         <div id="header-container">
                 <div class="inline bottom" id="header-logo-container">
-                    <a href="http://kshsk.github.io/WAVED/" target="_blank"><img id="header-logo" src="images/logo/WAVED_HighRes_Color_NoText.png" ondragstart="return false;" /></a>
+                    <a href="http://kshsk.github.io/WAVED/" target="_blank">
+                        <img id="header-logo" src="images/logo/WAVED_HighRes_Color_NoText.png" ondragstart="return false;" />
+                    </a>
                 </div>
                 <div class="inline bottom">
-                    <div class="menu-text" id="project-name" data-ng-bind="projectName"></div>
-                    <button class="inline" id="new-button" data-ng-click="tryToCreateNewProject();">New</button>
-                    <button class="inline" id="load-button" data-ng-click="tryToLoadProject();">Load</button>
+                    <div class="menu-text" id="project-name" data-bind="text: currentProject.name"></div>
+                    <button class="inline" id="new-button" data-bind="click: tryToCreateNewProject">New</button>
+                    <button class="inline" id="load-button" data-bind="click: tryToLoadProject">Load</button>
 
                     <button class="inline" id="undo-button">Undo</button>
                     <button class="inline" id="redo-button">Redo</button>
@@ -34,12 +36,11 @@
                     <span class="menu-text">Select: </span>
                     <select class="inline" 
                             id="widget-select" 
-                            data-ng-model="selectedWidget"
-                            data-ng-options="widget.name for widget in widgets"
-                            data-ng-change="selectedWidgetChanged()">
-                            <option value="">-- Select widget --</option>        
+                            data-bind="options: currentProject.widgets, 
+                                optionsText: function(item) {
+                                   return item.viewModel.name.value;
+                                }, value: selectedWidget">
                     </select>
-                    
                     <button class="inline" id="refresh-button">Refresh</button>
                 </div>                
         </div>
@@ -51,8 +52,7 @@
                     // Project Tree
                 </div>
                 <h3>Widgets</h3>
-                <div>
-                    // Widget list
+                <div id="widgets-panel">
                 </div>
                 <h3>Data</h3>
                 <div>
@@ -108,8 +108,7 @@
                     </div>
                 </div>
                 <h3>Properties</h3>
-                <div>
-                    // Properties
+                <div id="properties-panel">
                 </div>
                 <h3>Google Analytics</h3>
                 <div>
@@ -148,7 +147,7 @@
         </div>
         
         <div id="workspace-container" class="inline top">
-            <div id="waved-workspace">
+            <div id="waved-workspace" data-bind="style: {height: currentProject.workspace.height.value + 'px', width: currentProject.workspace.width.value + 'px'}">
             </div>
         </div>
         
@@ -162,12 +161,7 @@
     <div id="create-new-project-dialog" title="New Project" class="dialog">
         <p>Please create a new project</p>
         <label class="required" for="create-new-project-name">Project Name: </label>
-        <input id="create-new-project-name" type="text" class="validate"
-            data-min-length="1"
-            data-max-length="50" 
-            data-match="^[a-zA-Z0-9_\- ]+$"
-            data-match-desc="Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces." />
-        <div class="error"></div>
+        <input id="create-new-project-name" type="text"/>
         <p id="create-new-project-error" class="error"></p>
     </div>
     
@@ -175,10 +169,9 @@
         <p>Please select an existing project to load.</p>
         <label class="required" for="load-project-select">Project Name: </label>
         <select id="load-project-select"
-            data-ng-model="selectedProjectToLoad"
-            data-ng-options="project for project in projectList">
+            data-bind="options: projectList, value: projectToLoad">
         </select>
-        <button id="load-project-refresh-list" class="button-small" data-ng-click="updateProjectList();">Refresh List</button>
+        <button id="load-project-refresh-list" class="button-small" data-bind="click: updateProjectList">Refresh List</button>
         <p id="load-project-error" class="error"></p>
     </div>
     
@@ -189,5 +182,35 @@
     <div id="error-dialog" title="" class="dialog">
         <p id="error-dialog-message"></p>
     </div>
+    
+    <script type="text/html" id="stringPropertyTemplate">
+        <div>
+            <span data-bind="text:displayName"></span>
+            <input type="text" data-bind="value:value"></input>
+        </div>
+    </script>
+    <script type="text/html" id="numberPropertyTemplate">
+        <div>
+            <span data-bind="text:displayName"></span>
+            <input type="text" data-bind="value:value"></input>
+        </div>
+    </script>
+    <script type="text/html" id="arrayPropertyTemplate">
+        <div>
+            <span data-bind="text:displayName"></span>
+            <input type="text" data-bind="value:value"></input>
+        </div>
+    </script>
+    <script type="text/html" id="booleanPropertyTemplate">
+        <div>
+            <input type="checkbox" data-bind="checked:value"></input>
+            <span data-bind="text:displayName"></span>
+        </div>
+    </script>
+    <script type="text/html" id="buttonTemplate">
+        <button class="widget" data-bind="text:label.value, 
+            style:{left: x.value + '%', top: y.value+'%', height: height.value + '%', width: width.value + '%'},
+            visible: visible.value" style="position: relative"></buttton>
+    </script>
 </body>
 </html> 
