@@ -16,19 +16,27 @@ define([
         var hasHeight = defined(options.height);
         var hasWidth = defined(options.width);
         WidgetViewModel.call(this, options);
+
+        var labelOptions;
         if (defined(options.label)) {
-            this.label = new StringProperty(options.label);
+            labelOptions = {
+                displayName: options.label.displayName,
+                value: options.label.value
+            };
         }
         else {
             var displayName = 'Label';
-            this.label = new StringProperty({
+            labelOptions = {
                 displayName: displayName,
-                value: '',
-                isValidValue: function(value) {
-                    return value.length > 0 && value.length < 50;
-                }
-            });
+                value: ''
+            };
         }
+        labelOptions.isValidValue = function(value) {
+            return value.length > 0 && value.length < 50;
+        };
+
+        this.label = new StringProperty(labelOptions);
+
         if (!hasHeight) {
             this.height.value = 5;
         }
