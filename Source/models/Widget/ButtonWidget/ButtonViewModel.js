@@ -1,6 +1,6 @@
 /*global define*/
 define([
-        'models/WidgetViewModel',
+        'models/Widget/WidgetViewModel',
         'models/Property/StringProperty',
         'util/defined',
         'knockout'
@@ -17,7 +17,7 @@ define([
         var hasWidth = defined(options.width);
         WidgetViewModel.call(this, options);
         if (defined(options.label)) {
-            this.label = options.label;
+            this.label = new StringProperty(options.label);
         }
         else {
             var displayName = 'Label';
