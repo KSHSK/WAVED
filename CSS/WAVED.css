@@ -116,4 +116,9 @@ html, body {
     height: inherit;
     width: inherit;
     position: absolute;
+    pointer-events: none;
+}
+
+.widget {
+    pointer-events:auto;
 }
