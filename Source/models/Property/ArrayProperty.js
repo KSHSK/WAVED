@@ -3,7 +3,7 @@ define([
         './Property',
         'util/defined',
         'util/defaultValue',
-        '../PropertyTemplateName',
+        'models/Constants/PropertyTemplateName',
         'knockout'
     ],function(
         Property,
