@@ -9,7 +9,7 @@ define([
         ko){
     'use strict';
 
-    var GraphViewModel = function(state) {
+    var TextBlockViewModel = function(state) {
         state = (defined(state)) ? state : {};
 
         WidgetViewModel.call(this, state);
@@ -17,17 +17,17 @@ define([
         ko.track(this);
     };
 
-    GraphViewModel.prototype = Object.create(WidgetViewModel.prototype);
+    TextBlockViewModel.prototype = Object.create(WidgetViewModel.prototype);
 
-    GraphViewModel.prototype.getState = function() {
+    TextBlockViewModel.prototype.getState = function() {
         //TODO;
     };
 
-    GraphViewModel.prototype.setState = function(state) {
+    TextBlockViewModel.prototype.setState = function(state) {
         //TODO;
     };
 
-    Object.defineProperties(GraphViewModel.prototype, {
+    Object.defineProperties(TextBlockViewModel.prototype, {
         properties: {
             get: function() {
                 return [ /* TODO */ ];
@@ -35,5 +35,5 @@ define([
         }
     });
 
-    return GraphViewModel;
+    return TextBlockViewModel;
 });

@@ -11,10 +11,10 @@ define([
         $){
     'use strict';
 
-    var LineGraph = function(options) {
+    var LineGraph = function(state) {
         this._templateName = ComponentTemplateName.LINE_GRAPH;
 
-        var viewModel = new LineGraphViewModel(options);
+        var viewModel = new LineGraphViewModel(state);
 
         var $workspace = $('#waved-workspace');
         var lineGraph = document.createElement('div');
