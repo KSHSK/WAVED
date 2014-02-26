@@ -51,9 +51,10 @@ define([
         return LoadProject.updateProjectList(self);
     };
 
+    // TODO: Component
     WAVEDViewModel.prototype.addNewWidget = function(w) {
         var widget = new w.o();
-        self._currentProject.addWidget(widget);
+        self._currentProject.addComponent(widget);
         self._selectedWidget = widget;
     };
 

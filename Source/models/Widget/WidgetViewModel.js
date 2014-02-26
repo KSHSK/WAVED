@@ -18,24 +18,7 @@ define([
     'use strict';
 
     var WidgetViewModel = function(state) {
-        state = (defined(state)) ? state : {};
-        var nameOptions;
-        if (defined(state.name)) {
-            nameOptions = {
-                displayName: state.name.displayName,
-                value: state.name.value
-            };
-        }
-        else {
-            nameOptions = {
-                displayName: 'Name',
-                value: ''
-            };
-        }
-        nameOptions.isValidValue = function(value) {
-            return value.match(new RegExp('^[a-zA-Z0-9_\\- ]+$')) && value.length > 0 && value.length < 51;
-        };
-        this._name = new StringProperty(nameOptions);
+        ComponentViewModel.call(this, state);
 
         var heightOptions;
         if (defined(state.height)) {
@@ -109,41 +92,11 @@ define([
         };
         this.y = new NumberProperty(yOptions);
 
-        var visibleOptions;
-        if (defined(state.visible)) {
-            visibleOptions = {
-                displayName: state.visible.displayName,
-                value: state.visible.value
-            };
-        }
-        else {
-            visibleOptions = {
-                displayName: 'Visible',
-                value: true
-            };
-        }
-        this.visible = new BooleanProperty(visibleOptions);
-
-        var gaOptions;
-        if (defined(state.logGoogleAnalytics)) {
-            gaOptions = {
-                displayName: state.logGoogleAnalytics.displayName,
-                value: state.logGoogleAnalytics.value
-            };
-        }
-        else {
-            gaOptions = {
-                displayName: 'Log Google Analytics',
-                value: false
-            };
-        }
-        this.logGoogleAnalytics = new BooleanProperty(gaOptions);
-
-        this._parentWidgetName = defaultValue(state.parent, undefined);
+        // TODO: These things for real
         this._subwidgetNames = defaultValue(state.subwidgets, []);
         this._elementNames = defaultValue(state.elements, []);
         this._boundData = defaultValue(state.boundData, []);
-        this._triggers = [];
+        this._availableElements = []; // ComponentRecord[]
     };
 
     Object.defineProperties(WidgetViewModel.prototype, {

@@ -15,10 +15,12 @@ define([
 
     // TODO: The constructor takes in (Object state) in the DD
     var WorkspaceViewModel = function(width, height) {
-        this._name = new StringProperty({
+
+        this.name = new StringProperty({
             displayName: 'Name',
             value: 'Workspace'
         });
+
 
         var widthOptions;
         if (defined(width)) {
@@ -53,7 +55,7 @@ define([
         ko.track(this);
     };
 
-    WorkspaceViewModel.prototype = Object.create(SuperComponentViewModel.prototype);
+    //WorkspaceViewModel.prototype = Object.create(SuperComponentViewModel.prototype);
 
     // TODO: In the DD, add getProperties() and getViewModel() to be consistent here
     Object.defineProperties(WorkspaceViewModel.prototype, {
