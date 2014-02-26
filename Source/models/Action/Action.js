@@ -12,12 +12,8 @@ define(['knockout',
 
         // TODO: Validation, etc
         this._name = state.name; // String
-        this._target = state.target; // TODO: Get the actual target
+        this._target = state.target; // Any TODO: Get the actual target
         this._applyAutmatically = state.applyAutomatically; // Boolean
-
-       var apply = function() {
-
-       };
 
         ko.track(this);
     };
@@ -30,8 +26,29 @@ define(['knockout',
             set: function(value) {
                 this._name = value;
             }
+        },
+        // TODO: These not in the DD, should be required
+        target: {
+            get: function() {
+                return this._target;
+            },
+            set: function(target) {
+                this._target = target;
+            }
+        },
+        applyAutomatically: {
+            get: function() {
+                return this._applyAutomatically;
+            },
+            set: function(value) {
+                this._applyAutomatically = value;
+            }
         }
     });
+
+    Action.prototype.apply = function() {
+        // TODO
+    };
 
     return Action;
 });

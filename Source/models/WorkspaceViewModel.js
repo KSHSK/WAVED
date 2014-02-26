@@ -13,8 +13,9 @@ define([
         ko){
     'use strict';
 
+    // TODO: The constructor takes in (Object state) in the DD
     var WorkspaceViewModel = function(width, height) {
-        this.name = new StringProperty({
+        this._name = new StringProperty({
             displayName: 'Name',
             value: 'Workspace'
         });
@@ -54,6 +55,7 @@ define([
 
     WorkspaceViewModel.prototype = Object.create(SuperComponentViewModel.prototype);
 
+    // TODO: In the DD, add getProperties() and getViewModel() to be consistent here
     Object.defineProperties(WorkspaceViewModel.prototype, {
         viewModel: {
             get: function() {

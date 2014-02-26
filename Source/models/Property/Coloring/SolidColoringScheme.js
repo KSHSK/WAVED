@@ -11,6 +11,8 @@ define([
 
     var SolidColoringScheme = function(state) {
 
+        // TODO: Validation, etc
+        this.color = state.color; // StringProperty
     };
 
     return SolidColoringScheme;

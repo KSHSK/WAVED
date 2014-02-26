@@ -79,15 +79,16 @@ define([
         }
     });
 
+    // TODO: Update this to make it more generic to Components, temporarily just using this._components in the methods
     ProjectViewModel.prototype.addWidget = function(widget) {
-        this._widgets.push(widget);
+        this._components.push(widget);
     };
 
     ProjectViewModel.prototype.removeWidget = function(widget) {
         if (widget !== this._workspace) {
-            var index = this._widgets.indexOf(widget);
+            var index = this._components.indexOf(widget);
             if (index > -1) {
-                this._widgets.splice(index, 1);
+                this._components.splice(index, 1);
             }
         }
     };

@@ -18,8 +18,8 @@ define([
         state = defined(state) ? state : {};
 
         // TODO: Validation, settings defaults, etc.
-        this._value = state.value;
-        this._coloringType = state.coloringType;
+        this.value = state.value; // ColoringScheme
+        this._coloringType = state.coloringType; // ArrayProperty
 
         this._templateName = PropertyTemplateName.COLORING;
 
@@ -40,10 +40,10 @@ define([
         },
         value: {
             get: function() {
-                return this._value;
+                return this.value;
             },
             set: function(value) {
-                this._value = value;
+                this.value = value;
             }
         }
     });

@@ -36,6 +36,9 @@ define([
         sizeType: {
             get: function() {
                 return this._sizeType;
+            },
+            set: function(value) {
+                this._sizeType = value;
             }
         },
         value: {

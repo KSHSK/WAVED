@@ -14,7 +14,7 @@ define([
         state = (defined(state)) ? state : {};
 
         // TODO: Validation, etc
-        this._coloring = undefined; // ColoringSelectionProperty
+        this.coloring = undefined; // ColoringSelectionProperty
 
         WidgetViewModel.call(this, state);
 
@@ -34,7 +34,8 @@ define([
     Object.defineProperties(USMapViewModel.prototype, {
         properties: {
             get: function() {
-                return [ /* TODO */ ];
+                return [ this._parentWidgetName, this._name, this.x, this.y, this.width,
+                         this.height, this.visible, this.logGoogleAnalytics, this.coloring ];
             }
         }
     });

@@ -53,7 +53,7 @@ define([
         heightOptions.isValidValue = function(value) {
             return value >= 0 && value <= 100;
         };
-        this._height = new NumberProperty(heightOptions);
+        this.height = new NumberProperty(heightOptions);
 
         var widthOptions;
         if (defined(state.width)) {
@@ -71,7 +71,7 @@ define([
         widthOptions.isValidValue = function(value) {
             return value >= 0 && value <= 100;
         };
-        this._width = new NumberProperty(widthOptions);
+        this.width = new NumberProperty(widthOptions);
 
         var xOptions;
         if (defined(state.x)) {
@@ -89,7 +89,7 @@ define([
         xOptions.isValidValue = function(value) {
             return value >= 0 && value <= 100;
         };
-        this._x = new NumberProperty(xOptions);
+        this.x = new NumberProperty(xOptions);
 
         var yOptions;
         if (defined(state.y)) {
@@ -107,7 +107,7 @@ define([
         yOptions.isValidValue = function(value) {
             return value >= 0 && value <= 100;
         };
-        this._y = new NumberProperty(yOptions);
+        this.y = new NumberProperty(yOptions);
 
         var visibleOptions;
         if (defined(state.visible)) {
@@ -122,7 +122,7 @@ define([
                 value: true
             };
         }
-        this._visible = new BooleanProperty(visibleOptions);
+        this.visible = new BooleanProperty(visibleOptions);
 
         var gaOptions;
         if (defined(state.logGoogleAnalytics)) {
@@ -137,9 +137,9 @@ define([
                 value: false
             };
         }
-        this._logGoogleAnalytics = new BooleanProperty(gaOptions);
+        this.logGoogleAnalytics = new BooleanProperty(gaOptions);
 
-        this._parent = defaultValue(state.parent, undefined);
+        this._parentWidgetName = defaultValue(state.parent, undefined);
         this._subwidgetNames = defaultValue(state.subwidgets, []);
         this._elementNames = defaultValue(state.elements, []);
         this._boundData = defaultValue(state.boundData, []);
@@ -149,7 +149,7 @@ define([
     Object.defineProperties(WidgetViewModel.prototype, {
         properties: {
             get: function() {
-                return [this._name, this._x, this._y, this._width, this._height, this._visible, this._logGoogleAnalytics];
+                return [this._name, this.x, this.y, this.width, this.height, this.visible, this.logGoogleAnalytics];
             }
         }
     });

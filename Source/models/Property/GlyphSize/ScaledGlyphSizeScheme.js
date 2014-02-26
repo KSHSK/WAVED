@@ -12,8 +12,8 @@ define([
     var ScaledGlyphSizeScheme = function(state) {
 
         // TODO: Validation, etc
-        this._dataSet = state.dataSet; // ArrayProperty
-        this._dataField = state.dataField; // ArrayProperty
+        this.dataSet = state.dataSet; // ArrayProperty
+        this.dataField = state.dataField; // ArrayProperty
     };
 
     return ScaledGlyphSizeScheme;

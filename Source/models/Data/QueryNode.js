@@ -11,9 +11,9 @@ define(['knockout',
         state = defined(state) ? state : {};
 
         // TODO: Get these for real, validate, etc.
-        this._value = state.value; // QueryNodeValue
-        this._left = state.left; // QueryNode
-        this._right = state.right; // QueryNode
+        this.value = state.value; // QueryNodeValue
+        this.left = state.left; // QueryNode
+        this.right = state.right; // QueryNode
 
     };
 

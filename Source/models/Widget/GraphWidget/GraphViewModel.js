@@ -17,12 +17,12 @@ define([
         state = (defined(state)) ? state : {};
 
         // TODO: Validation, etc
-        this._title = state.title; // StringProperty
-        this._dataSet = state.dataSet; // ArrayProperty
-        this._xAxisLabel = state.xAxisLabel; // StringProperty
-        this._yAxisLabel = state.yAxisLabel; // StringProperty
-        this._xAxisDataField = state.xAxisDataField; // ArrayProperty
-        this._yAxisDataField = state.yAxisDataField; // ArrayProperty
+        this.title = state.title; // StringProperty
+        this.dataSet = state.dataSet; // ArrayProperty
+        this.xAxisLabel = state.xAxisLabel; // StringProperty
+        this.yAxisLabel = state.yAxisLabel; // StringProperty
+        this.xAxisDataField = state.xAxisDataField; // ArrayProperty
+        this.yAxisDataField = state.yAxisDataField; // ArrayProperty
 
         WidgetViewModel.call(this, state);
 
@@ -34,7 +34,8 @@ define([
     Object.defineProperties(GraphViewModel.prototype, {
         properties: {
             get: function() {
-                return [ this._title, this._dataSet, this._xAxisLabel, this._yAxisLabel, this._xAxisDataField, this._yAxisDataField ];
+                return [ this._parentWidgetName, this._name, this.x, this.y, this.width, this.height, this.visible, this.logGoogleAnalytics,
+                         this.title, this.dataSet, this.xAxisLabel, this.yAxisLabel, this.xAxisDataField, this.yAxisDataField ];
             }
         }
     });

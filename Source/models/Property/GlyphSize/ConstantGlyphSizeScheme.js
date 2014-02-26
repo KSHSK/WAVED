@@ -12,7 +12,7 @@ define([
     var ConstantGlyphSizeScheme = function(state) {
 
         // TODO: Validation, etc
-        this._size = state.size; // NumberProperty
+        this.size = state.size; // NumberProperty
     };
 
     return ConstantGlyphSizeScheme;
