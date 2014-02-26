@@ -3,9 +3,9 @@ define([], function(){
     'use strict';
 
     var ColoringSchemeType = {
-        SOLID_COLORING: 'solidColoringSchemeType',
-        FOUR_COLORING: 'fourColoringSchemeType',
-        GRADIENT_COLORING: 'gradientColoringSchemeType'
+        SOLID_COLORING: 'Solid coloring',
+        FOUR_COLORING: 'Four coloring',
+        GRADIENT_COLORING: 'Gradient coloring'
     };
 
     return ColoringSchemeType;
