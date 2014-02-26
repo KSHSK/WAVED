@@ -1,5 +1,6 @@
 /*global define*/
 define([
+        'models/Property/Coloring/ColoringSelectionProperty',
         'models/Widget/WidgetViewModel',
         'util/defined',
         'knockout'
@@ -11,6 +12,9 @@ define([
 
     var USMapViewModel = function(state) {
         state = (defined(state)) ? state : {};
+
+        // TODO: Validation, etc
+        this._coloring = undefined; // ColoringSelectionProperty
 
         WidgetViewModel.call(this, state);
 

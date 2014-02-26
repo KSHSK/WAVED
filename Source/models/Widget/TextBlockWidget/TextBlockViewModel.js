@@ -12,6 +12,9 @@ define([
     var TextBlockViewModel = function(state) {
         state = (defined(state)) ? state : {};
 
+        // TODO: Validation, etc
+        this._text = state.text; // StringProperty
+
         WidgetViewModel.call(this, state);
 
         ko.track(this);
@@ -30,7 +33,7 @@ define([
     Object.defineProperties(TextBlockViewModel.prototype, {
         properties: {
             get: function() {
-                return [ /* TODO */ ];
+                return [ this._text ];
             }
         }
     });

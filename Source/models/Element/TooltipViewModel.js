@@ -11,15 +11,15 @@ define([
         ko){
     'use strict';
 
-    var TooltipViewModel = function(options) {
-        options = (defined(options)) ? options : {};
-        var hasText = defined(options.text);
+    var TooltipViewModel = function(state) {
+        state = (defined(state)) ? state : {};
+        var hasText = defined(state.text);
 
         var textOptions;
-        if (defined(options.text)) {
+        if (defined(state.text)) {
             textOptions = {
-                displayName: options.text.displayName,
-                value: options.text.value
+                displayName: state.text.displayName,
+                value: state.text.value
             };
         }
         else {
@@ -35,7 +35,7 @@ define([
 
         this.text = new StringProperty(textOptions);
 
-        ElementViewModel.call(this, options);
+        ElementViewModel.call(this, state);
 
         ko.track(this);
     };
@@ -53,7 +53,7 @@ define([
     Object.defineProperties(TooltipViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.text];
+                return [ this.text ];
             }
         }
     });

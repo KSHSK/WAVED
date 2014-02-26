@@ -1,10 +1,12 @@
 /*global define*/
 define([
+        'models/SuperComponentViewModel',
         'models/Property/StringProperty',
         'models/Property/NumberProperty',
         'util/defined',
         'knockout'
     ], function(
+        SuperComponentViewModel,
         StringProperty,
         NumberProperty,
         defined,
@@ -49,6 +51,8 @@ define([
 
         ko.track(this);
     };
+
+    WorkspaceViewModel.prototype = Object.create(SuperComponentViewModel.prototype);
 
     Object.defineProperties(WorkspaceViewModel.prototype, {
         viewModel: {

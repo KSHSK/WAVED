@@ -35,14 +35,21 @@ define([
             return value.length > 0 && value.length < 50;
         };
 
-        this.label = new StringProperty(labelOptions);
+        this._label = new StringProperty(labelOptions);
 
         if (!hasHeight) {
-            this.height.value = 5;
+            this._height.value = 5;
+        }
+        else{
+            this._height = state.height;
         }
         if (!hasWidth) {
-            this.width.value = 10;
+            this._width.value = 10;
         }
+        else{
+            this._width = state.width;
+        }
+
         ko.track(this);
     };
 
@@ -59,8 +66,8 @@ define([
     Object.defineProperties(ButtonViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.label, this.x, this.y, this.width, this.height, this.visible,
-                this.logGoogleAnalytics];
+                return [this._name, this._label, this._x, this._y, this._width, this._height, this._visible,
+                this._logGoogleAnalytics];
             }
         }
     });
