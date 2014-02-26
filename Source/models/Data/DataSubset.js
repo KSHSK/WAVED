@@ -15,7 +15,7 @@ define([
     var DataSubset = function(state) {
         state = defined(state) ? state : {};
 
-        // TODO:
+        // TODO: Validation, etc
         this._queryNode = state.queryNode; // QueryNode
 
         ko.track(this);

@@ -25,6 +25,14 @@ define(['knockout',
         ko.track(this);
     };
 
+    DataSet.prototype.incrementReferenceCount = function() {
+        // TODO
+    };
+
+    DataSet.prototype.decrementReferenceCount = function() {
+        // TODO
+    };
+
     Object.defineProperties(DataSet.prototype, {
         name: {
             get: function() {
