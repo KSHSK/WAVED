@@ -1,11 +1,11 @@
 /*global define*/
 define([
+        'models/Property/StringProperty',
         'jquery',
         'knockout'
     ], function(
+        StringProperty,
         $,
-        defined,
-        defaultValue,
         ko) {
     'use strict';
 
@@ -14,18 +14,23 @@ define([
             throw new Error('SuperComponentViewModel name is required');
         }
 
-        this._name = state.name;
+        this._name = state.name; // StringProperty
 
         ko.track(this);
     };
 
     Object.defineProperties(SuperComponentViewModel.prototype, {
+        properties: {
+            get: function() {
+                return [this._name];
+            }
+        },
         name: {
             get: function() {
                 return this._name;
             },
             set: function(value) {
-                this._name = value;
+                this._name = value; // TODO: Validation
             }
         }
     });
@@ -37,18 +42,6 @@ define([
     SuperComponentViewModel.prototype.setState = function(state) {
         //TODO
     };
-
-    SuperComponentViewModel.prototype.getName = function() {
-        // TODO
-    };
-
-    Object.defineProperties(SuperComponentViewModel.prototype, {
-        properties: {
-            get: function() {
-                return [this._name];
-            }
-        }
-    });
 
     return SuperComponentViewModel;
 });

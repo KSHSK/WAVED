@@ -13,11 +13,12 @@ define([
 
     var ComponentViewModel = function(state) {
         if (typeof state.name === 'undefined') {
-            throw new Error('SuperComponentViewModel name is required');
+            throw new Error('ComponentViewModel name is required');
         }
 
-        this._visible = state.visible; // BooleanProperty
-        this._logGoogleAnalytics = state.logGoogleAnalytics; // BooleanProperty
+        // TODO: Validation, creation of actual Property objects, etc
+        this.visible = state.visible; // BooleanProperty
+        this.logGoogleAnalytics = state.logGoogleAnalytics; // BooleanProperty
         this._parentWidgetName = state.parentWidgetName; // String
         this._triggers = []; // Trigger[]
 
@@ -38,10 +39,24 @@ define([
         // TODO
     };
 
-    Object.defineProperties(SuperComponentViewModel.prototype, {
+    Object.defineProperties(ComponentViewModel.prototype, {
         properties: {
             get: function() {
-                return [this._name];
+                return [this._name, this.visible, this.logGoogleAnalytics, this._parentWidgetName];
+            }
+        },
+        triggers: {
+            get: function() {
+                return this._triggers;
+            }
+        },
+        // TODO: Add setter to DD, necessary since parentWidgetName is private and no one else has a setter
+        parentWidgetName: {
+            get: function() {
+                return this._parentWidgetName;
+            },
+            set: function(value){
+                this._parentWidgetName = value;
             }
         }
     });

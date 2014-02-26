@@ -13,7 +13,7 @@ define([
         state = (defined(state)) ? state : {};
 
         // TODO: Validation, etc
-        this._text = state.text; // StringProperty
+        this.text = state.text; // StringProperty
 
         WidgetViewModel.call(this, state);
 
@@ -33,7 +33,7 @@ define([
     Object.defineProperties(TextBlockViewModel.prototype, {
         properties: {
             get: function() {
-                return [ this._text ];
+                return [ this.text ];
             }
         }
     });

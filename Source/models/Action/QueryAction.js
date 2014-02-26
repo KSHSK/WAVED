@@ -18,8 +18,9 @@ define([
         state = defined(state) ? state : {};
 
         // TODO: Validation, etc
-        this._target = state.target; // DataSubset
-        this._newValues = state.newValues; // Object
+        // TODO: target visibility conflicts with Action _target visibility, issue?
+        this.target = state.target; // DataSubset
+        this.newValues = state.newValues; // QueryNode
 
         ko.track(this);
     };

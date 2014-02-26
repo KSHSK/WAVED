@@ -1,9 +1,11 @@
 /*global define*/
 define([
+        'models/ComponentViewModel',
         'jquery',
         'util/defined',
         'util/defaultValue'
     ], function(
+        ComponentViewModel,
         $,
         defined,
         defaultValue) {
@@ -13,13 +15,16 @@ define([
         // TODO
     };
 
+    // TODO: DD doesn't have this, but probably a good idea anyway?
     Object.defineProperties(ElementViewModel.prototype, {
         properties: {
             get: function() {
-                return [ /* TODO */ ];
+                return [ this._name, this.visible, this.logGoogleAnalytics, this._parentWidgetName ];
             }
         }
     });
+
+    ElementViewModel.prototype = Object.create(ComponentViewModel.prototype);
 
     return ElementViewModel;
 });

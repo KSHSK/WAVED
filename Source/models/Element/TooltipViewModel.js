@@ -53,7 +53,7 @@ define([
     Object.defineProperties(TooltipViewModel.prototype, {
         properties: {
             get: function() {
-                return [ this.text ];
+                return [ this._name, this.visible, this.logGoogleAnalytics, this._parentWidgetName, this.text ];
             }
         }
     });

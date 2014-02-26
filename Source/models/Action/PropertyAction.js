@@ -16,9 +16,10 @@ define([
         state = defined(state) ? state : {};
 
         // TODO: Validation, etc
-        this._target = state.target; // QueryNode
-        this._dataSet = state.dataSet; // DataSet
-        this._newValues = state.newValues; // Object
+        // TODO: target visibility conflicts with Action _target visibility, issue?
+        this.target = state.target; // String
+        this.dataSet = state.dataSet; // DataSet
+        this.newValues = state.newValues; // Object
 
         ko.track(this);
     };

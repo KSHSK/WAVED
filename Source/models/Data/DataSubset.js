@@ -16,7 +16,7 @@ define([
         state = defined(state) ? state : {};
 
         // TODO: Validation, etc
-        this._queryNode = state.queryNode; // QueryNode
+        this._query = state.query; // QueryNode
 
         ko.track(this);
     };
@@ -29,9 +29,12 @@ define([
                 return this._data;
             }
         },
-        queryNode: {
+        query: {
             get: function() {
-                return this._queryNode;
+                return this._query;
+            },
+            set: function(query) {
+                this._query = query;
             }
         }
     });

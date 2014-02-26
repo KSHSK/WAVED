@@ -19,12 +19,12 @@ define([
         state = (defined(state)) ? state : {};
 
         // TODO: Set these from options
-        this.dataSet = undefined;
-        this.color = undefined;
-        this.shape = undefined;
-        this.size = undefined;
-        this.latitude = undefined;
-        this.longitude = undefined;
+        this.dataSet = undefined; // ArrayProperty
+        this.color = undefined; // StringProperty
+        this.shape = undefined; // ArrayProperty
+        this.size = undefined; // GlyphSizeSelectionProperty
+        this.latitude = undefined; // ArrayProperty
+        this.longitude = undefined; // ArrayProperty
 
         ElementViewModel.call(this, state);
 
@@ -44,7 +44,8 @@ define([
     Object.defineProperties(GlyphViewModel.prototype, {
         properties: {
             get: function() {
-                return [ this.dataSet, this.color, this.shape, this.size, this.latitute, this.longitude ];
+                return [ this._name, this.visible, this.logGoogleAnalytics, this._parentWidgetName,
+                         this.dataSet, this.color, this.shape, this.size, this.latitute, this.longitude ];
             }
         }
     });

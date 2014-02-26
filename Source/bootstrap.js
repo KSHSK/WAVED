@@ -134,14 +134,14 @@
         var widgetButton = document.createElement('button');
         $(widgetButton).attr('data-bind', 'text: $data.name, click: $parent.addNewWidget');
         $widgetsPanel.append(widgetButton);
-
+        // TODO: Widgets -> Components
         var $propertiesPanel = $('#properties-panel');
-        $propertiesPanel.attr('data-bind', 'foreach: currentProject.widgets');
+        $propertiesPanel.attr('data-bind', 'foreach: currentProject.components');
         var widgetProperties = document.createElement('div');
         $(widgetProperties).attr('data-bind',
             'foreach: $data.viewModel.properties, visible: $parent.selectedWidget == $data');
         var property = document.createElement('div');
-        $(property).attr('data-bind', 'template: {name : $data.templateName, data: $data}');
+        $(property).attr('data-bind', 'template: {name : $data._templateName, data: $data}');
         $(widgetProperties).append(property);
         $propertiesPanel.append(widgetProperties);
 
