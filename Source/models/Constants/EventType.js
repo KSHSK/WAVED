@@ -3,9 +3,9 @@ define([], function(){
     'use strict';
 
     var EventType = {
-        CLICK: 'clickEventType',
-        MOVE: 'moveEventType',
-        HOVER: 'hoverEventType'
+        CLICK: 'Mouse click',
+        MOVE: 'Mouse move',
+        HOVER: 'Mouse hover'
     };
 
     return EventType;
