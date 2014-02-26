@@ -40,14 +40,8 @@ define([
         if (!hasHeight) {
             this.height.value = 5;
         }
-        else{
-            this.height = state.height;
-        }
         if (!hasWidth) {
             this.width.value = 10;
-        }
-        else{
-            this.width = state.width;
         }
 
         ko.track(this);
@@ -66,7 +60,7 @@ define([
     Object.defineProperties(ButtonViewModel.prototype, {
         properties: {
             get: function() {
-                return [this._parentWidgetName, this._name, this.label, this.x, this.y,
+                return [this._name, this.label, this.x, this.y,
                         this.width, this.height, this.visible, this.logGoogleAnalytics];
             }
         }

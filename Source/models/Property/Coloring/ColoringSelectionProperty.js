@@ -15,8 +15,6 @@ define([
     var ColoringSelectionProperty = function(state) {
         Property.call(this, state);
 
-        state = defined(state) ? state : {};
-
         // TODO: Validation, settings defaults, etc.
         this.value = state.value; // ColoringScheme
         this._coloringType = state.coloringType; // ArrayProperty
@@ -37,16 +35,12 @@ define([
             get: function() {
                 return this._coloringType;
             }
-        },
-        value: {
-            get: function() {
-                return this.value;
-            },
-            set: function(value) {
-                this.value = value;
-            }
         }
     });
+
+    ColoringSelectionProperty.prototype.getSelectedColoringType = function() {
+        // TODO
+    };
 
     return ColoringSelectionProperty;
 });

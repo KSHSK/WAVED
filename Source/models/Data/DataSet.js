@@ -9,18 +9,10 @@ define(['knockout',
 
     var DataSet = function(state) {
         state = defined(state) ? state : {};
-        this._name = state.displayName;
-        this._filename = state.filename;
-        this._data = undefined; // TODO: Load data here
-        this._referenceCount = state.referenceCount;
-
-       var incrementReferenceCount = function() {
-
-       };
-
-       var decrementReferenceCount = function() {
-
-       };
+        this._name = state.displayName; // String
+        this._filename = state.filename; // String
+        this._data = undefined; // TODO: Load data here, Object
+        this._referenceCount = state.referenceCount; // Number
 
         ko.track(this);
     };

@@ -34,7 +34,7 @@ define([
     Object.defineProperties(USMapViewModel.prototype, {
         properties: {
             get: function() {
-                return [ this._parentWidgetName, this._name, this.x, this.y, this.width,
+                return [ this._name, this.x, this.y, this.width,
                          this.height, this.visible, this.logGoogleAnalytics, this.coloring ];
             }
         }

@@ -12,12 +12,14 @@ define([
     ){
     'use strict';
 
+    // TODO: Should we pass in a ConditionalOperatorValue or a state Object? Update DD with decision
     var Condition = function(field, operator, value) {
+        QueryNodeValue.call(this); // TODO: Necessary super call?
 
         // TODO: Validation, etc
-        this._field = undefined; // String
-        this._operator = value; // ComparisonOperatorValue
-        this._value = undefined; // String
+        this.field = undefined; // String
+        this.operator = value; // ComparisonOperatorValue
+        this.value = undefined; // String
 
     };
 

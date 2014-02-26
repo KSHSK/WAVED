@@ -11,7 +11,7 @@ define(['knockout',
         state = defined(state) ? state : {};
 
         // TODO: Validation, etc
-        this._name = state.name; // String
+        this._name = state.name; // StringProperty
         this._target = state.target; // Any TODO: Get the actual target
         this._applyAutmatically = state.applyAutomatically; // Boolean
 

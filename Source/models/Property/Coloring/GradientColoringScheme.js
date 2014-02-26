@@ -10,6 +10,7 @@ define([
     'use strict';
 
     var GradientColoringScheme = function(state) {
+        ColoringScheme.call(this, state);
 
         // TODO: Define these, validation, etc.
         this.startColor = state.startColor; // StringProperty

@@ -12,14 +12,14 @@ define([
     'use strict';
 
     var ElementViewModel = function(state) {
-        // TODO
+        ComponentViewModel.call(this, state);
     };
 
     // TODO: DD doesn't have this, but probably a good idea anyway?
     Object.defineProperties(ElementViewModel.prototype, {
         properties: {
             get: function() {
-                return [ this._name, this.visible, this.logGoogleAnalytics, this._parentWidgetName ];
+                return [ this._name, this.visible, this.logGoogleAnalytics ];
             }
         }
     });
