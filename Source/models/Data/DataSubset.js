@@ -1,10 +1,12 @@
 /*global define*/
 define([
         'models/Data/DataSet',
+        'models/Data/QueryNode',
         'knockout',
         'util/defined'
     ],function(
         DataSet,
+        QueryNode,
         ko,
         defined
     ){
