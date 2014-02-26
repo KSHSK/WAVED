@@ -7,12 +7,12 @@ define(['knockout',
     ){
     'use strict';
 
-    var ComponentRecord = function(state) {
-        state = defined(state) ? state : {};
-        this._displayName = state.displayName;
+    var ComponentRecord = function(record) {
+        record = defined(record) ? record : {};
+        this._displayName = record.displayName;
 
         /* TODO */
-       this._widget = undefined;
+        this._widget = undefined; // Object
 
         ko.track(this);
     };
