@@ -1,7 +1,7 @@
 /*global define*/
 define([
         'models/Widget/ButtonWidget/ButtonViewModel',
-        'models/ComponentTemplateName',
+        'models/Constants/ComponentTemplateName',
         'knockout',
         'jquery'
     ],function(
