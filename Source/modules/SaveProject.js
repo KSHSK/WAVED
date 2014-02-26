@@ -13,15 +13,15 @@ define([
     var SaveProject = {
 
         tryToSaveProject: function(viewModel){
-
+            // TODO
         },
 
         openSaveProjectDialog: function(viewModel){
-
+            // TODO
         },
 
         saveProject: function(projectName, viewModel){
-
+            // TODO
         }
     };
 
