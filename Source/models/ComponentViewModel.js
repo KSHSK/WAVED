@@ -2,24 +2,56 @@
 define([
         'models/SuperComponentViewModel',
         'models/Event/Trigger',
+        'models/Property/BooleanProperty',
         'jquery',
+        'util/defined',
+        'util/defaultValue',
         'knockout'
     ], function(
         SuperComponentViewModel,
         Trigger,
+        BooleanProperty,
         $,
+        defined,
+        defaultValue,
         ko) {
     'use strict';
 
     var ComponentViewModel = function(state) {
-        if (typeof state.name === 'undefined') {
-            throw new Error('ComponentViewModel name is required');
+        SuperComponentViewModel.call(this, state);
+
+        var visibleOptions;
+        if (defined(state.visible)) {
+            visibleOptions = {
+                displayName: state.visible.displayName,
+                value: state.visible.value
+            };
         }
+        else {
+            visibleOptions = {
+                displayName: 'Visible',
+                value: true
+            };
+        }
+        this.visible = new BooleanProperty(visibleOptions);
+
+        var gaOptions;
+        if (defined(state.logGoogleAnalytics)) {
+            gaOptions = {
+                displayName: state.logGoogleAnalytics.displayName,
+                value: state.logGoogleAnalytics.value
+            };
+        }
+        else {
+            gaOptions = {
+                displayName: 'Log Google Analytics',
+                value: false
+            };
+        }
+        this.logGoogleAnalytics = new BooleanProperty(gaOptions);
 
         // TODO: Validation, creation of actual Property objects, etc
-        this.visible = state.visible; // BooleanProperty
-        this.logGoogleAnalytics = state.logGoogleAnalytics; // BooleanProperty
-        this._parentWidgetName = state.parentWidgetName; // String
+        this._parentWidgetName = defaultValue(state.parent, undefined); // String
         this._triggers = []; // Trigger[]
 
         ko.track(this);

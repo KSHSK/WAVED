@@ -2,19 +2,33 @@
 define([
         'models/Property/StringProperty',
         'jquery',
+        'util/defined',
         'knockout'
     ], function(
         StringProperty,
         $,
+        defined,
         ko) {
     'use strict';
 
     var SuperComponentViewModel = function(state) {
-        if (typeof state.name === 'undefined') {
-            throw new Error('SuperComponentViewModel name is required');
+        var nameOptions;
+        if (defined(state.name)) {
+            nameOptions = {
+                displayName: state.name.displayName,
+                value: state.name.value
+            };
         }
-
-        this._name = state.name; // StringProperty
+        else {
+            nameOptions = {
+                displayName: 'Name',
+                value: ''
+            };
+        }
+        nameOptions.isValidValue = function(value) {
+            return value.match(new RegExp('^[a-zA-Z0-9_\\- ]+$')) && value.length > 0 && value.length < 51;
+        };
+        this._name = new StringProperty(nameOptions);
 
         ko.track(this);
     };
