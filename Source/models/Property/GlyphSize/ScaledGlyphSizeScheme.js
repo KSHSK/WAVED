@@ -10,6 +10,7 @@ define([
     'use strict';
 
     var ScaledGlyphSizeScheme = function(state) {
+        GlyphSizeScheme.call(this, state);
 
         // TODO: Validation, etc
         this.dataSet = state.dataSet; // ArrayProperty

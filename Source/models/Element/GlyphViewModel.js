@@ -44,8 +44,8 @@ define([
     Object.defineProperties(GlyphViewModel.prototype, {
         properties: {
             get: function() {
-                return [ this._name, this.visible, this.logGoogleAnalytics, this._parentWidgetName,
-                         this.dataSet, this.color, this.shape, this.size, this.latitute, this.longitude ];
+                return [ this._name, this.visible, this.logGoogleAnalytics, this.dataSet,
+                         this.color, this.shape, this.size, this.latitute, this.longitude ];
             }
         }
     });

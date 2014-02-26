@@ -42,21 +42,13 @@ define([
     Object.defineProperties(ComponentViewModel.prototype, {
         properties: {
             get: function() {
+                // TODO: Mixed visibilities make this look weird? Problem?
                 return [this._name, this.visible, this.logGoogleAnalytics, this._parentWidgetName];
             }
         },
         triggers: {
             get: function() {
                 return this._triggers;
-            }
-        },
-        // TODO: Add setter to DD, necessary since parentWidgetName is private and no one else has a setter
-        parentWidgetName: {
-            get: function() {
-                return this._parentWidgetName;
-            },
-            set: function(value){
-                this._parentWidgetName = value;
             }
         }
     });

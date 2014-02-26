@@ -12,7 +12,9 @@ define([
     ){
     'use strict';
 
+    // TODO: Should we pass in a LogicalOperatorValue or a state Object? Update DD with decision
     var LogicalOperator = function(value) {
+        QueryNodeValue.call(this); // TODO: Necessary super call?
 
         // TODO: Validation, etc
         this._operator = value; // LogicalOperatorValue

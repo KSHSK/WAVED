@@ -13,10 +13,11 @@ define([
     'use strict';
 
     var PropertyAction = function(state) {
-        state = defined(state) ? state : {};
+        Action.call(this, state);
 
         // TODO: Validation, etc
         // TODO: target visibility conflicts with Action _target visibility, issue?
+        // TODO: Make private in order to do type checking, validation, etc? Update DD with decision
         this.target = state.target; // String
         this.dataSet = state.dataSet; // DataSet
         this.newValues = state.newValues; // Object

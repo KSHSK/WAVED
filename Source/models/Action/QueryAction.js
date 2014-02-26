@@ -15,7 +15,7 @@ define([
     'use strict';
 
     var QueryAction = function(state) {
-        state = defined(state) ? state : {};
+        Action.call(this, state);
 
         // TODO: Validation, etc
         // TODO: target visibility conflicts with Action _target visibility, issue?

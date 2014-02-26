@@ -12,7 +12,7 @@ define(['knockout',
         this._displayName = record.displayName;
 
         /* TODO */
-        this._widget = undefined; // Object
+        this._component = undefined; // Object
 
         ko.track(this);
     };
@@ -23,9 +23,9 @@ define(['knockout',
                 return this._displayName;
             }
         },
-        widget : {
+        component : {
             get: function() {
-                return this._widget;
+                return this._component;
             }
         }
     });

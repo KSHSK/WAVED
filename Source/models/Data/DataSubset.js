@@ -13,7 +13,7 @@ define([
     'use strict';
 
     var DataSubset = function(state) {
-        state = defined(state) ? state : {};
+        DataSet.call(this, state);
 
         // TODO: Validation, etc
         this._query = state.query; // QueryNode

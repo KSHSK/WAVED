@@ -15,16 +15,14 @@ define([
     var GlyphSizeSelectionProperty = function(state) {
         Property.call(this, state);
 
-        state = defined(state) ? state : {};
-
         // TODO: Validation, settings defaults, etc.
-        this._value = state.value;
-        this._sizeType = state.sizeType;
+        this._value = state.value; // GlyphSizeScheme
+        this._sizeType = state.sizeType; // ArrayProperty
 
         this._templateName = PropertyTemplateName.GLYPH_SIZE;
 
         this.isValidValue = function(value){
-
+            // TODO
         };
 
         ko.track(this);
@@ -40,16 +38,12 @@ define([
             set: function(value) {
                 this._sizeType = value;
             }
-        },
-        value: {
-            get: function() {
-                return this._value;
-            },
-            set: function(value) {
-                this._value = value;
-            }
         }
     });
+
+    GlyphSizeSelectionProperty.prototype.getSelectedSizeType = function() {
+        // TODO
+    };
 
     return GlyphSizeSelectionProperty;
 });

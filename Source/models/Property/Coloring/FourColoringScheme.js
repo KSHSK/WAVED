@@ -10,6 +10,7 @@ define([
     'use strict';
 
     var FourColoringScheme = function(state) {
+        ColoringScheme.call(this, state);
 
         // TODO: Define these, validation, etc.
         this.color1 = state.color1; // StringProperty

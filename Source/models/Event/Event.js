@@ -20,7 +20,7 @@ define([
         state = defined(state) ? state : {};
 
         // TODO: Validation, etc
-        this._name = state.name; // String
+        this._name = state.name; // StringProperty
         this._eventType = state.eventType; // EventType
         this._triggeringComponent = state.triggeringComponent; // ComponenetViewModel
         this._trigger = undefined; // Trigger
@@ -42,6 +42,7 @@ define([
             get: function() {
                 return this._eventType;
             }
+            // TODO: Why does this not have a setter? Update DD with decision.
         },
         triggeringComponent: {
             get: function() {

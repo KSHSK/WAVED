@@ -10,12 +10,10 @@ define([
     'use strict';
 
     var TextBlockViewModel = function(state) {
-        state = (defined(state)) ? state : {};
+        WidgetViewModel.call(this, state);
 
         // TODO: Validation, etc
         this.text = state.text; // StringProperty
-
-        WidgetViewModel.call(this, state);
 
         ko.track(this);
     };
@@ -33,7 +31,8 @@ define([
     Object.defineProperties(TextBlockViewModel.prototype, {
         properties: {
             get: function() {
-                return [ this.text ];
+                return [ this.text, this._name, this.x, this.y,
+                         this.width, this.height, this.visible, this.logGoogleAnalytics ];
             }
         }
     });

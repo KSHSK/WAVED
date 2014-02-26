@@ -10,6 +10,7 @@ define([
     'use strict';
 
     var SolidColoringScheme = function(state) {
+        ColoringScheme.call(this, state);
 
         // TODO: Validation, etc
         this.color = state.color; // StringProperty
