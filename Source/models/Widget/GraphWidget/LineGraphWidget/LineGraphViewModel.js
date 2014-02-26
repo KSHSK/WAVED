@@ -9,10 +9,10 @@ define([
         ko){
     'use strict';
 
-    var LineGraphViewModel = function(options) {
-        options = (defined(options)) ? options : {};
+    var LineGraphViewModel = function(state) {
+        state = (defined(state)) ? state : {};
 
-        GraphViewModel.call(this, options);
+        GraphViewModel.call(this, state);
 
         ko.track(this);
     };

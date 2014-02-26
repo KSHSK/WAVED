@@ -9,7 +9,7 @@ define([
         ko){
     'use strict';
 
-    var GraphViewModel = function(state) {
+    var USMapViewModel = function(state) {
         state = (defined(state)) ? state : {};
 
         WidgetViewModel.call(this, state);
@@ -17,17 +17,17 @@ define([
         ko.track(this);
     };
 
-    GraphViewModel.prototype = Object.create(WidgetViewModel.prototype);
+    USMapViewModel.prototype = Object.create(WidgetViewModel.prototype);
 
-    GraphViewModel.prototype.getState = function() {
+    USMapViewModel.prototype.getState = function() {
         //TODO;
     };
 
-    GraphViewModel.prototype.setState = function(state) {
+    USMapViewModel.prototype.setState = function(state) {
         //TODO;
     };
 
-    Object.defineProperties(GraphViewModel.prototype, {
+    Object.defineProperties(USMapViewModel.prototype, {
         properties: {
             get: function() {
                 return [ /* TODO */ ];
@@ -35,5 +35,5 @@ define([
         }
     });
 
-    return GraphViewModel;
+    return USMapViewModel;
 });

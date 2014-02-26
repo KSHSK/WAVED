@@ -15,13 +15,13 @@ define([
         defaultValue) {
     'use strict';
 
-    var WidgetViewModel = function(options) {
-        options = (defined(options)) ? options : {};
+    var WidgetViewModel = function(state) {
+        state = (defined(state)) ? state : {};
         var nameOptions;
-        if (defined(options.name)) {
+        if (defined(state.name)) {
             nameOptions = {
-                displayName: options.name.displayName,
-                value: options.name.value
+                displayName: state.name.displayName,
+                value: state.name.value
             };
         }
         else {
@@ -36,10 +36,10 @@ define([
         this.name = new StringProperty(nameOptions);
 
         var heightOptions;
-        if (defined(options.height)) {
+        if (defined(state.height)) {
             heightOptions = {
-                displayName: options.height.displayName,
-                value: options.height.value
+                displayName: state.height.displayName,
+                value: state.height.value
             };
         }
         else {
@@ -54,10 +54,10 @@ define([
         this.height = new NumberProperty(heightOptions);
 
         var widthOptions;
-        if (defined(options.width)) {
+        if (defined(state.width)) {
             widthOptions = {
-                displayName: options.width.displayName,
-                value: options.width.value
+                displayName: state.width.displayName,
+                value: state.width.value
             };
         }
         else {
@@ -72,10 +72,10 @@ define([
         this.width = new NumberProperty(widthOptions);
 
         var xOptions;
-        if (defined(options.x)) {
+        if (defined(state.x)) {
             xOptions = {
-                displayName: options.x.displayName,
-                value: options.x.value
+                displayName: state.x.displayName,
+                value: state.x.value
             };
         }
         else {
@@ -90,10 +90,10 @@ define([
         this.x = new NumberProperty(xOptions);
 
         var yOptions;
-        if (defined(options.y)) {
+        if (defined(state.y)) {
             yOptions = {
-                displayName: options.y.displayName,
-                value: options.y.value
+                displayName: state.y.displayName,
+                value: state.y.value
             };
         }
         else {
@@ -108,10 +108,10 @@ define([
         this.y = new NumberProperty(yOptions);
 
         var visibleOptions;
-        if (defined(options.visible)) {
+        if (defined(state.visible)) {
             visibleOptions = {
-                displayName: options.visible.displayName,
-                value: options.visible.value
+                displayName: state.visible.displayName,
+                value: state.visible.value
             };
         }
         else {
@@ -123,10 +123,10 @@ define([
         this.visible = new BooleanProperty(visibleOptions);
 
         var gaOptions;
-        if (defined(options.logGoogleAnalytics)) {
+        if (defined(state.logGoogleAnalytics)) {
             gaOptions = {
-                displayName: options.logGoogleAnalytics.displayName,
-                value: options.logGoogleAnalytics.value
+                displayName: state.logGoogleAnalytics.displayName,
+                value: state.logGoogleAnalytics.value
             };
         }
         else {
@@ -137,10 +137,10 @@ define([
         }
         this.logGoogleAnalytics = new BooleanProperty(gaOptions);
 
-        this._parent = defaultValue(options.parent, undefined);
-        this._subwidgetNames = defaultValue(options.subwidgets, []);
-        this._elementNames = defaultValue(options.elements, []);
-        this._boundData = defaultValue(options.boundData, []);
+        this._parent = defaultValue(state.parent, undefined);
+        this._subwidgetNames = defaultValue(state.subwidgets, []);
+        this._elementNames = defaultValue(state.elements, []);
+        this._boundData = defaultValue(state.boundData, []);
         this._triggers = [];
     };
 
