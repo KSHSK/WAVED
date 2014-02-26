@@ -11,10 +11,10 @@ define([
         $){
     'use strict';
 
-    var Tooltip = function(options) {
+    var Tooltip = function(state) {
         this._templateName = ComponentTemplateName.TOOLTIP;
 
-        var viewModel = new TooltipViewModel(options);
+        var viewModel = new TooltipViewModel(state);
 
         var $workspace = $('#waved-workspace');
         var tooltip = document.createElement('div');

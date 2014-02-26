@@ -27,13 +27,5 @@ define([
         //TODO;
     };
 
-    Object.defineProperties(LineGraphViewModel.prototype, {
-        properties: {
-            get: function() {
-                return [ /* TODO */ ];
-            }
-        }
-    });
-
     return LineGraphViewModel;
 });

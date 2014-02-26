@@ -9,7 +9,7 @@ define([
         defaultValue) {
     'use strict';
 
-    var ElementViewModel = function(options) {
+    var ElementViewModel = function(state) {
         // TODO
     };
 

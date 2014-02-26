@@ -4,6 +4,7 @@ define([
         'models/Property/StringProperty',
         'models/Property/NumberProperty',
         'models/Property/BooleanProperty',
+        'models/ComponentViewModel',
         'util/defined',
         'util/defaultValue'
     ], function(
@@ -11,6 +12,7 @@ define([
         StringProperty,
         NumberProperty,
         BooleanProperty,
+        ComponentViewModel,
         defined,
         defaultValue) {
     'use strict';
@@ -33,7 +35,7 @@ define([
         nameOptions.isValidValue = function(value) {
             return value.match(new RegExp('^[a-zA-Z0-9_\\- ]+$')) && value.length > 0 && value.length < 51;
         };
-        this.name = new StringProperty(nameOptions);
+        this._name = new StringProperty(nameOptions);
 
         var heightOptions;
         if (defined(state.height)) {
@@ -51,7 +53,7 @@ define([
         heightOptions.isValidValue = function(value) {
             return value >= 0 && value <= 100;
         };
-        this.height = new NumberProperty(heightOptions);
+        this._height = new NumberProperty(heightOptions);
 
         var widthOptions;
         if (defined(state.width)) {
@@ -69,7 +71,7 @@ define([
         widthOptions.isValidValue = function(value) {
             return value >= 0 && value <= 100;
         };
-        this.width = new NumberProperty(widthOptions);
+        this._width = new NumberProperty(widthOptions);
 
         var xOptions;
         if (defined(state.x)) {
@@ -87,7 +89,7 @@ define([
         xOptions.isValidValue = function(value) {
             return value >= 0 && value <= 100;
         };
-        this.x = new NumberProperty(xOptions);
+        this._x = new NumberProperty(xOptions);
 
         var yOptions;
         if (defined(state.y)) {
@@ -105,7 +107,7 @@ define([
         yOptions.isValidValue = function(value) {
             return value >= 0 && value <= 100;
         };
-        this.y = new NumberProperty(yOptions);
+        this._y = new NumberProperty(yOptions);
 
         var visibleOptions;
         if (defined(state.visible)) {
@@ -120,7 +122,7 @@ define([
                 value: true
             };
         }
-        this.visible = new BooleanProperty(visibleOptions);
+        this._visible = new BooleanProperty(visibleOptions);
 
         var gaOptions;
         if (defined(state.logGoogleAnalytics)) {
@@ -135,7 +137,7 @@ define([
                 value: false
             };
         }
-        this.logGoogleAnalytics = new BooleanProperty(gaOptions);
+        this._logGoogleAnalytics = new BooleanProperty(gaOptions);
 
         this._parent = defaultValue(state.parent, undefined);
         this._subwidgetNames = defaultValue(state.subwidgets, []);
@@ -147,7 +149,7 @@ define([
     Object.defineProperties(WidgetViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.x, this.y, this.width, this.height, this.visible, this.logGoogleAnalytics];
+                return [this._name, this._x, this._y, this._width, this._height, this._visible, this._logGoogleAnalytics];
             }
         }
     });
@@ -188,6 +190,8 @@ define([
     WidgetViewModel.prototype.unbindData = function(name) {
         //TODO
     };
+
+    WidgetViewModel.prototype = Object.create(ComponentViewModel.prototype);
 
     return WidgetViewModel;
 });

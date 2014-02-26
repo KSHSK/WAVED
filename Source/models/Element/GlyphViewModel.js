@@ -1,16 +1,22 @@
 /*global define*/
 define([
         'models/Element/ElementViewModel',
+        'models/Property/ArrayProperty',
+        'models/Property/StringProperty',
+        'models/Property/GlyphSize/GlyphSizeSelectionProperty',
         'util/defined',
         'knockout'
     ],function(
         ElementViewModel,
+        ArrayProperty,
+        StringProperty,
+        GlyphSizeSelectionProperty,
         defined,
         ko){
     'use strict';
 
-    var GlyphViewModel = function(options) {
-        options = (defined(options)) ? options : {};
+    var GlyphViewModel = function(state) {
+        state = (defined(state)) ? state : {};
 
         // TODO: Set these from options
         this.dataSet = undefined;
@@ -20,7 +26,7 @@ define([
         this.latitude = undefined;
         this.longitude = undefined;
 
-        ElementViewModel.call(this, options);
+        ElementViewModel.call(this, state);
 
         ko.track(this);
     };
