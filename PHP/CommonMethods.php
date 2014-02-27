@@ -58,6 +58,6 @@ function getExistingsProjects() {
 function getProjectState($projectName) {
     global $db;
     $deserializer = new SQLiteProjectSerializer($db);
-    return $deserializer->get($projectName);
+    return $deserializer->get($projectName)->getState();
 }
 ?>
