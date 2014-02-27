@@ -4,6 +4,7 @@ define([
         'models/Property/StringProperty',
         'models/Property/NumberProperty',
         'models/Property/BooleanProperty',
+        'models/ComponentViewModel',
         'util/defined',
         'util/defaultValue'
     ], function(
@@ -11,35 +12,19 @@ define([
         StringProperty,
         NumberProperty,
         BooleanProperty,
+        ComponentViewModel,
         defined,
         defaultValue) {
     'use strict';
 
-    var WidgetViewModel = function(options) {
-        options = (defined(options)) ? options : {};
-        var nameOptions;
-        if (defined(options.name)) {
-            nameOptions = {
-                displayName: options.name.displayName,
-                value: options.name.value
-            };
-        }
-        else {
-            nameOptions = {
-                displayName: 'Name',
-                value: ''
-            };
-        }
-        nameOptions.isValidValue = function(value) {
-            return value.match(new RegExp('^[a-zA-Z0-9_\\- ]+$')) && value.length > 0 && value.length < 51;
-        };
-        this.name = new StringProperty(nameOptions);
+    var WidgetViewModel = function(state) {
+        ComponentViewModel.call(this, state);
 
         var heightOptions;
-        if (defined(options.height)) {
+        if (defined(state.height)) {
             heightOptions = {
-                displayName: options.height.displayName,
-                value: options.height.value
+                displayName: state.height.displayName,
+                value: state.height.value
             };
         }
         else {
@@ -54,10 +39,10 @@ define([
         this.height = new NumberProperty(heightOptions);
 
         var widthOptions;
-        if (defined(options.width)) {
+        if (defined(state.width)) {
             widthOptions = {
-                displayName: options.width.displayName,
-                value: options.width.value
+                displayName: state.width.displayName,
+                value: state.width.value
             };
         }
         else {
@@ -72,10 +57,10 @@ define([
         this.width = new NumberProperty(widthOptions);
 
         var xOptions;
-        if (defined(options.x)) {
+        if (defined(state.x)) {
             xOptions = {
-                displayName: options.x.displayName,
-                value: options.x.value
+                displayName: state.x.displayName,
+                value: state.x.value
             };
         }
         else {
@@ -90,10 +75,10 @@ define([
         this.x = new NumberProperty(xOptions);
 
         var yOptions;
-        if (defined(options.y)) {
+        if (defined(state.y)) {
             yOptions = {
-                displayName: options.y.displayName,
-                value: options.y.value
+                displayName: state.y.displayName,
+                value: state.y.value
             };
         }
         else {
@@ -107,47 +92,17 @@ define([
         };
         this.y = new NumberProperty(yOptions);
 
-        var visibleOptions;
-        if (defined(options.visible)) {
-            visibleOptions = {
-                displayName: options.visible.displayName,
-                value: options.visible.value
-            };
-        }
-        else {
-            visibleOptions = {
-                displayName: 'Visible',
-                value: true
-            };
-        }
-        this.visible = new BooleanProperty(visibleOptions);
-
-        var gaOptions;
-        if (defined(options.logGoogleAnalytics)) {
-            gaOptions = {
-                displayName: options.logGoogleAnalytics.displayName,
-                value: options.logGoogleAnalytics.value
-            };
-        }
-        else {
-            gaOptions = {
-                displayName: 'Log Google Analytics',
-                value: false
-            };
-        }
-        this.logGoogleAnalytics = new BooleanProperty(gaOptions);
-
-        this._parent = defaultValue(options.parent, undefined);
-        this._subwidgetNames = defaultValue(options.subwidgets, []);
-        this._elementNames = defaultValue(options.elements, []);
-        this._boundData = defaultValue(options.boundData, []);
-        this._triggers = [];
+        // TODO: These things for real
+        this._subwidgetNames = defaultValue(state.subwidgets, []);
+        this._elementNames = defaultValue(state.elements, []);
+        this._boundData = defaultValue(state.boundData, []);
+        this._availableElements = []; // ComponentRecord[]
     };
 
     Object.defineProperties(WidgetViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.x, this.y, this.width, this.height, this.visible, this.logGoogleAnalytics];
+                return [this._name, this.x, this.y, this.width, this.height, this.visible, this.logGoogleAnalytics];
             }
         }
     });
@@ -188,6 +143,8 @@ define([
     WidgetViewModel.prototype.unbindData = function(name) {
         //TODO
     };
+
+    WidgetViewModel.prototype = Object.create(ComponentViewModel.prototype);
 
     return WidgetViewModel;
 });
