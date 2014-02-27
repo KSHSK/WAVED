@@ -55,7 +55,7 @@ define([
         ko.track(this);
     };
 
-    //WorkspaceViewModel.prototype = Object.create(SuperComponentViewModel.prototype);
+    WorkspaceViewModel.prototype = Object.create(SuperComponentViewModel.prototype);
 
     // TODO: In the DD, add getProperties() and getViewModel() to be consistent here
     Object.defineProperties(WorkspaceViewModel.prototype, {
