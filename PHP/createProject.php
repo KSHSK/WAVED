@@ -2,6 +2,7 @@
 include_once('connect.php');
 include_once("CommonMethods.php");
 include_once('SQLiteProjectSerializer.php');
+include_once('Project.php');
 
 /**
  * Checks to see if the project name is valid.
@@ -69,9 +70,9 @@ if (!$success) {
 
 
 // TODO: Replace with real initial state
-$projectState="{}";
+$project = Project::create($projectName, "{}");
 $serializer = new SQLiteProjectSerializer($db);
-$success = $serializer->set($projectName, $projectState);
+$success = $serializer->set($project);
 
 if(!$success) {
     // Attempt to remove traces from the filesystem

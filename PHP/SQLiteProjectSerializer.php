@@ -1,6 +1,7 @@
 <?php
 include_once('ISerializer.php');
 include_once('IDeserializer.php');
+include_once('Project.php');
 
 /*
     Class to (de)serialize project
@@ -11,12 +12,20 @@ class SQLiteProjectSerializer implements ISerializer, IDeserializer
     const TABLE = 'project';
     private $db;
 
+    /**
+     * Constructs a new SQLiteProjectSerializer object
+     * @param SQLite3 $db
+     */
     public function __construct($db)
     {
         $this->db = $db;
     }
 
-    public function set($name, $state)
+    /**
+     * Serializes the given project to the database
+     * @param Project $project
+     */
+    public function set($project)
     {
         // Hard code user for now
         $userid=1;
@@ -29,8 +38,8 @@ class SQLiteProjectSerializer implements ISerializer, IDeserializer
                 lastModifiedBy = :user
             WHERE name = :name");
 
-        $update->bindValue(':name', $name, SQLITE3_TEXT);
-        $update->bindValue(':state', $state, SQLITE3_BLOB);
+        $update->bindValue(':name', $project->getName(), SQLITE3_TEXT);
+        $update->bindValue(':state', $project->getState(), SQLITE3_BLOB);
         $update->bindValue(':user', $userid, SQLITE3_INTEGER);
         $update->bindValue(':dateTime', $dateTime, SQLITE3_INTEGER);
         $update->execute();
@@ -43,8 +52,8 @@ class SQLiteProjectSerializer implements ISerializer, IDeserializer
                 "(name, state, created, createdBy, lastModified, lastModifiedBy)
                 values(:name, :state, :dateTime, :user, :dateTime, :user)");
 
-            $insert->bindValue(':name', $name, SQLITE3_TEXT);
-            $insert->bindValue(':state', $state, SQLITE3_BLOB);
+            $insert->bindValue(':name', $project->getName(), SQLITE3_TEXT);
+            $insert->bindValue(':state', $project->getState(), SQLITE3_BLOB);
             $insert->bindValue(':user', $userid, SQLITE3_INTEGER);
             $insert->bindValue(':dateTime', $dateTime, SQLITE3_INTEGER);
             $insert->execute();
@@ -72,12 +81,13 @@ class SQLiteProjectSerializer implements ISerializer, IDeserializer
 
     public function get($name)
     {
-        $statement = $this->db->prepare("SELECT state FROM  " . self::TABLE . " WHERE name = :name");
+        $statement = $this->db->prepare("SELECT * FROM  " . self::TABLE . " WHERE name = :name");
         $statement->bindValue(':name', $name, SQLITE3_TEXT);
-        $value = $statement->execute()->fetchArray(SQLITE3_NUM);
+        $value = $statement->execute()->fetchArray(SQLITE3_ASSOC);
         $statement->close();
 
-        return $value[0];
+        $project = $this->projectFromRow($value);
+        return $project;
     }
 
     public function listId()
@@ -92,6 +102,13 @@ class SQLiteProjectSerializer implements ISerializer, IDeserializer
         }
 
         return $row;
+    }
+
+    private static function projectFromRow($row)
+    {
+        $project = Project::createFull($row['id'], $row['name'], $row['state'], $row['created'],
+            $row['createdBy'], $row['lastModified'], $row['lastModifiedBy']);
+        return $project;
     }
 }
 ?>
