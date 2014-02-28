@@ -52,7 +52,8 @@
                     // Project Tree
                 </div>
                 <h3>Widgets</h3>
-                <div id="widgets-panel">
+                <div id="widgets-panel" data-bind="foreach: availableWidgets">
+                    <button data-bind="text: $data.name, click: $parent.addNewWidget"></button>
                 </div>
                 <h3>Data</h3>
                 <div>
@@ -113,6 +114,27 @@
                 </div>
                 <h3>Properties</h3>
                 <div id="properties-panel">
+                    <div id="properties-panel-properties" data-bind="foreach: currentProject.components">
+                        <div data-bind="foreach: $data.viewModel.properties, visible: $parent.selectedWidget == $data">
+                            <div data-bind="template: {name : $data.templateName, data: $data}"></div>
+                        </div>
+                    </div>
+                    <div id="properties-panel-bound-data" data-bind="visible: selectedWidget && selectedWidget.boundData !== 'undefined'">
+                        <hr/>
+                        <div class="inline">Bound Data</div>
+                        <div class="inline right">
+                            <button id="bind-data-button" class="button-small">Bind Data</button>
+                            <button id="unbind-data-button" class="button-small">Unbind Data</button>
+                        </div>
+                        <div data-bind="if: selectedWidget && selectedWidget.boundData !== 'undefined'">
+                            <select id="bound-data-list" size="5" class="select-full-size"
+                                data-bind="options: selectedWidget.boundData, 
+                                    optionsText: function(item) {
+                                       return item.name;
+                                    }, value: selectedBoundData">
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <h3>Google Analytics</h3>
                 <div>

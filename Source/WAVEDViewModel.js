@@ -23,6 +23,7 @@ define([
         this._projectToLoad = '';
         this._selectedWidget = '';
         this._selectedDataSet = '';
+        this._selectedBoundData = '';
 
         this._currentProject = {
             name: '',
@@ -123,7 +124,16 @@ define([
             set: function(value) {
                 this._selectedDataSet = value;
             }
+        },
+        selectedBoundData: {
+            get: function() {
+                return this._selectedBoundData;
+            },
+            set: function(value) {
+                this._selectedBoundData = value;
+            }
         }
+
     });
 
     return WAVEDViewModel;

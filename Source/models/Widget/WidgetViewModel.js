@@ -104,6 +104,11 @@ define([
             get: function() {
                 return [this._name, this.x, this.y, this.width, this.height, this.visible, this.logGoogleAnalytics];
             }
+        },
+        boundData: {
+            get: function() {
+                return _boundData;
+            }
         }
     });
 
@@ -137,11 +142,18 @@ define([
     };
 
     WidgetViewModel.prototype.bindData = function(name) {
-        //TODO
+        // Don't bind the same data twice.
+        if (this._boundData.indexOf(name) === -1) {
+            this._boundData.push(name);
+        }
     };
 
     WidgetViewModel.prototype.unbindData = function(name) {
-        //TODO
+        // Only unbind if the data is bound.
+        var index = this._boundData.indexOf(name);
+        if (index > -1) {
+            this._boundData.splice(index, 1);
+        }
     };
 
     WidgetViewModel.prototype = Object.create(ComponentViewModel.prototype);
