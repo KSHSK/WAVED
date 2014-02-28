@@ -13,15 +13,14 @@ class Project
     private $lastModifiedBy;
 
 
-    // TODO check
     /**
      * Constructs a new Project object
-     * @param int $id
+     * @param integer $id
      * @param string $name
      * @param string $state
-     * @param string $created
+     * @param integer $created
      * @param int $createdBy
-     * @param string $lastModified
+     * @param integer $lastModified
      * @param int $lastModifiedBy
      */
     public static function createFull($id, $name, $state, $created,
@@ -35,6 +34,7 @@ class Project
         $instance->createdBy = $createdBy;
         $instance->lastModified = $lastModified;
         $instance->lastModifiedBy = $lastModifiedBy;
+
         return $instance;
     }
 
@@ -60,7 +60,7 @@ class Project
         $this->state = $state;
     }
 
-    /* Getters for datafields */
+    /* Getters for data fields */
     public function getId()
     {
         return $this->id;
