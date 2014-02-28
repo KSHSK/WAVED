@@ -4,10 +4,12 @@
  */
 define([
         'WavedViewModel',
+        'modules/SaveProject',
         'models/Data/DataSet',
         'jquery'
     ], function(
         WAVEDViewModel,
+        SaveProject,
         DataSet,
         $) {
     'use strict';
@@ -93,6 +95,10 @@ define([
 
                         var dataset = new DataSet(options);
                         viewModel.currentProject.addDataSet(dataset);
+
+                        // TODO: Make sure this works once SaveProject is implemented.
+                        SaveProject.saveProject(viewModel.currentProject.name, viewModel);
+
                         dataUploaded.resolve();
                     }
                     else {
