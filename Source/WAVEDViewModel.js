@@ -1,9 +1,9 @@
 /*global define*/
 define([
-        './modules/NewProject',
-        './modules/LoadProject',
-        './modules/LoadData',
-        './models/Widget/ButtonWidget/Button',
+        'modules/NewProject',
+        'modules/LoadProject',
+        'modules/LoadData',
+        'models/Widget/ButtonWidget/Button',
         'knockout'
     ], function(
         NewProject,
