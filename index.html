@@ -60,11 +60,15 @@
                         <div>
                             <div class="inline">Source Files</div>
                             <div class="inline right">
-                                <button id="add-data-file-button" class="button-small">Add Data File</button>
+                                <button id="add-data-file-button" class="button-small" data-bind="click: tryToLoadData">Add Data File</button>
                                 <button id="delete-data-file-button" class="button-small">Delete Data File</button>
                             </div>
                         </div>
-                        <select id="data-file-list" size="5" class="select-full-size"></select>
+                        <select id="data-file-list" size="5" class="select-full-size"
+                            data-bind="options: currentProject.dataSets, 
+                                optionsText: function(item) {
+                                   return item.name + ' : ' + item.filenameOnly;
+                                }, value: selectedDataSet"></select>
                     </div>
                     <br />
                     <div>
@@ -173,6 +177,16 @@
         </select>
         <button id="load-project-refresh-list" class="button-small" data-bind="click: updateProjectList">Refresh List</button>
         <p id="load-project-error" class="error"></p>
+    </div>
+    
+    <div id="upload-data-dialog" title="Upload Data" class="dialog">
+        <label class="required" for="upload-data-name">Name: </label>
+        <input id="upload-data-name" type="text"/>
+        <p id="upload-data-name-error" class="error"></p>
+        
+        <label class="required" for="upload-data-file">File: </label>
+        <input id="upload-data-file" type="file"/>
+        <p id="upload-data-file-error" class="error"></p>
     </div>
     
     <div id="unsaved-changes-dialog" title="Unsaved Changes" class="dialog">

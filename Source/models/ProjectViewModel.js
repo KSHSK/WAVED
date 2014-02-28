@@ -4,6 +4,7 @@ define([
         'util/defined',
         'util/defaultValue',
         'models/WorkspaceViewModel',
+        'models/Data/DataSet',
         'modules/GoogleAnalytics',
         'knockout'
     ], function(
@@ -11,6 +12,7 @@ define([
         defined,
         defaultValue,
         WorkspaceViewModel,
+        DataSet,
         GoogleAnalytics,
         ko) {
     'use strict';
@@ -102,7 +104,9 @@ define([
     };
 
     ProjectViewModel.prototype.addDataSet = function(data) {
-        //TODO
+        if (data instanceof DataSet) {
+            this._dataSets.push(data);
+        }
     };
 
     ProjectViewModel.prototype.addEvent = function(event) {

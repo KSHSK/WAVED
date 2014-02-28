@@ -2,11 +2,13 @@
 define([
         './modules/NewProject',
         './modules/LoadProject',
+        './modules/LoadData',
         './models/Widget/ButtonWidget/Button',
         'knockout'
     ], function(
         NewProject,
         LoadProject,
+        LoadData,
         Button,
         ko) {
     'use strict';
@@ -20,6 +22,8 @@ define([
         this._projectList = [];
         this._projectToLoad = '';
         this._selectedWidget = '';
+        this._selectedDataSet = '';
+
         this._currentProject = {
             name: '',
             workspace: {
@@ -49,6 +53,10 @@ define([
 
     WAVEDViewModel.prototype.updateProjectList = function() {
         return LoadProject.updateProjectList(self);
+    };
+
+    WAVEDViewModel.prototype.tryToLoadData = function() {
+        return LoadData.tryToLoadData(self);
     };
 
     // TODO: Component
@@ -106,6 +114,14 @@ define([
             },
             set: function(value) {
                 this._selectedWidget = value;
+            }
+        },
+        selectedDataSet: {
+            get: function() {
+                return this._selectedDataSet;
+            },
+            set: function(value) {
+                this._selectedDataSet = value;
             }
         }
     });
