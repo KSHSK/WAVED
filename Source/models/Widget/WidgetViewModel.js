@@ -143,10 +143,13 @@ define([
         //TODO
     };
 
-    WidgetViewModel.prototype.bindData = function(name) {
+    WidgetViewModel.prototype.bindData = function(dataSet) {
+        var name = dataSet.name;
+
         // Don't bind the same data twice.
         if (this._boundData.indexOf(name) === -1) {
             this._boundData.push(name);
+            dataSet.incrementReferenceCount();
         }
     };
 

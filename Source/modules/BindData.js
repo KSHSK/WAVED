@@ -50,7 +50,10 @@ define([
         },
 
         bindData: function(viewModel, name) {
-            viewModel.selectedWidget.viewModel.bindData(name);
+            var dataSet = viewModel.currentProject.getDataSet(name);
+            if (dataSet != null) {
+                viewModel.selectedWidget.viewModel.bindData(dataSet);
+            }
         },
 
     };
