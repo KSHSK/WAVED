@@ -66,8 +66,8 @@ define([
         return BindData.tryToBindData(self);
     };
 
-    WAVEDViewModel.prototype.tryToUnbindData = function() {
-//        return UnbindData.tryToUnbindData(self);
+    WAVEDViewModel.prototype.unbindData = function() {
+        return BindData.unbindData(self);
     };
 
     // TODO: Component
