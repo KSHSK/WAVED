@@ -99,6 +99,8 @@ define([
         this._availableElements = []; // ComponentRecord[]
     };
 
+    WidgetViewModel.prototype = Object.create(ComponentViewModel.prototype);
+
     Object.defineProperties(WidgetViewModel.prototype, {
         properties: {
             get: function() {
@@ -107,7 +109,7 @@ define([
         },
         boundData: {
             get: function() {
-                return _boundData;
+                return this._boundData;
             }
         }
     });
@@ -155,8 +157,6 @@ define([
             this._boundData.splice(index, 1);
         }
     };
-
-    WidgetViewModel.prototype = Object.create(ComponentViewModel.prototype);
 
     return WidgetViewModel;
 });

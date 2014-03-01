@@ -35,7 +35,7 @@ define([
                 buttons: {
                     'Bind': function() {
                         var checked = selections.filter(':checked');
-                        selections.each(function(index, item) {
+                        checked.each(function(index, item) {
                             var name = $(item).attr('data-name');
                             self.bindData(viewModel, name);
                         });
