@@ -93,9 +93,9 @@ define([
         this.y = new NumberProperty(yOptions);
 
         // TODO: These things for real
-        this._subwidgetNames = defaultValue(state.subwidgets, []);
-        this._elementNames = defaultValue(state.elements, []);
-        this._boundData = defaultValue(state.boundData, []);
+        this._subwidgetNames = defaultValue(state.subwidgets, []); // String[]
+        this._elementNames = defaultValue(state.elements, []); // String[]
+        this._boundData = defaultValue(state.boundData, []); // String[]
         this._availableElements = []; // ComponentRecord[]
     };
 

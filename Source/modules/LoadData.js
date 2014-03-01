@@ -23,11 +23,11 @@ define([
 
         tryToLoadData: function(viewModel){
             var dataUploaded = $.Deferred();
-            this.openLoadDataProjectDialog(dataUploaded, viewModel);
+            this.openLoadDataDialog(dataUploaded, viewModel);
             return dataUploaded.promise();
         },
 
-        openLoadDataProjectDialog: function(dataUploaded, viewModel){
+        openLoadDataDialog: function(dataUploaded, viewModel){
             var self = this;
 
             // Clear the inputs and errors.
