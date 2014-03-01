@@ -3,12 +3,14 @@ define([
         'modules/NewProject',
         'modules/LoadProject',
         'modules/LoadData',
+        'modules/BindData',
         'models/Widget/ButtonWidget/Button',
         'knockout'
     ], function(
         NewProject,
         LoadProject,
         LoadData,
+        BindData,
         Button,
         ko) {
     'use strict';
@@ -58,6 +60,14 @@ define([
 
     WAVEDViewModel.prototype.tryToLoadData = function() {
         return LoadData.tryToLoadData(self);
+    };
+
+    WAVEDViewModel.prototype.tryToBindData = function() {
+        return BindData.tryToBindData(self);
+    };
+
+    WAVEDViewModel.prototype.tryToUnbindData = function() {
+//        return UnbindData.tryToUnbindData(self);
     };
 
     // TODO: Component
