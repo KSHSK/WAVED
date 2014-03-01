@@ -63,6 +63,11 @@ define(['knockout',
         data: {
             get: function() {
                 return this._data;
+            },
+            set: function(data) {
+                if (typeof data === 'object') {
+                    this._data = data;
+                }
             }
         },
         referenceCount: {

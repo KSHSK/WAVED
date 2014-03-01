@@ -131,8 +131,8 @@
                             <div data-bind="if: selectedWidget && typeof selectedWidget.viewModel.boundData !== 'undefined'">
                                 <select id="bound-data-list" size="5" class="select-full-size"
                                     data-bind="options: selectedWidget.viewModel.boundData, 
-                                        optionsText: function(item) {
-                                           return item;
+                                        optionsText: function(name) {
+                                           return name + ' : ' + currentProject.getDataSet(name).filenameOnly;
                                         }, value: selectedBoundData">
                                 </select>
                             </div>

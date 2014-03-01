@@ -117,6 +117,19 @@ define([
         //TODO
     };
 
+    ProjectViewModel.prototype.getDataSet = function(name) {
+        for (var index = 0; index < this._dataSets.length; index++) {
+            var dataSet = this._dataSets[index];
+            if (dataSet.name === name) {
+                return dataSet;
+            }
+        }
+
+        return null;
+    };
+
+    // TODO: Do we want to allow removal using dataset instance and name?
+    // The DD specifies this, but we should probably pick one.
     ProjectViewModel.prototype.removeDataSet = function(data) {
         //TODO
     };
