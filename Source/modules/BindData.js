@@ -56,6 +56,17 @@ define([
             }
         },
 
+        unbindData: function(viewModel) {
+            //TODO: Check if the data is in use before unbinding it.
+
+            var name = viewModel.selectedBoundData;
+
+            var dataSet = viewModel.currentProject.getDataSet(name);
+            if (dataSet != null) {
+                viewModel.selectedWidget.viewModel.unbindData(dataSet);
+            }
+        }
+
     };
 
     return LoadData;

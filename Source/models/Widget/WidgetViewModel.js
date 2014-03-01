@@ -153,11 +153,14 @@ define([
         }
     };
 
-    WidgetViewModel.prototype.unbindData = function(name) {
+    WidgetViewModel.prototype.unbindData = function(dataSet) {
+        var name = dataSet.name;
+
         // Only unbind if the data is bound.
         var index = this._boundData.indexOf(name);
         if (index > -1) {
             this._boundData.splice(index, 1);
+            dataSet.decrementReferenceCount();
         }
     };
 
