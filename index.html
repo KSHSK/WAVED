@@ -119,10 +119,8 @@
                             <div data-bind="template: {name : $data.templateName, data: $data}"></div>
                         </div>
                     </div>
-                    <div id="properties-panel-bound-data" data-bind="visible: selectedWidget && selectedWidget.boundData !== 'undefined'">
-                        
-<!--                         <div data-bind="visible: selectedWidget && typeof selectedWidget.boundData !== 'undefined'"> -->
-                        <div>
+                    <div id="properties-panel-bound-data" data-bind="visible: selectedWidget && selectedWidget.viewModel.boundData !== 'undefined'">                        
+                        <div data-bind="visible: selectedWidget && typeof selectedWidget.viewModel.boundData !== 'undefined'">
                             <hr/>
                             <div class="inline">Bound Data</div>
                             <div class="inline right">
@@ -130,12 +128,11 @@
                                 <button id="unbind-data-button" data-bind="click: tryToUnbindData" class="button-small">Unbind Data</button>
                             </div>
                         
-<!--                             <div data-bind="if: selectedWidget && typeof selectedWidget.boundData !== 'undefined'"> -->
-                            <div data-bind="if: selectedWidget">
+                            <div data-bind="if: selectedWidget && typeof selectedWidget.viewModel.boundData !== 'undefined'">
                                 <select id="bound-data-list" size="5" class="select-full-size"
-                                    data-bind="options: selectedWidget.boundData, 
+                                    data-bind="options: selectedWidget.viewModel.boundData, 
                                         optionsText: function(item) {
-                                           return item.name;
+                                           return item;
                                         }, value: selectedBoundData">
                                 </select>
                             </div>
