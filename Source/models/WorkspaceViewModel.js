@@ -1,21 +1,26 @@
 /*global define*/
 define([
+        'models/SuperComponentViewModel',
         'models/Property/StringProperty',
         'models/Property/NumberProperty',
         'util/defined',
         'knockout'
     ], function(
+        SuperComponentViewModel,
         StringProperty,
         NumberProperty,
         defined,
         ko){
     'use strict';
 
+    // TODO: The constructor takes in (Object state) in the DD
     var WorkspaceViewModel = function(width, height) {
+
         this.name = new StringProperty({
             displayName: 'Name',
             value: 'Workspace'
         });
+
 
         var widthOptions;
         if (defined(width)) {
@@ -50,6 +55,9 @@ define([
         ko.track(this);
     };
 
+    WorkspaceViewModel.prototype = Object.create(SuperComponentViewModel.prototype);
+
+    // TODO: In the DD, add getProperties() and getViewModel() to be consistent here
     Object.defineProperties(WorkspaceViewModel.prototype, {
         viewModel: {
             get: function() {

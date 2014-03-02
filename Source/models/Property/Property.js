@@ -9,7 +9,10 @@ define(['knockout',
 
     var Property = function(state) {
         state = defined(state) ? state : {};
+
+        // TODO: Validation, etc
         this._displayName = state.displayName;
+        this._templateName = undefined; // PropertyTemplateName
 
         ko.track(this);
     };
@@ -26,6 +29,18 @@ define(['knockout',
             }
         }
     });
+
+    Property.prototype.isValidValue = function() {
+        // TODO: Abstract method
+    };
+
+    Property.prototype.getValue = function () {
+        // TODO: Abstract method
+    };
+
+    Property.prototype.setValue = function(value) {
+        // TODO: Abstract method
+    };
 
     return Property;
 });
