@@ -41,7 +41,12 @@ define([
             },
             set: function(value) {
                 if (typeof value === 'boolean' && this.isValidValue(value)) {
+                    this.error = false;
+                    this.message = '';
                     this._value = value;
+                } else {
+                    this.error = true;
+                    this.message = 'invalid value';
                 }
             }
         }

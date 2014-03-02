@@ -3,11 +3,15 @@ define([
         './modules/NewProject',
         './modules/LoadProject',
         './models/Widget/ButtonWidget/Button',
+        './models/Property/StringProperty',
+        './util/createValidator',
         'knockout'
     ], function(
         NewProject,
         LoadProject,
         Button,
+        StringProperty,
+        createValidator,
         ko) {
     'use strict';
 
@@ -35,32 +39,26 @@ define([
             o: Button
         }];
 
-        this.newProjectName = {};
-        this.newProjectName.error = ko.observable(false);
-        this.newProjectName.message = ko.observable('this is a message');
-        this.newProjectName.value = ko.observable('').extend({
-            validate: {
-                error: this.newProjectName.error,
-                message: this.newProjectName.message,
+        this.newProjectName = new StringProperty({
+            displayName: 'Project Name',
+            value: '',
+            validValue: createValidator({
                 minLength: 1,
                 maxLength: 50,
-                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$'),
-                messageText: 'Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
-            }
+                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
+            }),
+            errorMessage: 'Must be between 1 and 50 characters<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
         });
 
-        this.loadProjectName = {};
-        this.loadProjectName.error = ko.observable(false);
-        this.loadProjectName.message = ko.observable('this is a message');
-        this.loadProjectName.value = ko.observable('').extend({
-            validate: {
-                error: this.loadProjectName.error,
-                message: this.loadProjectName.message,
+        this.loadProjectName =  new StringProperty({
+            displayName: 'Project Name',
+            value: '',
+            validValue: createValidator({
                 minLength: 1,
                 maxLength: 50,
-                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$'),
-                messageText: 'Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
-            }
+                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
+            }),
+            errorMessage: 'Must be between 1 and 50 characters<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
         });
 
         ko.track(this);

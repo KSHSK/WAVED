@@ -21,7 +21,6 @@ define([
             value: 'Workspace'
         });
 
-
         var widthOptions;
         if (defined(width)) {
             widthOptions = {

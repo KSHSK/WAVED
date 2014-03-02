@@ -19,10 +19,6 @@ define([
          * be handled before the load project dialog is opened.
          */
         tryToLoadProject: function(viewModel) {
-            viewModel.loadProjectName.value('');
-            viewModel.loadProjectName.error(false);
-            viewModel.loadProjectName.message('');
-
             var self = this;
 
             var projectClean = $.Deferred();
@@ -61,8 +57,8 @@ define([
                         viewModel.projectList = data.projects;
                     }
                     else {
-                        viewModel.loadProjectName.error(true);
-                        viewModel.loadProjectName.message(data.errorMessage);
+                        viewModel.loadProjectName.error = true;
+                        viewModel.loadProjectName.message = data.errorMessage;
                     }
                 }
             }).promise();
@@ -85,7 +81,7 @@ define([
                         text: 'Load Project',
                         'class': 'submit-button',
                         click: function() {
-                            var projectName = viewModel.loadProjectName.value();
+                            var projectName = viewModel.loadProjectName.value;
                             self.loadProject(projectLoaded, projectName, viewModel);
                             $.when(projectLoaded).done(function() {
                                 loadProjectDialog.dialog('close');
@@ -122,8 +118,8 @@ define([
                         projectLoaded.resolve();
                     }
                     else {
-                        viewModel.loadProjectName.error(true);
-                        viewModel.loadProjectName.message(data.errorMessage);
+                        viewModel.loadProjectName.error = true;
+                        viewModel.loadProjectName.message = data.errorMessage;
                     }
                 }
             });
