@@ -34,6 +34,7 @@
         $('#google-analytics-add-button').button();
         $('#google-analytics-remove-button').button();
         $('#google-analytics-clear-button').button();
+        $('#bind-data-add-data-file-button').button();
 
         // Add/Edit/Remove Buttons.
         $('#add-action-button').button({

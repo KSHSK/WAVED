@@ -58,6 +58,8 @@ define([
         },
         unmarkedDataSets: {
             get: function() {
+                // TODO: Should this also filter to only grab proper DataSets (exclude DataSubsets)?
+                // If not here, it still needs to be done somewhere for displaying on the page.
                 return this._dataSets.filter(function(dataSet) {
                     return !dataSet.isMarkedForDeletion();
                 });
