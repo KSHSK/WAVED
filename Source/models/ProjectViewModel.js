@@ -56,6 +56,13 @@ define([
                 return this._dataSets;
             }
         },
+        unmarkedDataSets: {
+            get: function() {
+                return this._dataSets.filter(function(dataSet) {
+                    return !dataSet.isMarkedForDeletion();
+                });
+            }
+        },
         googleAnalytics: {
             get: function() {
                 return this._googleAnaytics;

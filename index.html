@@ -66,7 +66,7 @@
                             </div>
                         </div>
                         <select id="data-file-list" size="5" class="select-full-size"
-                            data-bind="options: currentProject.dataSets, 
+                            data-bind="options: currentProject.unmarkedDataSets, 
                                 optionsText: function(item) {
                                    return item.name + ' : ' + item.filenameOnly;
                                 }, value: selectedDataSet"></select>
@@ -223,7 +223,7 @@
                     <th>File</th>
                 </tr>
             </thead>
-            <tbody id="bind-data-options" data-bind="foreach: currentProject.dataSets">
+            <tbody id="bind-data-options" data-bind="foreach: currentProject.unmarkedDataSets">
                 <tr>
                     <td>
                         <input type="checkbox" class="bind-data-selections"
