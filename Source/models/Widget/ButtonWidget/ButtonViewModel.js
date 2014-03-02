@@ -11,17 +11,17 @@ define([
         ko){
     'use strict';
 
-    var ButtonViewModel = function(options) {
-        options = (defined(options)) ? options : {};
-        var hasHeight = defined(options.height);
-        var hasWidth = defined(options.width);
-        WidgetViewModel.call(this, options);
+    var ButtonViewModel = function(state) {
+        state = (defined(state)) ? state : {};
+        var hasHeight = defined(state.height);
+        var hasWidth = defined(state.width);
+        WidgetViewModel.call(this, state);
 
         var labelOptions;
-        if (defined(options.label)) {
+        if (defined(state.label)) {
             labelOptions = {
-                displayName: options.label.displayName,
-                value: options.label.value
+                displayName: state.label.displayName,
+                value: state.label.value
             };
         }
         else {
@@ -43,6 +43,7 @@ define([
         if (!hasWidth) {
             this.width.value = 10;
         }
+
         ko.track(this);
     };
 
@@ -59,8 +60,8 @@ define([
     Object.defineProperties(ButtonViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.label, this.x, this.y, this.width, this.height, this.visible,
-                this.logGoogleAnalytics];
+                return [this._name, this.label, this.x, this.y,
+                        this.width, this.height, this.visible, this.logGoogleAnalytics];
             }
         }
     });
