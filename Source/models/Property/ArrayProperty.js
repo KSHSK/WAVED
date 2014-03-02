@@ -59,7 +59,12 @@ define([
             },
             set: function(value) {
                 if (this.isValidValue(value)) {
+                    this.error = false;
+                    this.message = '';
                     this._value = value;
+                } else {
+                    this.error = true;
+                    this.message = 'invalid value';
                 }
             }
         }

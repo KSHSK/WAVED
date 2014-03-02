@@ -40,7 +40,12 @@ define([
             },
             set: function(value) {
                 if (!isNaN(Number(value)) && this.isValidValue(value)) {
+                    this.error = false;
+                    this.message = '';
                     this._value = Number(value);
+                } else {
+                    this.error = true;
+                    this.message = 'invalid value';
                 }
             }
         }

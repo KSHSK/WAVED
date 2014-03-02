@@ -20,10 +20,6 @@ define([
          * be handled before the new project dialog is opened.
          */
         tryToCreateNewProject: function(viewModel) {
-            viewModel.newProjectName.value('');
-            viewModel.newProjectName.error(false);
-            viewModel.newProjectName.message('');
-
             var self = this;
             var projectClean = $.Deferred();
 
@@ -61,13 +57,14 @@ define([
                         'class': 'submit-button',
                         click: function() {
                             var value = viewModel.newProjectName.value;
-                            value.notifySubscribers(value());
 
-                            if (!viewModel.newProjectName.error()) {
+                            if (!viewModel.newProjectName.error) {
                                 self.createNewProject(projectCreated, viewModel);
                                 $.when(projectCreated).done(function() {
                                     createNewProjectDialog.dialog('close');
                                 });
+                            } else {
+                                viewModel.newProjectName.message = viewModel.newProjectName.errorMessage;
                             }
                         }
                     },
@@ -84,7 +81,7 @@ define([
         createNewProject: function(projectCreated, viewModel) {
             var self = this;
             // Don't allow leading or trailing white space.
-            var projectName = viewModel.newProjectName.value().trim();
+            var projectName = viewModel.newProjectName.value.trim();
 
             $.ajax({
                 type: 'POST',
@@ -104,8 +101,8 @@ define([
                     }
                     else {
                         // Display error to user.
-                        viewModel.newProjectName.error(true);
-                        viewModel.newProjectName.message(data.errorMessage);
+                        viewModel.newProjectName.error = true;
+                        viewModel.newProjectName.message = data.errorMessage;
                     }
                 }
             });
