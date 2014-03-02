@@ -16,7 +16,6 @@ define([
     'use strict';
 
     var self;
-
     var ProjectViewModel = function(options) {
         self = this;
         if (typeof options.name === 'undefined') {
@@ -82,7 +81,8 @@ define([
         }
     });
 
-    // TODO: Update this to make it more generic to Components, temporarily just using this._components in the methods
+    // TODO: Update this to make it more generic to Components, temporarily just using this._components in the
+    // methods
     ProjectViewModel.prototype.addComponent = function(component) {
         this._components.push(component);
     };
@@ -96,28 +96,28 @@ define([
         }
     };
 
-    ProjectViewModel.prototype.getState = function(){
-        //TODO
+    ProjectViewModel.prototype.getState = function() {
+        // TODO
     };
 
     ProjectViewModel.prototype.setState = function(state) {
-        //TODO
+        // TODO
     };
 
     ProjectViewModel.prototype.addDataSet = function(data) {
-        //TODO
+        // TODO
     };
 
     ProjectViewModel.prototype.addEvent = function(event) {
-        //TODO
+        // TODO
     };
 
     ProjectViewModel.prototype.addAction = function(action) {
-        //TODO
+        // TODO
     };
 
     ProjectViewModel.prototype.removeDataSet = function(data) {
-        //TODO
+        // TODO
     };
 
     ProjectViewModel.prototype.removeComponent = function(component) {

@@ -44,7 +44,8 @@ define([
                     this.error = false;
                     this.message = '';
                     this._value = value;
-                } else {
+                }
+                else {
                     this.error = true;
                     this.message = 'invalid value';
                 }

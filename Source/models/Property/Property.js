@@ -37,7 +37,7 @@ define(['knockout',
         // TODO: Abstract method
     };
 
-    Property.prototype.getValue = function () {
+    Property.prototype.getValue = function() {
         // TODO: Abstract method
     };
 

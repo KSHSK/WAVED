@@ -63,7 +63,8 @@ define([
                                 $.when(projectCreated).done(function() {
                                     createNewProjectDialog.dialog('close');
                                 });
-                            } else {
+                            }
+                            else {
                                 viewModel.newProjectName.message = viewModel.newProjectName.errorMessage;
                             }
                         }

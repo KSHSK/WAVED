@@ -1,5 +1,5 @@
 /*global define*/
-define(['./defined'],function(defined) {
+define(['./defined'], function(defined) {
     'use strict';
 
     var createValidator = function(options) {
@@ -8,7 +8,7 @@ define(['./defined'],function(defined) {
         var maxLength = options.maxLength;
 
         // define a function to do validation
-        return function (newValue) {
+        return function(newValue) {
             var hasError = false;
             if (defined(minLength)) {
                 hasError = hasError || newValue.length < minLength;

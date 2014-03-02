@@ -12,15 +12,15 @@ define([
 
     var LoadData = {
 
-        tryToLoadData: function(viewModel){
+        tryToLoadData: function(viewModel) {
             // TODO
         },
 
-        openLoadDataProjectDialog: function(viewModel){
+        openLoadDataProjectDialog: function(viewModel) {
             // TODO
         },
 
-        loadData: function(projectName, viewModel){
+        loadData: function(projectName, viewModel) {
             // TODO
         }
     };

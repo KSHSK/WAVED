@@ -19,7 +19,6 @@
         setupUI();
         displayPage();
         WelcomeModule.openWelcomeDialog(WAVED.viewModel);
-
     });
 
     function setupUI() {

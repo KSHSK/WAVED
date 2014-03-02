@@ -34,7 +34,7 @@ define(['knockout',
                 this._name = value;
             }
         },
-        filename : {
+        filename: {
             get: function() {
                 return this._filename;
             },
