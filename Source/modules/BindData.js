@@ -22,10 +22,9 @@ define([
 
         openBindDataDialog: function(viewModel) {
             var self = this;
-            var selections = $('.bind-data-selections');
 
             // Uncheck all.
-            selections.removeAttr('checked');
+            $('.bind-data-selections').removeAttr('checked');
 
             self.bindDataDialog.dialog({
                 resizable: false,
@@ -34,7 +33,7 @@ define([
                 modal: true,
                 buttons: {
                     'Bind': function() {
-                        var checked = selections.filter(':checked');
+                        var checked = $('.bind-data-selections:checked');
                         checked.each(function(index, item) {
                             var name = $(item).attr('data-name');
                             self.bindData(viewModel, name);
@@ -45,6 +44,10 @@ define([
                     'Cancel': function() {
                         self.bindDataDialog.dialog('close');
                     }
+                },
+                open: function() {
+                    // Don't auto-select any buttons.
+                    $('button', $(this).parent()).blur();
                 }
             });
         },
