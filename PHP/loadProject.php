@@ -6,10 +6,6 @@ $returnValue = getInitialReturnValue();
 
 $projectName = $_POST["project"];
 
-// TODO : remove once db existence is merged in
-// Go back to the main directory.
-chdir("../");
-
 // Check if the project already exists.
 if (!projectExists($projectName)) {
     setReturnValueError($returnValue, "This project does not exist.");
