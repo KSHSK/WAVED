@@ -3,7 +3,7 @@
  * A module for loading data into a project
  */
 define([
-        'WavedViewModel',
+        'WAVEDViewModel',
         'models/Data/DataSet',
         'jquery'
     ], function(

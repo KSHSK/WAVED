@@ -3,7 +3,7 @@
  * A module for uploading data to the server
  */
 define([
-        'WavedViewModel',
+        'WAVEDViewModel',
         'modules/SaveProject',
         'modules/ReadData',
         'models/Data/DataSet',
