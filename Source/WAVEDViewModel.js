@@ -18,7 +18,6 @@ define([
         this._dirty = false;
 
         this._projectList = [];
-        this._projectToLoad = '';
         this._selectedWidget = '';
         this._currentProject = {
             name: '',
@@ -36,17 +35,35 @@ define([
             o: Button
         }];
 
-        this.newProjectName = '';
-
-        ko.track(this);
-        ko.validation.binder(this).bind('newProjectName', {
-            minLength: 1,
-            maxLength: 50,
-            pattern: {
-                message: 'Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.',
-                params: '^[a-zA-Z0-9_\\- ]+$'
+        this.newProjectName = {};
+        this.newProjectName.error = ko.observable(false);
+        this.newProjectName.message = ko.observable('this is a message');
+        this.newProjectName.value = ko.observable('').extend({
+            validate: {
+                error: this.newProjectName.error,
+                message: this.newProjectName.message,
+                minLength: 1,
+                maxLength: 50,
+                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$'),
+                messageText: 'Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
             }
         });
+
+        this.loadProjectName = {};
+        this.loadProjectName.error = ko.observable(false);
+        this.loadProjectName.message = ko.observable('this is a message');
+        this.loadProjectName.value = ko.observable('').extend({
+            validate: {
+                error: this.loadProjectName.error,
+                message: this.loadProjectName.message,
+                minLength: 1,
+                maxLength: 50,
+                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$'),
+                messageText: 'Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
+            }
+        });
+
+        ko.track(this);
     };
 
     WAVEDViewModel.prototype.tryToCreateNewProject = function() {
@@ -86,14 +103,6 @@ define([
             set: function(value) {
                 this._projectList = value;
                 this.projectToLoad = value[0];
-            }
-        },
-        projectToLoad: {
-            get: function() {
-                return this._projectToLoad;
-            },
-            set: function(value) {
-                this._projectToLoad = value;
             }
         },
         currentProject: {
