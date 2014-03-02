@@ -61,4 +61,28 @@ function getProjectState($projectName) {
     global $projectSerializer;
     return $projectSerializer->get($projectName)->getState();
 }
+
+/**
+ * Recursivley removes a directory.
+ * @param string $baseDir
+ */
+function recursiveRmdir($baseDir) {
+    // Find directory contents, ignoring current directory
+    // and parent directory
+    $contents = array_diff(scandir($baseDir), array('.', '..'));
+
+    // Delete each of the directory contents
+    foreach ($contents as $content) {
+        $content = "$baseDir/$content";
+        if (is_dir($content)) {
+            recursiveRmdir($content);
+        }
+        else {
+            unlink($content);
+        }
+    }
+
+    // Remove the now empty directory
+    return rmdir($baseDir);
+}
 ?>
