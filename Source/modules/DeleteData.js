@@ -3,7 +3,7 @@
  * A module for deleting data sets from a project
  */
 define([
-        '../WavedViewModel',
+        '../WAVEDViewModel',
         'jquery'
     ], function(
         WAVEDViewModel,
