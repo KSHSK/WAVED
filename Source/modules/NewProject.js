@@ -15,16 +15,15 @@ define([
     'use strict';
 
     var NewProject = {
-        /* TODO: validation */
-        projectNameDiv: $('#project-name'),
-        createNewProjectNameInput: $('#create-new-project-name'),
-        createNewProjectError: $('#create-new-project-error'),
-
         /**
          * If the project is clean, the new project dialog is opened. If the project is dirty, the unsaved changes must
          * be handled before the new project dialog is opened.
          */
         tryToCreateNewProject: function(viewModel) {
+            viewModel.newProjectName.value('');
+            viewModel.newProjectName.error(false);
+            viewModel.newProjectName.message('');
+
             var self = this;
             var projectClean = $.Deferred();
 
@@ -51,10 +50,6 @@ define([
             var self = this;
             var createNewProjectDialog = $('#create-new-project-dialog');
 
-            // Clear the input.
-            viewModel.newProjectName = '';
-            viewModel.newProjectName.message = '';
-
             createNewProjectDialog.dialog({
                 resizable: false,
                 height: 250,
@@ -65,7 +60,10 @@ define([
                         text: 'Create Project',
                         'class': 'submit-button',
                         click: function() {
-                            if (!viewModel.newProjectName.hasError) {
+                            var value = viewModel.newProjectName.value;
+                            value.notifySubscribers(value());
+
+                            if (!viewModel.newProjectName.error()) {
                                 self.createNewProject(projectCreated, viewModel);
                                 $.when(projectCreated).done(function() {
                                     createNewProjectDialog.dialog('close');
@@ -86,8 +84,7 @@ define([
         createNewProject: function(projectCreated, viewModel) {
             var self = this;
             // Don't allow leading or trailing white space.
-            var projectName = viewModel.newProjectName.trim();//this.createNewProjectNameInput.val().trim();
-            this.createNewProjectNameInput.val(projectName);
+            var projectName = viewModel.newProjectName.value().trim();
 
             $.ajax({
                 type: 'POST',
@@ -98,7 +95,6 @@ define([
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
                     if (data.success) {
-                        self.createNewProjectError.text('');
                         viewModel.currentProject = new ProjectViewModel({
                             name: projectName
                         });
@@ -108,7 +104,8 @@ define([
                     }
                     else {
                         // Display error to user.
-                        self.createNewProjectError.text(data.errorMessage);
+                        viewModel.newProjectName.error(true);
+                        viewModel.newProjectName.message(data.errorMessage);
                     }
                 }
             });
