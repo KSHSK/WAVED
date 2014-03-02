@@ -4,12 +4,14 @@ define([
         'util/defined',
         'util/defaultValue',
         'models/WorkspaceViewModel',
+        'modules/GoogleAnalytics',
         'knockout'
     ], function(
         $,
         defined,
         defaultValue,
         WorkspaceViewModel,
+        GoogleAnalytics,
         ko) {
     'use strict';
 
@@ -19,15 +21,16 @@ define([
         }
 
         this._name = options.name;
-        this._widgets = defaultValue(options.widgets, []);
+        this._components = defaultValue(options.components, []);
         this._dataSets = defaultValue(options.dataSet, []);
         this._events = defaultValue(options.events, []);
         this._actions = defaultValue(options.actions, []);
         this._googleAnalytics = defaultValue(options.googleAnalytics, undefined);
         this._workspace = new WorkspaceViewModel(options.width, options.height);
         this._dirty = false;
+        this._projectTree = undefined; // TODO
 
-        this._widgets.push(this._workspace);
+        this._components.push(this._workspace);
 
         ko.track(this);
     };
@@ -41,9 +44,9 @@ define([
                 this._name = value;
             }
         },
-        widgets: {
+        components: {
             get: function() {
-                return this._widgets;
+                return this._components;
             }
         },
         dataSets: {
@@ -76,15 +79,16 @@ define([
         }
     });
 
-    ProjectViewModel.prototype.addWidget = function(widget) {
-        this._widgets.push(widget);
+    // TODO: Update this to make it more generic to Components, temporarily just using this._components in the methods
+    ProjectViewModel.prototype.addComponent = function(component) {
+        this._components.push(component);
     };
 
-    ProjectViewModel.prototype.removeWidget = function(widget) {
-        if (widget !== this._workspace) {
-            var index = this._widgets.indexOf(widget);
+    ProjectViewModel.prototype.removeComponent = function(component) {
+        if (component !== this._workspace) {
+            var index = this._components.indexOf(component);
             if (index > -1) {
-                this._widgets.splice(index, 1);
+                this._components.splice(index, 1);
             }
         }
     };
@@ -98,10 +102,6 @@ define([
     };
 
     ProjectViewModel.prototype.addDataSet = function(data) {
-        //TODO
-    };
-
-    ProjectViewModel.prototype.addComponent = function(component) {
         //TODO
     };
 
