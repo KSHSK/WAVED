@@ -21,7 +21,7 @@ else if (!projectExists($projectName)) {
     return;
 }
 
-// Create the directory for the project.
+// Remove the directory for the project.
 $success = recursiveRmdir("../projects/" . $projectName);
 
 if (!$success) {
@@ -30,11 +30,12 @@ if (!$success) {
     return;
 }
 
+// Remove the database entry for the project.
 $success = $projectSerializer->delete($projectName);
 
 if(!$success) {
     // Report error
-    setReturnValueError($returnValue, "Unknown error registering new project.");
+    setReturnValueError($returnValue, "Unknown error deregistering project.");
     reportReturnValue($returnValue);
     return;
 }
