@@ -1,12 +1,21 @@
 /*global define*/
 define(['WAVEDViewModel',
         'knockout',
+        'knockoutValidation',
         'jquery'
     ], function(
         WAVEDViewModel,
         ko,
+        koV,
         $) {
     'use strict';
+
+    ko.validation.configure({
+        registerExtenders: true,
+        messagesOnModified: true,
+        insertMessages: true,
+        parseInputAttributes: true
+    });
 
     var viewModel = new WAVEDViewModel();
 

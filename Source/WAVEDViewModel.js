@@ -36,7 +36,17 @@ define([
             o: Button
         }];
 
+        this.newProjectName = '';
+
         ko.track(this);
+        ko.validation.binder(this).bind('newProjectName', {
+            minLength: 1,
+            maxLength: 50,
+            pattern: {
+                message: 'Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.',
+                params: '^[a-zA-Z0-9_\\- ]+$'
+            }
+        });
     };
 
     WAVEDViewModel.prototype.tryToCreateNewProject = function() {
