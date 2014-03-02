@@ -5,11 +5,13 @@
 define([
         '../modules/UnsavedChanges',
         '../models/ProjectViewModel',
-        'jquery'
+        'jquery',
+        'knockout'
     ], function(
         UnsavedChangesModule,
         ProjectViewModel,
-        $) {
+        $,
+        ko) {
     'use strict';
 
     var NewProject = {
@@ -50,9 +52,8 @@ define([
             var createNewProjectDialog = $('#create-new-project-dialog');
 
             // Clear the input.
-            this.createNewProjectNameInput.val('');
-
-            this.createNewProjectError.text('');
+            viewModel.newProjectName = '';
+            viewModel.newProjectName.message = '';
 
             createNewProjectDialog.dialog({
                 resizable: false,
@@ -64,10 +65,12 @@ define([
                         text: 'Create Project',
                         'class': 'submit-button',
                         click: function() {
-                            self.createNewProject(projectCreated, viewModel);
-                            $.when(projectCreated).done(function() {
-                                createNewProjectDialog.dialog('close');
-                            });
+                            if (!viewModel.newProjectName.hasError) {
+                                self.createNewProject(projectCreated, viewModel);
+                                $.when(projectCreated).done(function() {
+                                    createNewProjectDialog.dialog('close');
+                                });
+                            }
                         }
                     },
                     'Cancel': function() {
@@ -83,7 +86,7 @@ define([
         createNewProject: function(projectCreated, viewModel) {
             var self = this;
             // Don't allow leading or trailing white space.
-            var projectName = this.createNewProjectNameInput.val().trim();
+            var projectName = viewModel.newProjectName.trim();//this.createNewProjectNameInput.val().trim();
             this.createNewProjectNameInput.val(projectName);
 
             $.ajax({

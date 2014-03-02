@@ -160,9 +160,8 @@
     
     <div id="create-new-project-dialog" title="New Project" class="dialog">
         <p>Please create a new project</p>
-        <label class="required" for="create-new-project-name">Project Name: </label>
-        <input id="create-new-project-name" type="text"/>
-        <p id="create-new-project-error" class="error"></p>
+        <label>Project Name:  <input id="create-new-project-name" data-bind="value: newProjectName, valueUpdate: 'afterkeydown'"/>
+        <p data-bind="validationMessage: newProjectName"></p> </label>
     </div>
     
     <div id="load-project-dialog" title="Load Project" class="dialog">
