@@ -59,7 +59,7 @@ define(['knockout',
                 this._filename = value;
             }
         },
-        filenameOnly: {
+        basename: {
             get: function() {
                 return this._filename.substr(this._filename.lastIndexOf('/')+1, this._filename.length);
             },

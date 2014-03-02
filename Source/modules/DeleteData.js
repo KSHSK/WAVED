@@ -19,6 +19,7 @@ define([
             }
 
             if (dataSet.referenceCount > 0) {
+                // TODO: Change this to be jQueryUI dialog, page banner, or other nicer display method.
                 alert('Cannot delete data that is bound to a widget');
             }
             else {

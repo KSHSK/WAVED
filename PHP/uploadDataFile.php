@@ -1,16 +1,16 @@
 <?php
+include_once("CommonMethods.php");
 
 $file = $_FILES["file"];
 $projectName = $_POST["projectName"];
 
 // Setup return object.
-$returnValue = array("errorMessage" => "", "success" => true, "filePath" => "");
+$returnValue = getInitialReturnValue();
 
 if ($file == null) {
-   $returnValue["success"] = false;
-   $returnValue["errorMessage"] = "File is missing.";
-   echo json_encode($returnValue);
-   return;
+    setReturnValueError($returnValue, "File is missing.");
+    reportReturnValue($returnValue);
+    return;
 }
 
 // Go back to the main directory.
@@ -21,21 +21,19 @@ $filePath = "projects/" . $projectName . "/data/" . $fileName;
 $tempName = $file["tmp_name"];
 
 if (file_exists($filePath)) {
-   $returnValue["success"] = false;
-   $returnValue["errorMessage"] = "This file already exists.";
-   echo json_encode($returnValue);
-   return;
+    setReturnValueError($returnValue, "This file already exists.");
+    reportReturnValue($returnValue);
+    return;
 }
 
 $success = move_uploaded_file($tempName, $filePath);
 if (!$success) {
-   $returnValue["success"] = false;
-   $returnValue["errorMessage"] = "Failed to create file.";
-   echo json_encode($returnValue);
-   return;
+    setReturnValueError($returnValue, "Failed to create file.");
+    reportReturnValue($returnValue);
+    return;
 }
 
 $returnValue["filePath"] = $filePath;
-echo json_encode($returnValue);
+reportReturnValue($returnValue);
 
 ?>
