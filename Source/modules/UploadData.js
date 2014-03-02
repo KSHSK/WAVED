@@ -1,6 +1,6 @@
 /*global define*/
 /**
- * A module for loading data into a project
+ * A module for uploading data to the server
  */
 define([
         'WavedViewModel',
@@ -14,20 +14,20 @@ define([
         $) {
     'use strict';
 
-    var LoadData = {
+    var UploadData = {
         uploadDataDialog: $('#upload-data-dialog'),
         uploadDataNameInput: $('#upload-data-name'),
         uploadDataNameError: $('#upload-data-name-error'),
         uploadDataFileInput: $('#upload-data-file'),
         uploadDataFileError: $('#upload-data-file-error'),
 
-        tryToLoadData: function(viewModel){
+        tryToUploadData: function(viewModel){
             var dataUploaded = $.Deferred();
-            this.openLoadDataDialog(dataUploaded, viewModel);
+            this.openUploadDataDialog(dataUploaded, viewModel);
             return dataUploaded.promise();
         },
 
-        openLoadDataDialog: function(dataUploaded, viewModel){
+        openUploadDataDialog: function(dataUploaded, viewModel){
             var self = this;
 
             // Clear the inputs and errors.
@@ -46,7 +46,7 @@ define([
                         text: 'Upload',
                         'class': 'submit-button',
                         click: function() {
-                            self.loadData(dataUploaded, viewModel);
+                            self.uploadData(dataUploaded, viewModel);
                             $.when(dataUploaded).done(function() {
                                 self.uploadDataDialog.dialog('close');
                             });
@@ -59,7 +59,7 @@ define([
             });
         },
 
-        loadData: function(dataUploaded, viewModel){
+        uploadData: function(dataUploaded, viewModel){
             /* TODO: validation */
 
             var self = this;
@@ -111,5 +111,5 @@ define([
         }
     };
 
-    return LoadData;
+    return UploadData;
 });

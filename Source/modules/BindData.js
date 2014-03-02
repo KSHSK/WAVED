@@ -12,7 +12,7 @@ define([
         $) {
     'use strict';
 
-    var LoadData = {
+    var BindData = {
         bindDataDialog: $('#bind-data-dialog'),
         bindDataOptions: $('#bind-data-options'),
 
@@ -69,5 +69,5 @@ define([
 
     };
 
-    return LoadData;
+    return BindData;
 });
