@@ -4,10 +4,6 @@ html, body {
     min-width: 1150px; /* temp */
 }
 
-label {
-    display: block;
-}
-
 /*** JQuery UI Overrides ***/
 .ui-widget {
     font-size: 14px;

@@ -16,7 +16,6 @@ define([
     'use strict';
 
     var self;
-
     var WAVEDViewModel = function() {
         self = this;
         this._dirty = false;
@@ -53,26 +52,26 @@ define([
         }];
 
         this.newProjectName = new StringProperty({
-            displayName: 'Project Name',
-            value: '',
-            validValue: createValidator({
-                minLength: 1,
-                maxLength: 50,
-                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
-            }),
-            errorMessage: 'Must be between 1 and 50 characters<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
-        });
+                displayName: 'Project Name',
+                value: '',
+                validValue: createValidator({
+                    minLength: 1,
+                    maxLength: 50,
+                    regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
+                }),
+                errorMessage: 'Must be between 1 and 50 characters<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
+            });
 
-        this.loadProjectName =  new StringProperty({
-            displayName: 'Project Name',
-            value: '',
-            validValue: createValidator({
-                minLength: 1,
-                maxLength: 50,
-                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
-            }),
-            errorMessage: 'Must be between 1 and 50 characters<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
-        });
+        this.loadProjectName = new StringProperty({
+                displayName: 'Project Name',
+                value: '',
+                validValue: createValidator({
+                    minLength: 1,
+                    maxLength: 50,
+                    regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
+                }),
+                errorMessage: 'Must be between 1 and 50 characters<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
+            });
 
         ko.track(this);
     };

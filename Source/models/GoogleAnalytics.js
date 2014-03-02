@@ -13,6 +13,7 @@ define([
         ko,
         $) {
     'use strict';
+
     var self;
     var GoogleAnalytics = function(state) {
         self = this;
@@ -26,7 +27,7 @@ define([
             errorMessage: 'UA code is not in the correct format. It should look like UA-####-##.'
         });
 
-        this.eventCategory =  new StringProperty({
+        this.eventCategory = new StringProperty({
             displayName: 'UA Code: ',
             value: '',
             validValue: createValidator({
@@ -53,7 +54,8 @@ define([
     GoogleAnalytics.prototype.set = function() {
         if (!self.uaCode.error && !self.eventCategory.error) {
             self._bound = true;
-        } else {
+        }
+        else {
             if (self.uaCode.error) {
                 self.uaCode.message = self.uaCode.errorMessage;
             }
@@ -69,7 +71,7 @@ define([
 
     GoogleAnalytics.prototype.clear = function() {
         self.uaCode._value = '';
-        self.uaCode.error=  true;
+        self.uaCode.error = true;
         self.uaCode.message = '';
         self.eventCategory._value = '';
         self.eventCategory.error = true;

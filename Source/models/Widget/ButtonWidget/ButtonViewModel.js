@@ -60,8 +60,8 @@ define([
     Object.defineProperties(ButtonViewModel.prototype, {
         properties: {
             get: function() {
-                return [this._name, this.label, this.x, this.y,
-                        this.width, this.height, this.visible, this.logGoogleAnalytics];
+                return [this._name, this.label, this.x, this.y, this.width, this.height, this.visible,
+                this.logGoogleAnalytics];
             }
         }
     });

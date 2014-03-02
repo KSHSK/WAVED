@@ -107,41 +107,41 @@ define([
         }
     });
 
-    WidgetViewModel.prototype.setState = function(){
-        //TODO
+    WidgetViewModel.prototype.setState = function() {
+        // TODO
     };
 
     WidgetViewModel.prototype.getState = function() {
-        //TODO
+        // TODO
         return {};
     };
 
     WidgetViewModel.prototype.addElement = function(elementName) {
-        //TODO
+        // TODO
     };
 
     WidgetViewModel.prototype.removeElement = function(element) {
-        //TODO
+        // TODO
     };
 
     WidgetViewModel.prototype.addSubwidget = function(name) {
-        //TODO
+        // TODO
     };
 
     WidgetViewModel.prototype.removeSubwidget = function(name) {
-        //TODO
+        // TODO
     };
 
     WidgetViewModel.prototype.getAvailableElements = function() {
-        //TODO
+        // TODO
     };
 
     WidgetViewModel.prototype.bindData = function(name) {
-        //TODO
+        // TODO
     };
 
     WidgetViewModel.prototype.unbindData = function(name) {
-        //TODO
+        // TODO
     };
 
     WidgetViewModel.prototype = Object.create(ComponentViewModel.prototype);

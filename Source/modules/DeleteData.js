@@ -12,15 +12,15 @@ define([
 
     var DeleteData = {
 
-        tryToDeleteData: function(viewModel){
+        tryToDeleteData: function(viewModel) {
             // TODO
         },
 
-        openDeleteDataDialog: function(viewModel){
+        openDeleteDataDialog: function(viewModel) {
             // TODO
         },
 
-        deleteData: function(projectName, viewModel){
+        deleteData: function(projectName, viewModel) {
             // TODO
         }
     };

@@ -20,11 +20,11 @@ define([
     LineGraphViewModel.prototype = Object.create(GraphViewModel.prototype);
 
     LineGraphViewModel.prototype.getState = function() {
-        //TODO;
+        // TODO;
     };
 
     LineGraphViewModel.prototype.setState = function(state) {
-        //TODO;
+        // TODO;
     };
 
     return LineGraphViewModel;
