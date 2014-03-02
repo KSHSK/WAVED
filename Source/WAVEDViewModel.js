@@ -32,6 +32,19 @@ define([
                 width: {
                     value: 750
                 }
+            },
+            googleAnalytics: {
+                uaCode: {
+                    value: '',
+                    error: false,
+                    message: ''
+                },
+                eventCategory: {
+                    value: '',
+                    error: false,
+                    message: ''
+                },
+                bound: false
             }
         };
         this._availableWidgets = [{

@@ -3,8 +3,8 @@ define([
         'jquery',
         'util/defined',
         'util/defaultValue',
-        'models/WorkspaceViewModel',
-        'modules/GoogleAnalytics',
+        './WorkspaceViewModel',
+        './GoogleAnalytics',
         'knockout'
     ], function(
         $,
@@ -15,7 +15,10 @@ define([
         ko) {
     'use strict';
 
+    var self;
+
     var ProjectViewModel = function(options) {
+        self = this;
         if (typeof options.name === 'undefined') {
             throw new Error('ProjectViewModel name is required');
         }
@@ -25,7 +28,7 @@ define([
         this._dataSets = defaultValue(options.dataSet, []);
         this._events = defaultValue(options.events, []);
         this._actions = defaultValue(options.actions, []);
-        this._googleAnalytics = defaultValue(options.googleAnalytics, undefined);
+        this._googleAnalytics = defaultValue(options.googleAnalytics, new GoogleAnalytics());
         this._workspace = new WorkspaceViewModel(options.width, options.height);
         this._dirty = false;
         this._projectTree = undefined; // TODO
@@ -56,10 +59,10 @@ define([
         },
         googleAnalytics: {
             get: function() {
-                return this._googleAnaytics;
+                return self._googleAnalytics;
             },
             set: function(value) {
-                this._googleAnalytics = value;
+                self._googleAnalytics = value;
             }
         },
         events: {

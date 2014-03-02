@@ -1,12 +1,10 @@
 /*global define*/
 define(['WAVEDViewModel',
         'knockout',
-        'util/koExtenders',
         'jquery'
     ], function(
         WAVEDViewModel,
         ko,
-        koV,
         $) {
     'use strict';
 
