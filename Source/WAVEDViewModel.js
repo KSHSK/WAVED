@@ -6,6 +6,8 @@ define([
         'modules/BindData',
         'modules/DeleteData',
         'models/Widget/ButtonWidget/Button',
+        'util/defined',
+        'util/defaultValue',
         'knockout'
     ], function(
         NewProject,
@@ -14,6 +16,8 @@ define([
         BindData,
         DeleteData,
         Button,
+        defined,
+        defaultValue,
         ko) {
     'use strict';
 
@@ -148,8 +152,24 @@ define([
             set: function(value) {
                 this._selectedBoundData = value;
             }
-        }
+        },
+        availableDataForBinding: {
+            // Returns the list of datasets that are not bound to the selected widget.
+            get: function() {
+                if (!defined(this.currentProject) || !defined(this.selectedWidget)) {
+                    return [];
+                }
 
+                // TODO: Make sure use of 'unmarkedDataSets' works after DataSubsets are implemented
+                // since implementation of that function could change at that point.
+                var dataSets = this.currentProject.unmarkedDataSets;
+                var boundDataNames = defaultValue(this.selectedWidget.viewModel.boundData, []);
+
+                return dataSets.filter(function(dataSet) {
+                    return boundDataNames.indexOf(dataSet.name) === -1;
+                });
+            }
+        }
     });
 
     return WAVEDViewModel;
