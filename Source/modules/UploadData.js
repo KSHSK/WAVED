@@ -70,6 +70,12 @@ define([
             var dataSetName = this.uploadDataNameInput.val().trim();
             this.uploadDataNameInput.val(dataSetName);
 
+            // TODO Update/Remove condition when validation and error displaying is implemented.
+            if (dataSetName.length === 0) {
+                // TODO Handle when validation and error displaying is implemented.
+                return;
+            }
+
             var form = new FormData();
             var file = self.uploadDataFileInput[0].files[0];
             if (file === undefined) {

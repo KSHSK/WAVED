@@ -68,7 +68,7 @@
                         <select id="data-file-list" size="5" class="select-full-size"
                             data-bind="options: currentProject.unmarkedDataSets, 
                                 optionsText: function(item) {
-                                   return item.name + ' : ' + item.filenameOnly;
+                                   return item.name + ' : ' + item.basename;
                                 }, value: selectedDataSet"></select>
                     </div>
                     <br />
@@ -132,7 +132,7 @@
                                 <select id="bound-data-list" size="5" class="select-full-size"
                                     data-bind="options: selectedWidget.viewModel.boundData, 
                                         optionsText: function(name) {
-                                           return name + ' : ' + currentProject.getDataSet(name).filenameOnly;
+                                           return name + ' : ' + currentProject.getDataSet(name).basename;
                                         }, value: selectedBoundData">
                                 </select>
                             </div>
@@ -231,7 +231,7 @@
                             data-bind="attr: {'data-name': $data.name}" />
                     </td>
                     <td data-bind="text: $data.name"></td>
-                    <td data-bind="text: $data.filenameOnly"></td>
+                    <td data-bind="text: $data.basename"></td>
                 </tr>
             </tbody>
         </table>
