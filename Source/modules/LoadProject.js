@@ -121,6 +121,9 @@ define([
                             name: data.projectName
                         });
                         viewModel.dirty = false;
+
+                        // TODO: Read file contents for every DataSet in the state.
+
                         projectLoaded.resolve();
                     }
                     else {
