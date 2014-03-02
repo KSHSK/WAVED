@@ -2,14 +2,14 @@
 define([
         'modules/NewProject',
         'modules/LoadProject',
-        'modules/LoadData',
+        'modules/UploadData',
         'modules/BindData',
         'models/Widget/ButtonWidget/Button',
         'knockout'
     ], function(
         NewProject,
         LoadProject,
-        LoadData,
+        UploadData,
         BindData,
         Button,
         ko) {
@@ -58,8 +58,8 @@ define([
         return LoadProject.updateProjectList(self);
     };
 
-    WAVEDViewModel.prototype.tryToLoadData = function() {
-        return LoadData.tryToLoadData(self);
+    WAVEDViewModel.prototype.tryToUploadData = function() {
+        return UploadData.tryToUploadData(self);
     };
 
     WAVEDViewModel.prototype.tryToBindData = function() {
