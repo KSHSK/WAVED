@@ -11,17 +11,19 @@ define([
     'use strict';
 
     var DeleteData = {
+        markDataForDeletion: function(viewModel){
+            var dataSet = viewModel.selectedDataSet;
 
-        tryToDeleteData: function(viewModel){
-            // TODO
-        },
+            if (typeof dataSet === 'undefined') {
+                return;
+            }
 
-        openDeleteDataDialog: function(viewModel){
-            // TODO
-        },
-
-        deleteData: function(projectName, viewModel){
-            // TODO
+            if (dataSet.referenceCount > 0) {
+                alert('Cannot delete data that is bound to a widget');
+            }
+            else {
+                dataSet.markForDeletion();
+            }
         }
     };
 

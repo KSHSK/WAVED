@@ -4,6 +4,7 @@ define([
         'modules/LoadProject',
         'modules/UploadData',
         'modules/BindData',
+        'modules/DeleteData',
         'models/Widget/ButtonWidget/Button',
         'knockout'
     ], function(
@@ -11,6 +12,7 @@ define([
         LoadProject,
         UploadData,
         BindData,
+        DeleteData,
         Button,
         ko) {
     'use strict';
@@ -68,6 +70,10 @@ define([
 
     WAVEDViewModel.prototype.unbindData = function() {
         return BindData.unbindData(self);
+    };
+
+    WAVEDViewModel.prototype.markDataForDeletion = function() {
+        return DeleteData.markDataForDeletion(self);
     };
 
     // TODO: Component

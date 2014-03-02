@@ -34,6 +34,10 @@ define(['knockout',
         }
     };
 
+    DataSet.prototype.markForDeletion = function() {
+        this._referenceCount = MARKED_FOR_DELETION;
+    };
+
     DataSet.prototype.isMarkedForDeletion = function() {
         return (this._referenceCount === MARKED_FOR_DELETION);
     };
