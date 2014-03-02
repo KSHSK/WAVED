@@ -5,11 +5,13 @@
 define([
         'WavedViewModel',
         'modules/SaveProject',
+        'modules/ReadData',
         'models/Data/DataSet',
         'jquery'
     ], function(
         WAVEDViewModel,
         SaveProject,
+        ReadData,
         DataSet,
         $) {
     'use strict';
@@ -65,8 +67,8 @@ define([
             var self = this;
 
             // Don't allow leading or trailing white space.
-            var datasetName = this.uploadDataNameInput.val().trim();
-            this.uploadDataNameInput.val(datasetName);
+            var dataSetName = this.uploadDataNameInput.val().trim();
+            this.uploadDataNameInput.val(dataSetName);
 
             var form = new FormData();
             var file = self.uploadDataFileInput[0].files[0];
@@ -88,16 +90,21 @@ define([
                     var data = JSON.parse(dataString);
                     if (data.success) {
                         var options = {
-                            name: datasetName,
+                            name: dataSetName,
                             filename: data.filePath,
                             referenceCount: 0
                         };
 
-                        var dataset = new DataSet(options);
-                        viewModel.currentProject.addDataSet(dataset);
+                        // Create the DataSet.
+                        var dataSet = new DataSet(options);
+                        viewModel.currentProject.addDataSet(dataSet);
 
                         // TODO: Make sure this works once SaveProject is implemented.
+                        // Automatically save the project to avoid inconsistencies with state and the file system.
                         SaveProject.saveProject(viewModel.currentProject.name, viewModel);
+
+                        // Read the contents of the data file.
+                        ReadData.readData(dataSet);
 
                         dataUploaded.resolve();
                     }
