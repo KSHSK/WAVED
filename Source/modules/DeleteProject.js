@@ -3,7 +3,7 @@
  * A module for deleting an existing project.
  */
 define([
-        '../WavedViewModel',
+        '../WAVEDViewModel',
         'jquery'
     ], function(
         WAVEDViewModel,
