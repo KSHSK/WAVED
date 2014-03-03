@@ -34,7 +34,6 @@ if (!$success) {
 $success = $projectSerializer->delete($projectName);
 
 if(!$success) {
-    // Report error
     setReturnValueError($returnValue, "Unknown error deregistering project.");
     reportReturnValue($returnValue);
     return;
