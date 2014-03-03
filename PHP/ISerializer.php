@@ -5,6 +5,6 @@
 */
 interface ISerializer
 {
-    public function set($id, $value);
+    public function set($value);
 }
 ?>

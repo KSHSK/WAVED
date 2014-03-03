@@ -3,14 +3,16 @@ define([
         'jquery',
         'util/defined',
         'util/defaultValue',
-        './WorkspaceViewModel',
-        './GoogleAnalytics',
+        'models/WorkspaceViewModel',
+        'models/Data/DataSet',
+        'modules/GoogleAnalytics',
         'knockout'
     ], function(
         $,
         defined,
         defaultValue,
         WorkspaceViewModel,
+        DataSet,
         GoogleAnalytics,
         ko) {
     'use strict';
@@ -54,6 +56,15 @@ define([
         dataSets: {
             get: function() {
                 return this._dataSets;
+            }
+        },
+        unmarkedDataSets: {
+            get: function() {
+                // TODO: Should this also filter to only grab proper DataSets (exclude DataSubsets)?
+                // If not here, it still needs to be done somewhere for displaying on the page.
+                return this._dataSets.filter(function(dataSet) {
+                    return !dataSet.isMarkedForDeletion();
+                });
             }
         },
         googleAnalytics: {
@@ -105,7 +116,9 @@ define([
     };
 
     ProjectViewModel.prototype.addDataSet = function(data) {
-        // TODO
+        if (data instanceof DataSet) {
+            this._dataSets.push(data);
+        }
     };
 
     ProjectViewModel.prototype.addEvent = function(event) {
@@ -116,6 +129,19 @@ define([
         // TODO
     };
 
+    ProjectViewModel.prototype.getDataSet = function(name) {
+        for (var index = 0; index < this._dataSets.length; index++) {
+            var dataSet = this._dataSets[index];
+            if (dataSet.name === name) {
+                return dataSet;
+            }
+        }
+
+        return null;
+    };
+
+    // TODO: Do we want to allow removal using dataset instance and name?
+    // The DD specifies this, but we should probably pick one.
     ProjectViewModel.prototype.removeDataSet = function(data) {
         // TODO
     };

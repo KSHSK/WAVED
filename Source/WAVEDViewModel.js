@@ -1,15 +1,25 @@
 /*global define*/
 define([
-        './modules/NewProject',
-        './modules/LoadProject',
-        './models/Widget/ButtonWidget/Button',
+        'modules/NewProject',
+        'modules/LoadProject',
+        'modules/UploadData',
+        'modules/BindData',
+        'modules/DeleteData',
+        'models/Widget/ButtonWidget/Button',
+        'util/defined',
+        'util/defaultValue',
         './models/Property/StringProperty',
         './util/createValidator',
         'knockout'
     ], function(
         NewProject,
         LoadProject,
+        UploadData,
+        BindData,
+        DeleteData,
         Button,
+        defined,
+        defaultValue,
         StringProperty,
         createValidator,
         ko) {
@@ -22,6 +32,9 @@ define([
 
         this._projectList = [];
         this._selectedWidget = '';
+        this._selectedDataSet = '';
+        this._selectedBoundData = '';
+
         this._currentProject = {
             name: '',
             workspace: {
@@ -88,6 +101,22 @@ define([
         return LoadProject.updateProjectList(self);
     };
 
+    WAVEDViewModel.prototype.tryToUploadData = function() {
+        return UploadData.tryToUploadData(self);
+    };
+
+    WAVEDViewModel.prototype.tryToBindData = function() {
+        return BindData.tryToBindData(self);
+    };
+
+    WAVEDViewModel.prototype.unbindData = function() {
+        return BindData.unbindData(self);
+    };
+
+    WAVEDViewModel.prototype.markDataForDeletion = function() {
+        return DeleteData.markDataForDeletion(self);
+    };
+
     // TODO: Component
     WAVEDViewModel.prototype.addNewWidget = function(w) {
         var widget = new w.o();
@@ -135,6 +164,39 @@ define([
             },
             set: function(value) {
                 this._selectedWidget = value;
+            }
+        },
+        selectedDataSet: {
+            get: function() {
+                return this._selectedDataSet;
+            },
+            set: function(value) {
+                this._selectedDataSet = value;
+            }
+        },
+        selectedBoundData: {
+            get: function() {
+                return this._selectedBoundData;
+            },
+            set: function(value) {
+                this._selectedBoundData = value;
+            }
+        },
+        availableDataForBinding: {
+            // Returns the list of datasets that are not bound to the selected widget.
+            get: function() {
+                if (!defined(this.currentProject) || !defined(this.selectedWidget)) {
+                    return [];
+                }
+
+                // TODO: Make sure use of 'unmarkedDataSets' works after DataSubsets are implemented
+                // since implementation of that function could change at that point.
+                var dataSets = this.currentProject.unmarkedDataSets;
+                var boundDataNames = defaultValue(this.selectedWidget.viewModel.boundData, []);
+
+                return dataSets.filter(function(dataSet) {
+                    return boundDataNames.indexOf(dataSet.name) === -1;
+                });
             }
         }
     });

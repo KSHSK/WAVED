@@ -3,7 +3,7 @@
  * A module for deleting data sets from a project
  */
 define([
-        '../WavedViewModel',
+        '../WAVEDViewModel',
         'jquery'
     ], function(
         WAVEDViewModel,
@@ -11,17 +11,20 @@ define([
     'use strict';
 
     var DeleteData = {
+        markDataForDeletion: function(viewModel){
+            var dataSet = viewModel.selectedDataSet;
 
-        tryToDeleteData: function(viewModel) {
-            // TODO
-        },
+            if (typeof dataSet === 'undefined') {
+                return;
+            }
 
-        openDeleteDataDialog: function(viewModel) {
-            // TODO
-        },
-
-        deleteData: function(projectName, viewModel) {
-            // TODO
+            if (dataSet.referenceCount > 0) {
+                // TODO: Change this to be jQueryUI dialog, page banner, or other nicer display method.
+                alert('Cannot delete data that is bound to a widget');
+            }
+            else {
+                dataSet.markForDeletion();
+            }
         }
     };
 
