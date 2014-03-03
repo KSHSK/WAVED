@@ -2,6 +2,7 @@
 define(['./defined'], function(defined) {
     'use strict';
 
+    //TODO: Make a validator class?
     var createValidator = function(options) {
         var regex = options.regex;
         var minLength = options.minLength;

@@ -71,6 +71,7 @@ define([
 
     GoogleAnalytics.prototype.clear = function() {
         if (self.uaCode._value === '') {
+            // needed to force knockout to update UI input
             self.uaCode._value = ' ';
         }
         self.uaCode._value = '';
@@ -78,6 +79,7 @@ define([
         self.uaCode.message = '';
 
         if (self.eventCategory._value === '') {
+            // needed to force knockout to update UI input
             self.eventCategory._value = ' ';
         }
         self.eventCategory._value = '';
