@@ -122,6 +122,10 @@ define([
                         });
                         viewModel.dirty = false;
 
+                        // Set the URL to include the current project name.
+                        var projectParam = '?project=' + data.projectName;
+                        history.pushState({}, '', projectParam);
+
                         // TODO: Remove files that are marked for deletion.
                         // TODO: Read file contents for every DataSet in the state.
 
@@ -130,6 +134,7 @@ define([
                     else {
                         // Display error to user.
                         self.loadProjectError.text(data.errorMessage);
+                        projectLoaded.reject();
                     }
                 }
             });
