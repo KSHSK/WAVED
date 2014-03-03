@@ -104,7 +104,7 @@ define([
 
                         // Set the URL to include the current project name.
                         var projectParam = '?project=' + data.projectName;
-                        history.pushState({}, '', projectParam);
+                        history.replaceState({}, '', projectParam);
 
                         projectCreated.resolve();
                     }
