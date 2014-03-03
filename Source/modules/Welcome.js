@@ -12,9 +12,49 @@ define([
         $) {
     'use strict';
 
+    function getProjectNameFromUrl() {
+        var params = location.search.split('?');
+        if (params.length < 2) {
+            // Invalid URL parameter.
+            return "";
+        }
+
+        var projectParam = params[1].split('=');
+        if (projectParam.length < 2 || projectParam[0] !== "project") {
+            // Invalid URL parameter.
+            return "";
+        }
+
+        return decodeURI(projectParam[1]);
+    }
+
     var Welcome = {
 
         welcomeDialog: $('#welcome-dialog'),
+
+        /**
+         * Starts the application
+         */
+        start: function(viewModel) {
+            var self = this;
+
+            var projectName = getProjectNameFromUrl();
+            if (projectName.length === 0) {
+                // Open welcome dialog.
+                self.openWelcomeDialog(viewModel);
+            }
+            else {
+                var projectLoaded = $.Deferred();
+
+                // Try to load the project.
+                LoadProject.loadProject(projectLoaded, projectName, viewModel);
+
+                // If this project failed to load, open the welcome dialog.
+                $.when(projectLoaded).fail(function() {
+                    self.openWelcomeDialog(viewModel);
+                });
+            }
+        },
 
         /**
          * Open the welcome dialog.

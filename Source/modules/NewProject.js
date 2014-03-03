@@ -97,10 +97,15 @@ define([
                     if (data.success) {
                         self.createNewProjectError.text('');
                         viewModel.currentProject = new ProjectViewModel({
-                            name: projectName
+                            name: data.projectName
                         });
 
                         viewModel.dirty = false;
+
+                        // Set the URL to include the current project name.
+                        var projectParam = '?project=' + data.projectName;
+                        history.pushState({}, '', projectParam);
+
                         projectCreated.resolve();
                     }
                     else {
