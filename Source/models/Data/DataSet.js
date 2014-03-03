@@ -42,6 +42,19 @@ define(['knockout',
         return (this._referenceCount === MARKED_FOR_DELETION);
     };
 
+    DataSet.prototype.getState = function() {
+        return {
+            type: "DataSet",
+            name: this._name,
+            fileName: this._filename,
+            referenceCount: this._referenceCount
+        };
+    };
+
+    DataSet.prototype.setState = function(state) {
+        // TODO
+    };
+
     Object.defineProperties(DataSet.prototype, {
         name: {
             get: function() {
