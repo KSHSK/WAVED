@@ -89,6 +89,8 @@ define([
                         }
                     },
                     'Cancel': function() {
+                        viewModel.loadProjectName._value = '';
+                        viewModel.loadProjectName.message = '';
                         loadProjectDialog.dialog('close');
                     }
                 }

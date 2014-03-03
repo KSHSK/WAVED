@@ -181,7 +181,7 @@
     
     <div id="create-new-project-dialog" title="New Project" class="dialog">
         <p>Please create a new project</p>
-        <label class="required">Project Name: <input id="create-new-project-name" data-bind="value: newProjectName.value, valueUpdate: 'afterkeydown'"/> </label>
+        <label class="required">Project Name: <input id="create-new-project-name" data-bind="value: newProjectName.value, valueUpdate: 'keyup'"/> </label>
         <div class="error" data-bind="visible: newProjectName.error, html: newProjectName.message"></div>
     </div>
     
@@ -240,21 +240,21 @@
     <script type="text/html" id="stringPropertyTemplate">
         <div>
             <span data-bind="text:displayName"></span>
-            <input type="text" data-bind="value:value, valueUpdate: 'afterkeydown'"></input>
+            <input type="text" data-bind="value:value, valueUpdate: 'keyup'"></input>
             <div class="error" data-bind="visible: error, html: message"></div>
         </div>
     </script>
     <script type="text/html" id="numberPropertyTemplate">
         <div>
             <span data-bind="text:displayName"></span>
-            <input type="text" data-bind="value:value, valueUpdate: 'afterkeydown'"></input>
+            <input type="text" data-bind="value:value, valueUpdate: 'keyup'"></input>
             <div class="error" data-bind="visible: error, html: message"></div>
         </div>
     </script>
     <script type="text/html" id="arrayPropertyTemplate">
         <div>
             <span data-bind="text:displayName"></span>
-            <input type="text" data-bind="value:value, valueUpdate: 'afterkeydown'"></input>
+            <input type="text" data-bind="value:value, valueUpdate: 'keyup'"></input>
             <div class="error" data-bind="visible: error, html: message"><div>
         </div>
     </script>
