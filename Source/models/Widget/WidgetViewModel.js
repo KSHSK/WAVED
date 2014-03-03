@@ -93,16 +93,23 @@ define([
         this.y = new NumberProperty(yOptions);
 
         // TODO: These things for real
-        this._subwidgetNames = defaultValue(state.subwidgets, []);
-        this._elementNames = defaultValue(state.elements, []);
-        this._boundData = defaultValue(state.boundData, []);
+        this._subwidgetNames = defaultValue(state.subwidgets, []); // String[]
+        this._elementNames = defaultValue(state.elements, []); // String[]
+        this._boundData = defaultValue(state.boundData, []); // String[]
         this._availableElements = []; // ComponentRecord[]
     };
+
+    WidgetViewModel.prototype = Object.create(ComponentViewModel.prototype);
 
     Object.defineProperties(WidgetViewModel.prototype, {
         properties: {
             get: function() {
                 return [this._name, this.x, this.y, this.width, this.height, this.visible, this.logGoogleAnalytics];
+            }
+        },
+        boundData: {
+            get: function() {
+                return this._boundData;
             }
         }
     });
@@ -136,15 +143,26 @@ define([
         //TODO
     };
 
-    WidgetViewModel.prototype.bindData = function(name) {
-        //TODO
+    WidgetViewModel.prototype.bindData = function(dataSet) {
+        var name = dataSet.name;
+
+        // Don't bind the same data twice.
+        if (this._boundData.indexOf(name) === -1) {
+            this._boundData.push(name);
+            dataSet.incrementReferenceCount();
+        }
     };
 
-    WidgetViewModel.prototype.unbindData = function(name) {
-        //TODO
-    };
+    WidgetViewModel.prototype.unbindData = function(dataSet) {
+        var name = dataSet.name;
 
-    WidgetViewModel.prototype = Object.create(ComponentViewModel.prototype);
+        // Only unbind if the data is bound.
+        var index = this._boundData.indexOf(name);
+        if (index > -1) {
+            this._boundData.splice(index, 1);
+            dataSet.decrementReferenceCount();
+        }
+    };
 
     return WidgetViewModel;
 });

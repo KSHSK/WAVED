@@ -122,3 +122,8 @@ html, body {
 .widget {
     pointer-events:auto;
 }
+
+#bind-data-table {
+    width: 100%;
+    text-align: left;
+}
