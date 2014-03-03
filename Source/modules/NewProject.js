@@ -45,6 +45,9 @@ define([
         openCreateNewProjectDialog: function(projectCreated, viewModel) {
             var self = this;
             var createNewProjectDialog = $('#create-new-project-dialog');
+            viewModel.newProjectName._value = '';
+            viewModel.newProjectName.message = '';
+
 
             createNewProjectDialog.dialog({
                 resizable: false,
@@ -70,8 +73,6 @@ define([
                         }
                     },
                     'Cancel': function() {
-                        viewModel.newProjectName._value = '';
-                        viewModel.newProjectName.message = '';
                         createNewProjectDialog.dialog('close');
                     }
                 }

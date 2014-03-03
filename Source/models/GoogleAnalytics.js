@@ -70,15 +70,15 @@ define([
     };
 
     GoogleAnalytics.prototype.clear = function() {
-        if (self.uaCode.value === '') {
-            self.uaCode.value = ' ';
+        if (self.uaCode._value === '') {
+            self.uaCode._value = ' ';
         }
         self.uaCode._value = '';
         self.uaCode.error = true;
         self.uaCode.message = '';
 
-        if (self.eventCategory.value === '') {
-            self.eventCategory.value = ' ';
+        if (self.eventCategory._value === '') {
+            self.eventCategory._value = ' ';
         }
         self.eventCategory._value = '';
         self.eventCategory.error = true;
