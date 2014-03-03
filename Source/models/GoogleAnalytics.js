@@ -3,8 +3,8 @@
  * A module for Google Analytics integration
  */
 define([
-        './Property/StringProperty',
-        '../util/createValidator',
+        'models/Property/StringProperty',
+        'util/createValidator',
         'knockout',
         'jquery'
     ], function(
