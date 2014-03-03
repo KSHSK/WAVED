@@ -30,6 +30,8 @@ define([
         this._templateName = PropertyTemplateName.BOOLEAN;
 
         ko.track(this);
+
+        this.error = !this.isValidValue(this._value);
     };
 
     BooleanProperty.prototype = Object.create(Property.prototype);
@@ -47,7 +49,7 @@ define([
                 }
                 else {
                     this.error = true;
-                    this.message = 'invalid value';
+                    this.message = this.errorMessage;
                 }
             }
         }

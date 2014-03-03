@@ -96,7 +96,7 @@ define([
                         viewModel.currentProject = new ProjectViewModel({
                             name: projectName
                         });
-
+                        viewModel.newProjectName._value = '';
                         viewModel.dirty = false;
                         projectCreated.resolve();
                     }

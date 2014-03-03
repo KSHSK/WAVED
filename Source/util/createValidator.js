@@ -6,6 +6,8 @@ define(['./defined'], function(defined) {
         var regex = options.regex;
         var minLength = options.minLength;
         var maxLength = options.maxLength;
+        var min = options.min;
+        var max = options.max;
 
         // define a function to do validation
         return function(newValue) {
@@ -18,6 +20,12 @@ define(['./defined'], function(defined) {
             }
             if (defined(regex)) {
                 hasError = hasError || !(regex.test(newValue));
+            }
+            if (defined(min)) {
+                hasError = hasError || min > newValue;
+            }
+            if (defined(max)) {
+                hasError = hasError || max < newValue;
             }
             return !hasError;
         };

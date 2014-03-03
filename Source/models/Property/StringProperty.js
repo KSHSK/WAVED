@@ -31,7 +31,7 @@ define([
 
         ko.track(this);
 
-        this.error = this.isValidValue(this._value) ? false : true;
+        this.error = !this.isValidValue(this._value);
     };
 
     StringProperty.prototype = Object.create(Property.prototype);

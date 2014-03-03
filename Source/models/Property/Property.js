@@ -13,7 +13,7 @@ define(['knockout',
         // TODO: Validation, etc
         this._displayName = state.displayName;
         this._templateName = undefined; // PropertyTemplateName
-        this.errorMessage = defined(state.errorMessage) ? state.errorMessage : 'invalid valid';
+        this.errorMessage = defined(state.errorMessage) ? state.errorMessage : 'Invalid value';
         this.message = '';
         this.error = false;
 
