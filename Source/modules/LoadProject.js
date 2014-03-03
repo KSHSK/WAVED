@@ -121,6 +121,10 @@ define([
                             name: data.projectName
                         });
                         viewModel.dirty = false;
+
+                        // TODO: Remove files that are marked for deletion.
+                        // TODO: Read file contents for every DataSet in the state.
+
                         projectLoaded.resolve();
                     }
                     else {
