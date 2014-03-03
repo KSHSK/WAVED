@@ -6,5 +6,6 @@
 interface ISerializer
 {
     public function set($value);
+    public function delete($id);
 }
 ?>
