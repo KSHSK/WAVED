@@ -27,10 +27,10 @@ define([
         }
         else {
             this.isValidValue = function(value) {
-                if (defined(this._options)) {
+                if (defined(this._options) && this._options.length > 0) {
                     return (this._options.indexOf(value) !== -1);
                 }
-                return false;
+                return true;
             };
         }
 

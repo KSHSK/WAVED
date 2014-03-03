@@ -8,8 +8,9 @@ define([
         'models/Widget/ButtonWidget/Button',
         'util/defined',
         'util/defaultValue',
-        './models/Property/StringProperty',
-        './util/createValidator',
+        'models/Property/StringProperty',
+        'models/Property/ArrayProperty',
+        'util/createValidator',
         'knockout'
     ], function(
         NewProject,
@@ -21,6 +22,7 @@ define([
         defined,
         defaultValue,
         StringProperty,
+        ArrayProperty,
         createValidator,
         ko) {
     'use strict';
@@ -75,15 +77,10 @@ define([
                 errorMessage: 'Must be between 1 and 50 characters<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
             });
 
-        this.loadProjectName = new StringProperty({
+        this.loadProjectName = new ArrayProperty({
                 displayName: 'Project Name',
                 value: '',
-                validValue: createValidator({
-                    minLength: 1,
-                    maxLength: 50,
-                    regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
-                }),
-                errorMessage: 'Must be between 1 and 50 characters<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
+                options: this.projectList
             });
 
         ko.track(this);
@@ -141,7 +138,8 @@ define([
             },
             set: function(value) {
                 this._projectList = value;
-                this.projectToLoad = value[0];
+                this.loadProjectName.options = value;
+                this.loadProjectName.value = value[0];
             }
         },
         currentProject: {

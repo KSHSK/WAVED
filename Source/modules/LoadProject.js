@@ -70,6 +70,8 @@ define([
         openLoadProjectDialog: function(projectLoaded, viewModel) {
             var loadProjectDialog = $('#load-project-dialog');
             var self = this;
+            viewModel.loadProjectName._value = '';
+            viewModel.loadProjectName.message = '';
 
             loadProjectDialog.dialog({
                 resizable: false,
@@ -89,8 +91,6 @@ define([
                         }
                     },
                     'Cancel': function() {
-                        viewModel.loadProjectName._value = '';
-                        viewModel.loadProjectName.message = '';
                         loadProjectDialog.dialog('close');
                     }
                 }
