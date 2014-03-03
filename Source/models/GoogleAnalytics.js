@@ -71,7 +71,7 @@ define([
 
     GoogleAnalytics.prototype.clear = function() {
         if (self.uaCode.value === '') {
-            self.uaCode._value = ' ';
+            self.uaCode.value = ' ';
         }
         self.uaCode._value = '';
         self.uaCode.error = true;

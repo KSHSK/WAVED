@@ -70,6 +70,8 @@ define([
                         }
                     },
                     'Cancel': function() {
+                        viewModel.newProjectName._value = '';
+                        viewModel.newProjectName.message = '';
                         createNewProjectDialog.dialog('close');
                     }
                 }
