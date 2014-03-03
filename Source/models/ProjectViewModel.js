@@ -5,7 +5,7 @@ define([
         'util/defaultValue',
         'models/WorkspaceViewModel',
         'models/Data/DataSet',
-        'modules/GoogleAnalytics',
+        './GoogleAnalytics',
         'knockout'
     ], function(
         $,

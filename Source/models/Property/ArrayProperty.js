@@ -15,7 +15,7 @@ define([
     'use strict';
 
 
-var ArrayProperty = function(state) {
+    var ArrayProperty = function(state) {
         Property.call(this, state);
 
         state = defined(state) ? state : {};
@@ -37,6 +37,8 @@ var ArrayProperty = function(state) {
         this._templateName = PropertyTemplateName.ARRAY;
 
         ko.track(this);
+
+        this.error = !this.isValidValue(this._value);
     };
 
     ArrayProperty.prototype = Object.create(Property.prototype);
@@ -67,7 +69,7 @@ var ArrayProperty = function(state) {
                 }
                 else {
                     this.error = true;
-                    this.message = 'invalid value';
+                    this.message = this.errorMessage;
                 }
             }
         }

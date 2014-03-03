@@ -29,6 +29,8 @@ define([
         this._templateName = PropertyTemplateName.NUMBER;
 
         ko.track(this);
+
+        this.error = !this.isValidValue(this._value);
     };
 
     NumberProperty.prototype = Object.create(Property.prototype);
@@ -46,7 +48,7 @@ define([
                 }
                 else {
                     this.error = true;
-                    this.message = 'invalid value';
+                    this.message = this.errorMessage;
                 }
             }
         }

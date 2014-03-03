@@ -3,11 +3,13 @@ define([
         'models/Widget/WidgetViewModel',
         'models/Property/StringProperty',
         'util/defined',
+        'util/createValidator',
         'knockout'
     ],function(
         WidgetViewModel,
         StringProperty,
         defined,
+        createValidator,
         ko){
     'use strict';
 
@@ -31,9 +33,11 @@ define([
                 value: ''
             };
         }
-        labelOptions.isValidValue = function(value) {
-            return value.length > 0 && value.length < 50;
-        };
+        labelOptions.validValue = createValidator({
+            minLength: 1,
+            maxLength: 50
+        });
+        labelOptions.errorMessage = 'Must be between 1 and 50 characters';
 
         this.label = new StringProperty(labelOptions);
 

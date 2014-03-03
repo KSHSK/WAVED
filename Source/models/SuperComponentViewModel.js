@@ -3,11 +3,13 @@ define([
         'models/Property/StringProperty',
         'jquery',
         'util/defined',
+        'util/createValidator',
         'knockout'
     ], function(
         StringProperty,
         $,
         defined,
+        createValidator,
         ko) {
     'use strict';
 
@@ -25,9 +27,12 @@ define([
                 value: ''
             };
         }
-        nameOptions.isValidValue = function(value) {
-            return value.match(new RegExp('^[a-zA-Z0-9_\\- ]+$')) && value.length > 0 && value.length < 51;
-        };
+        nameOptions.validValue =  createValidator({
+            regex: new RegExp('^[a-zA-Z0-9_\\- ]+$'),
+            minLength: 1,
+            maxLength: 50
+        });
+        nameOptions.errorMessage = 'May only contain alphanumerics, hypens (-), underscores(_) and spaces.';
         this._name = new StringProperty(nameOptions);
 
         ko.track(this);

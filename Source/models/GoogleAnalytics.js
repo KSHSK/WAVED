@@ -70,12 +70,19 @@ define([
     };
 
     GoogleAnalytics.prototype.clear = function() {
+        if (self.uaCode.value === '') {
+            self.uaCode._value = ' ';
+        }
         self.uaCode._value = '';
         self.uaCode.error = true;
         self.uaCode.message = '';
+
+        if (self.eventCategory.value === '') {
+            self.eventCategory.value = ' ';
+        }
         self.eventCategory._value = '';
         self.eventCategory.error = true;
-        self.uaCode.message = '';
+        self.eventCategory.message = '';
     };
 
     return GoogleAnalytics;

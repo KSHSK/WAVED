@@ -182,7 +182,7 @@
     <div id="create-new-project-dialog" title="New Project" class="dialog">
         <p>Please create a new project</p>
         <label class="required">Project Name: <input id="create-new-project-name" data-bind="value: newProjectName.value, valueUpdate: 'afterkeydown'"/> </label>
-        <span class="error" data-bind="visible: newProjectName.error, html: newProjectName.message"></span>
+        <div class="error" data-bind="visible: newProjectName.error, html: newProjectName.message"></div>
     </div>
     
     <div id="load-project-dialog" title="Load Project" class="dialog">
@@ -193,7 +193,7 @@
             </select>
             <button id="load-project-refresh-list" class="button-small" data-bind="click: updateProjectList">Refresh List</button>
         </label>
-        <span class="error" data-bind="visible: loadProjectName.error, html: loadProjectName.message"></span>
+        <div class="error" data-bind="visible: loadProjectName.error, html: loadProjectName.message"></div>
     </div>
     
     <div id="upload-data-dialog" title="Upload Data" class="dialog">
@@ -240,29 +240,29 @@
     <script type="text/html" id="stringPropertyTemplate">
         <div>
             <span data-bind="text:displayName"></span>
-            <input type="text" data-bind="value:value"></input>
-            <span class="error" data-bind="visible: error, html: message"></span>
+            <input type="text" data-bind="value:value, valueUpdate: 'afterkeydown'"></input>
+            <div class="error" data-bind="visible: error, html: message"></div>
         </div>
     </script>
     <script type="text/html" id="numberPropertyTemplate">
         <div>
             <span data-bind="text:displayName"></span>
-            <input type="text" data-bind="value:value"></input>
-            <span class="error" data-bind="visible: error, html: message"></span>
+            <input type="text" data-bind="value:value, valueUpdate: 'afterkeydown'"></input>
+            <div class="error" data-bind="visible: error, html: message"></div>
         </div>
     </script>
     <script type="text/html" id="arrayPropertyTemplate">
         <div>
             <span data-bind="text:displayName"></span>
-            <input type="text" data-bind="value:value"></input>
-            <span class="error" data-bind="visible: error, html: message"></span>
+            <input type="text" data-bind="value:value, valueUpdate: 'afterkeydown'"></input>
+            <div class="error" data-bind="visible: error, html: message"><div>
         </div>
     </script>
     <script type="text/html" id="booleanPropertyTemplate">
         <div>
             <input type="checkbox" data-bind="checked:value"></input>
             <span data-bind="text:displayName"></span>
-            <span class="error" data-bind="visible: error, html: message"></span>
+            <div class="error" data-bind="visible: error, html: message"></div>
         </div>
     </script>
     <script type="text/html" id="buttonTemplate">
