@@ -32,6 +32,7 @@
         $('#google-analytics-add-button').button();
         $('#google-analytics-remove-button').button();
         $('#google-analytics-clear-button').button();
+        $('#bind-data-add-data-file-button').button();
 
         // Add/Edit/Remove Buttons.
         $('#add-action-button').button({
@@ -111,6 +112,20 @@
             }
         });
 
+        $('#bind-data-button').button({
+            text: false,
+            icons: {
+                primary: 'ui-icon-plus'
+            }
+        });
+
+        $('#unbind-data-button').button({
+            text: false,
+            icons: {
+                primary: 'ui-icon-trash'
+            }
+        });
+
         $('#load-project-refresh-list').button({
             text: false,
             icons: {
@@ -126,23 +141,6 @@
         $('input').addClass('ui-corner-all');
 
         var viewModel = WAVED.viewModel;
-
-        var $widgetsPanel = $('#widgets-panel');
-        $widgetsPanel.attr('data-bind', 'foreach: availableWidgets');
-        var widgetButton = document.createElement('button');
-        $(widgetButton).attr('data-bind', 'text: $data.name, click: $parent.addNewWidget');
-        $widgetsPanel.append(widgetButton);
-        // TODO: Widgets -> Components
-        var $propertiesPanel = $('#properties-panel');
-        $propertiesPanel.attr('data-bind', 'foreach: currentProject.components');
-        var widgetProperties = document.createElement('div');
-        $(widgetProperties).attr('data-bind',
-            'foreach: $data.viewModel.properties, visible: $parent.selectedWidget == $data');
-        var property = document.createElement('div');
-        $(property).attr('data-bind', 'template: {name : $data.templateName, data: $data}');
-        $(widgetProperties).append(property);
-        $propertiesPanel.append(widgetProperties);
-
         ko.applyBindings(viewModel, document.body);
     }
 
