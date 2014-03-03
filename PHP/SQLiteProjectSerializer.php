@@ -67,6 +67,23 @@ class SQLiteProjectSerializer implements ISerializer, IDeserializer
     }
 
     /**
+     * Deletes the given project to the database
+     * @param string $name
+     * @return boolean : TRUE on success, FALSE otherwise
+     */
+    public function delete($name)
+    {
+        $delete = $this->db->prepare("DELETE FROM  " . self::TABLE . "
+            WHERE name = :name");
+
+        $delete->bindValue(':name', $name, SQLITE3_TEXT);
+        $delete->execute();
+        $delete->close();
+
+        return $this->db->changes() > 0;
+    }
+
+    /**
      * Returns wheter a project with the given name exists
      * @param String $name
      * @return boolean
