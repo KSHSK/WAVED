@@ -1,5 +1,4 @@
 <?php
-include_once("SQLiteProjectSerializer.php");
 include_once("connect.php");
 
 /**
@@ -37,18 +36,21 @@ function reportReturnValue($returnValue) {
  * @param string $projectName
  */
 function projectExists($projectName) {
-    global $db;
-    $deserializer = new SQLiteProjectSerializer($db);
-    return $deserializer->exists($projectName);
+    global $projectSerializer;
+    return $projectSerializer->exists($projectName);
 }
 
 /**
  * Returns all existing projects.
  */
 function getExistingsProjects() {
-    global $db;
-    $deserializer = new SQLiteProjectSerializer($db);
-    return $deserializer->listId();
+    global $projectSerializer;
+    $projects = $projectSerializer->getAll();
+    $getName = function($project) { return $project->getName(); };
+
+    // Map through the array, returning only the name
+    // for each project
+    return array_map($getName, $projects);
 }
 
 /**
@@ -56,8 +58,31 @@ function getExistingsProjects() {
  * @param string $projectName
  */
 function getProjectState($projectName) {
-    global $db;
-    $deserializer = new SQLiteProjectSerializer($db);
-    return $deserializer->get($projectName);
+    global $projectSerializer;
+    return $projectSerializer->get($projectName)->getState();
+}
+
+/**
+ * Recursivley removes a directory.
+ * @param string $baseDir
+ */
+function recursiveRmdir($baseDir) {
+    // Find directory contents, ignoring current directory
+    // and parent directory
+    $contents = array_diff(scandir($baseDir), array('.', '..'));
+
+    // Delete each of the directory contents
+    foreach ($contents as $content) {
+        $content = "$baseDir/$content";
+        if (is_dir($content)) {
+            recursiveRmdir($content);
+        }
+        else {
+            unlink($content);
+        }
+    }
+
+    // Remove the now empty directory
+    return rmdir($baseDir);
 }
 ?>

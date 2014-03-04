@@ -6,7 +6,8 @@ require.config({
         knockout: '../ThirdParty/knockout/knockout',
         infuser: '../ThirdParty/knockout/koExternalTemplateEngine/infuser-amd',
         TrafficCop: '../ThirdParty/knockout/koExternalTemplateEngine/TrafficCop',
-        koExternalTemplateEngine: '../ThirdParty/knockout/koExternalTemplateEngine/koExternalTemplateEngine-amd'
+        koExternalTemplateEngine: '../ThirdParty/knockout/koExternalTemplateEngine/koExternalTemplateEngine-amd',
+        d3: '../ThirdParty/d3/d3.v3'
     },
 
     shim: {
@@ -22,6 +23,9 @@ require.config({
         },
         'koExternalTemplateEngine': {
             deps: ['jquery', 'infuser', 'TrafficCop', 'knockout']
+        },
+        'd3': {
+            'exports': 'd3'
         }
     },
 
