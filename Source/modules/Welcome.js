@@ -49,8 +49,13 @@ define([
                 // Try to load the project.
                 LoadProject.loadProject(projectLoaded, projectName, viewModel);
 
-                // If this project failed to load, open the welcome dialog.
+                // If this project failed to load...
                 $.when(projectLoaded).fail(function() {
+                    // Remove the URL param for the project that couldn't be loaded.
+                    var url = location.href.split('?')[0];
+                    history.replaceState({}, '', url);
+
+                    // Open welcome window.
                     self.openWelcomeDialog(viewModel);
                 });
             }
