@@ -22,9 +22,6 @@ require.config({
         },
         'koExternalTemplateEngine': {
             deps: ['jquery', 'infuser', 'TrafficCop', 'knockout']
-        },
-        'knockout': {
-            deps: ['../ThirdParty/knockout/weakmap']
         }
     },
 
