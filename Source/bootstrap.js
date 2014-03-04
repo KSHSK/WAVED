@@ -17,7 +17,7 @@
         $) {
     'use strict';
 
-    require(['../ThirdParty/domReady!'], function(document) {
+    require(['../ThirdParty/domReady!', 'koExternalTemplateEngine'], function(document) {
         setupUI();
         displayPage();
         WelcomeModule.openWelcomeDialog(WAVED.viewModel);
