@@ -3,7 +3,7 @@
  * A module for saving a project.
  */
 define([
-        '../WavedViewModel',
+        '../WAVEDViewModel',
         'jquery'
     ], function(
         WAVEDViewModel,

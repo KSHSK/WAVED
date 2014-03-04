@@ -3,7 +3,7 @@
  * A module for exporting the current project.
  */
 define([
-        '../WavedViewModel',
+        '../WAVEDViewModel',
         'jquery'
     ], function(
         WAVEDViewModel,
