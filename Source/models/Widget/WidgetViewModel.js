@@ -36,7 +36,7 @@ define([
             };
         }
         heightOptions.validValue = createValidator({
-            min: 0,
+            min: 1,
             max: 100
         });
         heightOptions.errorMessage = 'Value must be between 0 and 100';
@@ -57,7 +57,7 @@ define([
             };
         }
         widthOptions.validValue =  createValidator({
-            min: 0,
+            min: 1,
             max: 100
         });
         widthOptions.errorMessage = 'Value must be between 0 and 100';
