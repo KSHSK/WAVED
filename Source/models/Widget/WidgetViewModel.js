@@ -39,7 +39,7 @@ define([
             min: 1,
             max: 100
         });
-        heightOptions.errorMessage = 'Value must be between 0 and 100';
+        heightOptions.errorMessage = 'Value must be between 1 and 100';
 
         this.height = new NumberProperty(heightOptions);
 
@@ -60,7 +60,7 @@ define([
             min: 1,
             max: 100
         });
-        widthOptions.errorMessage = 'Value must be between 0 and 100';
+        widthOptions.errorMessage = 'Value must be between 1 and 100';
         this.width = new NumberProperty(widthOptions);
 
         var xOptions;
