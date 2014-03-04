@@ -7,6 +7,7 @@
 // This is the AMD style module version of the KO External Template Engine
 // If you need the standard 'js lib' version, please go to https://github.com/ifandelse/Knockout.js-External-Template-Engine
 
+// WAVED modification: Changed 'ko' to 'knockout' in define
 define(['knockout','jquery', 'infuser'], function(ko, jQuery, infuser){
 
 	var ExternalTemplateSource = function(templateId, options) {
