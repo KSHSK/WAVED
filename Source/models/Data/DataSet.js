@@ -45,9 +45,9 @@ define(['knockout',
     DataSet.prototype.getState = function() {
         return {
             type: this.type,
-            name: this._name,
-            fileName: this._filename,
-            referenceCount: this._referenceCount
+            name: this.name,
+            fileName: this.filename,
+            referenceCount: this.referenceCount
         };
     };
 

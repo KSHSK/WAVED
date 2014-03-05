@@ -24,6 +24,7 @@ define([
             throw new Error('ProjectViewModel name is required');
         }
 
+        // TODO: Load actual state.
         this._name = options.name;
         this._components = defaultValue(options.components, []);
         this._dataSets = defaultValue(options.dataSet, []);
@@ -108,13 +109,19 @@ define([
     };
 
     ProjectViewModel.prototype.getState = function(){
+        var self = this;
+
         return {
             'name': this._name,
             'workspace': this._workspace.getState(),
-            // TODO: Include GA after merge from validation branch.
-//            'analytics': this._googleAnalytics.getState(),
+            'analytics': this._googleAnalytics.getState(),
             'components': $.map(this._components, function(item) {
-                return item.getState();
+                // Skip workspace.
+                if (item === self._workspace) {
+                    return null;
+                }
+
+                return item.viewModel.getState();
             }),
             'dataSets': $.map(this._dataSets, function(item) {
                 return item.getState();

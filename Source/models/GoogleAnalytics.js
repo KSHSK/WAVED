@@ -51,6 +51,14 @@ define([
         }
     });
 
+    // TODO: Add to DD.
+    GoogleAnalytics.prototype.getState = function() {
+        return {
+            'uaCode': this.uaCode.getState(),
+            'eventCategory': this.eventCategory.getState(),
+        };
+    };
+
     GoogleAnalytics.prototype.set = function() {
         if (!self.uaCode.error && !self.eventCategory.error) {
             self._bound = true;

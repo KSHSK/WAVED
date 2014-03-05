@@ -52,6 +52,8 @@ define([
 
         // TODO: Validation, creation of actual Property objects, etc
         this._parentWidgetName = defaultValue(state.parent, undefined); // String
+
+        // TODO: Should this be static?
         this._triggers = []; // Trigger[]
 
         ko.track(this);
@@ -60,7 +62,11 @@ define([
     ComponentViewModel.prototype = Object.create(SuperComponentViewModel.prototype);
 
     ComponentViewModel.prototype.getState = function() {
-        // TODO
+        var state = SuperComponentViewModel.prototype.getState.call(this);
+        state['visible'] = this.visible.getState();
+        state['logGoogleAnalytics'] = this.logGoogleAnalytics.getState();
+
+        return state;
     };
 
     ComponentViewModel.prototype.setState = function(state) {
