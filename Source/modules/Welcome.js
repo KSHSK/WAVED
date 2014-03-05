@@ -25,10 +25,6 @@ define([
 
             var projectName = getQueryParamByName('project');
             if (projectName.length === 0) {
-                // Remove the URL param for the project that couldn't be loaded.
-                var url = location.href.split('?')[0];
-                history.replaceState({}, '', url);
-
                 // Open welcome dialog.
                 self.openWelcomeDialog(viewModel);
             }
@@ -40,10 +36,6 @@ define([
 
                 // If this project failed to load...
                 $.when(projectLoaded).fail(function() {
-                    // Remove the URL param for the project that couldn't be loaded.
-                    var url = location.href.split('?')[0];
-                    history.replaceState({}, '', url);
-
                     // Open welcome window.
                     self.openWelcomeDialog(viewModel);
                 });
