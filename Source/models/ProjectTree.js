@@ -11,6 +11,5 @@ define(['knockout',
 
     };
 
-
     return ProjectTree;
 });

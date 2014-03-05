@@ -30,6 +30,8 @@ define([
         this._templateName = PropertyTemplateName.BOOLEAN;
 
         ko.track(this);
+
+        this.error = !this.isValidValue(this._value);
     };
 
     BooleanProperty.prototype = Object.create(Property.prototype);
@@ -41,7 +43,13 @@ define([
             },
             set: function(value) {
                 if (typeof value === 'boolean' && this.isValidValue(value)) {
+                    this.error = false;
+                    this.message = '';
                     this._value = value;
+                }
+                else {
+                    this.error = true;
+                    this.message = this.errorMessage;
                 }
             }
         }

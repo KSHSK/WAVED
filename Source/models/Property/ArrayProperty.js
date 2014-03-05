@@ -13,6 +13,8 @@ define([
         ko
     ){
     'use strict';
+
+
     var ArrayProperty = function(state) {
         Property.call(this, state);
 
@@ -25,16 +27,18 @@ define([
         }
         else {
             this.isValidValue = function(value) {
-                if (defined(this._options)) {
+                if (defined(this._options) && this._options.length > 0) {
                     return (this._options.indexOf(value) !== -1);
                 }
-                return false;
+                return true;
             };
         }
 
         this._templateName = PropertyTemplateName.ARRAY;
 
         ko.track(this);
+
+        this.error = !this.isValidValue(this._value);
     };
 
     ArrayProperty.prototype = Object.create(Property.prototype);
@@ -59,7 +63,13 @@ define([
             },
             set: function(value) {
                 if (this.isValidValue(value)) {
+                    this.error = false;
+                    this.message = '';
                     this._value = value;
+                }
+                else {
+                    this.error = true;
+                    this.message = this.errorMessage;
                 }
             }
         }

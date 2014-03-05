@@ -13,6 +13,9 @@ define(['knockout',
         // TODO: Validation, etc
         this._displayName = state.displayName;
         this._templateName = undefined; // PropertyTemplateName
+        this.errorMessage = defined(state.errorMessage) ? state.errorMessage : 'Invalid value';
+        this.message = '';
+        this.error = false;
 
         ko.track(this);
     };
@@ -23,7 +26,7 @@ define(['knockout',
                 return this._displayName;
             }
         },
-        templateName : {
+        templateName: {
             get: function() {
                 return this._templateName;
             }
@@ -34,7 +37,7 @@ define(['knockout',
         // TODO: Abstract method
     };
 
-    Property.prototype.getValue = function () {
+    Property.prototype.getValue = function() {
         // TODO: Abstract method
     };
 

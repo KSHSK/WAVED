@@ -21,7 +21,7 @@ define([
 
         this._templateName = PropertyTemplateName.COLORING;
 
-        this.isValidValue = function(value){
+        this.isValidValue = function(value) {
 
         };
 

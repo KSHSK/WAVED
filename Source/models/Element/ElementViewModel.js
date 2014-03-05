@@ -19,7 +19,7 @@ define([
     Object.defineProperties(ElementViewModel.prototype, {
         properties: {
             get: function() {
-                return [ this._name, this.visible, this.logGoogleAnalytics ];
+                return [this._name, this.visible, this.logGoogleAnalytics];
             }
         }
     });
