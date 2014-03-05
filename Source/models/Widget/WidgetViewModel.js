@@ -6,7 +6,8 @@ define([
         'models/Property/BooleanProperty',
         'models/ComponentViewModel',
         'util/defined',
-        'util/defaultValue'
+        'util/defaultValue',
+        'util/createValidator'
     ], function(
         $,
         StringProperty,
@@ -14,7 +15,8 @@ define([
         BooleanProperty,
         ComponentViewModel,
         defined,
-        defaultValue) {
+        defaultValue,
+        createValidator) {
     'use strict';
 
     var WidgetViewModel = function(state) {
@@ -33,9 +35,12 @@ define([
                 value: 50
             };
         }
-        heightOptions.isValidValue = function(value) {
-            return value >= 0 && value <= 100;
-        };
+        heightOptions.validValue = createValidator({
+            min: 1,
+            max: 100
+        });
+        heightOptions.errorMessage = 'Value must be between 1 and 100';
+
         this.height = new NumberProperty(heightOptions);
 
         var widthOptions;
@@ -51,9 +56,11 @@ define([
                 value: 50
             };
         }
-        widthOptions.isValidValue = function(value) {
-            return value >= 0 && value <= 100;
-        };
+        widthOptions.validValue =  createValidator({
+            min: 1,
+            max: 100
+        });
+        widthOptions.errorMessage = 'Value must be between 1 and 100';
         this.width = new NumberProperty(widthOptions);
 
         var xOptions;
@@ -69,9 +76,11 @@ define([
                 value: 0
             };
         }
-        xOptions.isValidValue = function(value) {
-            return value >= 0 && value <= 100;
-        };
+        xOptions.validValue = createValidator({
+            min: 0,
+            max: 100
+        });
+        xOptions.errorMessage = 'Value must be between 0 and 100';
         this.x = new NumberProperty(xOptions);
 
         var yOptions;
@@ -87,9 +96,11 @@ define([
                 value: 0
             };
         }
-        yOptions.isValidValue = function(value) {
-            return value >= 0 && value <= 100;
-        };
+        yOptions.validValue =  createValidator({
+            min: 0,
+            max: 100
+        });
+        yOptions.errorMessage = 'Value must be between 0 and 100';
         this.y = new NumberProperty(yOptions);
 
         // TODO: These things for real
@@ -114,33 +125,33 @@ define([
         }
     });
 
-    WidgetViewModel.prototype.setState = function(){
-        //TODO
+    WidgetViewModel.prototype.setState = function() {
+        // TODO
     };
 
     WidgetViewModel.prototype.getState = function() {
-        //TODO
+        // TODO
         return {};
     };
 
     WidgetViewModel.prototype.addElement = function(elementName) {
-        //TODO
+        // TODO
     };
 
     WidgetViewModel.prototype.removeElement = function(element) {
-        //TODO
+        // TODO
     };
 
     WidgetViewModel.prototype.addSubwidget = function(name) {
-        //TODO
+        // TODO
     };
 
     WidgetViewModel.prototype.removeSubwidget = function(name) {
-        //TODO
+        // TODO
     };
 
     WidgetViewModel.prototype.getAvailableElements = function() {
-        //TODO
+        // TODO
     };
 
     WidgetViewModel.prototype.bindData = function(dataSet) {
