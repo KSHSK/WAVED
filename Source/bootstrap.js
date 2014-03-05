@@ -1,7 +1,6 @@
 /*global define*/
  define([
         'require',
-        'util/koExtenders',
         'app',
         'WAVED',
         'modules/Welcome',
@@ -9,7 +8,6 @@
         'jqueryUI'
     ], function (
         require,
-        koExtenders,
         app,
         WAVED,
         WelcomeModule,

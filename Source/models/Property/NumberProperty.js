@@ -29,6 +29,8 @@ define([
         this._templateName = PropertyTemplateName.NUMBER;
 
         ko.track(this);
+
+        this.error = !this.isValidValue(this._value);
     };
 
     NumberProperty.prototype = Object.create(Property.prototype);
@@ -40,7 +42,13 @@ define([
             },
             set: function(value) {
                 if (!isNaN(Number(value)) && this.isValidValue(value)) {
+                    this.error = false;
+                    this.message = '';
                     this._value = Number(value);
+                }
+                else {
+                    this.error = true;
+                    this.message = this.errorMessage;
                 }
             }
         }

@@ -23,7 +23,7 @@ define(['knockout',
                 return this._displayName;
             }
         },
-        component : {
+        component: {
             get: function() {
                 return this._component;
             }
