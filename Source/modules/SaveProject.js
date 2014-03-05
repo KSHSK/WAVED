@@ -20,7 +20,7 @@ define([
             // TODO
         },
 
-        saveProject: function(projectSaved, projectName, viewModel){
+        saveProject: function(projectSaved, projectName, viewModel) {
             var self = this;
             var stateObj = viewModel.currentProject.getState();
 

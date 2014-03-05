@@ -55,15 +55,5 @@ define([
         }
     });
 
-    BooleanProperty.prototype.getState = function() {
-        return {
-            'value': this.value
-        };
-    };
-
-    BooleanProperty.prototype.setState = function() {
-        // TODO: Implement Me
-    };
-
     return BooleanProperty;
 });

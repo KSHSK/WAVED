@@ -108,7 +108,7 @@ define([
         }
     };
 
-    ProjectViewModel.prototype.getState = function(){
+    ProjectViewModel.prototype.getState = function() {
         var self = this;
 
         return {

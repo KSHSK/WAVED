@@ -55,15 +55,5 @@ define([
         }
     });
 
-    StringProperty.prototype.getState = function() {
-        return {
-            'value': this.value
-        };
-    };
-
-    StringProperty.prototype.setState = function() {
-        // TODO: Implement Me
-    };
-
     return StringProperty;
 });
