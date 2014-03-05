@@ -5,16 +5,42 @@
 define([
         '../modules/NewProject',
         '../modules/LoadProject',
+        'util/getQueryParamByName',
         'jquery'
     ], function(
         NewProject,
         LoadProject,
+        getQueryParamByName,
         $) {
     'use strict';
 
     var Welcome = {
-
         welcomeDialog: $('#welcome-dialog'),
+
+        /**
+         * Starts the application
+         */
+        start: function(viewModel) {
+            var self = this;
+
+            var projectName = getQueryParamByName('project');
+            if (projectName.length === 0) {
+                // Open welcome dialog.
+                self.openWelcomeDialog(viewModel);
+            }
+            else {
+                var projectLoaded = $.Deferred();
+
+                // Try to load the project.
+                LoadProject.loadProject(projectLoaded, projectName, viewModel);
+
+                // If this project failed to load...
+                $.when(projectLoaded).fail(function() {
+                    // Open welcome window.
+                    self.openWelcomeDialog(viewModel);
+                });
+            }
+        },
 
         /**
          * Open the welcome dialog.

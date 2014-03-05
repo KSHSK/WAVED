@@ -18,7 +18,7 @@
     require(['../ThirdParty/domReady!'], function(document) {
         setupUI();
         displayPage();
-        WelcomeModule.openWelcomeDialog(WAVED.viewModel);
+        WelcomeModule.start(WAVED.viewModel);
     });
 
     function setupUI() {
