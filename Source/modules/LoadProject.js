@@ -5,18 +5,16 @@
 define([
         '../modules/UnsavedChanges',
         '../models/ProjectViewModel',
+        'util/updateQueryByName',
         'jquery'
     ], function(
         UnsavedChangesModule,
         ProjectViewModel,
+        updateQueryByName,
         $) {
     'use strict';
 
     var LoadProject = {
-        /* TODO: validation */
-        loadProjectDialog: $('#load-project-dialog'),
-        loadProjectSelect: $('#load-project-select'),
-        loadProjectError: $('#load-project-error'),
 
         /**
          * If the project is clean, the load project dialog is opened. If the project is dirty, the unsaved changes must
@@ -58,12 +56,11 @@ define([
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
                     if (data.success) {
-                        self.loadProjectError.text('');
                         viewModel.projectList = data.projects;
                     }
                     else {
-                        // Display error to user.
-                        self.loadProjectError.text(data.errorMessage);
+                        viewModel.loadProjectName.error = true;
+                        viewModel.loadProjectName.message = data.errorMessage;
                     }
                 }
             }).promise();
@@ -73,9 +70,12 @@ define([
          * Open the dialog for loading an existing project.
          */
         openLoadProjectDialog: function(projectLoaded, viewModel) {
+            var loadProjectDialog = $('#load-project-dialog');
             var self = this;
+            viewModel.loadProjectName._value = '';
+            viewModel.loadProjectName.message = '';
 
-            this.loadProjectDialog.dialog({
+            loadProjectDialog.dialog({
                 resizable: false,
                 height: 250,
                 width: 400,
@@ -85,15 +85,15 @@ define([
                         text: 'Load Project',
                         'class': 'submit-button',
                         click: function() {
-                            var projectName = viewModel.projectToLoad;
+                            var projectName = viewModel.loadProjectName.value;
                             self.loadProject(projectLoaded, projectName, viewModel);
                             $.when(projectLoaded).done(function() {
-                                self.loadProjectDialog.dialog('close');
+                                loadProjectDialog.dialog('close');
                             });
                         }
                     },
                     'Cancel': function() {
-                        self.loadProjectDialog.dialog('close');
+                        loadProjectDialog.dialog('close');
                     }
                 }
             });
@@ -114,13 +114,15 @@ define([
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
                     if (data.success) {
-                        self.loadProjectError.text('');
-
                         // Set the project name.
                         viewModel.currentProject = new ProjectViewModel({
                             name: data.projectName
                         });
                         viewModel.dirty = false;
+                        viewModel.loadProjectName._value = '';
+
+                        // Set the URL to include the current project name.
+                        updateQueryByName('project', data.projectName);
 
                         // TODO: Remove files that are marked for deletion.
                         // TODO: Read file contents for every DataSet in the state.
@@ -128,8 +130,9 @@ define([
                         projectLoaded.resolve();
                     }
                     else {
-                        // Display error to user.
-                        self.loadProjectError.text(data.errorMessage);
+                        viewModel.loadProjectName.error = true;
+                        viewModel.loadProjectName.message = data.errorMessage;
+                        projectLoaded.reject();
                     }
                 }
             });

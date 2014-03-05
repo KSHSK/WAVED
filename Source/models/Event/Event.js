@@ -42,7 +42,7 @@ define([
             get: function() {
                 return this._eventType;
             }
-            // TODO: Why does this not have a setter? Update DD with decision.
+        // TODO: Why does this not have a setter? Update DD with decision.
         },
         triggeringComponent: {
             get: function() {
