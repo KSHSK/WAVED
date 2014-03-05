@@ -105,7 +105,24 @@ define([
     };
 
     ProjectViewModel.prototype.getState = function(){
-        //TODO
+        return {
+            'name': this._name,
+            'workspace': this._workspace.getState(),
+            // TODO: Include GA after merge from validation branch.
+//            'analytics': this._googleAnalytics.getState(),
+            'components': $.map(this._components, function(item) {
+                return item.getState();
+            }),
+            'dataSets': $.map(this._dataSets, function(item) {
+                return item.getState();
+            }),
+            'actions': $.map(this._actions, function(item) {
+                return item.getState();
+            }),
+            'events': $.map(this._events, function(item) {
+                return item.getState();
+            })
+        };
     };
 
     ProjectViewModel.prototype.setState = function(state) {
