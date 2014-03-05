@@ -5,31 +5,16 @@
 define([
         '../modules/NewProject',
         '../modules/LoadProject',
+        'util/getQueryParamByName',
         'jquery'
     ], function(
         NewProject,
         LoadProject,
+        getQueryParamByName,
         $) {
     'use strict';
 
-    function getProjectNameFromUrl() {
-        var params = location.search.split('?');
-        if (params.length < 2) {
-            // Invalid URL parameter.
-            return "";
-        }
-
-        var projectParam = params[1].split('=');
-        if (projectParam.length < 2 || projectParam[0] !== "project") {
-            // Invalid URL parameter.
-            return "";
-        }
-
-        return decodeURI(projectParam[1]);
-    }
-
     var Welcome = {
-
         welcomeDialog: $('#welcome-dialog'),
 
         /**
@@ -38,8 +23,12 @@ define([
         start: function(viewModel) {
             var self = this;
 
-            var projectName = getProjectNameFromUrl();
+            var projectName = getQueryParamByName('project');
             if (projectName.length === 0) {
+                // Remove the URL param for the project that couldn't be loaded.
+                var url = location.href.split('?')[0];
+                history.replaceState({}, '', url);
+
                 // Open welcome dialog.
                 self.openWelcomeDialog(viewModel);
             }

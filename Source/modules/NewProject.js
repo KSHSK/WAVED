@@ -5,10 +5,12 @@
 define([
         '../modules/UnsavedChanges',
         '../models/ProjectViewModel',
+        'util/updateQueryByName',
         'jquery'
     ], function(
         UnsavedChangesModule,
         ProjectViewModel,
+        updateQueryByName,
         $) {
     'use strict';
 
@@ -103,8 +105,7 @@ define([
                         viewModel.dirty = false;
 
                         // Set the URL to include the current project name.
-                        var projectParam = '?project=' + data.projectName;
-                        history.replaceState({}, '', projectParam);
+                        updateQueryByName('project', data.projectName);
 
                         projectCreated.resolve();
                     }
