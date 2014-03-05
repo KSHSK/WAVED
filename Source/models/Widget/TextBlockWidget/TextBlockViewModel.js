@@ -31,8 +31,8 @@ define([
     Object.defineProperties(TextBlockViewModel.prototype, {
         properties: {
             get: function() {
-                return [ this.text, this._name, this.x, this.y,
-                         this.width, this.height, this.visible, this.logGoogleAnalytics ];
+                return [this.text, this._name, this.x, this.y, this.width, this.height, this.visible,
+                this.logGoogleAnalytics];
             }
         }
     });

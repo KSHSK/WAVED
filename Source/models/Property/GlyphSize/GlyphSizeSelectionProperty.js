@@ -21,7 +21,7 @@ define([
 
         this._templateName = PropertyTemplateName.GLYPH_SIZE;
 
-        this.isValidValue = function(value){
+        this.isValidValue = function(value) {
             // TODO
         };
 

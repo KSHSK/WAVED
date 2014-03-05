@@ -9,6 +9,9 @@ define([
         'models/Widget/ButtonWidget/Button',
         'util/defined',
         'util/defaultValue',
+        'models/Property/StringProperty',
+        'models/Property/ArrayProperty',
+        'util/createValidator',
         'knockout'
     ], function(
         NewProject,
@@ -20,17 +23,18 @@ define([
         Button,
         defined,
         defaultValue,
+        StringProperty,
+        ArrayProperty,
+        createValidator,
         ko) {
     'use strict';
 
     var self;
-
     var WAVEDViewModel = function() {
         self = this;
         this._dirty = false;
 
         this._projectList = [];
-        this._projectToLoad = '';
         this._selectedWidget = '';
         this._selectedDataSet = '';
         this._selectedBoundData = '';
@@ -44,12 +48,42 @@ define([
                 width: {
                     value: 750
                 }
+            },
+            googleAnalytics: {
+                uaCode: {
+                    value: '',
+                    error: false,
+                    message: ''
+                },
+                eventCategory: {
+                    value: '',
+                    error: false,
+                    message: ''
+                },
+                bound: false
             }
         };
         this._availableWidgets = [{
             name: 'Button',
             o: Button
         }];
+
+        this.newProjectName = new StringProperty({
+                displayName: 'Project Name',
+                value: '',
+                validValue: createValidator({
+                    minLength: 1,
+                    maxLength: 50,
+                    regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
+                }),
+                errorMessage: 'Must be between 1 and 50 characters<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
+            });
+
+        this.loadProjectName = new ArrayProperty({
+                displayName: 'Project Name',
+                value: '',
+                options: this.projectList
+            });
 
         ko.track(this);
     };
@@ -115,15 +149,8 @@ define([
             },
             set: function(value) {
                 this._projectList = value;
-                this.projectToLoad = value[0];
-            }
-        },
-        projectToLoad: {
-            get: function() {
-                return this._projectToLoad;
-            },
-            set: function(value) {
-                this._projectToLoad = value;
+                this.loadProjectName.options = value;
+                this.loadProjectName.value = value[0];
             }
         },
         currentProject: {

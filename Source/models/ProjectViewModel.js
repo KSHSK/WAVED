@@ -5,7 +5,7 @@ define([
         'util/defaultValue',
         'models/WorkspaceViewModel',
         'models/Data/DataSet',
-        'modules/GoogleAnalytics',
+        './GoogleAnalytics',
         'knockout'
     ], function(
         $,
@@ -17,7 +17,9 @@ define([
         ko) {
     'use strict';
 
+    var self;
     var ProjectViewModel = function(options) {
+        self = this;
         if (typeof options.name === 'undefined') {
             throw new Error('ProjectViewModel name is required');
         }
@@ -27,7 +29,7 @@ define([
         this._dataSets = defaultValue(options.dataSet, []);
         this._events = defaultValue(options.events, []);
         this._actions = defaultValue(options.actions, []);
-        this._googleAnalytics = defaultValue(options.googleAnalytics, undefined);
+        this._googleAnalytics = defaultValue(options.googleAnalytics, new GoogleAnalytics());
         this._workspace = new WorkspaceViewModel(options.width, options.height);
         this._dirty = false;
         this._projectTree = undefined; // TODO
@@ -67,10 +69,10 @@ define([
         },
         googleAnalytics: {
             get: function() {
-                return this._googleAnaytics;
+                return self._googleAnalytics;
             },
             set: function(value) {
-                this._googleAnalytics = value;
+                self._googleAnalytics = value;
             }
         },
         events: {
@@ -90,7 +92,8 @@ define([
         }
     });
 
-    // TODO: Update this to make it more generic to Components, temporarily just using this._components in the methods
+    // TODO: Update this to make it more generic to Components, temporarily just using this._components in the
+    // methods
     ProjectViewModel.prototype.addComponent = function(component) {
         this._components.push(component);
     };
@@ -126,7 +129,7 @@ define([
     };
 
     ProjectViewModel.prototype.setState = function(state) {
-        //TODO
+        // TODO
     };
 
     ProjectViewModel.prototype.addDataSet = function(data) {
@@ -136,11 +139,11 @@ define([
     };
 
     ProjectViewModel.prototype.addEvent = function(event) {
-        //TODO
+        // TODO
     };
 
     ProjectViewModel.prototype.addAction = function(action) {
-        //TODO
+        // TODO
     };
 
     ProjectViewModel.prototype.getDataSet = function(name) {
@@ -157,7 +160,7 @@ define([
     // TODO: Do we want to allow removal using dataset instance and name?
     // The DD specifies this, but we should probably pick one.
     ProjectViewModel.prototype.removeDataSet = function(data) {
-        //TODO
+        // TODO
     };
 
     ProjectViewModel.prototype.removeComponent = function(component) {

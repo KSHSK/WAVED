@@ -12,11 +12,11 @@ define([
 
     var SaveProject = {
 
-        tryToSaveProject: function(viewModel){
+        tryToSaveProject: function(viewModel) {
             // TODO
         },
 
-        openSaveProjectDialog: function(viewModel){
+        openSaveProjectDialog: function(viewModel) {
             // TODO
         },
 
