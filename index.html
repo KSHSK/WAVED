@@ -24,13 +24,16 @@
                 </div>
                 <div class="inline bottom">
                     <div class="menu-text" id="project-name" data-bind="text: currentProject.name"></div>
+                    
                     <button class="inline" id="new-button" data-bind="click: tryToCreateNewProject">New</button>
                     <button class="inline" id="load-button" data-bind="click: tryToLoadProject">Load</button>
 
                     <button class="inline" id="undo-button">Undo</button>
                     <button class="inline" id="redo-button">Redo</button>
                 
-                    <button class="inline" id="save-button">Save</button>
+                    <button class="inline" id="save-button" data-bind="click: saveProject">Save</button>
+                    <button class="inline" id="save-as-button" data-bind="click: saveProject">Save As </button>
+                    
                     <button class="inline" id="export-button">Export</button>
                 
                     <span class="menu-text">Select: </span>
@@ -188,6 +191,13 @@
     </div>
     
     <div id="create-new-project-dialog" title="New Project" class="dialog">
+        <p>Please create a new project</p>
+        <label class="required" for="create-new-project-name">Project Name: </label>
+        <input id="create-new-project-name" type="text"/>
+        <p id="create-new-project-error" class="error"></p>
+    </div>
+    
+    <div id="save-as-project-dialog" title="New Project" class="dialog">
         <p>Please create a new project</p>
         <label class="required" for="create-new-project-name">Project Name: </label>
         <input id="create-new-project-name" type="text"/>
