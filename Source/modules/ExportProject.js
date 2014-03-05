@@ -12,15 +12,15 @@ define([
 
     var ExportProject = {
 
-        tryToExportProject: function(viewModel){
+        tryToExportProject: function(viewModel) {
             // TODO
         },
 
-        openExportProjectDialog: function(viewModel){
+        openExportProjectDialog: function(viewModel) {
             // TODO
         },
 
-        exportProject: function(projectName, viewModel){
+        exportProject: function(projectName, viewModel) {
             // TODO
         }
     };
