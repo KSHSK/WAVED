@@ -56,6 +56,18 @@ define([
 
     WorkspaceViewModel.prototype = Object.create(SuperComponentViewModel.prototype);
 
+    WorkspaceViewModel.prototype.getState = function() {
+        var state = SuperComponentViewModel.prototype.getState.call(this);
+        state['width'] = this.width.getState();
+        state['height'] = this.height.getState();
+
+        return state;
+    };
+
+    WorkspaceViewModel.prototype.setState = function(state) {
+        // TODO
+    };
+
     // TODO: In the DD, add getProperties() and getViewModel() to be consistent here
     Object.defineProperties(WorkspaceViewModel.prototype, {
         viewModel: {

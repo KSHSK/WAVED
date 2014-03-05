@@ -33,6 +33,14 @@ define(['knockout',
         }
     });
 
+    Property.prototype.getState = function() {
+        // TODO: Abstract method
+    };
+
+    Property.prototype.setState = function() {
+        // TODO: Abstract method
+    };
+
     Property.prototype.isValidValue = function() {
         // TODO: Abstract method
     };

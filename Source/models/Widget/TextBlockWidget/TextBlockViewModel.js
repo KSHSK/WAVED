@@ -18,6 +18,14 @@ define([
         ko.track(this);
     };
 
+    /**
+     * Static method that returns the type String for this class.
+     */
+    TextBlockViewModel.getType = function() {
+        //TODO: Update this in the DD.
+        return "TextBlock";
+    };
+
     TextBlockViewModel.prototype = Object.create(WidgetViewModel.prototype);
 
     TextBlockViewModel.prototype.getState = function() {

@@ -51,14 +51,25 @@ define([
         ko.track(this);
     };
 
+    /**
+     * Static method that returns the type String for this class.
+     */
+    ButtonViewModel.getType = function() {
+        return "Button";
+    };
+
     ButtonViewModel.prototype = Object.create(WidgetViewModel.prototype);
 
     ButtonViewModel.prototype.getState = function() {
-        //TODO;
+        var state = WidgetViewModel.prototype.getState.call(this);
+        state['type'] = ButtonViewModel.getType();
+        state['label'] = this.label.getState();
+
+        return state;
     };
 
     ButtonViewModel.prototype.setState = function(state) {
-        //TODO;
+        // TODO
     };
 
     Object.defineProperties(ButtonViewModel.prototype, {
