@@ -5,11 +5,13 @@
 define([
         '../modules/UnsavedChanges',
         '../models/ProjectViewModel',
+        'util/updateQueryByName',
         'jquery',
         'knockout'
     ], function(
         UnsavedChangesModule,
         ProjectViewModel,
+        updateQueryByName,
         $,
         ko) {
     'use strict';
@@ -47,7 +49,6 @@ define([
             var createNewProjectDialog = $('#create-new-project-dialog');
             viewModel.newProjectName._value = '';
             viewModel.newProjectName.message = '';
-
 
             createNewProjectDialog.dialog({
                 resizable: false,
@@ -97,10 +98,14 @@ define([
                     var data = JSON.parse(dataString);
                     if (data.success) {
                         viewModel.currentProject = new ProjectViewModel({
-                            name: projectName
+                            name: data.projectName
                         });
                         viewModel.newProjectName._value = '';
                         viewModel.dirty = false;
+
+                        // Set the URL to include the current project name.
+                        updateQueryByName('project', data.projectName);
+
                         projectCreated.resolve();
                     }
                     else {
