@@ -60,11 +60,11 @@ define([
     ComponentViewModel.prototype = Object.create(SuperComponentViewModel.prototype);
 
     ComponentViewModel.prototype.getState = function() {
-        //TODO
+        // TODO
     };
 
     ComponentViewModel.prototype.setState = function(state) {
-        //TODO
+        // TODO
     };
 
     ComponentViewModel.prototype.getTriggers = function() {

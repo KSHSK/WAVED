@@ -145,32 +145,24 @@
                 <h3>Google Analytics</h3>
                 <div>
                     <div>
-                        <div class="inline" id="google-analytics-unbound">
-                            <label for="google-analytics-ua" class="inline">Google Analytics UA Code</label>
-	                        <input type="text" id="google-analytics-ua" class="validate" 
-                               data-min-length="1" 
-                               data-match="^((UA)(-)(\d+)(-)(\d+)){1}$" 
-                               data-match-modifier="i" 
-                               data-match-desc="UA code is not in the correct format. It should look like UA-####-##." />
-	                        <div id="google-analytics-ua-error" class="error"></div>
-	                        <label for="google-analytics-category" class="inline">Google Analytics Event Category</label>
-	                        <input type="text" id="google-analytics-category" class="validate" 
-	                           data-min-length="1" 
-	                           data-match="^[a-zA-Z0-9_\- ]+$" 
-	                           data-match-modifier="i" 
-	                           data-match-desc="May only contain alphanumerics, hypens (-), underscores(_) and spaces."/>
-	                        <div id="google-analytics-category-error" class="error"></div>
-	                        <div id="google-analytics-add-button-panel" class="submit-button-panel">
-	                           <button id="google-analytics-add-button" class="button-small submit-button" data-ng-click="addGoogleAnalytics();">Add</button>
-	                           <button id="google-analytics-clear-button" class="button-small" data-ng-click="clearGoogleAnalyticsFields();">Clear</button>
+                        <div class="inline" data-bind="visible: !currentProject.googleAnalytics.bound">
+                            <label class="inline">Google Analytics UA Code</label>
+	                        <input type="text" data-bind="value: currentProject.googleAnalytics.uaCode.value, valueUpdate: 'keyup'"/>
+	                        <div class="error" data-bind="visible: currentProject.googleAnalytics.uaCode.error, html: currentProject.googleAnalytics.uaCode.message"></div>
+	                        <label class="inline">Google Analytics Event Category</label>
+	                        <input type="text" data-bind="value: currentProject.googleAnalytics.eventCategory.value, valueUpdate: 'keyup'" />
+	                        <div class="error" data-bind="visible: currentProject.googleAnalytics.eventCategory.error, html:currentProject.googleAnalytics.eventCategory.message"></div>
+	                        <div class="submit-button-panel">
+	                           <button id="google-analytics-add-button" class="button-small submit-button" data-bind="click: currentProject.googleAnalytics.set;">Add</button>
+	                           <button id="google-analytics-clear-button" class="button-small" data-bind="click: currentProject.googleAnalytics.clear">Clear</button>
                             </div>
                         </div>
-                        <div class="inline" id="google-analytics-bound" style="display:none;">
-                            <span>UA: </span><span id="google-analytics-ua-preview"></span>
+                        <div class="inline" data-bind="visible: currentProject.googleAnalytics.bound">
+                            <span>UA: </span><span data-bind="text: currentProject.googleAnalytics.uaCode.value"></span>
                             <br>
-                            <span>Event Category: </span><span id="google-analytics-category-preview"></span>
-                            <div id="google-analytics-remove-button-panel">
-                                <button id="google-analytics-remove-button" class="button-small" data-ng-click="removeGoogleAnalytics();" style="float:center;">Remove</button>
+                            <span>Event Category: </span><span data-bind="text: currentProject.googleAnalytics.eventCategory.value"></span>
+                            <div>
+                                <button id="google-analytics-remove-button" class="button-small" data-bind="click: currentProject.googleAnalytics.unset" style="float:center;">Remove</button>
                             </div>
                         </div>
                     </div>
@@ -192,9 +184,8 @@
     
     <div id="create-new-project-dialog" title="New Project" class="dialog">
         <p>Please create a new project</p>
-        <label class="required" for="create-new-project-name">Project Name: </label>
-        <input id="create-new-project-name" type="text"/>
-        <p id="create-new-project-error" class="error"></p>
+        <label class="required">Project Name: <input id="create-new-project-name" data-bind="value: newProjectName.value, valueUpdate: 'keyup'"/> </label>
+        <div class="error" data-bind="visible: newProjectName.error, html: newProjectName.message"></div>
     </div>
     
     <div id="save-as-project-dialog" title="New Project" class="dialog">
@@ -206,12 +197,13 @@
     
     <div id="load-project-dialog" title="Load Project" class="dialog">
         <p>Please select an existing project to load.</p>
-        <label class="required" for="load-project-select">Project Name: </label>
-        <select id="load-project-select"
-            data-bind="options: projectList, value: projectToLoad">
-        </select>
-        <button id="load-project-refresh-list" class="button-small" data-bind="click: updateProjectList">Refresh List</button>
-        <p id="load-project-error" class="error"></p>
+        <label class="required">Project Name: 
+            <select id="load-project-select"
+                data-bind="options: projectList, value: loadProjectName.value">
+            </select>
+            <button id="load-project-refresh-list" class="button-small" data-bind="click: updateProjectList">Refresh List</button>
+        </label>
+        <div class="error" data-bind="visible: loadProjectName.error, html: loadProjectName.message"></div>
     </div>
     
     <div id="upload-data-dialog" title="Upload Data" class="dialog">
@@ -259,24 +251,28 @@
         <div>
             <span data-bind="text:displayName"></span>
             <input type="text" data-bind="value:value"></input>
+            <div class="error" data-bind="visible: error, html: message"></div>
         </div>
     </script>
     <script type="text/html" id="numberPropertyTemplate">
         <div>
             <span data-bind="text:displayName"></span>
             <input type="text" data-bind="value:value"></input>
+            <div class="error" data-bind="visible: error, html: message"></div>
         </div>
     </script>
     <script type="text/html" id="arrayPropertyTemplate">
         <div>
             <span data-bind="text:displayName"></span>
             <input type="text" data-bind="value:value"></input>
+            <div class="error" data-bind="visible: error, html: message"><div>
         </div>
     </script>
     <script type="text/html" id="booleanPropertyTemplate">
         <div>
             <input type="checkbox" data-bind="checked:value"></input>
             <span data-bind="text:displayName"></span>
+            <div class="error" data-bind="visible: error, html: message"></div>
         </div>
     </script>
     <script type="text/html" id="buttonTemplate">

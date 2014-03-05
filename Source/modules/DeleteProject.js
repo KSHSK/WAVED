@@ -12,15 +12,15 @@ define([
 
     var DeleteProject = {
 
-        tryToDeleteProject: function(viewModel){
+        tryToDeleteProject: function(viewModel) {
             // TODO
         },
 
-        openDeleteProjectDialog: function(viewModel){
+        openDeleteProjectDialog: function(viewModel) {
             // TODO
         },
 
-        deleteProject: function(projectName, viewModel){
+        deleteProject: function(projectName, viewModel) {
             // TODO
         }
     };
