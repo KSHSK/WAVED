@@ -54,15 +54,5 @@ define([
         }
     });
 
-    NumberProperty.prototype.getState = function() {
-        return {
-            'value': this.value
-        };
-    };
-
-    NumberProperty.prototype.setState = function() {
-        // TODO: Implement Me
-    };
-
     return NumberProperty;
 });

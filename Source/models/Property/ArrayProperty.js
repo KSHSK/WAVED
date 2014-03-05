@@ -76,10 +76,10 @@ define([
     });
 
     ArrayProperty.prototype.getState = function() {
-        return {
-            'value': this.value,
-            'options': this.options
-        };
+        var state = Property.prototype.getState.call(this);
+        state['options'] = this.options;
+
+        return state;
     };
 
     ArrayProperty.prototype.setState = function() {
