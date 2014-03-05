@@ -5,10 +5,12 @@
 define([
         '../modules/UnsavedChanges',
         '../models/ProjectViewModel',
+        'util/updateQueryByName',
         'jquery'
     ], function(
         UnsavedChangesModule,
         ProjectViewModel,
+        updateQueryByName,
         $) {
     'use strict';
 
@@ -119,6 +121,9 @@ define([
                         viewModel.dirty = false;
                         viewModel.loadProjectName._value = '';
 
+                        // Set the URL to include the current project name.
+                        updateQueryByName('project', data.projectName);
+
                         // TODO: Remove files that are marked for deletion.
                         // TODO: Read file contents for every DataSet in the state.
 
@@ -127,6 +132,7 @@ define([
                     else {
                         viewModel.loadProjectName.error = true;
                         viewModel.loadProjectName.message = data.errorMessage;
+                        projectLoaded.reject();
                     }
                 }
             });
