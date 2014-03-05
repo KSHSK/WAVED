@@ -40,4 +40,5 @@ require(['infuser'], function(infuser){
     infuser.defaults.templateUrl = 'Source/templates/';
     infuser.defaults.templatePrefix = '';
     infuser.defaults.templateSuffix = '.html';
+    infuser.defaults.loadingTemplate.content = '';
 });
