@@ -4,9 +4,11 @@
  */
 define([
         '../WAVEDViewModel',
+        'util/displayMessage',
         'jquery'
     ], function(
         WAVEDViewModel,
+        displayMessage,
         $) {
     'use strict';
 
@@ -38,14 +40,12 @@ define([
                         viewModel.currentProject.name = data.projectName;
                         viewModel.dirty = false;
 
-                        // TODO: Clear error for Save As popup.
-
+                        displayMessage('The project was successfully saved');
                         projectSaved.resolve();
                     }
                     else {
                         // Display error to user.
-                        // TODO: Display error for Save As popup.
-
+                        displayMessage(data.errorMessage);
                         projectSaved.reject();
                     }
                 }
