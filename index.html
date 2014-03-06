@@ -236,39 +236,5 @@
     <div id="error-dialog" title="" class="dialog">
         <p id="error-dialog-message"></p>
     </div>
-    
-    <script type="text/html" id="stringPropertyTemplate">
-        <div>
-            <span data-bind="text:displayName"></span>
-            <input type="text" data-bind="value:value"></input>
-            <div class="error" data-bind="visible: error, html: message"></div>
-        </div>
-    </script>
-    <script type="text/html" id="numberPropertyTemplate">
-        <div>
-            <span data-bind="text:displayName"></span>
-            <input type="text" data-bind="value:value"></input>
-            <div class="error" data-bind="visible: error, html: message"></div>
-        </div>
-    </script>
-    <script type="text/html" id="arrayPropertyTemplate">
-        <div>
-            <span data-bind="text:displayName"></span>
-            <input type="text" data-bind="value:value"></input>
-            <div class="error" data-bind="visible: error, html: message"><div>
-        </div>
-    </script>
-    <script type="text/html" id="booleanPropertyTemplate">
-        <div>
-            <input type="checkbox" data-bind="checked:value"></input>
-            <span data-bind="text:displayName"></span>
-            <div class="error" data-bind="visible: error, html: message"></div>
-        </div>
-    </script>
-    <script type="text/html" id="buttonTemplate">
-        <button class="widget" data-bind="text:label.value, 
-            style:{left: x.value + '%', top: y.value+'%', height: height.value + '%', width: width.value + '%'},
-            visible: visible.value" style="position: relative"></buttton>
-    </script>
 </body>
 </html> 
