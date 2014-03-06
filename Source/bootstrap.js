@@ -1,14 +1,12 @@
 /*global define*/
  define([
         'require',
-        'app',
         'WAVED',
         'modules/Welcome',
         'knockout',
         'jqueryUI'
     ], function (
         require,
-        app,
         WAVED,
         WelcomeModule,
         ko,
