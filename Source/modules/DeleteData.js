@@ -1,4 +1,4 @@
-/*global define*/
+/*global define, alert*/
 /**
  * A module for deleting data sets from a project
  */
