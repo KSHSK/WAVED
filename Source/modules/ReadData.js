@@ -28,8 +28,7 @@ define([
             });
 
             return readComplete.promise();
-        },
-
+        }
     };
 
     return ReadData;
