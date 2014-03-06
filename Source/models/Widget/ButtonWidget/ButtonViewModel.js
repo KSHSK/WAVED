@@ -55,7 +55,7 @@ define([
      * Static method that returns the type String for this class.
      */
     ButtonViewModel.getType = function() {
-        return "Button";
+        return 'Button';
     };
 
     ButtonViewModel.prototype = Object.create(WidgetViewModel.prototype);

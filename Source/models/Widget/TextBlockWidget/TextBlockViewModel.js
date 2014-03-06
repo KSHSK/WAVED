@@ -23,7 +23,7 @@ define([
      */
     TextBlockViewModel.getType = function() {
         //TODO: Update this in the DD.
-        return "TextBlock";
+        return 'TextBlock';
     };
 
     TextBlockViewModel.prototype = Object.create(WidgetViewModel.prototype);

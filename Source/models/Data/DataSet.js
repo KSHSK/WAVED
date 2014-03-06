@@ -24,7 +24,7 @@ define(['knockout',
      * Static method that returns the type String for this class.
      */
     DataSet.getType = function() {
-        return "DataSet";
+        return 'DataSet';
     };
 
 

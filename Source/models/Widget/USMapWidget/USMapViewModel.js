@@ -25,7 +25,7 @@ define([
      * Static method that returns the type String for this class.
      */
     USMapViewModel.getType = function() {
-        return "USMap";
+        return 'USMap';
     };
 
     USMapViewModel.prototype = Object.create(WidgetViewModel.prototype);
