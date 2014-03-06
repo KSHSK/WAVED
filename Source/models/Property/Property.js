@@ -31,6 +31,9 @@ define(['knockout',
         templateName: {
             get: function() {
                 return this._templateName;
+            },
+            set: function(templateName) {
+                this._templateName = templateName;
             }
         }
     });
