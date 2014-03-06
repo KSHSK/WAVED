@@ -21,7 +21,7 @@ define([
      * Static method that returns the type String for this class.
      */
     LineGraphViewModel.getType = function() {
-        return "LineGraph";
+        return 'LineGraph';
     };
 
     LineGraphViewModel.prototype = Object.create(GraphViewModel.prototype);
