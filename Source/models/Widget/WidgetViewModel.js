@@ -132,12 +132,12 @@ define([
 
     WidgetViewModel.prototype.getState = function() {
         var state = ComponentViewModel.prototype.getState.call(this);
-        state['width'] = this.width.getState();
-        state['height'] = this.height.getState();
-        state['x'] = this.x.getState();
-        state['y'] = this.y.getState();
-        state['elementNames'] = this.elementNames;
-        state['boundData'] = this.boundData;
+        state.width = this.width.getState();
+        state.height = this.height.getState();
+        state.x = this.x.getState();
+        state.y = this.y.getState();
+        state.elementNames = this.elementNames;
+        state.boundData = this.boundData;
 
         return state;
     };

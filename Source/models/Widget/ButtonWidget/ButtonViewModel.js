@@ -62,8 +62,8 @@ define([
 
     ButtonViewModel.prototype.getState = function() {
         var state = WidgetViewModel.prototype.getState.call(this);
-        state['type'] = ButtonViewModel.getType();
-        state['label'] = this.label.getState();
+        state.type = ButtonViewModel.getType();
+        state.label = this.label.getState();
 
         return state;
     };
