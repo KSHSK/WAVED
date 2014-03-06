@@ -63,8 +63,8 @@ define([
 
     ComponentViewModel.prototype.getState = function() {
         var state = SuperComponentViewModel.prototype.getState.call(this);
-        state['visible'] = this.visible.getState();
-        state['logGoogleAnalytics'] = this.logGoogleAnalytics.getState();
+        state.visible = this.visible.getState();
+        state.logGoogleAnalytics = this.logGoogleAnalytics.getState();
 
         return state;
     };

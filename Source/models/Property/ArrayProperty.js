@@ -77,7 +77,7 @@ define([
 
     ArrayProperty.prototype.getState = function() {
         var state = Property.prototype.getState.call(this);
-        state['options'] = this.options;
+        state.options = this.options;
 
         return state;
     };

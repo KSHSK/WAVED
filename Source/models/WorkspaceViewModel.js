@@ -58,8 +58,8 @@ define([
 
     WorkspaceViewModel.prototype.getState = function() {
         var state = SuperComponentViewModel.prototype.getState.call(this);
-        state['width'] = this.width.getState();
-        state['height'] = this.height.getState();
+        state.width = this.width.getState();
+        state.height = this.height.getState();
 
         return state;
     };
