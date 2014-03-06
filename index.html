@@ -32,7 +32,7 @@
                     <button class="inline" id="redo-button">Redo</button>
                 
                     <button class="inline" id="save-button" data-bind="click: saveProject">Save</button>
-                    <button class="inline" id="save-as-button" data-bind="click: saveProject">Save As </button>
+                    <button class="inline" id="save-as-button" data-bind="click: saveProject">Save As</button>
                     
                     <button class="inline" id="export-button">Export</button>
                 
@@ -187,14 +187,7 @@
         <label class="required">Project Name: <input id="create-new-project-name" data-bind="value: newProjectName.value, valueUpdate: 'keyup'"/> </label>
         <div class="error" data-bind="visible: newProjectName.error, html: newProjectName.message"></div>
     </div>
-    
-    <div id="save-as-project-dialog" title="New Project" class="dialog">
-        <p>Please create a new project</p>
-        <label class="required" for="create-new-project-name">Project Name: </label>
-        <input id="create-new-project-name" type="text"/>
-        <p id="create-new-project-error" class="error"></p>
-    </div>
-    
+
     <div id="load-project-dialog" title="Load Project" class="dialog">
         <p>Please select an existing project to load.</p>
         <label class="required">Project Name: 
