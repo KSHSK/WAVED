@@ -27,6 +27,7 @@
         $('#redo-button').button();
         $('#load-button').button();
         $('#save-button').button();
+        $('#save-as-button').button();
         $('#export-button').button();
         $('#refresh-button').button();
         $('#google-analytics-add-button').button();

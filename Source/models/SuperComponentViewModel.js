@@ -55,7 +55,9 @@ define([
     });
 
     SuperComponentViewModel.prototype.getState = function() {
-        // TODO
+        return {
+            'name': this.name.getState()
+        };
     };
 
     SuperComponentViewModel.prototype.setState = function(state) {
