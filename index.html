@@ -90,7 +90,7 @@
                         <div>
                             <div class="inline">Actions</div>
                             <div class="inline right">
-                                <button id="add-action-button" class="button-small">Add Action</button>
+                                <button id="add-action-button" class="button-small" data-bind="click: currentProject.addAction">Add Action</button>
                                 <button id="edit-action-button" class="button-small">Edit Action</button>
                                 <button id="delete-action-button" class="button-small">Delete Action</button>
                             </div>
@@ -227,6 +227,45 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+    
+    <div id="action-dialog" title="Action" class="dialog">
+    	<div class="inline top padding15">
+    		<div>Affected Component:</div>
+	    	<select class="marginBottom10 width100"
+					data-bind="
+					options: currentProject.components, 
+	              	optionsText: function(component) {
+	                	 return component.viewModel.name.value;
+	              	},
+	              value: currentProject.actionEditor.affectedComponent">
+			</select>
+	    	<div>Dataset:</div>
+	    	<select class="marginBottom10 width100"
+					data-bind="optionsCaption: 'None',
+					options: currentProject.dataSets, 
+	              	optionsText: function(dataSet) {
+	              		 return dataSet.name;
+	              	},
+	              value: currentProject.actionEditor.dataSet">
+			</select>
+	    	<div>Properties:</div>
+	    	<select size="10" class="select-full-size"
+	    			data-bind="options: currentProject.actionEditor.affectedComponent.properties,
+	    			optionsText: function(property) {
+	    				return property.displayName;
+	    			},
+	    			value: currentProject.actionEditor.selectedProperty">
+	    	</select>
+    	</div>
+		<div class="inline top padding15">
+			<div>Options</div>
+            <div data-bind="foreach: currentProject.actionEditor.affectedComponent">
+                <div data-bind="foreach: $data.properties">
+                    <div data-bind="template: {name : $data.templateName, data: $data}"></div>
+                </div>
+            </div>
+		</div>
     </div>
     
     <div id="unsaved-changes-dialog" title="Unsaved Changes" class="dialog">

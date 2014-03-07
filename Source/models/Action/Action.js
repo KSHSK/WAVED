@@ -1,7 +1,9 @@
 /*global define*/
-define(['knockout',
+define(['jquery',
+        'knockout',
         'util/defined'
     ],function(
+        $,
         ko,
         defined
     ){
