@@ -1,30 +1,35 @@
 /*global define*/
-define([
-        'modules/NewProject',
-        'modules/LoadProject',
-        'modules/UploadData',
+define(['knockout',
+        'models/GoogleAnalytics',
+        'models/ProjectViewModel',
+        'models/Property/ArrayProperty',
+        'models/Property/StringProperty',
+        'models/WorkspaceViewModel',
+        'models/Widget/ButtonWidget/Button',
         'modules/BindData',
         'modules/DeleteData',
-        'models/Widget/ButtonWidget/Button',
+        'modules/LoadProject',
+        'modules/NewProject',
+        'modules/UploadData',
         'util/defined',
         'util/defaultValue',
-        'models/Property/StringProperty',
-        'models/Property/ArrayProperty',
-        'util/createValidator',
-        'knockout'
+        'util/createValidator'
     ], function(
-        NewProject,
-        LoadProject,
-        UploadData,
+        ko,
+        GoogleAnalytics,
+        ProjectViewModel,
+        ArrayProperty,
+        StringProperty,
+        WorkspaceViewModel,
+        Button,
         BindData,
         DeleteData,
-        Button,
+        LoadProject,
+        NewProject,
+        UploadData,
         defined,
         defaultValue,
-        StringProperty,
-        ArrayProperty,
-        createValidator,
-        ko) {
+        createValidator) {
     'use strict';
 
     var self;
@@ -37,30 +42,10 @@ define([
         this._selectedDataSet = '';
         this._selectedBoundData = '';
 
-        this._currentProject = {
-            name: '',
-            workspace: {
-                height: {
-                    value: 600
-                },
-                width: {
-                    value: 750
-                }
-            },
-            googleAnalytics: {
-                uaCode: {
-                    value: '',
-                    error: false,
-                    message: ''
-                },
-                eventCategory: {
-                    value: '',
-                    error: false,
-                    message: ''
-                },
-                bound: false
-            }
-        };
+        this._currentProject = new ProjectViewModel({
+            name: ''
+        });
+
         this._availableWidgets = [{
             name: 'Button',
             o: Button

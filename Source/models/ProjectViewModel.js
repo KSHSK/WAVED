@@ -30,11 +30,13 @@ define([
         this._events = defaultValue(options.events, []);
         this._actions = defaultValue(options.actions, []);
         this._googleAnalytics = defaultValue(options.googleAnalytics, new GoogleAnalytics());
-        this._workspace = new WorkspaceViewModel(options.width, options.height);
+        this._workspace = new WorkspaceViewModel();
         this._dirty = false;
         this._projectTree = undefined; // TODO
 
         this._components.push(this._workspace);
+
+        this.actionEditor = {};
 
         ko.track(this);
     };
@@ -126,7 +128,21 @@ define([
     };
 
     ProjectViewModel.prototype.addAction = function(action) {
-        // TODO
+        var actionDialog = $('#action-dialog');
+        actionDialog.dialog({
+            resizable: false,
+            width: 500,
+            modal: true,
+            closeOnEscape: false,
+            buttons: {
+                'Okay': function() {
+
+                },
+                'Cancel': function() {
+                    actionDialog.dialog('close');
+                }
+            }
+        });
     };
 
     ProjectViewModel.prototype.getDataSet = function(name) {
