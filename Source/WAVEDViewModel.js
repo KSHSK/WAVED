@@ -2,6 +2,7 @@
 define([
         'modules/NewProject',
         'modules/LoadProject',
+        'modules/SaveProject',
         'modules/UploadData',
         'modules/BindData',
         'modules/DeleteData',
@@ -15,6 +16,7 @@ define([
     ], function(
         NewProject,
         LoadProject,
+        SaveProject,
         UploadData,
         BindData,
         DeleteData,
@@ -112,6 +114,15 @@ define([
 
     WAVEDViewModel.prototype.markDataForDeletion = function() {
         return DeleteData.markDataForDeletion(self);
+    };
+
+    WAVEDViewModel.prototype.saveProject = function() {
+        var deferred = $.Deferred();
+        return SaveProject.saveProject(deferred, this.currentProject.name, self);
+    };
+
+    WAVEDViewModel.prototype.tryToSaveProject = function() {
+        return SaveProject.tryToSaveProject(self);
     };
 
     // TODO: Component

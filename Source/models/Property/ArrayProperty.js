@@ -75,5 +75,16 @@ define([
         }
     });
 
+    ArrayProperty.prototype.getState = function() {
+        var state = Property.prototype.getState.call(this);
+        state.options = this.options;
+
+        return state;
+    };
+
+    ArrayProperty.prototype.setState = function() {
+        // TODO: Implement Me
+    };
+
     return ArrayProperty;
 });
