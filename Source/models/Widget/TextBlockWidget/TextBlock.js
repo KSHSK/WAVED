@@ -27,9 +27,9 @@ define([
     };
 
     /**
-     * Static method that returns the type String for this class.
+     * Static method that returns the type String for this class's ViewModel.
      */
-    TextBlock.getType = function() {
+    TextBlock.getViewModelType = function() {
         return TextBlockViewModel.getType();
     };
 

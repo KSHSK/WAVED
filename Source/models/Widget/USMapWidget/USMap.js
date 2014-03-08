@@ -27,9 +27,9 @@ define([
     };
 
     /**
-     * Static method that returns the type String for this class.
+     * Static method that returns the type String for this class's ViewModel.
      */
-    USMap.getType = function() {
+    USMap.getViewModelType = function() {
         return USMapViewModel.getType();
     };
 
