@@ -5,9 +5,6 @@ author: Steve Nguyen
 
 **Items completed this week:**
 
-* General
-	* Online meeting on Sunday (2/16) to discuss design document progress.
-	* In person meeting with advisor on Monday (2/17) to review design document.
 * Issues Created
 	* [#79](https://github.com/KSHSK/WAVED/issues/79) - Add workspace scrolling
 	* [#80](https://github.com/KSHSK/WAVED/issues/80) - Update workspace when current project is changed
