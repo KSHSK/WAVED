@@ -7,14 +7,19 @@ $fileName = $_POST["fileName"];
 // Setup return object.
 $returnValue = getInitialReturnValue();
 
-if ($projectName == null) {
-    setReturnValueError($returnValue, "Project name is missing.");
+if (empty($projectName)) {
+    setReturnValueError($returnValue, "A project name must be given.");
+    reportReturnValue($returnValue);
+    return;
+}
+else if (!projectExists($projectName)) {
+    setReturnValueError($returnValue, "This project does not exist.");
     reportReturnValue($returnValue);
     return;
 }
 
-if ($fileName == null) {
-    setReturnValueError($returnValue, "Filename is missing.");
+if (empty($fileName)) {
+    setReturnValueError($returnValue, "A filename must be given.");
     reportReturnValue($returnValue);
     return;
 }
