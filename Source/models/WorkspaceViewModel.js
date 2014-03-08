@@ -3,53 +3,59 @@ define([
         'models/SuperComponentViewModel',
         'models/Property/StringProperty',
         'models/Property/NumberProperty',
+        'util/createValidator',
         'util/defined',
+        'util/defaultValue',
         'knockout'
     ], function(
         SuperComponentViewModel,
         StringProperty,
         NumberProperty,
+        createValidator,
         defined,
+        defaultValue,
         ko){
     'use strict';
 
     // TODO: The constructor takes in (Object state) in the DD
-    var WorkspaceViewModel = function(width, height) {
+    var WorkspaceViewModel = function(state) {
+        state = defined(state) ? state : {};
 
+        // Set name
         this.name = new StringProperty({
             displayName: 'Name',
             value: 'Workspace'
         });
 
-        var widthOptions;
-        if (defined(width)) {
-            widthOptions = {
-                displayName: width.displayName,
-                value: width.value
-            };
+        // Set width
+        var widthValue = 750;
+        if (defined(state.width)) {
+            widthValue = state.width.value;
         }
-        else {
-            widthOptions = {
-                displayName: 'Width',
-                value: 750
-            };
-        }
-        this.width = new NumberProperty(widthOptions);
 
-        var heightOptions;
-        if (defined(height)) {
-            heightOptions = {
-                displayName: height.displayName,
-                value: height.value
-            };
+        this.width = new NumberProperty({
+            displayName: 'Width',
+            value: widthValue,
+            validValue: createValidator({
+                min: 1
+            }),
+            errorMessage: 'Value must be greater than 0'
+        });
+
+        // Set height
+        var heightValue = 600;
+        if (defined(state.height)) {
+            heightValue = state.height.value;
         }
-        else {
-            heightOptions = {
-                displayName: 'Height',
-                value: 600
-            };
-        }
-        this.height = new NumberProperty(heightOptions);
+
+        this.height = new NumberProperty({
+            displayName: 'Height',
+            value: heightValue,
+            validValue: createValidator({
+                min: 1
+            }),
+            errorMessage: 'Value must be greater than 0'
+        });
 
         ko.track(this);
     };

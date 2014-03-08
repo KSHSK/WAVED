@@ -15,36 +15,31 @@ define([
 
     var ButtonViewModel = function(state) {
         state = (defined(state)) ? state : {};
-        var hasHeight = defined(state.height);
-        var hasWidth = defined(state.width);
         WidgetViewModel.call(this, state);
 
-        var labelOptions;
+        // Set label
+        var labelValue = '';
         if (defined(state.label)) {
-            labelOptions = {
-                displayName: state.label.displayName,
-                value: state.label.value
-            };
+            labelValue = state.label.value;
         }
-        else {
-            var displayName = 'Label';
-            labelOptions = {
-                displayName: displayName,
-                value: ''
-            };
-        }
-        labelOptions.validValue = createValidator({
-            minLength: 1,
-            maxLength: 50
+
+        this.label = new StringProperty({
+            displayName: 'Label',
+            value: labelValue,
+            validValue: createValidator({
+                minLength: 1,
+                maxLength: 50
+            }),
+            errorMessage: 'Must be between 1 and 50 characters'
         });
-        labelOptions.errorMessage = 'Must be between 1 and 50 characters';
 
-        this.label = new StringProperty(labelOptions);
-
-        if (!hasHeight) {
+        // Change the default height if not defined.
+        if (!defined(state.height)) {
             this.height.value = 5;
         }
-        if (!hasWidth) {
+
+        // Change the default width if not defined.
+        if (!defined(state.width)) {
             this.width.value = 10;
         }
 

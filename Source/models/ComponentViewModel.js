@@ -20,38 +20,27 @@ define([
     var ComponentViewModel = function(state) {
         SuperComponentViewModel.call(this, state);
 
-        var visibleOptions;
+        // Set visible
+        var visibleValue = true;
         if (defined(state.visible)) {
-            visibleOptions = {
-                displayName: state.visible.displayName,
-                value: state.visible.value
-            };
+            visibleValue = state.visible.value;
         }
-        else {
-            visibleOptions = {
-                displayName: 'Visible',
-                value: true
-            };
-        }
-        this.visible = new BooleanProperty(visibleOptions);
 
-        var gaOptions;
+        this.visible = new BooleanProperty({
+            displayName: 'Visible',
+            value: visibleValue,
+        });
+
+        // Set logGoogleAnalytics
+        var gaValue = false;
         if (defined(state.logGoogleAnalytics)) {
-            gaOptions = {
-                displayName: state.logGoogleAnalytics.displayName,
-                value: state.logGoogleAnalytics.value
-            };
+            gaValue = state.logGoogleAnalytics.value;
         }
-        else {
-            gaOptions = {
-                displayName: 'Log Google Analytics',
-                value: false
-            };
-        }
-        this.logGoogleAnalytics = new BooleanProperty(gaOptions);
 
-        // TODO: Validation, creation of actual Property objects, etc
-        this._parentWidgetName = defaultValue(state.parent, undefined); // String
+        this.logGoogleAnalytics = new BooleanProperty({
+            displayName: 'Log Google Analytics',
+            value: gaValue,
+        });
 
         // TODO: Should this be static?
         this._triggers = []; // Trigger[]

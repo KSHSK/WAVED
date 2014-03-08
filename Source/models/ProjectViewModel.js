@@ -1,41 +1,50 @@
 /*global define*/
 define([
         'jquery',
+        'knockout',
         'util/defined',
         'util/defaultValue',
         'models/WorkspaceViewModel',
+        'models/GoogleAnalytics',
         'models/Data/DataSet',
-        './GoogleAnalytics',
-        'knockout'
+        'models/Data/DataSubset',
+        'models/Action/PropertyAction',
+        'models/Action/QueryAction',
+        'models/Event/Event'
     ], function(
         $,
+        ko,
         defined,
         defaultValue,
         WorkspaceViewModel,
-        DataSet,
         GoogleAnalytics,
-        ko) {
+        DataSet,
+        DataSubset,
+        PropertyAction,
+        QueryAction,
+        Event) {
     'use strict';
 
     var self;
-    var ProjectViewModel = function(options) {
+    var ProjectViewModel = function(state, availableWidgets) {
         self = this;
-        if (typeof options.name === 'undefined') {
+        state = defined(state) ? state : {};
+
+        if (typeof state.name === 'undefined') {
             throw new Error('ProjectViewModel name is required');
         }
 
-        // TODO: Load actual state.
-        this._name = options.name;
-        this._components = defaultValue(options.components, []);
-        this._dataSets = defaultValue(options.dataSet, []);
-        this._events = defaultValue(options.events, []);
-        this._actions = defaultValue(options.actions, []);
-        this._googleAnalytics = defaultValue(options.googleAnalytics, new GoogleAnalytics());
-        this._workspace = new WorkspaceViewModel(options.width, options.height);
-        this._dirty = false;
-        this._projectTree = undefined; // TODO
+        var defaults = {
+            components: [],
+            dataSets: [],
+            events: [],
+            actions: [],
+            googleAnalytics: (new GoogleAnalytics()).getState(),
+            workspace: (new WorkspaceViewModel()).getState()
+        };
 
-        this._components.push(this._workspace);
+        this.setState($.extend({}, defaults, state), availableWidgets);
+        // TODO: Update Project Tree if necessary.
 
         ko.track(this);
     };
@@ -135,8 +144,55 @@ define([
         };
     };
 
-    ProjectViewModel.prototype.setState = function(state) {
-        // TODO
+    ProjectViewModel.prototype.setState = function(state, availableWidgets) {
+        this._name = state.name;
+        this._workspace = new WorkspaceViewModel(state.workspace);
+        this._googleAnalytics = new GoogleAnalytics(state.analytics);
+
+        this._components = $.map(state.components, function(itemState) {
+            for (var index in availableWidgets) {
+                var widget = availableWidgets[index];
+                if (itemState.type === widget.o.getType()) {
+                    return new widget.o(itemState);
+                }
+            }
+
+            // Invalid state.
+            return null;
+        });
+
+        // Insert workspace first.
+        this._components.unshift(this._workspace);
+
+        this._dataSets = $.map(state.dataSets, function(itemState) {
+            if (itemState.type === DataSet.getType()) {
+                return new DataSet(itemState);
+            }
+
+            if (itemState.type === DataSubset.getType()) {
+                return new DataSubset(itemState);
+            }
+
+            // Invalid state.
+            return null;
+        });
+
+        this._actions = $.map(state.actions, function(itemState) {
+            if (itemState.type === PropertyAction.getType()) {
+                return new PropertyAction(itemState);
+            }
+
+            if (itemState.type === QueryAction.getType()) {
+                return new QueryAction(itemState);
+            }
+
+            // Invalid state.
+            return null;
+        });
+
+        this._events = $.map(state.events, function(itemState) {
+            return new Event(itemState);
+        });
     };
 
     ProjectViewModel.prototype.addDataSet = function(data) {

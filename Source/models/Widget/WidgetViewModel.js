@@ -22,91 +22,75 @@ define([
     var WidgetViewModel = function(state) {
         ComponentViewModel.call(this, state);
 
-        var heightOptions;
-        if (defined(state.height)) {
-            heightOptions = {
-                displayName: state.height.displayName,
-                value: state.height.value
-            };
-        }
-        else {
-            heightOptions = {
-                displayName: 'Height',
-                value: 50
-            };
-        }
-        heightOptions.validValue = createValidator({
-            min: 1,
-            max: 100
-        });
-        heightOptions.errorMessage = 'Value must be between 1 and 100';
-
-        this.height = new NumberProperty(heightOptions);
-
-        var widthOptions;
+        // Set width
+        var widthValue = 50;
         if (defined(state.width)) {
-            widthOptions = {
-                displayName: state.width.displayName,
-                value: state.width.value
-            };
+            widthValue = state.width.value;
         }
-        else {
-            widthOptions = {
-                displayName: 'Width',
-                value: 50
-            };
-        }
-        widthOptions.validValue =  createValidator({
-            min: 1,
-            max: 100
-        });
-        widthOptions.errorMessage = 'Value must be between 1 and 100';
-        this.width = new NumberProperty(widthOptions);
 
-        var xOptions;
+        this.width = new NumberProperty({
+            displayName: 'Width',
+            value: widthValue,
+            validValue: createValidator({
+                min: 1,
+                max: 100
+            }),
+            errorMessage: 'Value must be between 1 and 100'
+        });
+
+        // Set height
+        var heightValue = 50;
+        if (defined(state.height)) {
+            heightValue = state.height.value;
+        }
+
+        this.height = new NumberProperty({
+            displayName: 'Height',
+            value: heightValue,
+            validValue: createValidator({
+                min: 1,
+                max: 100
+            }),
+            errorMessage: 'Value must be between 1 and 100'
+        });
+
+        // Set x
+        var xValue = 0;
         if (defined(state.x)) {
-            xOptions = {
-                displayName: state.x.displayName,
-                value: state.x.value
-            };
+            xValue = state.x.value;
         }
-        else {
-            xOptions = {
-                displayName: 'X',
-                value: 0
-            };
-        }
-        xOptions.validValue = createValidator({
-            min: 0,
-            max: 100
-        });
-        xOptions.errorMessage = 'Value must be between 0 and 100';
-        this.x = new NumberProperty(xOptions);
 
-        var yOptions;
+        this.x = new NumberProperty({
+            displayName: 'X',
+            value: xValue,
+            validValue: createValidator({
+                min: 0,
+                max: 100
+            }),
+            errorMessage: 'Value must be between 0 and 100'
+        });
+
+        // Set y
+        var yValue = 0;
         if (defined(state.y)) {
-            yOptions = {
-                displayName: state.y.displayName,
-                value: state.y.value
-            };
+            yValue = state.y.value;
         }
-        else {
-            yOptions = {
-                displayName: 'Y',
-                value: 0
-            };
-        }
-        yOptions.validValue =  createValidator({
-            min: 0,
-            max: 100
-        });
-        yOptions.errorMessage = 'Value must be between 0 and 100';
-        this.y = new NumberProperty(yOptions);
 
-        // TODO: These things for real
+        this.y = new NumberProperty({
+            displayName: 'Y',
+            value: yValue,
+            validValue: createValidator({
+                min: 0,
+                max: 100
+            }),
+            errorMessage: 'Value must be between 0 and 100'
+        });
+
         this._subwidgetNames = defaultValue(state.subwidgets, []); // String[]
         this._elementNames = defaultValue(state.elements, []); // String[]
         this._boundData = defaultValue(state.boundData, []); // String[]
+
+        // TODO: Set this.
         this._availableElements = []; // ComponentRecord[]
     };
 

@@ -115,9 +115,8 @@ define([
                     var data = JSON.parse(dataString);
                     if (data.success) {
                         // Set the project name.
-                        viewModel.currentProject = new ProjectViewModel({
-                            name: data.projectName
-                        });
+                        viewModel.currentProject = new ProjectViewModel(JSON.parse(data.projectState),
+                            viewModel.availableWidgets);
                         viewModel.dirty = false;
                         viewModel.loadProjectName._value = '';
 
