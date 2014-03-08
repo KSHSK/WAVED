@@ -5,11 +5,13 @@
 define([
         'models/Property/StringProperty',
         'util/createValidator',
+        'util/defined',
         'knockout',
         'jquery'
     ], function(
         StringProperty,
         createValidator,
+        defined,
         ko,
         $) {
     'use strict';
@@ -17,9 +19,16 @@ define([
     var self;
     var GoogleAnalytics = function(state) {
         self = this;
+        state = defined(state) ? state : {};
+
+        var uaCodeValue = '';
+        if (defined(state.uaCode)) {
+            uaCodeValue = state.uaCode.value;
+        }
+
         this.uaCode = new StringProperty({
             displayName: 'UA Code: ',
-            value: '',
+            value: uaCodeValue,
             validValue: createValidator({
                 minLength: 1,
                 regex: new RegExp('^((UA)(-)(\\d+)(-)(\\d+)){1}$', 'i')
@@ -27,9 +36,14 @@ define([
             errorMessage: 'UA code is not in the correct format. It should look like UA-####-##.'
         });
 
+        var eventCategoryValue = '';
+        if (defined(state.eventCategory)) {
+            eventCategoryValue = state.eventCategory.value;
+        }
+
         this.eventCategory = new StringProperty({
             displayName: 'UA Code: ',
-            value: '',
+            value: eventCategoryValue,
             validValue: createValidator({
                 minLength: 1,
                 regex: new RegExp('^[a-zA-Z0-9_\\- ]+$', 'i')

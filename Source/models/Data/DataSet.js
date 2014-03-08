@@ -14,7 +14,6 @@ define(['knockout',
         state = defined(state) ? state : {};
         this._name = state.name; // String
         this._filename = state.filename; // String
-        this._data = state.data; // Object
         this._referenceCount = state.referenceCount; // Number
 
         ko.track(this);
@@ -54,7 +53,7 @@ define(['knockout',
         return {
             type: DataSet.getType(),
             name: this.name,
-            fileName: this.filename,
+            filename: this.filename,
             referenceCount: this.referenceCount
         };
     };

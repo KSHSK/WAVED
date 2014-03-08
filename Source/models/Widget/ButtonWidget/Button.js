@@ -26,5 +26,12 @@ define([
         ko.applyBindings(viewModel, button);
     };
 
+    /**
+     * Static method that returns the type String for this class.
+     */
+    Button.getType = function() {
+        return ButtonViewModel.getType();
+    };
+
     return Button;
 });
