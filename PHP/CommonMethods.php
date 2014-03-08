@@ -85,4 +85,31 @@ function recursiveRmdir($baseDir) {
     // Remove the now empty directory
     return rmdir($baseDir);
 }
+
+/**
+ * Returns the data folder for the given project.
+ * @param String $projectName
+ */
+function getDataFolder($projectName) {
+    return "projects/" . $projectName . "/data/";
+}
+
+/**
+ * Determines if $file is in $projectName's data folder
+ * @param String $projectName
+ * @param String $file
+ */
+function projectHasDataFile($projectName, $file) {
+    $dataFolder = getDataFolder($projectName);
+
+    // Scan the $dataFolder directory to ensure $file doesn't go into other directories.
+    $files = array_diff(scandir($dataFolder), array('.', '..'));
+    foreach ($files as $fileToCheck) {
+        if ($fileToCheck === $file && is_file($dataFolder . $fileToCheck)) {
+            return true;
+        }
+    }
+    
+    return false;
+}
 ?>
