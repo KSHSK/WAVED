@@ -12,7 +12,14 @@ if (empty($projectName)) {
     reportReturnValue($returnValue);
     return;
 }
-else if (!projectExists($projectName)) {
+
+if (empty($fileName)) {
+    setReturnValueError($returnValue, "A filename must be given.");
+    reportReturnValue($returnValue);
+    return;
+}
+
+if (!projectExists($projectName)) {
     setReturnValueError($returnValue, "This project does not exist.");
     reportReturnValue($returnValue);
     return;
@@ -22,24 +29,17 @@ else if (!projectExists($projectName)) {
 chdir("../");
 $filePath = realpath(getDataFolder($projectName) . $fileName);
 
-if (empty($fileName)) {
-    setReturnValueError($returnValue, "A filename must be given.");
-    reportReturnValue($returnValue);
-    return;
-}
-else if (!is_file($filePath)) {
+if (!is_file($filePath)) {
     setReturnValueError($returnValue, "This file does not exist.");
     reportReturnValue($returnValue);
     return;
 }
-else if (!projectHasDataFile($projectName, $fileName)) {
-    setReturnValueError($returnValue, "This file name is invalid.");
+
+if (!projectHasDataFile($projectName, $fileName)) {
+    setReturnValueError($returnValue, "This filename is invalid.");
     reportReturnValue($returnValue);
     return;
 }
-
-
-
 
 // Delete file.
 $success = unlink($filePath);
