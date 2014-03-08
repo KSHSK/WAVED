@@ -34,16 +34,7 @@ define([
             throw new Error('ProjectViewModel name is required');
         }
 
-        var defaults = {
-            components: [],
-            dataSets: [],
-            events: [],
-            actions: [],
-            googleAnalytics: (new GoogleAnalytics()).getState(),
-            workspace: (new WorkspaceViewModel()).getState()
-        };
-
-        this.setState($.extend({}, defaults, state), availableWidgets);
+        this.setState(state, availableWidgets);
         // TODO: Update Project Tree if necessary.
 
         ko.track(this);
@@ -145,6 +136,18 @@ define([
     };
 
     ProjectViewModel.prototype.setState = function(state, availableWidgets) {
+        // Default values in case they aren't included in state.
+        var defaults = {
+            components: [],
+            dataSets: [],
+            events: [],
+            actions: [],
+            googleAnalytics: (new GoogleAnalytics()).getState(),
+            workspace: (new WorkspaceViewModel()).getState()
+        };
+
+        state = $.extend({}, defaults, state);
+
         this._name = state.name;
         this._workspace = new WorkspaceViewModel(state.workspace);
         this._googleAnalytics = new GoogleAnalytics(state.analytics);
