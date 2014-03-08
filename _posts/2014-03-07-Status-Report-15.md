@@ -49,15 +49,15 @@ author: Steve Nguyen
 	
 **Action items for next week:**
 
-1. Work on Save As (the rest of #43)
+1. Work on Save As (the rest of [#43](https://github.com/KSHSK/WAVED/issues/43))
 	* Sean
-2. Work on setting state and data features when loading a project (#95, #106, and #118)
+2. Work on setting state and data features when loading a project ([#95](https://github.com/KSHSK/WAVED/issues/95), [#106](https://github.com/KSHSK/WAVED/issues/106), and [#118](https://github.com/KSHSK/WAVED/issues/118))
 	* Sean
-3. Client side project deletion (#86)
+3. Client side project deletion ([#86](https://github.com/KSHSK/WAVED/issues/86))
 	* Keith
-4. Finish work on GlyphSizeSelectionProperty (#78)
+4. Finish work on GlyphSizeSelectionProperty ([#78](https://github.com/KSHSK/WAVED/issues/78))
 	* Steve
-5. Finish ColoringSelectionProperty (#77)
+5. Finish ColoringSelectionProperty ([#77](https://github.com/KSHSK/WAVED/issues/77))
 	* Steve
 6. Finish Textbox Widget
 	* Hannah
