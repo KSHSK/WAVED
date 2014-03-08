@@ -27,9 +27,9 @@ define([
     };
 
     /**
-     * Static method that returns the type String for this class.
+     * Static method that returns the type String for this class's ViewModel.
      */
-    LineGraph.getType = function() {
+    LineGraph.getViewModelType = function() {
         return LineGraphViewModel.getType();
     };
 

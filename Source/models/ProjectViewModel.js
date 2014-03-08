@@ -155,7 +155,7 @@ define([
         this._components = $.map(state.components, function(itemState) {
             for (var index in availableWidgets) {
                 var widget = availableWidgets[index];
-                if (itemState.type === widget.o.getType()) {
+                if (itemState.type === widget.o.getViewModelType()) {
                     return new widget.o(itemState);
                 }
             }
