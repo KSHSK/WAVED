@@ -18,22 +18,28 @@ else if (!projectExists($projectName)) {
     return;
 }
 
+// Go back to the main directory.
+chdir("../");
+$filePath = realpath(getDataFolder($projectName) . $fileName);
+
 if (empty($fileName)) {
     setReturnValueError($returnValue, "A filename must be given.");
     reportReturnValue($returnValue);
     return;
 }
-
-// Go back to the main directory.
-chdir("../");
-
-$filePath = realpath("projects/" . $projectName . "/data/" . $fileName);
-
-if (!is_file($filePath)) {
+else if (!is_file($filePath)) {
     setReturnValueError($returnValue, "This file does not exist.");
     reportReturnValue($returnValue);
     return;
 }
+else if (!projectHasDataFile($projectName, $fileName)) {
+    setReturnValueError($returnValue, "This file name is invalid.");
+    reportReturnValue($returnValue);
+    return;
+}
+
+
+
 
 // Delete file.
 $success = unlink($filePath);
