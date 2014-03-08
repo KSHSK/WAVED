@@ -3,12 +3,14 @@
  * A module for loading an existing project.
  */
 define([
-        '../modules/UnsavedChanges',
-        '../models/ProjectViewModel',
+        './UnsavedChanges',
+        './ReadData',
+        'models/ProjectViewModel',
         'util/updateQueryByName',
         'jquery'
     ], function(
         UnsavedChangesModule,
+        ReadData,
         ProjectViewModel,
         updateQueryByName,
         $) {
@@ -123,8 +125,15 @@ define([
                         // Set the URL to include the current project name.
                         updateQueryByName('project', data.projectName);
 
+                        // Read the contents of all data files.
+                        $.each(viewModel.currentProject.dataSets, function(index, dataSet) {
+                            // Read file contents for the DataSet.
+                            ReadData.readData(dataSet);
+
+                            // TODO: How should DataSubsets be handled?
+                        });
+
                         // TODO: Remove files that are marked for deletion.
-                        // TODO: Read file contents for every DataSet in the state.
 
                         projectLoaded.resolve();
                     }
