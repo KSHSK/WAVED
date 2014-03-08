@@ -53,7 +53,7 @@ author: Steve Nguyen
 	* Sean
 2. Work on setting state and data features when loading a project ([#95](https://github.com/KSHSK/WAVED/issues/95), [#106](https://github.com/KSHSK/WAVED/issues/106), and [#118](https://github.com/KSHSK/WAVED/issues/118))
 	* Sean
-3. Client side project deletion ([#86](https://github.com/KSHSK/WAVED/issues/86))
+3. Client side project deletion ([#66](https://github.com/KSHSK/WAVED/issues/66))
 	* Keith
 4. Finish work on GlyphSizeSelectionProperty ([#78](https://github.com/KSHSK/WAVED/issues/78))
 	* Steve
