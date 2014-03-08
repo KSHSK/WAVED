@@ -3,17 +3,21 @@
  * A module for loading an existing project.
  */
 define([
+        'jquery',
         './UnsavedChanges',
         './ReadData',
+        './DeleteData',
+        './SaveProject',
         'models/ProjectViewModel',
-        'util/updateQueryByName',
-        'jquery'
+        'util/updateQueryByName'
     ], function(
-        UnsavedChangesModule,
+        $,
+        UnsavedChanges,
         ReadData,
+        DeleteData,
+        SaveProject,
         ProjectViewModel,
-        updateQueryByName,
-        $) {
+        updateQueryByName) {
     'use strict';
 
     var LoadProject = {
@@ -28,7 +32,7 @@ define([
             var projectClean = $.Deferred();
 
             if (viewModel.dirty === true) {
-                UnsavedChangesModule.handleUnsavedChanges(projectClean);
+                UnsavedChanges.handleUnsavedChanges(projectClean);
             }
             else {
                 // Project is already clean.
@@ -125,15 +129,17 @@ define([
                         // Set the URL to include the current project name.
                         updateQueryByName('project', data.projectName);
 
-                        // Read the contents of all data files.
-                        $.each(viewModel.currentProject.dataSets, function(index, dataSet) {
-                            // Read file contents for the DataSet.
-                            ReadData.readData(dataSet);
+                        // Delete marked data.
+                        var filesDeleted = DeleteData.deleteAllMarkedData(viewModel);
 
-                            // TODO: How should DataSubsets be handled?
+                        $.when(filesDeleted).done(function() {
+                            // Save the project if some files were deleted.
+                            var projectSaved = $.Deferred();
+                            SaveProject.saveProject(projectSaved, viewModel.currentProject.name, viewModel);
+                        }).always(function() {
+                            // Read the contents of all data files.
+                            ReadData.readAllData(viewModel);
                         });
-
-                        // TODO: Remove files that are marked for deletion.
 
                         projectLoaded.resolve();
                     }

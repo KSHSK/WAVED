@@ -222,8 +222,11 @@ define([
 
     // TODO: Do we want to allow removal using dataset instance and name?
     // The DD specifies this, but we should probably pick one.
-    ProjectViewModel.prototype.removeDataSet = function(data) {
-        // TODO
+    ProjectViewModel.prototype.removeDataSet = function(dataSet) {
+        var index = this._dataSets.indexOf(dataSet);
+        if (index > -1) {
+            this._dataSets.splice(index, 1);
+        }
     };
 
     ProjectViewModel.prototype.removeComponent = function(component) {
