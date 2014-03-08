@@ -95,17 +95,17 @@ function getDataFolder($projectName) {
 }
 
 /**
- * Determines if $file is in $projectName's data folder
+ * Determines if $fileName is in $projectName's data folder
  * @param String $projectName
- * @param String $file
+ * @param String $fileName
  */
-function projectHasDataFile($projectName, $file) {
+function projectHasDataFile($projectName, $fileName) {
     $dataFolder = getDataFolder($projectName);
 
-    // Scan the $dataFolder directory to ensure $file doesn't go into other directories.
+    // Scan the $dataFolder directory to ensure $fileName doesn't navigate to other directories.
     $files = array_diff(scandir($dataFolder), array('.', '..'));
     foreach ($files as $fileToCheck) {
-        if ($fileToCheck === $file && is_file($dataFolder . $fileToCheck)) {
+        if ($fileToCheck === $fileName && is_file($dataFolder . $fileName)) {
             return true;
         }
     }
