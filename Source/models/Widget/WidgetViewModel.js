@@ -22,6 +22,45 @@ define([
     var WidgetViewModel = function(state) {
         ComponentViewModel.call(this, state);
 
+        // TODO: Set this.
+        this._availableElements = []; // ComponentRecord[]
+    };
+
+    WidgetViewModel.prototype = Object.create(ComponentViewModel.prototype);
+
+    Object.defineProperties(WidgetViewModel.prototype, {
+        properties: {
+            get: function() {
+                return [this._name, this.x, this.y, this.width, this.height, this.visible, this.logGoogleAnalytics];
+            }
+        },
+        boundData: {
+            get: function() {
+                return this._boundData;
+            }
+        },
+        elementNames: {
+            get: function() {
+                return this._elementNames;
+            }
+        }
+    });
+
+    WidgetViewModel.prototype.getState = function() {
+        var state = ComponentViewModel.prototype.getState.call(this);
+        state.width = this.width.getState();
+        state.height = this.height.getState();
+        state.x = this.x.getState();
+        state.y = this.y.getState();
+        state.elementNames = this.elementNames;
+        state.boundData = this.boundData;
+
+        return state;
+    };
+
+    WidgetViewModel.prototype.setState = function(state) {
+        ComponentViewModel.prototype.setState.call(this, state);
+
         // Set width
         var widthValue = 50;
         if (defined(state.width)) {
@@ -89,45 +128,6 @@ define([
         this._subwidgetNames = defaultValue(state.subwidgets, []); // String[]
         this._elementNames = defaultValue(state.elements, []); // String[]
         this._boundData = defaultValue(state.boundData, []); // String[]
-
-        // TODO: Set this.
-        this._availableElements = []; // ComponentRecord[]
-    };
-
-    WidgetViewModel.prototype = Object.create(ComponentViewModel.prototype);
-
-    Object.defineProperties(WidgetViewModel.prototype, {
-        properties: {
-            get: function() {
-                return [this._name, this.x, this.y, this.width, this.height, this.visible, this.logGoogleAnalytics];
-            }
-        },
-        boundData: {
-            get: function() {
-                return this._boundData;
-            }
-        },
-        elementNames: {
-            get: function() {
-                return this._elementNames;
-            }
-        }
-    });
-
-    WidgetViewModel.prototype.getState = function() {
-        var state = ComponentViewModel.prototype.getState.call(this);
-        state.width = this.width.getState();
-        state.height = this.height.getState();
-        state.x = this.x.getState();
-        state.y = this.y.getState();
-        state.elementNames = this.elementNames;
-        state.boundData = this.boundData;
-
-        return state;
-    };
-
-    WidgetViewModel.prototype.setState = function() {
-        // TODO
     };
 
     WidgetViewModel.prototype.addElement = function(elementName) {

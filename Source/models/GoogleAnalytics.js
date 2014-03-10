@@ -20,7 +20,29 @@ define([
     var GoogleAnalytics = function(state) {
         self = this;
         state = defined(state) ? state : {};
+        this.setState(state);
 
+        ko.track(this);
+    };
+
+    Object.defineProperties(GoogleAnalytics.prototype, {
+        bound: {
+            get: function() {
+                return this._bound;
+            }
+        }
+    });
+
+    // TODO: Add to DD.
+    GoogleAnalytics.prototype.getState = function() {
+        return {
+            'uaCode': this.uaCode.getState(),
+            'eventCategory': this.eventCategory.getState(),
+        };
+    };
+
+    // TODO: Add to DD.
+    GoogleAnalytics.prototype.setState = function(state) {
         var uaCodeValue = '';
         if (defined(state.uaCode)) {
             uaCodeValue = state.uaCode.value;
@@ -52,25 +74,6 @@ define([
         });
 
         this._bound = false;
-
-        ko.track(this);
-
-    };
-
-    Object.defineProperties(GoogleAnalytics.prototype, {
-        bound: {
-            get: function() {
-                return this._bound;
-            }
-        }
-    });
-
-    // TODO: Add to DD.
-    GoogleAnalytics.prototype.getState = function() {
-        return {
-            'uaCode': this.uaCode.getState(),
-            'eventCategory': this.eventCategory.getState(),
-        };
     };
 
     GoogleAnalytics.prototype.set = function() {

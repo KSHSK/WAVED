@@ -16,22 +16,7 @@ define([
     var ButtonViewModel = function(state) {
         state = (defined(state)) ? state : {};
         WidgetViewModel.call(this, state);
-
-        // Set label
-        var labelValue = '';
-        if (defined(state.label)) {
-            labelValue = state.label.value;
-        }
-
-        this.label = new StringProperty({
-            displayName: 'Label',
-            value: labelValue,
-            validValue: createValidator({
-                minLength: 1,
-                maxLength: 50
-            }),
-            errorMessage: 'Must be between 1 and 50 characters'
-        });
+        this.setState(state);
 
         // Change the default height if not defined.
         if (!defined(state.height)) {
@@ -64,7 +49,23 @@ define([
     };
 
     ButtonViewModel.prototype.setState = function(state) {
-        // TODO
+        WidgetViewModel.prototype.setState.call(this, state);
+
+        // Set label
+        var labelValue = '';
+        if (defined(state.label)) {
+            labelValue = state.label.value;
+        }
+
+        this.label = new StringProperty({
+            displayName: 'Label',
+            value: labelValue,
+            validValue: createValidator({
+                minLength: 1,
+                maxLength: 50
+            }),
+            errorMessage: 'Must be between 1 and 50 characters'
+        });
     };
 
     Object.defineProperties(ButtonViewModel.prototype, {

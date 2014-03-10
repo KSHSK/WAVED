@@ -14,23 +14,6 @@ define([
     'use strict';
 
     var SuperComponentViewModel = function(state) {
-        // Set name
-        var nameValue = '';
-        if (defined(state.name)) {
-            nameValue = state.name.value;
-        }
-
-        this._name = new StringProperty({
-            displayName: 'Name',
-            value: nameValue,
-            validValue: createValidator({
-                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$'),
-                minLength: 1,
-                maxLength: 50
-            }),
-            errorMessage: 'May only contain alphanumerics, hypens (-), underscores(_) and spaces.'
-        });
-
         ko.track(this);
     };
 
@@ -57,7 +40,22 @@ define([
     };
 
     SuperComponentViewModel.prototype.setState = function(state) {
-        // TODO
+        // Set name
+        var nameValue = '';
+        if (defined(state.name)) {
+            nameValue = state.name.value;
+        }
+
+        this._name = new StringProperty({
+            displayName: 'Name',
+            value: nameValue,
+            validValue: createValidator({
+                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$'),
+                minLength: 1,
+                maxLength: 50
+            }),
+            errorMessage: 'May only contain alphanumerics, hypens (-), underscores(_) and spaces.'
+        });
     };
 
     return SuperComponentViewModel;

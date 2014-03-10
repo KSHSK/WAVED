@@ -3,13 +3,15 @@
  * A module for creating a new project.
  */
 define([
-        '../modules/UnsavedChanges',
-        '../models/ProjectViewModel',
+        './UnsavedChanges',
+        './SaveProject',
+        'models/ProjectViewModel',
         'util/updateQueryByName',
         'jquery',
         'knockout'
     ], function(
         UnsavedChangesModule,
+        SaveProject,
         ProjectViewModel,
         updateQueryByName,
         $,
@@ -105,6 +107,10 @@ define([
 
                         // Set the URL to include the current project name.
                         updateQueryByName('project', data.projectName);
+
+                        // Save state of new project.
+                        var projectSaved = $.Deferred();
+                        SaveProject.saveProject(projectSaved, viewModel.currentProject.name, viewModel);
 
                         projectCreated.resolve();
                     }
