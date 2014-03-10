@@ -24,13 +24,16 @@
                 </div>
                 <div class="inline bottom">
                     <div class="menu-text" id="project-name" data-bind="text: currentProject.name"></div>
+                    
                     <button class="inline" id="new-button" data-bind="click: tryToCreateNewProject">New</button>
                     <button class="inline" id="load-button" data-bind="click: tryToLoadProject">Load</button>
 
                     <button class="inline" id="undo-button">Undo</button>
                     <button class="inline" id="redo-button">Redo</button>
                 
-                    <button class="inline" id="save-button">Save</button>
+                    <button class="inline" id="save-button" data-bind="click: saveProject">Save</button>
+                    <button class="inline" id="save-as-button">Save As</button>
+                    
                     <button class="inline" id="export-button">Export</button>
                 
                     <span class="menu-text">Select: </span>
@@ -192,7 +195,7 @@
         <label class="required">Project Name: <input id="create-new-project-name" data-bind="value: newProjectName.value, valueUpdate: 'keyup'"/> </label>
         <div class="error" data-bind="visible: newProjectName.error, html: newProjectName.message"></div>
     </div>
-    
+
     <div id="load-project-dialog" title="Load Project" class="dialog">
         <p>Please select an existing project to load.</p>
         <label class="required">Project Name: 

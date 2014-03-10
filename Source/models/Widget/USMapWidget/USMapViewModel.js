@@ -21,6 +21,13 @@ define([
         ko.track(this);
     };
 
+    /**
+     * Static method that returns the type String for this class.
+     */
+    USMapViewModel.getType = function() {
+        return 'USMap';
+    };
+
     USMapViewModel.prototype = Object.create(WidgetViewModel.prototype);
 
     USMapViewModel.prototype.getState = function() {

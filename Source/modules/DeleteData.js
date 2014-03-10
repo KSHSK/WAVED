@@ -4,9 +4,11 @@
  */
 define([
         '../WAVEDViewModel',
+        'util/displayMessage',
         'jquery'
     ], function(
         WAVEDViewModel,
+        displayMessage,
         $) {
     'use strict';
 
@@ -19,8 +21,7 @@ define([
             }
 
             if (dataSet.referenceCount > 0) {
-                // TODO: Change this to be jQueryUI dialog, page banner, or other nicer display method.
-                alert('Cannot delete data that is bound to a widget');
+                displayMessage('Cannot delete data that is bound to a widget');
             }
             else {
                 dataSet.markForDeletion();

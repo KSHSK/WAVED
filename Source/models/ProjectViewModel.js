@@ -28,6 +28,7 @@ define([
             throw new Error('ProjectViewModel name is required');
         }
 
+        // TODO: Load actual state.
         this._name = options.name;
         this._components = defaultValue(options.components, []);
         this._dataSets = defaultValue(options.dataSet, []);
@@ -112,7 +113,30 @@ define([
     };
 
     ProjectViewModel.prototype.getState = function() {
-        // TODO
+        var self = this;
+
+        return {
+            'name': this._name,
+            'workspace': this._workspace.getState(),
+            'analytics': this._googleAnalytics.getState(),
+            'components': $.map(this._components, function(item) {
+                // Skip workspace.
+                if (item === self._workspace) {
+                    return null;
+                }
+
+                return item.viewModel.getState();
+            }),
+            'dataSets': $.map(this._dataSets, function(item) {
+                return item.getState();
+            }),
+            'actions': $.map(this._actions, function(item) {
+                return item.getState();
+            }),
+            'events': $.map(this._events, function(item) {
+                return item.getState();
+            })
+        };
     };
 
     ProjectViewModel.prototype.setState = function(state) {

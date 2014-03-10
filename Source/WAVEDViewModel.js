@@ -1,4 +1,5 @@
 /*global define*/
+<<<<<<< HEAD
 define(['jquery',
         'knockout',
         'models/Action/Action',
@@ -10,6 +11,13 @@ define(['jquery',
         'models/Property/StringProperty',
         'models/WorkspaceViewModel',
         'models/Widget/ButtonWidget/Button',
+=======
+define([
+        'modules/NewProject',
+        'modules/LoadProject',
+        'modules/SaveProject',
+        'modules/UploadData',
+>>>>>>> master
         'modules/BindData',
         'modules/DeleteData',
         'modules/LoadProject',
@@ -19,6 +27,7 @@ define(['jquery',
         'util/defaultValue',
         'util/createValidator'
     ], function(
+<<<<<<< HEAD
         $,
         ko,
         Action,
@@ -30,6 +39,12 @@ define(['jquery',
         StringProperty,
         WorkspaceViewModel,
         Button,
+=======
+        NewProject,
+        LoadProject,
+        SaveProject,
+        UploadData,
+>>>>>>> master
         BindData,
         DeleteData,
         LoadProject,
@@ -275,6 +290,14 @@ define(['jquery',
 
     WAVEDViewModel.prototype.removeSelectedEvent = function() {
         self._currentProject.removeEvent(self.selectedEvent);
+
+    WAVEDViewModel.prototype.saveProject = function() {
+        var deferred = $.Deferred();
+        return SaveProject.saveProject(deferred, this.currentProject.name, self);
+    };
+
+    WAVEDViewModel.prototype.tryToSaveProject = function() {
+        return SaveProject.tryToSaveProject(self);
     };
 
     // TODO: Component
