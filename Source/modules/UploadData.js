@@ -83,12 +83,12 @@ define([
                 return;
             }
 
-            form.append("file", file);
-            form.append("projectName", viewModel.currentProject.name);
+            form.append('file', file);
+            form.append('projectName', viewModel.currentProject.name);
 
             $.ajax({
-                type : "POST",
-                url : "PHP/uploadDataFile.php",
+                type : 'POST',
+                url : 'PHP/uploadDataFile.php',
                 data : form,
                 processData : false,
                 contentType : false,

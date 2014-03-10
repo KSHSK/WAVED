@@ -44,7 +44,7 @@ define(['knockout',
 
     DataSet.prototype.getState = function() {
         return {
-            type: "DataSet",
+            type: 'DataSet',
             name: this._name,
             fileName: this._filename,
             referenceCount: this._referenceCount
@@ -75,7 +75,7 @@ define(['knockout',
         basename: {
             get: function() {
                 return this._filename.substr(this._filename.lastIndexOf('/')+1, this._filename.length);
-            },
+            }
         },
         data: {
             get: function() {

@@ -28,7 +28,7 @@ define([
             });
 
             return readComplete.promise();
-        },
+        }
 
     };
 
