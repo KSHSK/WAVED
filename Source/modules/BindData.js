@@ -54,7 +54,7 @@ define([
 
         bindData: function(viewModel, name) {
             var dataSet = viewModel.currentProject.getDataSet(name);
-            if (dataSet != null) {
+            if (dataSet !== null) {
                 viewModel.selectedWidget.viewModel.bindData(dataSet);
             }
         },
@@ -65,7 +65,7 @@ define([
             var name = viewModel.selectedBoundData;
 
             var dataSet = viewModel.currentProject.getDataSet(name);
-            if (dataSet != null) {
+            if (dataSet !== null) {
                 viewModel.selectedWidget.viewModel.unbindData(dataSet);
             }
         }
