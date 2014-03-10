@@ -12,9 +12,7 @@ define(['knockout',
 
     var DataSet = function(state) {
         state = defined(state) ? state : {};
-        this._name = state.name; // String
-        this._filename = state.filename; // String
-        this._referenceCount = state.referenceCount; // Number
+        this.setState(state);
 
         ko.track(this);
     };
@@ -59,7 +57,9 @@ define(['knockout',
     };
 
     DataSet.prototype.setState = function(state) {
-        // TODO
+        this._name = state.name; // String
+        this._filename = state.filename; // String
+        this._referenceCount = state.referenceCount; // Number
     };
 
     Object.defineProperties(DataSet.prototype, {

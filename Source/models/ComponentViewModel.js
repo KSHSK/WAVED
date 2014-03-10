@@ -20,6 +20,25 @@ define([
     var ComponentViewModel = function(state) {
         SuperComponentViewModel.call(this, state);
 
+        // TODO: Should this be static?
+        this._triggers = []; // Trigger[]
+
+        ko.track(this);
+    };
+
+    ComponentViewModel.prototype = Object.create(SuperComponentViewModel.prototype);
+
+    ComponentViewModel.prototype.getState = function() {
+        var state = SuperComponentViewModel.prototype.getState.call(this);
+        state.visible = this.visible.getState();
+        state.logGoogleAnalytics = this.logGoogleAnalytics.getState();
+
+        return state;
+    };
+
+    ComponentViewModel.prototype.setState = function(state) {
+        SuperComponentViewModel.prototype.setState.call(this, state);
+
         // Set visible
         var visibleValue = true;
         if (defined(state.visible)) {
@@ -41,25 +60,6 @@ define([
             displayName: 'Log Google Analytics',
             value: gaValue,
         });
-
-        // TODO: Should this be static?
-        this._triggers = []; // Trigger[]
-
-        ko.track(this);
-    };
-
-    ComponentViewModel.prototype = Object.create(SuperComponentViewModel.prototype);
-
-    ComponentViewModel.prototype.getState = function() {
-        var state = SuperComponentViewModel.prototype.getState.call(this);
-        state.visible = this.visible.getState();
-        state.logGoogleAnalytics = this.logGoogleAnalytics.getState();
-
-        return state;
-    };
-
-    ComponentViewModel.prototype.setState = function(state) {
-        // TODO
     };
 
     ComponentViewModel.prototype.getTriggers = function() {

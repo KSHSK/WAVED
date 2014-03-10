@@ -20,7 +20,22 @@ define([
     // TODO: The constructor takes in (Object state) in the DD
     var WorkspaceViewModel = function(state) {
         state = defined(state) ? state : {};
+        this.setState(state);
 
+        ko.track(this);
+    };
+
+    WorkspaceViewModel.prototype = Object.create(SuperComponentViewModel.prototype);
+
+    WorkspaceViewModel.prototype.getState = function() {
+        var state = SuperComponentViewModel.prototype.getState.call(this);
+        state.width = this.width.getState();
+        state.height = this.height.getState();
+
+        return state;
+    };
+
+    WorkspaceViewModel.prototype.setState = function(state) {
         // Set name
         this.name = new StringProperty({
             displayName: 'Name',
@@ -56,22 +71,6 @@ define([
             }),
             errorMessage: 'Value must be greater than 0'
         });
-
-        ko.track(this);
-    };
-
-    WorkspaceViewModel.prototype = Object.create(SuperComponentViewModel.prototype);
-
-    WorkspaceViewModel.prototype.getState = function() {
-        var state = SuperComponentViewModel.prototype.getState.call(this);
-        state.width = this.width.getState();
-        state.height = this.height.getState();
-
-        return state;
-    };
-
-    WorkspaceViewModel.prototype.setState = function(state) {
-        // TODO
     };
 
     // TODO: In the DD, add getProperties() and getViewModel() to be consistent here
