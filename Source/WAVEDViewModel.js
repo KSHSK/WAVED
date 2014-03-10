@@ -1,5 +1,4 @@
 /*global define*/
-<<<<<<< HEAD
 define(['jquery',
         'knockout',
         'models/Action/Action',
@@ -11,23 +10,16 @@ define(['jquery',
         'models/Property/StringProperty',
         'models/WorkspaceViewModel',
         'models/Widget/ButtonWidget/Button',
-=======
-define([
         'modules/NewProject',
         'modules/LoadProject',
         'modules/SaveProject',
         'modules/UploadData',
->>>>>>> master
         'modules/BindData',
         'modules/DeleteData',
-        'modules/LoadProject',
-        'modules/NewProject',
-        'modules/UploadData',
         'util/defined',
         'util/defaultValue',
         'util/createValidator'
     ], function(
-<<<<<<< HEAD
         $,
         ko,
         Action,
@@ -39,17 +31,12 @@ define([
         StringProperty,
         WorkspaceViewModel,
         Button,
-=======
         NewProject,
         LoadProject,
         SaveProject,
         UploadData,
->>>>>>> master
         BindData,
         DeleteData,
-        LoadProject,
-        NewProject,
-        UploadData,
         defined,
         defaultValue,
         createValidator) {
