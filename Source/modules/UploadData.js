@@ -105,14 +105,17 @@ define([
                         var dataSet = new DataSet(options);
                         viewModel.currentProject.addDataSet(dataSet);
 
-                        // TODO: Make sure this works once SaveProject is implemented.
+                        var projectSaved = $.Deferred();
+
                         // Automatically save the project to avoid inconsistencies with state and the file system.
-                        SaveProject.saveProject(viewModel.currentProject.name, viewModel);
+                        SaveProject.saveProject(projectSaved, viewModel.currentProject.name, viewModel);
 
                         // Read the contents of the data file.
                         ReadData.readData(dataSet);
 
-                        dataUploaded.resolve();
+                        $.when(projectSaved).done(function() {
+                            dataUploaded.resolve();
+                        });
                     }
                     else {
                         // Display error to user.

@@ -20,6 +20,14 @@ define(['knockout',
         ko.track(this);
     };
 
+    /**
+     * Static method that returns the type String for this class.
+     */
+    DataSet.getType = function() {
+        return 'DataSet';
+    };
+
+
     DataSet.prototype.incrementReferenceCount = function() {
         // Don't change if marked for deletion.
         if (this._referenceCount !== MARKED_FOR_DELETION) {
@@ -44,10 +52,10 @@ define(['knockout',
 
     DataSet.prototype.getState = function() {
         return {
-            type: 'DataSet',
-            name: this._name,
-            fileName: this._filename,
-            referenceCount: this._referenceCount
+            type: DataSet.getType(),
+            name: this.name,
+            fileName: this.filename,
+            referenceCount: this.referenceCount
         };
     };
 
