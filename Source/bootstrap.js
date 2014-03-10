@@ -33,98 +33,28 @@
         $('#bind-data-add-data-file-button').button();
 
         // Add/Edit/Remove Buttons.
-        $('#add-action-button').button({
+        $('.add-icon-button').button({
             text: false,
             icons: {
                 primary: 'ui-icon-plus'
             }
         });
 
-        $('#edit-action-button').button({
+        $('.edit-icon-button').button({
             text: false,
             icons: {
                 primary: 'ui-icon-pencil'
             }
         });
 
-        $('#delete-action-button').button({
+        $('.delete-icon-button').button({
             text: false,
             icons: {
                 primary: 'ui-icon-trash'
             }
         });
 
-        $('#add-event-button').button({
-            text: false,
-            icons: {
-                primary: 'ui-icon-plus'
-            }
-        });
-
-        $('#edit-event-button').button({
-            text: false,
-            icons: {
-                primary: 'ui-icon-pencil'
-            }
-        });
-
-        $('#delete-event-button').button({
-            text: false,
-            icons: {
-                primary: 'ui-icon-trash'
-            }
-        });
-
-        $('#add-data-file-button').button({
-            text: false,
-            icons: {
-                primary: 'ui-icon-plus'
-            }
-        });
-
-        $('#delete-data-file-button').button({
-            text: false,
-            icons: {
-                primary: 'ui-icon-trash'
-            }
-        });
-
-        $('#add-data-subset-button').button({
-            text: false,
-            icons: {
-                primary: 'ui-icon-plus'
-            }
-        });
-
-        $('#edit-data-subset-button').button({
-            text: false,
-            icons: {
-                primary: 'ui-icon-pencil'
-            }
-        });
-
-        $('#delete-data-subset-button').button({
-            text: false,
-            icons: {
-                primary: 'ui-icon-trash'
-            }
-        });
-
-        $('#bind-data-button').button({
-            text: false,
-            icons: {
-                primary: 'ui-icon-plus'
-            }
-        });
-
-        $('#unbind-data-button').button({
-            text: false,
-            icons: {
-                primary: 'ui-icon-trash'
-            }
-        });
-
-        $('#load-project-refresh-list').button({
+        $('.refresh-icon-button').button({
             text: false,
             icons: {
                 primary: 'ui-icon-arrowrefresh-1-n'
