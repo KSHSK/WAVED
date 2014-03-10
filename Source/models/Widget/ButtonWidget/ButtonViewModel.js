@@ -1,13 +1,15 @@
 /*global define*/
 define([
-        'models/Widget/WidgetViewModel',
+        'models/Event/Trigger',
         'models/Property/StringProperty',
+        'models/Widget/WidgetViewModel',
         'util/defined',
         'util/createValidator',
         'knockout'
     ],function(
-        WidgetViewModel,
+        Trigger,
         StringProperty,
+        WidgetViewModel,
         defined,
         createValidator,
         ko){
@@ -47,6 +49,11 @@ define([
         if (!hasWidth) {
             this.width.value = 10;
         }
+
+        // Test
+        this._triggers.push(new Trigger({
+            name: 'Button'
+        }));
 
         ko.track(this);
     };

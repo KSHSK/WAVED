@@ -1,10 +1,14 @@
 /*global define*/
 define(['jquery',
         'knockout',
+        'models/Property/StringProperty',
+        'util/createValidator',
         'util/defined'
     ],function(
         $,
         ko,
+        StringProperty,
+        createValidator,
         defined
     ){
     'use strict';
@@ -12,10 +16,18 @@ define(['jquery',
     var Action = function(state) {
         state = defined(state) ? state : {};
 
-        // TODO: Validation, etc
-        this._name = state.name; // StringProperty
+        // TODO: Name Validation
+        this._name = new StringProperty({
+            displayName: 'Name',
+            value: state.name
+        });
         this._target = state.target; // Any TODO: Get the actual target
+        this._values = state.values;
         this._applyAutomatically = state.applyAutomatically; // Boolean
+
+        if (this._applyAutomatically) {
+            this.apply();
+        }
 
         ko.track(this);
     };
@@ -45,11 +57,21 @@ define(['jquery',
             set: function(value) {
                 this._applyAutomatically = value;
             }
+        },
+        values: {
+            get: function() {
+                return this._values;
+            },
+            set: function(value) {
+                this._values = value;
+            }
         }
     });
 
     Action.prototype.apply = function() {
-        // TODO
+        for (var i = 0; i < this._values.length; i++) {
+            this._target.viewModel.properties[i].value = this._values[i];
+        }
     };
 
     return Action;

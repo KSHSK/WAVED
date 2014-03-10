@@ -25,6 +25,10 @@ html, body {
    vertical-align: bottom;
 }
 
+.right {
+	float: right;
+}
+
 .padding15 {
 	padding: 15px;
 }

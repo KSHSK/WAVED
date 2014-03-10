@@ -4,6 +4,7 @@ define([
         'models/Constants/EventType',
         'models/Action/Action',
         'models/Event/Trigger',
+        'models/Property/StringProperty',
         'knockout',
         'util/defined'
     ],function(
@@ -11,6 +12,7 @@ define([
         EventType,
         Action,
         Trigger,
+        StringProperty,
         ko,
         defined
     ){
@@ -20,11 +22,15 @@ define([
         state = defined(state) ? state : {};
 
         // TODO: Validation, etc
-        this._name = state.name; // StringProperty
+        this._name = new StringProperty({
+            displayName: 'Name',
+            value: state.name
+        });
         this._eventType = state.eventType; // EventType
-        this._triggeringComponent = state.triggeringComponent; // ComponenetViewModel
-        this._trigger = undefined; // Trigger
-        this._action = state.action; // Action
+        this._triggeringComponent = state.triggeringComponent; // ComponentViewModel
+        this._trigger = state.trigger; // Trigger
+        this._actions = []; // Action[]
+        this._actions.push(state.actions);
 
         ko.track(this);
     };
@@ -41,8 +47,10 @@ define([
         eventType: {
             get: function() {
                 return this._eventType;
+            },
+            set: function(value) {
+                this._eventType = value;
             }
-        // TODO: Why does this not have a setter? Update DD with decision.
         },
         triggeringComponent: {
             get: function() {
@@ -60,12 +68,12 @@ define([
                 this._trigger = value;
             }
         },
-        action: {
+        actions: {
             get: function() {
-                return this._action;
+                return this._actions;
             },
             set: function(value) {
-                this._action = value;
+                this._actions = value;
             }
         }
     });
