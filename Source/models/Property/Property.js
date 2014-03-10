@@ -11,11 +11,9 @@ define(['knockout',
         state = defined(state) ? state : {};
 
         // TODO: Validation, etc
-        this._displayName = state.displayName;
         this._templateName = undefined; // PropertyTemplateName
         this._value = undefined; // Type determined by subclasses.
 
-        this.errorMessage = defined(state.errorMessage) ? state.errorMessage : 'Invalid value';
         this.message = '';
         this.error = false;
 
@@ -44,8 +42,21 @@ define(['knockout',
         };
     };
 
-    Property.prototype.setState = function() {
-        // TODO: Is this abstract or should it be implemented?
+    Property.prototype.setState = function(state) {
+        this._displayName = state.displayName;
+        this.errorMessage = defined(state.errorMessage) ? state.errorMessage : 'Invalid value';
+
+        this._value = state.value;
+        if (defined(state.validValue)) {
+            this.isValidValue = state.validValue;
+        }
+        else {
+            this.isValidValue = function(value) {
+                return true;
+            };
+        }
+
+        this.error = !this.isValidValue(this._value);
     };
 
     Property.prototype.isValidValue = function() {

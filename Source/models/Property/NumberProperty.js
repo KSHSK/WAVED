@@ -13,24 +13,13 @@ define([
     'use strict';
 
     var NumberProperty = function(state) {
-        Property.call(this, state);
-
         state = defined(state) ? state : {};
+        Property.call(this, state);
+        this.setState(state);
 
-        this._value = state.value;
-        if (defined(state.validValue)) {
-            this.isValidValue = state.validValue;
-        }
-        else {
-            this.isValidValue = function(value) {
-                return true;
-            };
-        }
         this._templateName = PropertyTemplateName.NUMBER;
 
         ko.track(this);
-
-        this.error = !this.isValidValue(this._value);
     };
 
     NumberProperty.prototype = Object.create(Property.prototype);
