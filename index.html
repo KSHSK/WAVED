@@ -61,8 +61,8 @@
                         <div>
                             <div class="inline">Source Files</div>
                             <div class="inline right">
-                                <button id="add-data-file-button" class="button-small" data-bind="click: tryToUploadData">Add Data File</button>
-                                <button id="delete-data-file-button" class="button-small" data-bind="click: markDataForDeletion">Delete Data File</button>
+                                <button class="button-small add-icon-button" data-bind="click: tryToUploadData">Add Data File</button>
+                                <button class="button-small delete-icon-button" data-bind="click: markDataForDeletion">Delete Data File</button>
                             </div>
                         </div>
                         <select id="data-file-list" size="5" class="select-full-size"
@@ -76,9 +76,9 @@
                         <div>
                             <div class="inline">Data Subsets</div>
                             <div class="inline right">
-                                <button id="add-data-subset-button" class="button-small">Add Data Subset</button>
-                                <button id="edit-data-subset-button" class="button-small">Edit Data Subset</button>
-                                <button id="delete-data-subset-button" class="button-small">Delete Data Subset</button>
+                                <button class="button-small add-icon-button">Add Data Subset</button>
+                                <button class="button-small edit-icon-button">Edit Data Subset</button>
+                                <button class="button-small delete-icon-button">Delete Data Subset</button>
                             </div>
                         </div>
                         <select id="data-subset-list" size="5" class="select-full-size"></select>
@@ -90,12 +90,16 @@
                         <div>
                             <div class="inline">Actions</div>
                             <div class="inline right">
-                                <button id="add-action-button" class="button-small" data-bind="click: currentProject.addAction">Add Action</button>
-                                <button id="edit-action-button" class="button-small">Edit Action</button>
-                                <button id="delete-action-button" class="button-small">Delete Action</button>
+                                <button class="button-small add-icon-button" data-bind="click: currentProject.addAction">Add Action</button>
+                                <button class="button-small edit-icon-button">Edit Action</button>
+                                <button class="button-small delete-icon-button" data-bind="click: removeSelectedAction">Delete Action</button>
                             </div>
                         </div>
-                        <select id="action-list" size="10" class="select-full-size"></select>
+                        <select id="action-list" size="10" class="select-full-size" 
+	                            data-bind="options: currentProject.actions,
+                                optionsText: function(action) {
+                                   return action.name.value;
+                                }, value: selectedAction"></select>
                     </div>
                 </div>
                 <h3>Events</h3>
@@ -104,9 +108,9 @@
                         <div>
                             <div class="inline">Events</div>
                             <div class="inline right">
-                                <button id="add-event-button" class="button-small">Add Event</button>
-                                <button id="edit-event-button" class="button-small">Edit Event</button>
-                                <button id="delete-event-button" class="button-small">Delete Event</button>
+                                <button class="button-small add-icon-button" data-bind="click: currentProject.addEvent">Add Event</button>
+                                <button class="button-small edit-icon-button">Edit Event</button>
+                                <button class="button-small delete-icon-button">Delete Event</button>
                             </div>
                         </div>
                         <select id="event-list" size="10" class="select-full-size"></select>
@@ -124,8 +128,8 @@
                             <hr/>
                             <div class="inline">Bound Data</div>
                             <div class="inline right">
-                                <button id="bind-data-button" data-bind="click: tryToBindData" class="button-small">Bind Data</button>
-                                <button id="unbind-data-button" data-bind="click: unbindData" class="button-small">Unbind Data</button>
+                                <button data-bind="click: tryToBindData" class="button-small add-icon-button">Bind Data</button>
+                                <button data-bind="click: unbindData" class="button-small delete-icon-button">Unbind Data</button>
                             </div>
                         
                             <div data-bind="if: selectedWidget && typeof selectedWidget.viewModel.boundData !== 'undefined'">
@@ -191,7 +195,7 @@
             <select id="load-project-select"
                 data-bind="options: projectList, value: loadProjectName.value">
             </select>
-            <button id="load-project-refresh-list" class="button-small" data-bind="click: updateProjectList">Refresh List</button>
+            <button class="button-small refresh-icon-button" data-bind="click: updateProjectList">Refresh List</button>
         </label>
         <div class="error" data-bind="visible: loadProjectName.error, html: loadProjectName.message"></div>
     </div>
@@ -229,8 +233,12 @@
         </table>
     </div>
     
-    <div id="action-dialog" title="Action" class="dialog">
+    <div id="action-editor-dialog" title="Action Editor" class="dialog">
     	<div class="inline top padding15">
+    		<div class="required">Name:</div>
+			<div class="marginBottom10">
+    			<input data-bind="value: selectedActionName, valueUpdate: 'keyup'"/>
+			</div>
     		<div>Affected Component:</div>
 	    	<select class="marginBottom10 width100"
 					data-bind="
@@ -238,7 +246,7 @@
 	              	optionsText: function(component) {
 	                	 return component.viewModel.name.value;
 	              	},
-	              value: currentProject.actionEditor.affectedComponent">
+	              value: actionEditorAffectedComponent">
 			</select>
 	    	<div>Dataset:</div>
 	    	<select class="marginBottom10 width100"
@@ -247,25 +255,50 @@
 	              	optionsText: function(dataSet) {
 	              		 return dataSet.name;
 	              	},
-	              value: currentProject.actionEditor.dataSet">
+	              value: actionEditorDataSet">
 			</select>
 	    	<div>Properties:</div>
-	    	<select size="10" class="select-full-size"
-	    			data-bind="options: currentProject.actionEditor.affectedComponent.properties,
+	    	<select size="10" class="select-full-size marginBottom10"
+	    			data-bind="options: actionEditorAffectedComponent.viewModel.properties,
 	    			optionsText: function(property) {
 	    				return property.displayName;
 	    			},
-	    			value: currentProject.actionEditor.selectedProperty">
+	    			value: actionEditorSelectedProperty">
 	    	</select>
+	    	<div>
+	    		<input type="checkbox"></input>
+    			<span>Apply Automatically</span>
+	    	</div>
     	</div>
 		<div class="inline top padding15">
 			<div>Options</div>
-            <div data-bind="foreach: currentProject.actionEditor.affectedComponent">
-                <div data-bind="foreach: $data.properties">
-                    <div data-bind="template: {name : $data.templateName, data: $data}"></div>
-                </div>
-            </div>
+			<div data-bind="if: actionEditorSelectedProperty">
+				<div data-bind="template: {name : actionEditorSelectedProperty.templateName, data: actionEditorSelectedProperty}"></div>
+			</div>
 		</div>
+    </div>
+    
+    <div id="event-editor-dialog" title="Event Editor" class="dialog">
+    	<div>
+    		<label class="inline required">Name: </label>
+        	<input type="text" data-bind="valueUpdate: 'keyup'"/>
+    	</div>
+    	<div>
+    		<label class="inline">Event: </label>
+        	<input type="text" data-bind="valueUpdate: 'keyup'"/>
+    	</div>
+    	<div>
+    		<label class="inline">Trigger: </label>
+        	<input type="text" data-bind="valueUpdate: 'keyup'"/>
+    	</div>
+    	<div>
+    		<div>
+    		Action:
+    		
+    		</div>
+    		<select size="5" class="select-full-size"></select>
+    	</div>
+    	
     </div>
     
     <div id="unsaved-changes-dialog" title="Unsaved Changes" class="dialog">
