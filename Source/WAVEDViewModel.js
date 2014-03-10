@@ -277,6 +277,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.removeSelectedEvent = function() {
         self._currentProject.removeEvent(self.selectedEvent);
+    };
 
     WAVEDViewModel.prototype.saveProject = function() {
         var deferred = $.Deferred();
