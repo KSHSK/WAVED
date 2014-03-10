@@ -16,29 +16,13 @@ define([
 
 
     var ArrayProperty = function(state) {
-        Property.call(this, state);
-
         state = defined(state) ? state : {};
-
-        this._value = state.value;
-        this._options = defaultValue(state.options, []);
-        if (defined(state.validValue)) {
-            this.isValidValue = state.validValue;
-        }
-        else {
-            this.isValidValue = function(value) {
-                if (defined(this._options) && this._options.length > 0) {
-                    return (this._options.indexOf(value) !== -1);
-                }
-                return true;
-            };
-        }
+        Property.call(this, state);
+        this.setState(state);
 
         this._templateName = PropertyTemplateName.ARRAY;
 
         ko.track(this);
-
-        this.error = !this.isValidValue(this._value);
     };
 
     ArrayProperty.prototype = Object.create(Property.prototype);
@@ -82,8 +66,20 @@ define([
         return state;
     };
 
-    ArrayProperty.prototype.setState = function() {
-        // TODO: Implement Me
+    ArrayProperty.prototype.setState = function(state) {
+        // Set a default isValidValue function if necessary.
+        if (!defined(state.validValue)) {
+            state.validValue = function(value) {
+                if (defined(this._options) && this._options.length > 0) {
+                    return (this._options.indexOf(value) !== -1);
+                }
+                return true;
+            };
+        }
+        this._options = defaultValue(state.options, []);
+
+        // Need to call this after this._options is set, so the isValidValue function works.
+        Property.prototype.setState.call(this, state);
     };
 
     return ArrayProperty;

@@ -18,16 +18,6 @@ define([
         WidgetViewModel.call(this, state);
         this.setState(state);
 
-        // Change the default height if not defined.
-        if (!defined(state.height)) {
-            this.height.value = 5;
-        }
-
-        // Change the default width if not defined.
-        if (!defined(state.width)) {
-            this.width.value = 10;
-        }
-
         ko.track(this);
     };
 
@@ -66,6 +56,16 @@ define([
             }),
             errorMessage: 'Must be between 1 and 50 characters'
         });
+
+        // Change the default height if not defined.
+        if (!defined(state.height)) {
+            this.height.value = 5;
+        }
+
+        // Change the default width if not defined.
+        if (!defined(state.width)) {
+            this.width.value = 10;
+        }
     };
 
     Object.defineProperties(ButtonViewModel.prototype, {
