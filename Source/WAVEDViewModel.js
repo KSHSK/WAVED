@@ -1,5 +1,9 @@
 /*global define*/
-define(['knockout',
+define(['jquery',
+        'knockout',
+        'models/Action/Action',
+        'models/Constants/EventType',
+        'models/Event/Event',
         'models/GoogleAnalytics',
         'models/ProjectViewModel',
         'models/Property/ArrayProperty',
@@ -15,7 +19,11 @@ define(['knockout',
         'util/defaultValue',
         'util/createValidator'
     ], function(
+        $,
         ko,
+        Action,
+        EventType,
+        Event,
         GoogleAnalytics,
         ProjectViewModel,
         ArrayProperty,
@@ -31,6 +39,19 @@ define(['knockout',
         defaultValue,
         createValidator) {
     'use strict';
+
+    var actionDialog = $('#action-editor-dialog');
+    var eventDialog = $('#event-editor-dialog');
+
+    function resetActionEditor() {
+        self.selectedActionName = '';
+        $('#actionApplyAutomatically').attr('checked', false);
+    }
+
+    function resetEventEditor() {
+        self.selectedEventName = '';
+        self.selectedEventActions = [];
+    }
 
     var self;
     var WAVEDViewModel = function() {
@@ -51,6 +72,11 @@ define(['knockout',
             o: Button
         }];
 
+        this.eventTypes = [];
+        for (var eventType in EventType) {
+            this.eventTypes.push(eventType);
+        }
+
         this.newProjectName = new StringProperty({
                 displayName: 'Project Name',
                 value: '',
@@ -67,6 +93,18 @@ define(['knockout',
                 value: '',
                 options: this.projectList
             });
+
+        this.actionEditorSelectedProperty = undefined;
+        this.actionEditorAffectedComponent = undefined;
+        this.actionEditorDataSet = undefined;
+        this.selectedAction = undefined;
+        this.selectedEvent = undefined;
+        this.selectedActionName = '';
+        this.selectedEventName = '';
+        this.eventEditorTriggeringComponent = undefined;
+        this.eventEditorTrigger = undefined;
+        this.selectedEventType = undefined;
+        this.selectedEventActions = [];
 
         ko.track(this);
     };
@@ -97,6 +135,146 @@ define(['knockout',
 
     WAVEDViewModel.prototype.markDataForDeletion = function() {
         return DeleteData.markDataForDeletion(self);
+    };
+
+    WAVEDViewModel.prototype.addAction = function() {
+        actionDialog.dialog({
+            resizable: false,
+            width: 500,
+            modal: true,
+            closeOnEscape: false,
+            buttons: {
+                'Okay': function() {
+                    var actionValues = [];
+                    var properties = self.actionEditorAffectedComponent.viewModel.properties;
+                    for (var i = 0; i < properties.length; i++) {
+                        actionValues.push(properties[i].actionValue);
+                    }
+
+                    var action = new Action({
+                        name: self.selectedActionName,
+                        target: self.actionEditorAffectedComponent,
+                        values: actionValues,
+                        applyAutomatically: $('#actionApplyAutomatically').is(':checked')
+                    });
+
+                    // TODO: Validation to prevent two actions having same name?
+                    self._currentProject.addAction(action);
+                    actionDialog.dialog('close');
+                    resetActionEditor();
+                },
+                'Cancel': function() {
+                    actionDialog.dialog('close');
+                    resetActionEditor();
+                }
+            }
+        });
+    };
+
+    WAVEDViewModel.prototype.editAction = function() {
+
+        self.selectedActionName = self.selectedAction.name.value;
+        self.actionEditorAffectedComponent = self.selectedAction.target;
+        $('#actionApplyAutomatically').prop('checked', self.selectedAction.applyAutomatically ? true : false);
+
+        actionDialog.dialog({
+            resizable: false,
+            width: 500,
+            modal: true,
+            closeOnEscape: false,
+            buttons: {
+                'Save': function() {
+                    var actionValues = [];
+                    var properties = self.actionEditorAffectedComponent.viewModel.properties;
+                    for (var i = 0; i < properties.length; i++) {
+                        actionValues.push(properties[i].actionValue);
+                    }
+
+                    self.selectedAction.name.value = self.selectedActionName;
+                    self.selectedAction.target = self.actionEditorAffectedComponent;
+                    self.selectedAction.values = actionValues;
+                    self.selectedAction.applyAutomatically = $('#actionApplyAutomatically').is(':checked');
+                    if (self.selectedAction.applyAutomatically) {
+                        self.selectedAction.apply();
+                    }
+
+                    actionDialog.dialog('close');
+                    resetActionEditor();
+                },
+                'Cancel': function() {
+                    actionDialog.dialog('close');
+                    resetActionEditor();
+                }
+            }
+        });
+    };
+
+    WAVEDViewModel.prototype.removeSelectedAction = function() {
+        self._currentProject.removeAction(self.selectedAction);
+    };
+
+    WAVEDViewModel.prototype.addEvent = function() {
+        eventDialog.dialog({
+            resizable: false,
+            width: 500,
+            modal: true,
+            closeOnEscape: false,
+            buttons: {
+                'Save': function() {
+                    var event = new Event({
+                        name: self.selectedEventName,
+                        eventType: self.selectedEventType,
+                        triggeringComponent: self.eventEditorTriggeringComponent,
+                        trigger: self.eventEditorTrigger,
+                        actions: self.selectedEventActions
+                    });
+                    self._currentProject.addEvent(event);
+                    eventDialog.dialog('close');
+                    resetEventEditor();
+                },
+                'Cancel': function() {
+                    eventDialog.dialog('close');
+                    resetEventEditor();
+                }
+            }
+        });
+    };
+
+    WAVEDViewModel.prototype.editEvent = function() {
+
+        self.selectedEventName = self.selectedEvent.name.value;
+        self.selectedEventType = self.selectedEvent.eventType;
+        self.eventEditorTriggeringComponent = self.selectedEvent.triggeringComponent;
+        self.eventEditorTrigger = self.selectedEvent.trigger;
+        self.selectedEventActions = self.selectedEvent.actions;
+
+        eventDialog.dialog({
+            resizable: false,
+            width: 500,
+            modal: true,
+            closeOnEscape: false,
+            buttons: {
+                'Save': function() {
+
+                    self.selectedEvent.name.value = self.selectedEventName;
+                    self.selectedEvent.eventType =  self.selectedEventType;
+                    self.selectedEvent.triggeringComponent = self.eventEditorTriggeringComponent;
+                    self.selectedEvent.trigger = self.eventEditorTrigger;
+                    self.selectedEvent.actions = self.selectedEventActions;
+
+                    eventDialog.dialog('close');
+                    resetEventEditor();
+                },
+                'Cancel': function() {
+                    eventDialog.dialog('close');
+                    resetEventEditor();
+                }
+            }
+        });
+    };
+
+    WAVEDViewModel.prototype.removeSelectedEvent = function() {
+        self._currentProject.removeEvent(self.selectedEvent);
     };
 
     // TODO: Component

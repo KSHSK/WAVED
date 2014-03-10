@@ -13,6 +13,7 @@ define(['knockout',
         // TODO: Validation, etc
         this._displayName = state.displayName;
         this._templateName = undefined; // PropertyTemplateName
+        this._actionTemplateName = undefined; // PropertyTemplateName
         this.errorMessage = defined(state.errorMessage) ? state.errorMessage : 'Invalid value';
         this.message = '';
         this.error = false;
@@ -32,6 +33,11 @@ define(['knockout',
             },
             set: function(templateName) {
                 this._templateName = templateName;
+            }
+        },
+        actionTemplateName: {
+            get: function() {
+                return this._actionTemplateName;
             }
         }
     });

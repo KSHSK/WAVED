@@ -1,8 +1,10 @@
-/*global define*/
+/*global define, alert*/
 define([
         'jquery',
         'util/defined',
         'util/defaultValue',
+        'models/Action/Action',
+        'models/Event/Event',
         'models/WorkspaceViewModel',
         'models/Data/DataSet',
         './GoogleAnalytics',
@@ -11,6 +13,8 @@ define([
         $,
         defined,
         defaultValue,
+        Action,
+        Event,
         WorkspaceViewModel,
         DataSet,
         GoogleAnalytics,
@@ -35,8 +39,6 @@ define([
         this._projectTree = undefined; // TODO
 
         this._components.push(this._workspace);
-
-        this.actionEditor = {};
 
         ko.track(this);
     };
@@ -124,25 +126,12 @@ define([
     };
 
     ProjectViewModel.prototype.addEvent = function(event) {
-        // TODO
+        this._events.push(event);
     };
 
     ProjectViewModel.prototype.addAction = function(action) {
-        var actionDialog = $('#action-dialog');
-        actionDialog.dialog({
-            resizable: false,
-            width: 500,
-            modal: true,
-            closeOnEscape: false,
-            buttons: {
-                'Okay': function() {
-
-                },
-                'Cancel': function() {
-                    actionDialog.dialog('close');
-                }
-            }
-        });
+        // Check that action doesn't already exist.
+        this._actions.push(action);
     };
 
     ProjectViewModel.prototype.getDataSet = function(name) {
@@ -167,11 +156,27 @@ define([
     };
 
     ProjectViewModel.prototype.removeEvent = function(event) {
-        //TODO
+        var index = self._events.indexOf(event);
+        if (index > -1) {
+            self._events.splice(index, 1);
+        }
     };
 
     ProjectViewModel.prototype.removeAction = function(action) {
-        //TODO
+        for (var i = 0; i < self._events.length; i++) {
+            for (var j = 0; j < self._events[i].actions[0].length; j++) {
+                if (self._events[i]._actions[0][j].name.value === action.name.value) {
+                    // TODO: Replace alert w/ banner notification.
+                    alert('Action is in use by Event: ' + self._events[i].name.value);
+                    return;
+                }
+            }
+        }
+
+        var index = self._actions.indexOf(action);
+        if (index > -1) {
+            self._actions.splice(index, 1);
+        }
     };
 
     ProjectViewModel.prototype.refreshWorkspace = function() {

@@ -90,8 +90,8 @@
                         <div>
                             <div class="inline">Actions</div>
                             <div class="inline right">
-                                <button class="button-small add-icon-button" data-bind="click: currentProject.addAction">Add Action</button>
-                                <button class="button-small edit-icon-button">Edit Action</button>
+                                <button class="button-small add-icon-button" data-bind="click: addAction">Add Action</button>
+                                <button class="button-small edit-icon-button" data-bind="click: editAction">Edit Action</button>
                                 <button class="button-small delete-icon-button" data-bind="click: removeSelectedAction">Delete Action</button>
                             </div>
                         </div>
@@ -108,12 +108,16 @@
                         <div>
                             <div class="inline">Events</div>
                             <div class="inline right">
-                                <button class="button-small add-icon-button" data-bind="click: currentProject.addEvent">Add Event</button>
-                                <button class="button-small edit-icon-button">Edit Event</button>
-                                <button class="button-small delete-icon-button">Delete Event</button>
+                                <button class="button-small add-icon-button" data-bind="click: addEvent">Add Event</button>
+                                <button class="button-small edit-icon-button" data-bind="click: editEvent">Edit Event</button>
+                                <button class="button-small delete-icon-button" data-bind="click: removeSelectedEvent">Delete Event</button>
                             </div>
                         </div>
-                        <select id="event-list" size="10" class="select-full-size"></select>
+                        <select id="event-list" size="10" class="select-full-size"
+                        		data-bind="options: currentProject.events,
+                        		optionsText: function(event) {
+                        			return event.name.value;
+                        		}, value: selectedEvent"></select>
                     </div>
                 </div>
                 <h3>Properties</h3>
@@ -237,7 +241,7 @@
     	<div class="inline top padding15">
     		<div class="required">Name:</div>
 			<div class="marginBottom10">
-    			<input data-bind="value: selectedActionName, valueUpdate: 'keyup'"/>
+   				<input data-bind="value: selectedActionName, valueUpdate: 'keyup'"/>
 			</div>
     		<div>Affected Component:</div>
 	    	<select class="marginBottom10 width100"
@@ -257,23 +261,15 @@
 	              	},
 	              value: actionEditorDataSet">
 			</select>
-	    	<div>Properties:</div>
-	    	<select size="10" class="select-full-size marginBottom10"
-	    			data-bind="options: actionEditorAffectedComponent.viewModel.properties,
-	    			optionsText: function(property) {
-	    				return property.displayName;
-	    			},
-	    			value: actionEditorSelectedProperty">
-	    	</select>
 	    	<div>
-	    		<input type="checkbox"></input>
+	    		<input type="checkbox" id="actionApplyAutomatically"></input>
     			<span>Apply Automatically</span>
 	    	</div>
     	</div>
 		<div class="inline top padding15">
 			<div>Options</div>
-			<div data-bind="if: actionEditorSelectedProperty">
-				<div data-bind="template: {name : actionEditorSelectedProperty.templateName, data: actionEditorSelectedProperty}"></div>
+			<div data-bind="foreach: actionEditorAffectedComponent.viewModel.properties">
+				<div data-bind="template: {name : $data.actionTemplateName, data: $data}"></div>
 			</div>
 		</div>
     </div>
@@ -281,22 +277,37 @@
     <div id="event-editor-dialog" title="Event Editor" class="dialog">
     	<div>
     		<label class="inline required">Name: </label>
-        	<input type="text" data-bind="valueUpdate: 'keyup'"/>
+        	<input type="text" data-bind="value: selectedEventName, valueUpdate: 'keyup'"/>
     	</div>
     	<div>
     		<label class="inline">Event: </label>
-        	<input type="text" data-bind="valueUpdate: 'keyup'"/>
+        	<select data-bind="options: eventTypes, value: selectedEventType"></select>
+    	</div>
+    	<div>
+    		<label class="inline">Triggering Component: </label>
+        	<select data-bind="options: currentProject.components,
+        					optionsText: function(component) {
+        						return component.viewModel.name.value;
+        					}, value: eventEditorTriggeringComponent"></select>
     	</div>
     	<div>
     		<label class="inline">Trigger: </label>
-        	<input type="text" data-bind="valueUpdate: 'keyup'"/>
+        	<select data-bind="options: eventEditorTriggeringComponent.viewModel.triggers,
+        					optionsText: function(trigger) {
+        						return trigger.name;
+        					}, value: eventEditorTrigger"></select>
     	</div>
     	<div>
     		<div>
     		Action:
-    		
+    		<button class="button-small add-icon-button right" data-bind="click: addAction">Add Action</button>
     		</div>
-    		<select size="5" class="select-full-size"></select>
+    		<div data-bind="foreach: currentProject.actions">
+    			<div>
+    				<input type="checkbox" data-bind="checkedValue: $data, checked: $root.selectedEventActions"></input>
+    				<span data-bind="text: $data.name.value"></span>
+    			</div>
+    		</div>
     	</div>
     	
     </div>

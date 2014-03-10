@@ -27,7 +27,10 @@ define([
             };
         }
 
+        this._actionValue = this._value;
+
         this._templateName = PropertyTemplateName.BOOLEAN;
+        this._actionTemplateName = PropertyTemplateName.BOOLEAN_ACTION;
 
         ko.track(this);
 
@@ -46,11 +49,20 @@ define([
                     this.error = false;
                     this.message = '';
                     this._value = value;
+                    this._actionValue = value;
                 }
                 else {
                     this.error = true;
                     this.message = this.errorMessage;
                 }
+            }
+        },
+        actionValue: {
+            get: function() {
+                return this._actionValue;
+            },
+            set: function(value) {
+                this._actionValue = value;
             }
         }
     });

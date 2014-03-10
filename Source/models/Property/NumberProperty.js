@@ -26,7 +26,11 @@ define([
                 return true;
             };
         }
+
+        this._actionValue = this._value;
+
         this._templateName = PropertyTemplateName.NUMBER;
+        this._actionTemplateName = PropertyTemplateName.NUMBER_ACTION;
 
         ko.track(this);
 
@@ -45,11 +49,20 @@ define([
                     this.error = false;
                     this.message = '';
                     this._value = Number(value);
+                    this._actionValue = this._value;
                 }
                 else {
                     this.error = true;
                     this.message = this.errorMessage;
                 }
+            }
+        },
+        actionValue: {
+            get: function() {
+                return this._actionValue;
+            },
+            set: function(value) {
+                this._actionValue = value;
             }
         }
     });
