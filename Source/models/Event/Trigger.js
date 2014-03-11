@@ -11,7 +11,9 @@ define(['knockout',
         state = defined(state) ? state : {};
 
         // TODO: Validation, etc
-        this._name = state.name; // String
+        this._name = ''; // String
+
+        this.setState(state);
 
         ko.track(this);
     };
@@ -26,6 +28,18 @@ define(['knockout',
             }
         }
     });
+
+    Trigger.prototype.setState = function(state) {
+        if (defined(state.name)) {
+            this._name = name;
+        }
+    };
+
+    Trigger.prototype.getState = function() {
+        return {
+            'name': name
+        };
+    };
 
     return Trigger;
 });

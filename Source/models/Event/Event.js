@@ -3,34 +3,42 @@ define([
         'models/ComponentViewModel',
         'models/Constants/EventType',
         'models/Action/Action',
+        'models/Action/PropertyAction',
+        'models/Action/QueryAction',
         'models/Event/Trigger',
         'models/Property/StringProperty',
+        'util/defined',
         'knockout',
-        'util/defined'
+        'jquery'
     ],function(
         ComponentViewModel,
         EventType,
         Action,
+        PropertyAction,
+        QueryAction,
         Trigger,
         StringProperty,
+        defined,
         ko,
-        defined
+        $
     ){
     'use strict';
 
-    var Event = function(state) {
+    var Event = function(state, availableWidgets) {
         state = defined(state) ? state : {};
 
         // TODO: Validation, etc
         this._name = new StringProperty({
             displayName: 'Name',
-            value: state.name
+            value: ''
         });
-        this._eventType = state.eventType; // EventType
-        this._triggeringComponent = state.triggeringComponent; // ComponentViewModel
-        this._trigger = state.trigger; // Trigger
+
+        this._eventType = ''; // EventType
+        this._triggeringComponent = {}; // ComponentViewModel
+        this._trigger = {}; // Trigger
         this._actions = []; // Action[]
-        this._actions.push(state.actions);
+
+        this.setState(state, availableWidgets);
 
         ko.track(this);
     };
@@ -77,6 +85,53 @@ define([
             }
         }
     });
+
+    Event.prototype.setState = function(state, availableWidgets) {
+
+        if (defined(state.name)) {
+            this._name.value = state.name;
+        }
+
+        if (defined(state.eventType)) {
+            this._eventType = state.eventType; // EventType
+        }
+
+        if (defined(state.triggeringComponent)){
+            this._triggeringComponent = state.triggeringComponent;
+        }
+
+        if (defined(state.trigger)){
+            this._trigger = state.trigger;
+        }
+
+        if (defined(state.actions)){
+            this._actions = $.map(state.actions, function(itemState) {
+                if (itemState.type === PropertyAction.getType()) {
+                    return new PropertyAction(itemState);
+                }
+
+                if (itemState.type === QueryAction.getType()) {
+                    return new QueryAction(itemState);
+                }
+
+                // Invalid state.
+                return null;
+            });
+        }
+    };
+
+    Event.prototype.getState = function() {
+        return {
+            'name': this._name.value,
+            'eventType': this._eventType,
+            'triggeringComponent': this._triggeringComponent.getState(),
+            'trigger': this._trigger.getState(),
+            'actions': $.map(this._actions, function(item) {
+                return item.getState();
+            })
+        };
+
+    };
 
     return Event;
 });
