@@ -103,13 +103,8 @@ function projectHasDataFile($projectName, $fileName) {
     $dataFolder = getDataFolder($projectName);
 
     // Scan the $dataFolder directory to ensure $fileName doesn't navigate to other directories.
-    $files = array_diff(scandir($dataFolder), array('.', '..'));
-    foreach ($files as $fileToCheck) {
-        if ($fileToCheck === $fileName && is_file($dataFolder . $fileName)) {
-            return true;
-        }
-    }
+    $files = scandir($dataFolder);
     
-    return false;
+    return in_array($fileName, $files) && is_file($dataFolder . $fileName);
 }
 ?>
