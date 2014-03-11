@@ -13,7 +13,7 @@ define(['knockout',
         // TODO: Validation, etc
         this._displayName = state.displayName;
         this._templateName = undefined; // PropertyTemplateName
-        this._actionTemplateName = undefined; // PropertyTemplateName
+        this._displayTemplateName = undefined; // PropertyTemplateName
         this._value = undefined; // Type determined by subclasses.
 
         this.errorMessage = defined(state.errorMessage) ? state.errorMessage : 'Invalid value';
@@ -37,9 +37,9 @@ define(['knockout',
                 this._templateName = templateName;
             }
         },
-        actionTemplateName: {
+        displayTemplateName: {
             get: function() {
-                return this._actionTemplateName;
+                return this._displayTemplateName;
             }
         }
     });

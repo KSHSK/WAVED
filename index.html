@@ -273,7 +273,7 @@
             <div>Options</div>
             <div data-bind="foreach: actionEditorAffectedComponent.viewModel.properties">
                 <!-- ko if:  $data.displayName !== 'Name' -->
-                <div data-bind="template: {name : $data.actionTemplateName, data: $data}"></div>
+                <div data-bind="template: {name : $data.displayTemplateName, data: $data}"></div>
                 <!-- /ko -->
             </div>
         </div>

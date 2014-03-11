@@ -4,11 +4,11 @@ define([], function(){
 
     var PropertyTemplateName = {
         STRING: 'stringPropertyTemplate',
-        STRING_ACTION: 'stringActionPropertyTemplate',
+        STRING_DISPLAY: 'stringDisplayPropertyTemplate',
         NUMBER: 'numberPropertyTemplate',
-        NUMBER_ACTION: 'numberActionPropertyTemplate',
+        NUMBER_DISPLAY: 'numberDisplayPropertyTemplate',
         BOOLEAN: 'booleanPropertyTemplate',
-        BOOLEAN_ACTION: 'booleanActionPropertyTemplate',
+        BOOLEAN_DISPLAY: 'booleanDisplayPropertyTemplate',
         ARRAY: 'arrayPropertyTemplate',
         COLORING: 'coloringPropertyTemplate',
         GLYPH_SIZE: 'glyphSizePropertyTemplate'
