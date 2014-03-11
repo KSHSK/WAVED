@@ -99,6 +99,10 @@ define([
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
                     if (data.success) {
+                        // Clear the workspace.
+                        $('#waved-workspace').empty();
+
+
                         viewModel.currentProject = new ProjectViewModel({
                             name: data.projectName
                         });

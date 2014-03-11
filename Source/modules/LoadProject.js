@@ -120,9 +120,14 @@ define([
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
                     if (data.success) {
-                        // Set the project name.
+
+                        // Clear the workspace.
+                        $('#waved-workspace').empty();
+
+                        // Create the new project.
                         viewModel.currentProject = new ProjectViewModel(JSON.parse(data.projectState),
                             viewModel.availableWidgets);
+
                         viewModel.dirty = false;
                         viewModel.loadProjectName._value = '';
 
