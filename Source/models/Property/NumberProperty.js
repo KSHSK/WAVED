@@ -27,10 +27,10 @@ define([
             };
         }
 
-        this._actionValue = this._value;
+        this._displayValue = this._value;
 
         this._templateName = PropertyTemplateName.NUMBER;
-        this._actionTemplateName = PropertyTemplateName.NUMBER_ACTION;
+        this._displayTemplateName = PropertyTemplateName.NUMBER_DISPLAY;
 
         ko.track(this);
 
@@ -49,7 +49,7 @@ define([
                     this.error = false;
                     this.message = '';
                     this._value = Number(value);
-                    this._actionValue = this._value;
+                    this._displayValue = this._value;
                 }
                 else {
                     this.error = true;
@@ -57,12 +57,12 @@ define([
                 }
             }
         },
-        actionValue: {
+        displayValue: {
             get: function() {
-                return this._actionValue;
+                return this._displayValue;
             },
             set: function(value) {
-                this._actionValue = value;
+                this._displayValue = value;
             }
         }
     });
