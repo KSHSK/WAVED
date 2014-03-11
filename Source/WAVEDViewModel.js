@@ -152,7 +152,7 @@ define(['jquery',
                     var actionValues = [];
                     var properties = self.actionEditorAffectedComponent.viewModel.properties;
                     for (var i = 0; i < properties.length; i++) {
-                        actionValues.push(properties[i].actionValue);
+                        actionValues.push(properties[i].displayValue);
                     }
 
                     var action = new Action({
