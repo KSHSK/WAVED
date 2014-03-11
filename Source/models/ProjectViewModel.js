@@ -3,6 +3,7 @@ define([
         'jquery',
         'util/defined',
         'util/defaultValue',
+        'util/displayMessage',
         'models/Action/Action',
         'models/Event/Event',
         'models/WorkspaceViewModel',
@@ -13,6 +14,7 @@ define([
         $,
         defined,
         defaultValue,
+        displayMessage,
         Action,
         Event,
         WorkspaceViewModel,
@@ -191,7 +193,7 @@ define([
             for (var j = 0; j < self._events[i].actions[0].length; j++) {
                 if (self._events[i]._actions[0][j].name.value === action.name.value) {
                     // TODO: Replace alert w/ banner notification.
-                    alert('Action is in use by Event: ' + self._events[i].name.value);
+                    displayMessage('Action is in use by Event: ' + self._events[i].name.value);
                     return;
                 }
             }

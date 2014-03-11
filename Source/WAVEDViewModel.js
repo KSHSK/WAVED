@@ -18,6 +18,7 @@ define(['jquery',
         'modules/DeleteData',
         'util/defined',
         'util/defaultValue',
+        'util/displayMessage',
         'util/createValidator'
     ], function(
         $,
@@ -39,6 +40,7 @@ define(['jquery',
         DeleteData,
         defined,
         defaultValue,
+        displayMessage,
         createValidator) {
     'use strict';
 
@@ -212,7 +214,7 @@ define(['jquery',
             });
         }
         else {
-            // TODO: Banner alert
+            displayMessage('Select an action to edit.');
         }
     };
 
