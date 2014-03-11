@@ -16,18 +16,15 @@ define(['jquery',
     var Action = function(state) {
         state = defined(state) ? state : {};
 
-        // TODO: Name Validation
         this._name = new StringProperty({
             displayName: 'Name',
-            value: state.name
+            value: ''
         });
-        this._target = state.target; // Any TODO: Get the actual target
-        this._values = state.values;
-        this._applyAutomatically = state.applyAutomatically; // Boolean
+        this._target = {};
+        this._applyAutomatically  = false;
+        this._values = [];
 
-        if (this._applyAutomatically) {
-            this.apply();
-        }
+        this.setState(state);
 
         ko.track(this);
     };
@@ -67,6 +64,35 @@ define(['jquery',
             }
         }
     });
+
+    Action.prototype.setState = function(state) {
+
+        if (defined(state.name)) {
+            // TODO: Name Validation
+            this._name.value = state.name;
+        }
+
+        if (defined(state.target)) {
+            this._target = state.target;
+        }
+
+        if (defined(state.applyAutomatically)) {
+            this._applyAutomatically = state.applyAutomatically;
+        }
+
+        if (this._applyAutomatically) {
+            this.apply();
+        }
+    };
+
+    Action.prototype.getState = function() {
+        return {
+            'name': this._name.value,
+            'target': this._target.getState(),
+            'values': this._values,
+            'applyAutomatically': this._applyAutomatically
+        };
+    };
 
     Action.prototype.apply = function() {
         for (var i = 0; i < this._values.length; i++) {

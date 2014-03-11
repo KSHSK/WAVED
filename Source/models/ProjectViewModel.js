@@ -115,7 +115,7 @@ define([
     };
 
     ProjectViewModel.prototype.getState = function() {
-        var self = this;
+        self = this;
 
         return {
             'name': this._name,

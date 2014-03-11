@@ -55,7 +55,7 @@ define([
     GoogleAnalytics.prototype.getState = function() {
         return {
             'uaCode': this.uaCode.getState(),
-            'eventCategory': this.eventCategory.getState(),
+            'eventCategory': this.eventCategory.getState()
         };
     };
 
