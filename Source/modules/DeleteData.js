@@ -61,7 +61,7 @@ define([
                 type: 'POST',
                 url: 'PHP/deleteDataFile.php',
                 data: {
-                    'projectName': viewModel.currentProject.name,
+                    project: viewModel.currentProject.name,
                     // TODO: Use dataSet.filename once that only includes file and not path.
                     fileName: dataSet.basename
                 },

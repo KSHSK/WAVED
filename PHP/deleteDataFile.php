@@ -1,7 +1,7 @@
 <?php
 include_once("CommonMethods.php");
 
-$projectName = $_POST["projectName"];
+$projectName = $_POST["project"];
 $fileName = $_POST["fileName"];
 
 // Setup return object.
@@ -28,12 +28,6 @@ if (!projectExists($projectName)) {
 // Go back to the main directory.
 chdir("../");
 $filePath = realpath(getDataFolder($projectName) . $fileName);
-
-if (!is_file($filePath)) {
-    setReturnValueError($returnValue, "This file does not exist.");
-    reportReturnValue($returnValue);
-    return;
-}
 
 if (!projectHasDataFile($projectName, $fileName)) {
     setReturnValueError($returnValue, "This filename is invalid.");
