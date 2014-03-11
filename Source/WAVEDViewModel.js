@@ -175,40 +175,45 @@ define(['jquery',
 
     WAVEDViewModel.prototype.editAction = function() {
 
-        self.selectedActionName = self.selectedAction.name.value;
-        self.actionEditorAffectedComponent = self.selectedAction.target;
-        $('#actionApplyAutomatically').prop('checked', self.selectedAction.applyAutomatically ? true : false);
+        if (defined(self.selectedAction)) {
+            self.selectedActionName = self.selectedAction.name.value;
+            self.actionEditorAffectedComponent = self.selectedAction.target;
+            $('#actionApplyAutomatically').prop('checked', self.selectedAction.applyAutomatically ? true : false);
 
-        actionDialog.dialog({
-            resizable: false,
-            width: 500,
-            modal: true,
-            closeOnEscape: false,
-            buttons: {
-                'Save': function() {
-                    var actionValues = [];
-                    var properties = self.actionEditorAffectedComponent.viewModel.properties;
-                    for (var i = 0; i < properties.length; i++) {
-                        actionValues.push(properties[i].actionValue);
+            actionDialog.dialog({
+                resizable: false,
+                width: 500,
+                modal: true,
+                closeOnEscape: false,
+                buttons: {
+                    'Save': function() {
+                        var actionValues = [];
+                        var properties = self.actionEditorAffectedComponent.viewModel.properties;
+                        for (var i = 0; i < properties.length; i++) {
+                            actionValues.push(properties[i].actionValue);
+                        }
+
+                        self.selectedAction.name.value = self.selectedActionName;
+                        self.selectedAction.target = self.actionEditorAffectedComponent;
+                        self.selectedAction.values = actionValues;
+                        self.selectedAction.applyAutomatically = $('#actionApplyAutomatically').is(':checked');
+                        if (self.selectedAction.applyAutomatically) {
+                            self.selectedAction.apply();
+                        }
+
+                        actionDialog.dialog('close');
+                        resetActionEditor();
+                    },
+                    'Cancel': function() {
+                        actionDialog.dialog('close');
+                        resetActionEditor();
                     }
-
-                    self.selectedAction.name.value = self.selectedActionName;
-                    self.selectedAction.target = self.actionEditorAffectedComponent;
-                    self.selectedAction.values = actionValues;
-                    self.selectedAction.applyAutomatically = $('#actionApplyAutomatically').is(':checked');
-                    if (self.selectedAction.applyAutomatically) {
-                        self.selectedAction.apply();
-                    }
-
-                    actionDialog.dialog('close');
-                    resetActionEditor();
-                },
-                'Cancel': function() {
-                    actionDialog.dialog('close');
-                    resetActionEditor();
                 }
-            }
-        });
+            });
+        }
+        else {
+            // TODO: Banner alert
+        }
     };
 
     WAVEDViewModel.prototype.removeSelectedAction = function() {
