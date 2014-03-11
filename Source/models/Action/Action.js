@@ -80,6 +80,10 @@ define(['jquery',
             this._applyAutomatically = state.applyAutomatically;
         }
 
+        if (defined(state.values)) {
+            this._values = state.values;
+        }
+
         if (this._applyAutomatically) {
             this.apply();
         }
