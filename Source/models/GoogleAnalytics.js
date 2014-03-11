@@ -6,12 +6,14 @@ define([
         'models/Property/StringProperty',
         'util/createValidator',
         'util/defined',
+        'util/defaultValue',
         'knockout',
         'jquery'
     ], function(
         StringProperty,
         createValidator,
         defined,
+        defaultValue,
         ko,
         $) {
     'use strict';
@@ -38,6 +40,7 @@ define([
         return {
             'uaCode': this.uaCode.getState(),
             'eventCategory': this.eventCategory.getState(),
+            'bound': this.bound
         };
     };
 
@@ -73,7 +76,7 @@ define([
             errorMessage: 'May only contain alphanumerics, hypens (-), underscores(_) and spaces.'
         });
 
-        this._bound = false;
+        this._bound = defaultValue(state.bound, false);
     };
 
     GoogleAnalytics.prototype.set = function() {
