@@ -73,6 +73,7 @@ define(['jquery',
         }
 
         if (defined(state.target)) {
+            // TODO: state.target is just the name of the component. We need to get the actual component and store it.
             this._target = state.target;
         }
 
@@ -92,7 +93,7 @@ define(['jquery',
     Action.prototype.getState = function() {
         return {
             'name': this._name.value,
-            'target': this._target.getState(),
+            'target': this._target.name.value,
             'values': this._values,
             'applyAutomatically': this._applyAutomatically
         };
