@@ -10,6 +10,8 @@ define(['jquery',
         'models/Property/StringProperty',
         'models/WorkspaceViewModel',
         'models/Widget/ButtonWidget/Button',
+        'modules/ActionHelper',
+        'modules/EventHelper',
         'modules/NewProject',
         'modules/LoadProject',
         'modules/SaveProject',
@@ -18,7 +20,6 @@ define(['jquery',
         'modules/DeleteData',
         'util/defined',
         'util/defaultValue',
-        'util/displayMessage',
         'util/createValidator'
     ], function(
         $,
@@ -32,6 +33,8 @@ define(['jquery',
         StringProperty,
         WorkspaceViewModel,
         Button,
+        ActionHelper,
+        EventHelper,
         NewProject,
         LoadProject,
         SaveProject,
@@ -40,22 +43,8 @@ define(['jquery',
         DeleteData,
         defined,
         defaultValue,
-        displayMessage,
         createValidator) {
     'use strict';
-
-    var actionDialog = $('#action-editor-dialog');
-    var eventDialog = $('#event-editor-dialog');
-
-    function resetActionEditor() {
-        self.selectedActionName = '';
-        $('#actionApplyAutomatically').attr('checked', false);
-    }
-
-    function resetEventEditor() {
-        self.selectedEventName = '';
-        self.selectedEventActions = [];
-    }
 
     var self;
     var WAVEDViewModel = function() {
@@ -142,80 +131,11 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.addAction = function() {
-        actionDialog.dialog({
-            resizable: false,
-            width: 500,
-            modal: true,
-            closeOnEscape: false,
-            buttons: {
-                'Okay': function() {
-                    var actionValues = [];
-                    var properties = self.actionEditorAffectedComponent.viewModel.properties;
-                    for (var i = 0; i < properties.length; i++) {
-                        actionValues.push(properties[i].displayValue);
-                    }
-
-                    var action = new Action({
-                        name: self.selectedActionName,
-                        target: self.actionEditorAffectedComponent,
-                        values: actionValues,
-                        applyAutomatically: $('#actionApplyAutomatically').is(':checked')
-                    });
-
-                    // TODO: Validation to prevent two actions having same name?
-                    self._currentProject.addAction(action);
-                    actionDialog.dialog('close');
-                    resetActionEditor();
-                },
-                'Cancel': function() {
-                    actionDialog.dialog('close');
-                    resetActionEditor();
-                }
-            }
-        });
+        return ActionHelper.addAction(self);
     };
 
     WAVEDViewModel.prototype.editAction = function() {
-
-        if (defined(self.selectedAction)) {
-            self.selectedActionName = self.selectedAction.name.value;
-            self.actionEditorAffectedComponent = self.selectedAction.target;
-            $('#actionApplyAutomatically').prop('checked', self.selectedAction.applyAutomatically ? true : false);
-
-            actionDialog.dialog({
-                resizable: false,
-                width: 500,
-                modal: true,
-                closeOnEscape: false,
-                buttons: {
-                    'Save': function() {
-                        var actionValues = [];
-                        var properties = self.actionEditorAffectedComponent.viewModel.properties;
-                        for (var i = 0; i < properties.length; i++) {
-                            actionValues.push(properties[i].actionValue);
-                        }
-
-                        self.selectedAction.name.value = self.selectedActionName;
-                        self.selectedAction.target = self.actionEditorAffectedComponent;
-                        self.selectedAction.values = actionValues;
-                        self.selectedAction.applyAutomatically = $('#actionApplyAutomatically').is(':checked');
-                        if (self.selectedAction.applyAutomatically) {
-                            self.selectedAction.apply();
-                        }
-
-                        actionDialog.dialog('close');
-                        resetActionEditor();
-                    },
-                    'Cancel': function() {
-                        actionDialog.dialog('close');
-                        resetActionEditor();
-                    }
-                }
-            });
-        }
-        else {
-            displayMessage('Select an action to edit.');
-        }
+        return ActionHelper.editAction(self);
     };
 
     WAVEDViewModel.prototype.removeSelectedAction = function() {
@@ -223,63 +143,11 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.addEvent = function() {
-        eventDialog.dialog({
-            resizable: false,
-            width: 500,
-            modal: true,
-            closeOnEscape: false,
-            buttons: {
-                'Save': function() {
-                    var event = new Event({
-                        name: self.selectedEventName,
-                        eventType: self.selectedEventType,
-                        triggeringComponent: self.eventEditorTriggeringComponent,
-                        trigger: self.eventEditorTrigger,
-                        actions: self.selectedEventActions
-                    });
-                    self._currentProject.addEvent(event);
-                    eventDialog.dialog('close');
-                    resetEventEditor();
-                },
-                'Cancel': function() {
-                    eventDialog.dialog('close');
-                    resetEventEditor();
-                }
-            }
-        });
+        EventHelper.addEvent(self);
     };
 
     WAVEDViewModel.prototype.editEvent = function() {
-
-        self.selectedEventName = self.selectedEvent.name.value;
-        self.selectedEventType = self.selectedEvent.eventType;
-        self.eventEditorTriggeringComponent = self.selectedEvent.triggeringComponent;
-        self.eventEditorTrigger = self.selectedEvent.trigger;
-        self.selectedEventActions = self.selectedEvent.actions;
-
-        eventDialog.dialog({
-            resizable: false,
-            width: 500,
-            modal: true,
-            closeOnEscape: false,
-            buttons: {
-                'Save': function() {
-
-                    self.selectedEvent.name.value = self.selectedEventName;
-                    self.selectedEvent.eventType =  self.selectedEventType;
-                    self.selectedEvent.triggeringComponent = self.eventEditorTriggeringComponent;
-                    self.selectedEvent.trigger = self.eventEditorTrigger;
-                    self.selectedEvent.actions = self.selectedEventActions;
-
-                    eventDialog.dialog('close');
-                    resetEventEditor();
-                },
-                'Cancel': function() {
-                    eventDialog.dialog('close');
-                    resetEventEditor();
-                }
-            }
-        });
+        EventHelper.editEvent(self);
     };
 
     WAVEDViewModel.prototype.removeSelectedEvent = function() {

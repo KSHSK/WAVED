@@ -124,10 +124,10 @@ define([
         return {
             'name': this._name.value,
             'eventType': this._eventType,
-            'triggeringComponent': this._triggeringComponent.getState(),
-            'trigger': this._trigger.getState(),
-            'actions': $.map(this._actions, function(item) {
-                return item.getState();
+            'triggeringComponent': this._triggeringComponent.name.value,
+            'trigger': this._trigger.name,
+            'actions': $.map(this._actions, function(action) {
+                return action.name.value;
             })
         };
 
