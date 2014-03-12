@@ -11,5 +11,9 @@ define([
 
     };
 
+    GlyphSizeScheme.prototype.getType = function(){
+
+    };
+
     return GlyphSizeScheme;
 });
