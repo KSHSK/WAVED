@@ -21,7 +21,11 @@ define([
         eventDialog: $('#event-editor-dialog'),
 
         resetEventEditor: function(viewModel) {
+            viewModel.eventEditorTriggeringComponent = undefined;
+            viewModel.eventEditorTrigger = undefined;
+            viewModel.selectedEventType = undefined;
             viewModel.selectedEventName = '';
+            viewModel.selectedEvent = undefined;
             viewModel.selectedEventActions = [];
         },
 

@@ -22,7 +22,12 @@ define([
         actionDialog: $('#action-editor-dialog'),
 
         resetActionEditor: function(viewModel) {
+            viewModel.actionEditorSelectedProperty = undefined;
+            viewModel.actionEditorAffectedComponent = undefined;
+            viewModel.actionEditorDataSet = undefined;
+            viewModel.selectedAction = undefined;
             viewModel.selectedActionName = '';
+            viewModel.selectedActionType = '';
             $('#actionApplyAutomatically').attr('checked', false);
         },
 
