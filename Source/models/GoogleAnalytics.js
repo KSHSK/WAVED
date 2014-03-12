@@ -22,6 +22,29 @@ define([
     var GoogleAnalytics = function(state) {
         self = this;
         state = defined(state) ? state : {};
+
+        this.uaCode = new StringProperty({
+            displayName: 'UA Code: ',
+            value: '',
+            validValue: createValidator({
+                minLength: 1,
+                regex: new RegExp('^((UA)(-)(\\d+)(-)(\\d+)){1}$', 'i')
+            }),
+            errorMessage: 'UA code is not in the correct format. It should look like UA-####-##.'
+        });
+
+        this.eventCategory = new StringProperty({
+            displayName: 'UA Code: ',
+            value: '',
+            validValue: createValidator({
+                minLength: 1,
+                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$', 'i')
+            }),
+            errorMessage: 'May only contain alphanumerics, hypens (-), underscores(_) and spaces.'
+        });
+
+        this._bound = false;
+
         this.setState(state);
 
         ko.track(this);
@@ -46,37 +69,17 @@ define([
 
     // TODO: Add to DD.
     GoogleAnalytics.prototype.setState = function(state) {
-        var uaCodeValue = '';
         if (defined(state.uaCode)) {
-            uaCodeValue = state.uaCode.value;
+            this.uaCode.value = state.uaCode.value;
         }
 
-        this.uaCode = new StringProperty({
-            displayName: 'UA Code: ',
-            value: uaCodeValue,
-            validValue: createValidator({
-                minLength: 1,
-                regex: new RegExp('^((UA)(-)(\\d+)(-)(\\d+)){1}$', 'i')
-            }),
-            errorMessage: 'UA code is not in the correct format. It should look like UA-####-##.'
-        });
-
-        var eventCategoryValue = '';
         if (defined(state.eventCategory)) {
-            eventCategoryValue = state.eventCategory.value;
+            this.eventCategory.value = state.eventCategory.value;
         }
 
-        this.eventCategory = new StringProperty({
-            displayName: 'UA Code: ',
-            value: eventCategoryValue,
-            validValue: createValidator({
-                minLength: 1,
-                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$', 'i')
-            }),
-            errorMessage: 'May only contain alphanumerics, hypens (-), underscores(_) and spaces.'
-        });
-
-        this._bound = defaultValue(state.bound, false);
+        if (defined(state.bound)) {
+            this._bound = state.bound;
+        }
     };
 
     GoogleAnalytics.prototype.set = function() {

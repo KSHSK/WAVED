@@ -12,12 +12,13 @@ define([
     ){
     'use strict';
 
-    var StringProperty = function(state) {
-        state = defined(state) ? state : {};
-        Property.call(this, state);
-        this.setState(state);
+    var StringProperty = function(options) {
+        options = defined(options) ? options : {};
+        Property.call(this, options);
 
         this._templateName = PropertyTemplateName.STRING;
+
+        this.setState(options);
 
         ko.track(this);
     };

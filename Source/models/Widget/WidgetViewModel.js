@@ -22,6 +22,53 @@ define([
     var WidgetViewModel = function(state) {
         ComponentViewModel.call(this, state);
 
+        // Set width
+        this.width = new NumberProperty({
+            displayName: 'Width',
+            value: 50,
+            validValue: createValidator({
+                min: 1,
+                max: 100
+            }),
+            errorMessage: 'Value must be between 1 and 100'
+        });
+
+        // Set height
+        this.height = new NumberProperty({
+            displayName: 'Height',
+            value: 50,
+            validValue: createValidator({
+                min: 1,
+                max: 100
+            }),
+            errorMessage: 'Value must be between 1 and 100'
+        });
+
+        // Set x
+        this.x = new NumberProperty({
+            displayName: 'X',
+            value: 0,
+            validValue: createValidator({
+                min: 0,
+                max: 100
+            }),
+            errorMessage: 'Value must be between 0 and 100'
+        });
+
+        // Set y
+        this.y = new NumberProperty({
+            displayName: 'Y',
+            value: 0,
+            validValue: createValidator({
+                min: 0,
+                max: 100
+            }),
+            errorMessage: 'Value must be between 0 and 100'
+        });
+
+        this._elementNames = []; // String[]
+        this._boundData = []; // String[]
+
         // TODO: Set this.
         this._availableElements = []; // ComponentRecord[]
     };
@@ -31,7 +78,7 @@ define([
     Object.defineProperties(WidgetViewModel.prototype, {
         properties: {
             get: function() {
-                return [this._name, this.x, this.y, this.width, this.height, this.visible, this.logGoogleAnalytics];
+                return [this.name, this.x, this.y, this.width, this.height, this.visible, this.logGoogleAnalytics];
             }
         },
         boundData: {
@@ -61,73 +108,29 @@ define([
     WidgetViewModel.prototype.setState = function(state) {
         ComponentViewModel.prototype.setState.call(this, state);
 
-        // Set width
-        var widthValue = 50;
         if (defined(state.width)) {
-            widthValue = state.width.value;
+            this.width.value = state.width.value;
         }
 
-        this.width = new NumberProperty({
-            displayName: 'Width',
-            value: widthValue,
-            validValue: createValidator({
-                min: 1,
-                max: 100
-            }),
-            errorMessage: 'Value must be between 1 and 100'
-        });
-
-        // Set height
-        var heightValue = 50;
         if (defined(state.height)) {
-            heightValue = state.height.value;
+            this.height.value = state.height.value;
         }
 
-        this.height = new NumberProperty({
-            displayName: 'Height',
-            value: heightValue,
-            validValue: createValidator({
-                min: 1,
-                max: 100
-            }),
-            errorMessage: 'Value must be between 1 and 100'
-        });
-
-        // Set x
-        var xValue = 0;
         if (defined(state.x)) {
-            xValue = state.x.value;
+            this.x.value = state.x.value;
         }
 
-        this.x = new NumberProperty({
-            displayName: 'X',
-            value: xValue,
-            validValue: createValidator({
-                min: 0,
-                max: 100
-            }),
-            errorMessage: 'Value must be between 0 and 100'
-        });
-
-        // Set y
-        var yValue = 0;
         if (defined(state.y)) {
-            yValue = state.y.value;
+            this.y.value = state.y.value;
         }
 
-        this.y = new NumberProperty({
-            displayName: 'Y',
-            value: yValue,
-            validValue: createValidator({
-                min: 0,
-                max: 100
-            }),
-            errorMessage: 'Value must be between 0 and 100'
-        });
+        if (defined(state.elements)) {
+            this._elementNames = state.elements;
+        }
 
-        this._subwidgetNames = defaultValue(state.subwidgets, []); // String[]
-        this._elementNames = defaultValue(state.elements, []); // String[]
-        this._boundData = defaultValue(state.boundData, []); // String[]
+        if (defined(state.boundData)) {
+            this._boundData = state.boundData;
+        }
     };
 
     WidgetViewModel.prototype.addElement = function(elementName) {

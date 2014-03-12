@@ -7,15 +7,29 @@ define(['knockout',
     ){
     'use strict';
 
-    var Property = function(state) {
-        state = defined(state) ? state : {};
+    var Property = function(options) {
+        options = defined(options) ? options : {};
 
         // TODO: Validation, etc
-        this._templateName = undefined; // PropertyTemplateName
+        this._templateName = undefined; // PropertyTemplateName, defined by subclasses.
         this._value = undefined; // Type determined by subclasses.
 
         this.message = '';
         this.error = false;
+
+        this._displayName = options.displayName;
+        this.errorMessage = defined(options.errorMessage) ? options.errorMessage : 'Invalid value';
+
+        if (defined(options.validValue)) {
+            this.isValidValue = options.validValue;
+        }
+        else {
+            this.isValidValue = function(value) {
+                return true;
+            };
+        }
+
+        this.setState(options);
 
         ko.track(this);
     };
@@ -43,19 +57,7 @@ define(['knockout',
     };
 
     Property.prototype.setState = function(state) {
-        this._displayName = state.displayName;
-        this.errorMessage = defined(state.errorMessage) ? state.errorMessage : 'Invalid value';
-
         this._value = state.value;
-        if (defined(state.validValue)) {
-            this.isValidValue = state.validValue;
-        }
-        else {
-            this.isValidValue = function(value) {
-                return true;
-            };
-        }
-
         this.error = !this.isValidValue(this._value);
     };
 
