@@ -160,6 +160,17 @@ define([
         this._actions.push(action);
     };
 
+    ProjectViewModel.prototype.getComponent = function(name) {
+        for (var index = 0; index < this._components.length; index++) {
+            var component = this._components[index];
+            if (component.namevalue === name) {
+                return component;
+            }
+        }
+
+        return null;
+    };
+
     ProjectViewModel.prototype.getDataSet = function(name) {
         for (var index = 0; index < this._dataSets.length; index++) {
             var dataSet = this._dataSets[index];

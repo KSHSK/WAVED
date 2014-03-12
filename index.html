@@ -246,15 +246,20 @@
             <div class="marginBottom10">
                    <input data-bind="value: selectedActionName, valueUpdate: 'keyup'"/>
             </div>
+            <div>Action Type:</div>
+            <select class="marginBottom10 width100"
+                    data-bind="options: ['Property Action', 'Query Action'],
+                    value: selectedActionType">
+            </select>
             <div>Affected Component:</div>
             <select class="marginBottom10 width100"
-                    data-bind="
-                    options: currentProject.components, 
+                    data-bind="options: currentProject.components, 
                       optionsText: function(component) {
                          return component.viewModel.name.value;
                       },
                   value: actionEditorAffectedComponent">
             </select>
+            <!-- ko if: selectedActionType === 'Query Action' -->
             <div>Dataset:</div>
             <select class="marginBottom10 width100"
                     data-bind="optionsCaption: 'None',
@@ -264,6 +269,7 @@
                       },
                   value: actionEditorDataSet">
             </select>
+            <!-- /ko -->
             <div>
                 <input type="checkbox" id="actionApplyAutomatically"></input>
                 <span>Apply Automatically</span>
@@ -271,11 +277,16 @@
         </div>
         <div class="inline top padding15">
             <div>Options</div>
+            <!-- ko if: selectedActionType === 'Property Action' -->
             <div data-bind="foreach: actionEditorAffectedComponent.viewModel.properties">
                 <!-- ko if:  $data.displayName !== 'Name' -->
                 <div data-bind="template: {name : $data.displayTemplateName, data: $data}"></div>
                 <!-- /ko -->
             </div>
+            <!-- /ko -->
+            <!-- ko if: selectedActionType === 'Property Action' -->
+            <!-- TODO: Query Action Options -->
+            <!-- /ko -->
         </div>
     </div>
     
@@ -299,6 +310,7 @@
             <label class="inline">Trigger: </label>
             <select data-bind="options: eventEditorTriggeringComponent.viewModel.triggers,
                             optionsText: function(trigger) {
+                                console.log(eventEditorTriggeringComponent.viewModel);
                                 return trigger.name;
                             }, value: eventEditorTrigger"></select>
         </div>

@@ -98,6 +98,7 @@ define(['jquery',
         this.eventEditorTrigger = undefined;
         this.selectedEventType = undefined;
         this.selectedEventActions = [];
+        this.selectedActionType = '';
 
         ko.track(this);
     };

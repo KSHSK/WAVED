@@ -65,45 +65,5 @@ define(['jquery',
         }
     });
 
-    Action.prototype.setState = function(state) {
-
-        if (defined(state.name)) {
-            // TODO: Name Validation
-            this._name.value = state.name;
-        }
-
-        if (defined(state.target)) {
-            // TODO: state.target is just the name of the component. We need to get the actual component and store it.
-            this._target = state.target;
-        }
-
-        if (defined(state.applyAutomatically)) {
-            this._applyAutomatically = state.applyAutomatically;
-        }
-
-        if (defined(state.values)) {
-            this._values = state.values;
-        }
-
-        if (this._applyAutomatically) {
-            this.apply();
-        }
-    };
-
-    Action.prototype.getState = function() {
-        return {
-            'name': this._name.value,
-            'target': this._target.name.value,
-            'values': this._values,
-            'applyAutomatically': this._applyAutomatically
-        };
-    };
-
-    Action.prototype.apply = function() {
-        for (var i = 0; i < this._values.length; i++) {
-            this._target.viewModel.properties[i].value = this._values[i];
-        }
-    };
-
     return Action;
 });

@@ -1,14 +1,16 @@
 /*global define*/
 define([
         'WAVEDViewModel',
-        'models/Action/Action',
+        'models/Action/PropertyAction',
+        'models/Action/QueryAction',
         'util/defined',
         'util/displayMessage',
         'knockout',
         'jquery'
     ],function(
         WAVEDViewModel,
-        Action,
+        PropertyAction,
+        QueryAction,
         defined,
         displayMessage,
         ko,
@@ -40,7 +42,9 @@ define([
                             actionValues.push(properties[i].displayValue);
                         }
 
-                        var action = new Action({
+                        // TODO: Handle QueryAction
+                        // TODO: Ensure an action with the same name doesn't already exist. Display error message if so.
+                        var action = new PropertyAction({
                             name: viewModel.selectedActionName,
                             target: viewModel.actionEditorAffectedComponent,
                             values: actionValues,
