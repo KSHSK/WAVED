@@ -28,11 +28,7 @@ define([
         state = defined(state) ? state : {};
 
         // TODO: Validation, etc
-        this._name = new StringProperty({
-            displayName: 'Name',
-            value: ''
-        });
-
+        this._name = '';
         this._eventType = ''; // EventType
         this._triggeringComponent = {}; // ComponentViewModel
         this._trigger = {}; // Trigger
@@ -89,7 +85,7 @@ define([
     Event.prototype.setState = function(state, availableWidgets) {
 
         if (defined(state.name)) {
-            this._name.value = state.name;
+            this._name = state.name;
         }
 
         if (defined(state.eventType)) {
@@ -101,27 +97,12 @@ define([
         }
 
         if (defined(state.trigger)){
-            // TODO: This shouldn't be a new Trigger, but rather one of the ones
-            // found in this._triggeringComponent.triggers.
-            this._trigger = new Trigger(state.trigger.name);
+            // TODO: Make sure this is one of the triggers found on the triggeringComponent.
+            this._trigger = state.trigger;
         }
 
         if (defined(state.actions)){
             this._actions = state.actions;
-            /*
-            this._actions = $.map(state.actions, function(itemState) {
-                if (itemState.type === PropertyAction.getType()) {
-                    return new PropertyAction(itemState);
-                }
-
-                if (itemState.type === QueryAction.getType()) {
-                    return new QueryAction(itemState);
-                }
-
-                // Invalid state.
-                return null;
-            });
-            */
         }
     };
 

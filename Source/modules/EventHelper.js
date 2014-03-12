@@ -56,40 +56,40 @@ define([
         editEvent: function(viewModel) {
             var self = this;
 
-            if (defined(viewModel.selectedEvent)) {
-                viewModel.selectedEventName = viewModel.selectedEvent.name.value;
-                viewModel.selectedEventType = viewModel.selectedEvent.eventType;
-                viewModel.eventEditorTriggeringComponent = viewModel.selectedEvent.triggeringComponent;
-                viewModel.eventEditorTrigger = viewModel.selectedEvent.trigger;
-                viewModel.selectedEventActions = viewModel.selectedEvent.actions;
-
-                self.eventDialog.dialog({
-                    resizable: false,
-                    width: 500,
-                    modal: true,
-                    closeOnEscape: false,
-                    buttons: {
-                        'Save': function() {
-
-                            viewModel.selectedEvent.name.value = viewModel.selectedEventName;
-                            viewModel.selectedEvent.eventType =  viewModel.selectedEventType;
-                            viewModel.selectedEvent.triggeringComponent = viewModel.eventEditorTriggeringComponent;
-                            viewModel.selectedEvent.trigger = viewModel.eventEditorTrigger;
-                            viewModel.selectedEvent.actions = viewModel.selectedEventActions;
-
-                            self.eventDialog.dialog('close');
-                            self.resetEventEditor(viewModel);
-                        },
-                        'Cancel': function() {
-                            self.eventDialog.dialog('close');
-                            self.resetEventEditor(viewModel);
-                        }
-                    }
-                });
-            }
-            else {
+            if (!defined(viewModel.selectedEvent)) {
                 displayMessage('Select an event to edit.');
+                return;
             }
+
+            viewModel.selectedEventName = viewModel.selectedEvent.name.value;
+            viewModel.selectedEventType = viewModel.selectedEvent.eventType;
+            viewModel.eventEditorTriggeringComponent = viewModel.selectedEvent.triggeringComponent;
+            viewModel.eventEditorTrigger = viewModel.selectedEvent.trigger;
+            viewModel.selectedEventActions = viewModel.selectedEvent.actions;
+
+            self.eventDialog.dialog({
+                resizable: false,
+                width: 500,
+                modal: true,
+                closeOnEscape: false,
+                buttons: {
+                    'Save': function() {
+
+                        viewModel.selectedEvent.name.value = viewModel.selectedEventName;
+                        viewModel.selectedEvent.eventType =  viewModel.selectedEventType;
+                        viewModel.selectedEvent.triggeringComponent = viewModel.eventEditorTriggeringComponent;
+                        viewModel.selectedEvent.trigger = viewModel.eventEditorTrigger;
+                        viewModel.selectedEvent.actions = viewModel.selectedEventActions;
+
+                        self.eventDialog.dialog('close');
+                        self.resetEventEditor(viewModel);
+                    },
+                    'Cancel': function() {
+                        self.eventDialog.dialog('close');
+                        self.resetEventEditor(viewModel);
+                    }
+                }
+            });
         }
 
     };
