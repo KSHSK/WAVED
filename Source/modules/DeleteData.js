@@ -43,10 +43,7 @@ define([
                 }
             }
 
-            if (deferreds.length === 0) {
-                groupDeferred.reject();
-            }
-            else {
+            if (deferreds.length > 0) {
                 $.when.apply($, deferreds).always(function() {
                     groupDeferred.resolve();
                 });
@@ -62,8 +59,7 @@ define([
                 url: 'PHP/deleteDataFile.php',
                 data: {
                     project: viewModel.currentProject.name,
-                    // TODO: Use dataSet.filename once that only includes file and not path.
-                    fileName: dataSet.basename
+                    fileName: dataSet.filename
                 },
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
