@@ -72,7 +72,7 @@ define([
                 return;
             }
 
-            viewModel.selectedActionName = viewModel.selectedAction.name.value;
+            viewModel.selectedActionName = viewModel.selectedAction.name;
             viewModel.actionEditorAffectedComponent = viewModel.selectedAction.target;
             $('#actionApplyAutomatically').prop('checked', viewModel.selectedAction.applyAutomatically ? true : false);
 
@@ -89,9 +89,9 @@ define([
                             actionValues.push(properties[i].displayValue);
                         }
 
-                        viewModel.selectedAction.name.value = viewModel.selectedActionName;
+                        viewModel.selectedAction.name = viewModel.selectedActionName;
                         viewModel.selectedAction.target = viewModel.actionEditorAffectedComponent;
-                        viewModel.selectedAction.values = actionValues;
+                        viewModel.selectedAction.newValues = actionValues;
                         viewModel.selectedAction.applyAutomatically = $('#actionApplyAutomatically').is(':checked');
                         if (viewModel.selectedAction.applyAutomatically) {
                             viewModel.selectedAction.apply();
