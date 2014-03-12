@@ -16,13 +16,9 @@ define(['jquery',
     var Action = function(state) {
         state = defined(state) ? state : {};
 
-        this._name = new StringProperty({
-            displayName: 'Name',
-            value: ''
-        });
-        this._target = {};
+        this._name = '';
+        this._target = undefined;
         this._applyAutomatically  = false;
-        this._values = [];
 
         this.setState(state);
 
@@ -54,16 +50,31 @@ define(['jquery',
             set: function(value) {
                 this._applyAutomatically = value;
             }
-        },
-        values: {
-            get: function() {
-                return this._values;
-            },
-            set: function(value) {
-                this._values = value;
-            }
         }
     });
+
+    Action.prototype.setState = function(state) {
+        if (defined(state.name)) {
+            // TODO: Name Validation
+            this._name = state.name;
+        }
+
+        // TODO: Does this need to be different for Property/Query Actions?
+        if (defined(state.target)) {
+            this._target = state.target;
+        }
+
+        if (defined(state.applyAutomatically)) {
+            this._applyAutomatically = state.applyAutomatically;
+        }
+    };
+
+    Action.prototype.getState = function() {
+        return {
+            'name': this._name,
+            'applyAutomatically': this._applyAutomatically
+        };
+    };
 
     return Action;
 });

@@ -156,7 +156,7 @@ define([
     };
 
     ProjectViewModel.prototype.addAction = function(action) {
-        // Check that action doesn't already exist.
+        // TODO: Check that action doesn't already exist.
         this._actions.push(action);
     };
 
@@ -203,7 +203,6 @@ define([
         for (var i = 0; i < self._events.length; i++) {
             for (var j = 0; j < self._events[i].actions[0].length; j++) {
                 if (self._events[i]._actions[0][j].name.value === action.name.value) {
-                    // TODO: Replace alert w/ banner notification.
                     displayMessage('Action is in use by Event: ' + self._events[i].name.value);
                     return;
                 }
