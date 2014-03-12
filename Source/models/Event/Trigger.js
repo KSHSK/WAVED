@@ -31,7 +31,7 @@ define(['knockout',
 
     Trigger.prototype.setState = function(state) {
         if (defined(state.name)) {
-            this._name = name;
+            this._name = state.name;
         }
     };
 

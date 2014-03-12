@@ -101,10 +101,14 @@ define([
         }
 
         if (defined(state.trigger)){
-            this._trigger = state.trigger;
+            // TODO: This shouldn't be a new Trigger, but rather one of the ones
+            // found in this._triggeringComponent.triggers.
+            this._trigger = new Trigger(state.trigger.name);
         }
 
         if (defined(state.actions)){
+            this._actions = state.actions;
+            /*
             this._actions = $.map(state.actions, function(itemState) {
                 if (itemState.type === PropertyAction.getType()) {
                     return new PropertyAction(itemState);
@@ -117,6 +121,7 @@ define([
                 // Invalid state.
                 return null;
             });
+            */
         }
     };
 
@@ -124,7 +129,7 @@ define([
         return {
             'name': this._name.value,
             'eventType': this._eventType,
-            'triggeringComponent': this._triggeringComponent.name.value,
+            'triggeringComponent': this._triggeringComponent.viewModel.name.value,
             'trigger': this._trigger.name,
             'actions': $.map(this._actions, function(action) {
                 return action.name.value;

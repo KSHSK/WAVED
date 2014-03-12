@@ -27,5 +27,9 @@ define([
 
     QueryAction.prototype = Object.create(Action.prototype);
 
+    QueryAction.getType = function() {
+        return 'QueryAction';
+    };
+
     return QueryAction;
 });
