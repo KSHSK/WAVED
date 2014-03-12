@@ -12,6 +12,11 @@ define(['knockout',
 
     var DataSet = function(state) {
         state = defined(state) ? state : {};
+
+        this._name = ''; // String
+        this._filename = ''; // String
+        this._referenceCount = 0; // Number
+
         this.setState(state);
 
         ko.track(this);

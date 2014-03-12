@@ -34,6 +34,14 @@ define([
             throw new Error('ProjectViewModel name is required');
         }
 
+        this._name = state.name;
+        this._googleAnalytics = new GoogleAnalytics();
+        this._workspace = new WorkspaceViewModel();
+        this._components = [this._workspace];
+        this._dataSets = [];
+        this._actions = [];
+        this._events = [];
+
         this.setState(state, availableWidgets);
         // TODO: Update Project Tree if necessary.
 
@@ -136,66 +144,71 @@ define([
     };
 
     ProjectViewModel.prototype.setState = function(state, availableWidgets) {
-        // Default values in case they aren't included in state.
-        var defaults = {
-            components: [],
-            dataSets: [],
-            events: [],
-            actions: [],
-            googleAnalytics: (new GoogleAnalytics()).getState(),
-            workspace: (new WorkspaceViewModel()).getState()
-        };
+        if (defined(state.name)) {
+            this._name = state.name;
+        }
 
-        state = $.extend({}, defaults, state);
+        if (defined(state.analytics)) {
+            this._googleAnalytics = new GoogleAnalytics(state.analytics);
+        }
 
-        this._name = state.name;
-        this._workspace = new WorkspaceViewModel(state.workspace);
-        this._googleAnalytics = new GoogleAnalytics(state.analytics);
+        if (defined(state.workspace)) {
+            this._workspace = new WorkspaceViewModel(state.workspace);
+        }
 
-        this._components = $.map(state.components, function(itemState) {
-            for (var index in availableWidgets) {
-                var widget = availableWidgets[index];
-                if (itemState.type === widget.o.getViewModelType()) {
-                    return new widget.o(itemState);
+
+        if (defined(state.components)) {
+            this._components = $.map(state.components, function(itemState) {
+                for (var index in availableWidgets) {
+                    var widget = availableWidgets[index];
+                    if (itemState.type === widget.o.getViewModelType()) {
+                        return new widget.o(itemState);
+                    }
                 }
-            }
 
-            // Invalid state.
-            return null;
-        });
+                // Invalid state.
+                return null;
+            });
 
-        // Insert workspace first.
-        this._components.unshift(this._workspace);
+            // Insert workspace first.
+            this._components.unshift(this._workspace);
+        }
 
-        this._dataSets = $.map(state.dataSets, function(itemState) {
-            if (itemState.type === DataSet.getType()) {
-                return new DataSet(itemState);
-            }
+        if (defined(state.dataSets)) {
+            this._dataSets = $.map(state.dataSets, function(itemState) {
+                if (itemState.type === DataSet.getType()) {
+                    return new DataSet(itemState);
+                }
 
-            if (itemState.type === DataSubset.getType()) {
-                return new DataSubset(itemState);
-            }
+                if (itemState.type === DataSubset.getType()) {
+                    return new DataSubset(itemState);
+                }
 
-            // Invalid state.
-            return null;
-        });
+                // Invalid state.
+                return null;
+            });
+        }
 
-        this._actions = $.map(state.actions, function(itemState) {
-            if (itemState.type === PropertyAction.getType()) {
-                return new PropertyAction(itemState);
-            }
+        if (defined(state.actions)) {
+            this._actions = $.map(state.actions, function(itemState) {
+                if (itemState.type === PropertyAction.getType()) {
+                    return new PropertyAction(itemState);
+                }
 
-            if (itemState.type === QueryAction.getType()) {
-                return new QueryAction(itemState);
-            }
+                if (itemState.type === QueryAction.getType()) {
+                    return new QueryAction(itemState);
+                }
 
-            // Invalid state.
-            return null;
-        });
+                // Invalid state.
+                return null;
+            });
+        }
 
-        this._events = $.map(state.events, function(itemState) {
-            return new Event(itemState);
-        });
+        if (defined(state.events)) {
+            this._events = $.map(state.events, function(itemState) {
+                return new Event(itemState);
+            });
+        }
     };
 
     ProjectViewModel.prototype.addDataSet = function(data) {

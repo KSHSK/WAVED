@@ -20,6 +20,33 @@ define([
     // TODO: The constructor takes in (Object state) in the DD
     var WorkspaceViewModel = function(state) {
         state = defined(state) ? state : {};
+
+        // Set name
+        this.name = new StringProperty({
+            displayName: 'Name',
+            value: 'Workspace'
+        });
+
+        // Set width
+        this.width = new NumberProperty({
+            displayName: 'Width',
+            value: 750,
+            validValue: createValidator({
+                min: 1
+            }),
+            errorMessage: 'Value must be greater than 0'
+        });
+
+        // Set height
+        this.height = new NumberProperty({
+            displayName: 'Height',
+            value: 600,
+            validValue: createValidator({
+                min: 1
+            }),
+            errorMessage: 'Value must be greater than 0'
+        });
+
         this.setState(state);
 
         ko.track(this);
@@ -36,41 +63,13 @@ define([
     };
 
     WorkspaceViewModel.prototype.setState = function(state) {
-        // Set name
-        this.name = new StringProperty({
-            displayName: 'Name',
-            value: 'Workspace'
-        });
-
-        // Set width
-        var widthValue = 750;
         if (defined(state.width)) {
-            widthValue = state.width.value;
+            this.width.value = state.width.value;
         }
 
-        this.width = new NumberProperty({
-            displayName: 'Width',
-            value: widthValue,
-            validValue: createValidator({
-                min: 1
-            }),
-            errorMessage: 'Value must be greater than 0'
-        });
-
-        // Set height
-        var heightValue = 600;
         if (defined(state.height)) {
-            heightValue = state.height.value;
+            this.height.value = state.height.value;
         }
-
-        this.height = new NumberProperty({
-            displayName: 'Height',
-            value: heightValue,
-            validValue: createValidator({
-                min: 1
-            }),
-            errorMessage: 'Value must be greater than 0'
-        });
     };
 
     // TODO: In the DD, add getProperties() and getViewModel() to be consistent here

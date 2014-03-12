@@ -20,6 +20,18 @@ define([
     var ComponentViewModel = function(state) {
         SuperComponentViewModel.call(this, state);
 
+        // Set visible
+        this.visible = new BooleanProperty({
+            displayName: 'Visible',
+            value: true,
+        });
+
+        // Set logGoogleAnalytics
+        this.logGoogleAnalytics = new BooleanProperty({
+            displayName: 'Log Google Analytics',
+            value: false,
+        });
+
         // TODO: Should this be static?
         this._triggers = []; // Trigger[]
 
@@ -39,27 +51,13 @@ define([
     ComponentViewModel.prototype.setState = function(state) {
         SuperComponentViewModel.prototype.setState.call(this, state);
 
-        // Set visible
-        var visibleValue = true;
         if (defined(state.visible)) {
-            visibleValue = state.visible.value;
+            this.visible.value = state.visible.value;
         }
 
-        this.visible = new BooleanProperty({
-            displayName: 'Visible',
-            value: visibleValue,
-        });
-
-        // Set logGoogleAnalytics
-        var gaValue = false;
         if (defined(state.logGoogleAnalytics)) {
-            gaValue = state.logGoogleAnalytics.value;
+            this.logGoogleAnalytics.value = state.logGoogleAnalytics.value;
         }
-
-        this.logGoogleAnalytics = new BooleanProperty({
-            displayName: 'Log Google Analytics',
-            value: gaValue,
-        });
     };
 
     ComponentViewModel.prototype.getTriggers = function() {
@@ -69,8 +67,7 @@ define([
     Object.defineProperties(ComponentViewModel.prototype, {
         properties: {
             get: function() {
-                // TODO: Mixed visibilities make this look weird? Problem?
-                return [this._name, this.visible, this.logGoogleAnalytics, this._parentWidgetName];
+                return [this.name, this.visible, this.logGoogleAnalytics];
             }
         },
         triggers: {

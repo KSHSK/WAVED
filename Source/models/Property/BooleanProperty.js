@@ -12,12 +12,13 @@ define([
     ){
     'use strict';
 
-    var BooleanProperty = function(state) {
-        state = defined(state) ? state : {};
-        Property.call(this, state);
-        this.setState(state);
+    var BooleanProperty = function(options) {
+        options = defined(options) ? options : {};
+        Property.call(this, options);
 
         this._templateName = PropertyTemplateName.BOOLEAN;
+
+        this.setState(options);
 
         ko.track(this);
     };
