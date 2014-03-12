@@ -71,7 +71,7 @@
                         <select id="data-file-list" size="5" class="select-full-size"
                             data-bind="options: currentProject.unmarkedDataSets, 
                                 optionsText: function(item) {
-                                   return item.name + ' : ' + item.basename;
+                                   return item.name.value + ' : ' + item.filename;
                                 }, value: selectedDataSet"></select>
                     </div>
                     <br />
@@ -135,7 +135,7 @@
                                 <select id="bound-data-list" size="5" class="select-full-size"
                                     data-bind="options: selectedWidget.viewModel.boundData, 
                                         optionsText: function(name) {
-                                           return name + ' : ' + currentProject.getDataSet(name).basename;
+                                           return name + ' : ' + currentProject.getDataSet(name).filename;
                                         }, value: selectedBoundData">
                                 </select>
                             </div>
@@ -223,10 +223,10 @@
                 <tr>
                     <td>
                         <input type="checkbox" class="bind-data-selections"
-                            data-bind="attr: {'data-name': $data.name}" />
+                            data-bind="attr: {'data-name': $data.name.value}" />
                     </td>
-                    <td data-bind="text: $data.name"></td>
-                    <td data-bind="text: $data.basename"></td>
+                    <td data-bind="text: $data.name.value"></td>
+                    <td data-bind="text: $data.filename"></td>
                 </tr>
             </tbody>
         </table>

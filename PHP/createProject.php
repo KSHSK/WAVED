@@ -84,9 +84,10 @@ if(!$success) {
     return;
 }
 
-// Set the name and state of the project
+// Set project variables.
 $returnValue["projectName"] = $projectName;
 $returnValue["projectState"] = $projectState;
+$returnValue["dataFolder"] = getDataFolder($projectName);
 
 reportReturnValue($returnValue);
 ?>

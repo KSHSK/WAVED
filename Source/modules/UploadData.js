@@ -5,13 +5,11 @@
 define([
         'WAVEDViewModel',
         'modules/SaveProject',
-        'modules/ReadData',
         'models/Data/DataSet',
         'jquery'
     ], function(
         WAVEDViewModel,
         SaveProject,
-        ReadData,
         DataSet,
         $) {
     'use strict';
@@ -96,8 +94,10 @@ define([
                     var data = JSON.parse(dataString);
                     if (data.success) {
                         var options = {
-                            name: dataSetName,
-                            filename: data.filePath,
+                            name: {
+                                value: dataSetName
+                            },
+                            filename: data.filename,
                             referenceCount: 0
                         };
 
@@ -109,9 +109,6 @@ define([
 
                         // Automatically save the project to avoid inconsistencies with state and the file system.
                         SaveProject.saveProject(projectSaved, viewModel.currentProject.name, viewModel);
-
-                        // Read the contents of the data file.
-                        ReadData.readData(dataSet);
 
                         $.when(projectSaved).done(function() {
                             dataUploaded.resolve();
