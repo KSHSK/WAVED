@@ -101,7 +101,7 @@
                         <select id="action-list" size="10" class="select-full-size" 
                                 data-bind="options: currentProject.actions,
                                 optionsText: function(action) {
-                                   return action.name.value;
+                                   return action.name;
                                 }, value: selectedAction"></select>
                     </div>
                 </div>
@@ -119,7 +119,7 @@
                         <select id="event-list" size="10" class="select-full-size"
                                 data-bind="options: currentProject.events,
                                 optionsText: function(event) {
-                                    return event.name.value;
+                                    return event.name;
                                 }, value: selectedEvent"></select>
                     </div>
                 </div>
@@ -321,7 +321,7 @@
             <div data-bind="foreach: currentProject.actions">
                 <div>
                     <input type="checkbox" data-bind="checkedValue: $data, checked: $root.selectedEventActions"></input>
-                    <span data-bind="text: $data.name.value"></span>
+                    <span data-bind="text: $data.name"></span>
                 </div>
             </div>
         </div>

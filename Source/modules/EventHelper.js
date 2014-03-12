@@ -61,7 +61,7 @@ define([
                 return;
             }
 
-            viewModel.selectedEventName = viewModel.selectedEvent.name.value;
+            viewModel.selectedEventName = viewModel.selectedEvent.name;
             viewModel.selectedEventType = viewModel.selectedEvent.eventType;
             viewModel.eventEditorTriggeringComponent = viewModel.selectedEvent.triggeringComponent;
             viewModel.eventEditorTrigger = viewModel.selectedEvent.trigger;
@@ -75,7 +75,7 @@ define([
                 buttons: {
                     'Save': function() {
 
-                        viewModel.selectedEvent.name.value = viewModel.selectedEventName;
+                        viewModel.selectedEvent.name = viewModel.selectedEventName;
                         viewModel.selectedEvent.eventType =  viewModel.selectedEventType;
                         viewModel.selectedEvent.triggeringComponent = viewModel.eventEditorTriggeringComponent;
                         viewModel.selectedEvent.trigger = viewModel.eventEditorTrigger;
