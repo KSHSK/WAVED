@@ -20,38 +20,17 @@ define([
     var ComponentViewModel = function(state) {
         SuperComponentViewModel.call(this, state);
 
-        var visibleOptions;
-        if (defined(state.visible)) {
-            visibleOptions = {
-                displayName: state.visible.displayName,
-                value: state.visible.value
-            };
-        }
-        else {
-            visibleOptions = {
-                displayName: 'Visible',
-                value: true
-            };
-        }
-        this.visible = new BooleanProperty(visibleOptions);
+        // Set visible
+        this.visible = new BooleanProperty({
+            displayName: 'Visible',
+            value: true,
+        });
 
-        var gaOptions;
-        if (defined(state.logGoogleAnalytics)) {
-            gaOptions = {
-                displayName: state.logGoogleAnalytics.displayName,
-                value: state.logGoogleAnalytics.value
-            };
-        }
-        else {
-            gaOptions = {
-                displayName: 'Log Google Analytics',
-                value: false
-            };
-        }
-        this.logGoogleAnalytics = new BooleanProperty(gaOptions);
-
-        // TODO: Validation, creation of actual Property objects, etc
-        this._parentWidgetName = defaultValue(state.parent, undefined); // String
+        // Set logGoogleAnalytics
+        this.logGoogleAnalytics = new BooleanProperty({
+            displayName: 'Log Google Analytics',
+            value: false,
+        });
 
         // TODO: Should this be static?
         this._triggers = []; // Trigger[]
@@ -70,7 +49,15 @@ define([
     };
 
     ComponentViewModel.prototype.setState = function(state) {
-        // TODO
+        SuperComponentViewModel.prototype.setState.call(this, state);
+
+        if (defined(state.visible)) {
+            this.visible.value = state.visible.value;
+        }
+
+        if (defined(state.logGoogleAnalytics)) {
+            this.logGoogleAnalytics.value = state.logGoogleAnalytics.value;
+        }
     };
 
     ComponentViewModel.prototype.getTriggers = function() {
@@ -80,8 +67,7 @@ define([
     Object.defineProperties(ComponentViewModel.prototype, {
         properties: {
             get: function() {
-                // TODO: Mixed visibilities make this look weird? Problem?
-                return [this._name, this.visible, this.logGoogleAnalytics, this._parentWidgetName];
+                return [this.name, this.visible, this.logGoogleAnalytics];
             }
         },
         triggers: {

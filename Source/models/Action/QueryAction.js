@@ -25,6 +25,13 @@ define([
         ko.track(this);
     };
 
+    /**
+     * Static method that returns the type String for this class.
+     */
+    QueryAction.getType = function() {
+        return 'QueryAction';
+    };
+
     QueryAction.prototype = Object.create(Action.prototype);
 
     return QueryAction;

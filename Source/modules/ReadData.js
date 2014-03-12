@@ -29,6 +29,14 @@ define([
 
             return readComplete.promise();
         },
+        readAllData: function(viewModel) {
+            $.each(viewModel.currentProject.dataSets, function(index, dataSet) {
+                // Read file contents for the DataSet.
+                ReadData.readData(dataSet);
+
+                // TODO: How should DataSubsets be handled?
+            });
+        }
 
     };
 
