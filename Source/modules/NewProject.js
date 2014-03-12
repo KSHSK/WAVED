@@ -3,13 +3,15 @@
  * A module for creating a new project.
  */
 define([
-        '../modules/UnsavedChanges',
-        '../models/ProjectViewModel',
+        './UnsavedChanges',
+        './SaveProject',
+        'models/ProjectViewModel',
         'util/updateQueryByName',
         'jquery',
         'knockout'
     ], function(
         UnsavedChangesModule,
+        SaveProject,
         ProjectViewModel,
         updateQueryByName,
         $,
@@ -97,6 +99,10 @@ define([
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
                     if (data.success) {
+                        // Clear the workspace.
+                        $('#waved-workspace').empty();
+
+
                         viewModel.currentProject = new ProjectViewModel({
                             name: data.projectName
                         });
@@ -105,6 +111,10 @@ define([
 
                         // Set the URL to include the current project name.
                         updateQueryByName('project', data.projectName);
+
+                        // Save state of new project.
+                        var projectSaved = $.Deferred();
+                        SaveProject.saveProject(projectSaved, viewModel.currentProject.name, viewModel);
 
                         projectCreated.resolve();
                     }
