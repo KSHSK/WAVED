@@ -31,6 +31,7 @@ define([
 
         addEvent: function(viewModel) {
             var self = this;
+            self.resetEventEditor(viewModel);
             self.eventDialog.dialog({
                 resizable: false,
                 width: 500,
@@ -47,24 +48,23 @@ define([
                             });
                             viewModel.currentProject.addEvent(event);
                             self.eventDialog.dialog('close');
-                            self.resetEventEditor(viewModel);
                         }
                     },
                     'Cancel': function() {
                         self.eventDialog.dialog('close');
-                        self.resetEventEditor(viewModel);
                     }
                 }
             });
         },
 
         editEvent: function(viewModel) {
-            var self = this;
-
             if (!defined(viewModel.selectedEvent)) {
                 displayMessage('Select an event to edit.');
                 return;
             }
+
+            var self = this;
+            self.resetEventEditor(viewModel);
 
             viewModel.selectedEventName.value = viewModel.selectedEvent.name;
             viewModel.selectedEventType = viewModel.selectedEvent.eventType;
@@ -87,12 +87,10 @@ define([
                             viewModel.selectedEvent.actions = viewModel.selectedEventActions;
 
                             self.eventDialog.dialog('close');
-                            self.resetEventEditor(viewModel);
                         }
                     },
                     'Cancel': function() {
                         self.eventDialog.dialog('close');
-                        self.resetEventEditor(viewModel);
                     }
                 }
             });
