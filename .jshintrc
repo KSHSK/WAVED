@@ -14,5 +14,7 @@
   "strict": true,
   "trailing": true,
 
-  "browser": true
+  "browser": true,
+  
+  "globals": { "define": false }
 }

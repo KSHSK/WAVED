@@ -1,4 +1,3 @@
-/*global define*/
 define([
         'models/Data/QueryNodeValue',
         'models/Constants/ComparisonOperatorValue',

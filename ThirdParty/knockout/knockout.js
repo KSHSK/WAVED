@@ -1,4 +1,3 @@
-/*global define*/
 define([
         '../ThirdParty/knockout/knockout-3.0.0',
         '../ThirdParty/knockout/knockout-es5'

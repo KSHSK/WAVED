@@ -1,4 +1,3 @@
-/*global define*/
 define([
         'models/Widget/GraphWidget/GraphViewModel',
         'util/defined',

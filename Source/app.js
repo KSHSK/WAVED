@@ -1,4 +1,3 @@
-/*global define*/
 /**
  * Wraps the definition of the top-level app module. Loads submodule dependencies.
  */
