@@ -25,6 +25,11 @@ define([
 
     StringProperty.prototype = Object.create(Property.prototype);
 
+    StringProperty.prototype.setBlank = function() {
+        this._value = '';
+        this.error = false;
+    };
+
     Object.defineProperties(StringProperty.prototype, {
         value: {
             get: function() {
