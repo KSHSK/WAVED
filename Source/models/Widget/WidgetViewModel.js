@@ -154,7 +154,7 @@ define([
     };
 
     WidgetViewModel.prototype.bindData = function(dataSet) {
-        var name = dataSet.name.value;
+        var name = dataSet.name;
 
         // Don't bind the same data twice.
         if (this._boundData.indexOf(name) === -1) {
@@ -164,7 +164,7 @@ define([
     };
 
     WidgetViewModel.prototype.unbindData = function(dataSet) {
-        var name = dataSet.name.value;
+        var name = dataSet.name;
 
         // Only unbind if the data is bound.
         var index = this._boundData.indexOf(name);
