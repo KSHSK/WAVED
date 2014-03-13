@@ -78,7 +78,7 @@ define(['jquery',
                     maxLength: 50,
                     regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
                 }),
-                errorMessage: 'Must be between 1 and 50 characters<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
+                errorMessage: 'Must be between 1 and 50 characters.<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
             });
 
         this.loadProjectName = new ArrayProperty({
@@ -87,18 +87,39 @@ define(['jquery',
                 options: this.projectList
             });
 
-        this.actionEditorSelectedProperty = undefined;
+
+        this.selectedActionName = new StringProperty({
+            displayName: 'Project Name',
+            value: '',
+            validValue: createValidator({
+                minLength: 1,
+                maxLength: 50,
+                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
+            }),
+            errorMessage: 'Must be between 1 and 50 characters.<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
+        });
+
+        this.selectedAction = undefined;
+        this.selectedActionType = '';
         this.actionEditorAffectedComponent = undefined;
         this.actionEditorDataSet = undefined;
-        this.selectedAction = undefined;
+
+        this.selectedEventName = new StringProperty({
+            displayName: 'Project Name',
+            value: '',
+            validValue: createValidator({
+                minLength: 1,
+                maxLength: 50,
+                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
+            }),
+            errorMessage: 'Must be between 1 and 50 characters.<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
+        });
+
         this.selectedEvent = undefined;
-        this.selectedActionName = '';
-        this.selectedEventName = '';
         this.eventEditorTriggeringComponent = undefined;
         this.eventEditorTrigger = undefined;
         this.selectedEventType = undefined;
         this.selectedEventActions = [];
-        this.selectedActionType = '';
 
         ko.track(this);
     };
