@@ -24,8 +24,7 @@ define([
         resetActionEditor: function(viewModel) {
             viewModel.actionEditorAffectedComponent = undefined;
             viewModel.actionEditorDataSet = undefined;
-            viewModel.selectedAction = undefined;
-            viewModel.selectedActionName.value = '';
+            viewModel.selectedActionName.setBlank();
             viewModel.selectedActionType = '';
             $('#actionApplyAutomatically').attr('checked', false);
         },
@@ -51,6 +50,13 @@ define([
                                     }
                                 }
                             }
+
+                            // Restore displayValue to value so that it's not shown as the new value
+                            // if the action isn't applied automatically.
+                            for (var i = 0; i < properties.length; i++) {
+                                properties[i].displayValue = properties[i].value;
+                            }
+
 
                             // TODO: Handle QueryAction
                             // TODO: Ensure an action with the same name doesn't already exist. Display error message if so.
@@ -85,6 +91,11 @@ define([
             viewModel.selectedActionName.value = viewModel.selectedAction.name;
             viewModel.actionEditorAffectedComponent = viewModel.selectedAction.target;
             $('#actionApplyAutomatically').prop('checked', viewModel.selectedAction.applyAutomatically ? true : false);
+            // Set the displayValues to match those saved in the Action
+            var properties = viewModel.actionEditorAffectedComponent.viewModel.properties;
+            for (var key in viewModel.selectedAction.newValues) {
+                viewModel.actionEditorAffectedComponent.viewModel[key].displayValue = viewModel.selectedAction.newValues[key];
+            }
 
             self.actionDialog.dialog({
                 resizable: false,
@@ -95,7 +106,6 @@ define([
                     'Save': function() {
                         if (!viewModel.selectedActionName.error) {
                             var actionValues = {};
-                            var properties = viewModel.actionEditorAffectedComponent.viewModel.properties;
 
                             for (var property in viewModel.actionEditorAffectedComponent.viewModel) {
                                 var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedComponent.viewModel[property]);
@@ -104,6 +114,10 @@ define([
                                         actionValues[property] = properties[propertyIndex].displayValue;
                                     }
                                 }
+                            }
+
+                            for (var i = 0; i < properties.length; i++) {
+                                properties[i].displayValue = properties[i].value;
                             }
 
                             viewModel.selectedAction.name = viewModel.selectedActionName.value;

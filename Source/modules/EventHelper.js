@@ -24,8 +24,7 @@ define([
             viewModel.eventEditorTriggeringComponent = undefined;
             viewModel.eventEditorTrigger = undefined;
             viewModel.selectedEventType = undefined;
-            viewModel.selectedEventName.value = '';
-            viewModel.selectedEvent = undefined;
+            viewModel.selectedEventName.setBlank();
             viewModel.selectedEventActions = [];
         },
 
