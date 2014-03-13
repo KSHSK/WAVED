@@ -43,13 +43,17 @@ define([
                         text: 'Upload',
                         'class': 'submit-button',
                         click: function() {
-                            if (!viewModel.uploadDataName.error && !viewModel.uploadDataFile.error) {
-                                self.uploadData(dataUploaded, viewModel);
-
-                                $.when(dataUploaded).done(function() {
-                                    self.uploadDataDialog.dialog('close');
-                                });
+                            if (viewModel.uploadDataName.error || viewModel.uploadDataFile.error) {
+                                viewModel.uploadDataName.message = viewModel.uploadDataName.errorMessage;
+                                viewModel.uploadDataFile.message = viewModel.uploadDataFile.errorMessage;
+                                return
                             }
+
+                            self.uploadData(dataUploaded, viewModel);
+
+                            $.when(dataUploaded).done(function() {
+                                self.uploadDataDialog.dialog('close');
+                            });
                         }
                     },
                     'Cancel': function() {
