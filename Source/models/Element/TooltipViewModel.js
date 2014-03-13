@@ -1,4 +1,3 @@
-/*global define*/
 define([
         'models/Element/ElementViewModel',
         'models/Property/StringProperty',

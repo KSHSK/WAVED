@@ -1,4 +1,3 @@
-/*global define*/
 define([
         'modules/NewProject',
         'modules/LoadProject',
