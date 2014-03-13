@@ -1,4 +1,3 @@
-/*global define*/
 /**
  * A module for exporting the current project.
  */

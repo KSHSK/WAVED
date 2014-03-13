@@ -1,5 +1,4 @@
 
-/*global define*/
 define([
         'models/Widget/WidgetViewModel',
         'models/Property/StringProperty',

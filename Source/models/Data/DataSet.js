@@ -1,4 +1,3 @@
-/*global define*/
 define(['knockout',
         'util/defined'
     ],function(

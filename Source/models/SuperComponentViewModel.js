@@ -1,4 +1,3 @@
-/*global define*/
 define([
         'models/Property/StringProperty',
         'jquery',
