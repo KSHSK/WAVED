@@ -48,6 +48,9 @@ define([
                             viewModel.currentProject.addEvent(event);
                             self.eventDialog.dialog('close');
                         }
+                        else {
+                            viewModel.selectedEventName.message = viewModel.selectedEventName.errorMessage;
+                        }
                     },
                     'Cancel': function() {
                         self.eventDialog.dialog('close');
@@ -86,6 +89,9 @@ define([
                             viewModel.selectedEvent.actions = viewModel.selectedEventActions;
 
                             self.eventDialog.dialog('close');
+                        }
+                        else {
+                            viewModel.selectedEventName.message = viewModel.selectedEventName.errorMessage;
                         }
                     },
                     'Cancel': function() {

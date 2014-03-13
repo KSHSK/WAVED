@@ -76,6 +76,9 @@ define([
                             viewModel.currentProject.addAction(action);
                             self.closeActionDialog(viewModel);
                         }
+                        else {
+                            viewModel.selectedActionName.message = viewModel.selectedActionName.errorMessage;
+                        }
                     },
                     'Cancel': function() {
                         self.closeActionDialog(viewModel);
@@ -130,6 +133,9 @@ define([
                             }
 
                             self.closeActionDialog(viewModel);
+                        }
+                        else {
+                            viewModel.selectedActionName.message = viewModel.selectedActionName.errorMessage;
                         }
                     },
                     'Cancel': function() {
