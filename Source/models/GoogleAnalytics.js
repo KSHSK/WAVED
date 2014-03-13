@@ -27,8 +27,7 @@ define([
             displayName: 'UA Code: ',
             value: '',
             validValue: createValidator({
-                minLength: 1,
-                regex: new RegExp('^((UA)(-)(\\d+)(-)(\\d+)){1}$', 'i')
+                regex: new RegExp('^$|^((UA)(-)(\\d+)(-)(\\d+)){1}$', 'i')
             }),
             errorMessage: 'UA code is not in the correct format. It should look like UA-####-##.'
         });
@@ -37,8 +36,7 @@ define([
             displayName: 'UA Code: ',
             value: '',
             validValue: createValidator({
-                minLength: 1,
-                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$', 'i')
+                regex: new RegExp('^$|^[a-zA-Z0-9_\\- ]+$', 'i')
             }),
             errorMessage: 'May only contain alphanumerics, hypens (-), underscores(_) and spaces.'
         });
@@ -83,7 +81,9 @@ define([
     };
 
     GoogleAnalytics.prototype.set = function() {
-        if (!self.uaCode.error && !self.eventCategory.error) {
+        if (!self.uaCode.error && !self.eventCategory.error && self.uaCode.value.length > 0
+            && self.eventCategory.value.length > 0) {
+
             self._bound = true;
         }
         else {
