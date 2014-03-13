@@ -36,7 +36,6 @@ define([
                 // TODO: How should DataSubsets be handled?
             });
         }
-
     };
 
     return ReadData;

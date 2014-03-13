@@ -1,7 +1,6 @@
 html, body {
     margin: 0;
     padding: 0;
-    min-width: 1150px; /* temp */
 }
 
 /*** JQuery UI Overrides ***/
@@ -24,6 +23,22 @@ html, body {
 
 .bottom {
    vertical-align: bottom;
+}
+
+.right {
+	float: right;
+}
+
+.padding15 {
+	padding: 15px;
+}
+
+.marginBottom10 {
+	margin-bottom: 10px;
+}
+
+.width100 {
+	width: 100%;
 }
 
 .menu-text {
@@ -96,6 +111,10 @@ html, body {
 /* Hide dialogs on load */
 .dialog {
     display: none;
+}
+
+.dialogColumnMaxWidth {
+	max-width: 170px;
 }
 
 .error {

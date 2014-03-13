@@ -9,7 +9,7 @@ define(['./getQueryParams'], function(getQueryParams) {
         var params = getQueryParams();
         var values = params[name];
         if (typeof values === 'undefined') {
-            return "";
+            return '';
         }
 
         return values[0];
