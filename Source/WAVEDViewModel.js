@@ -63,27 +63,48 @@ define([
                 bound: false
             }
         };
+
         this._availableWidgets = [{
             name: 'Button',
             o: Button
         }];
 
         this.newProjectName = new StringProperty({
-                displayName: 'Project Name',
-                value: '',
-                validValue: createValidator({
-                    minLength: 1,
-                    maxLength: 50,
-                    regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
-                }),
-                errorMessage: 'Must be between 1 and 50 characters<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
-            });
+            displayName: 'Project Name',
+            value: '',
+            validValue: createValidator({
+                minLength: 1,
+                maxLength: 50,
+                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
+            }),
+            errorMessage: 'Must be between 1 and 50 characters<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
+        });
 
         this.loadProjectName = new ArrayProperty({
-                displayName: 'Project Name',
-                value: '',
-                options: this.projectList
-            });
+            displayName: 'Project Name',
+            value: '',
+            options: this.projectList
+        });
+
+        this.uploadDataName = new StringProperty({
+            displayName: 'Name',
+            value: '',
+            validValue: createValidator({
+                minLength: 1,
+                maxLength: 50,
+                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
+            }),
+            errorMessage: 'Must be between 1 and 50 characters<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
+        });
+
+        this.uploadDataFile = new StringProperty({
+            displayName: 'File',
+            value: '',
+            validValue: createValidator({
+                minLength: 1
+            }),
+            errorMessage: 'Must select a file.'
+        });
 
         ko.track(this);
     };
