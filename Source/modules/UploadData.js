@@ -3,23 +3,22 @@
  * A module for uploading data to the server
  */
 define([
+        'jquery',
         'WAVEDViewModel',
         'modules/SaveProject',
         'models/Data/DataSet',
-        'jquery'
+        'util/displayMessage'
     ], function(
+        $,
         WAVEDViewModel,
         SaveProject,
         DataSet,
-        $) {
+        displayMessage) {
     'use strict';
 
     var UploadData = {
         uploadDataDialog: $('#upload-data-dialog'),
-        uploadDataNameInput: $('#upload-data-name'),
-        uploadDataNameError: $('#upload-data-name-error'),
         uploadDataFileInput: $('#upload-data-file'),
-        uploadDataFileError: $('#upload-data-file-error'),
 
         tryToUploadData: function(viewModel){
             var dataUploaded = $.Deferred();
@@ -31,10 +30,14 @@ define([
             var self = this;
 
             // Clear the inputs and errors.
-            self.uploadDataNameInput.val('');
-            self.uploadDataNameError.text('');
+            viewModel.uploadDataName.reset();
+
+            // Can't use reset on a file input.
+            viewModel.uploadDataFile._value = '';
+            viewModel.uploadDataFile.message = '';
+            viewModel.uploadDataFile.error = false;
+
             self.uploadDataFileInput.val('');
-            self.uploadDataFileError.text('');
 
             self.uploadDataDialog.dialog({
                 resizable: false,
@@ -46,10 +49,13 @@ define([
                         text: 'Upload',
                         'class': 'submit-button',
                         click: function() {
-                            self.uploadData(dataUploaded, viewModel);
-                            $.when(dataUploaded).done(function() {
-                                self.uploadDataDialog.dialog('close');
-                            });
+                            if (!viewModel.uploadDataName.error && !viewModel.uploadDataFile.error) {
+                                self.uploadData(dataUploaded, viewModel);
+
+                                $.when(dataUploaded).done(function() {
+                                    self.uploadDataDialog.dialog('close');
+                                });
+                            }
                         }
                     },
                     'Cancel': function() {
@@ -60,24 +66,17 @@ define([
         },
 
         uploadData: function(dataUploaded, viewModel){
-            /* TODO: validation */
-
             var self = this;
 
             // Don't allow leading or trailing white space.
-            var dataSetName = this.uploadDataNameInput.val().trim();
-            this.uploadDataNameInput.val(dataSetName);
-
-            // TODO Update/Remove condition when validation and error displaying is implemented.
-            if (dataSetName.length === 0) {
-                // TODO Handle when validation and error displaying is implemented.
-                return;
-            }
+            viewModel.uploadDataName.value = viewModel.uploadDataName.value.trim();
+            var dataSetName = viewModel.uploadDataName.value;
 
             var form = new FormData();
             var file = self.uploadDataFileInput[0].files[0];
             if (file === undefined) {
-                // TODO Handle when validation and error displaying is implemented.
+                // Just a precaution, but should never be called.
+                displayMessage('No file has been selected');
                 return;
             }
 
@@ -116,7 +115,7 @@ define([
                     }
                     else {
                         // Display error to user.
-                        // TODO Handle when validation and error displaying is implemented.
+                        displayMessage(data.errorMessage);
                     }
                 }
 

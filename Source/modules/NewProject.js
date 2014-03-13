@@ -51,8 +51,7 @@ define([
         openCreateNewProjectDialog: function(projectCreated, viewModel) {
             var self = this;
             var createNewProjectDialog = $('#create-new-project-dialog');
-            viewModel.newProjectName._value = '';
-            viewModel.newProjectName.message = '';
+            viewModel.newProjectName.reset();
 
             createNewProjectDialog.dialog({
                 resizable: false,
