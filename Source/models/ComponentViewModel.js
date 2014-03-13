@@ -23,13 +23,13 @@ define([
         // Set visible
         this.visible = new BooleanProperty({
             displayName: 'Visible',
-            value: true,
+            value: true
         });
 
         // Set logGoogleAnalytics
         this.logGoogleAnalytics = new BooleanProperty({
             displayName: 'Log Google Analytics',
-            value: false,
+            value: false
         });
 
         // TODO: Should this be static?
