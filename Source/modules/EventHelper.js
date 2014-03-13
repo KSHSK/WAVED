@@ -35,7 +35,6 @@ define([
                 resizable: false,
                 width: 500,
                 modal: true,
-                closeOnEscape: false,
                 buttons: {
                     'Save': function() {
                         if (!viewModel.selectedEventName.error) {
@@ -49,9 +48,6 @@ define([
                             viewModel.currentProject.addEvent(event);
                             self.eventDialog.dialog('close');
                             self.resetEventEditor(viewModel);
-                        }
-                        else {
-                            viewModel.selectedEventName.message = viewModel.selectedEventName.errorMessage;
                         }
                     },
                     'Cancel': function() {
@@ -93,10 +89,6 @@ define([
                             self.eventDialog.dialog('close');
                             self.resetEventEditor(viewModel);
                         }
-                        else {
-                            viewModel.selectedEventName.message = viewModel.selectedEventName.errorMessage;
-                        }
-
                     },
                     'Cancel': function() {
                         self.eventDialog.dialog('close');

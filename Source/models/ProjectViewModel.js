@@ -192,7 +192,6 @@ define([
             });
         }
 
-        // TODO: Get action by name and pass the actual component to the action.
         if (defined(state.actions)) {
             this._actions = $.map(state.actions, function(itemState) {
 

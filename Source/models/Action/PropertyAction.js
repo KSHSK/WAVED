@@ -22,6 +22,8 @@ define([
         // TODO: Validation, etc
         // TODO: target visibility conflicts with Action _target visibility, issue?
         // TODO: Make private in order to do type checking, validation, etc? Update DD with decision
+        this.target = state.target;
+        this.dataSet = state.dataSet;
 
         ko.track(this);
     };
@@ -59,13 +61,13 @@ define([
     };
 
     PropertyAction.prototype.getState = function() {
-        var state = Action.prototype.getState.call(this);
-        $.extend(state, {
+        return {
+            'name': this._name,
+            'applyAutomatically': this._applyAutomatically,
             'target': this._target.viewModel.name.value,
             'newValues': this._newValues,
             'type': PropertyAction.getType()
-        });
-        return state;
+        };
     };
 
     PropertyAction.getType = function() {
@@ -73,14 +75,8 @@ define([
     };
 
     PropertyAction.prototype.apply = function() {
-        var targetProperties = this._target.viewModel.properties;
         for (var key in this._newValues) {
-            var value = this._newValues[key];
-            for (var i = 0; i < targetProperties.length; i++) {
-                if (targetProperties[i].displayName === key) {
-                    this._target.viewModel.properties[i].value = this._newValues[key];
-                }
-            }
+            this._target.viewModel[key].value = this._newValues[key];
         }
     };
 

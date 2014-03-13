@@ -51,12 +51,12 @@ define([
     };
 
     QueryAction.prototype.getState = function() {
-        var state = Action.prototype.getState.call(this);
-        $.extend(state, {
+        return {
+            'name': this._name,
+            'applyAutomatically': this._applyAutomatically,
             'target': this._target.name,
             'type': QueryAction.getType()
-        });
-        return state;
+        };
     };
 
     return QueryAction;
