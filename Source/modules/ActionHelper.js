@@ -41,10 +41,12 @@ define([
                 closeOnEscape: false,
                 buttons: {
                     'Okay': function() {
-                        var actionValues = [];
+                        var actionValues = {};
                         var properties = viewModel.actionEditorAffectedComponent.viewModel.properties;
                         for (var i = 0; i < properties.length; i++) {
-                            actionValues.push(properties[i].displayValue);
+                            if (properties[i].displayValue !== properties[i].value) {
+                                actionValues[properties[i].displayName] = properties[i].displayValue;
+                            }
                         }
 
                         // TODO: Handle QueryAction
@@ -88,10 +90,12 @@ define([
                 closeOnEscape: false,
                 buttons: {
                     'Save': function() {
-                        var actionValues = [];
+                        var actionValues = {};
                         var properties = viewModel.actionEditorAffectedComponent.viewModel.properties;
                         for (var i = 0; i < properties.length; i++) {
-                            actionValues.push(properties[i].displayValue);
+                            if (properties[i].displayValue !== properties[i].value) {
+                                actionValues[properties[i].displayName] = properties[i].displayValue;
+                            }
                         }
 
                         viewModel.selectedAction.name = viewModel.selectedActionName;

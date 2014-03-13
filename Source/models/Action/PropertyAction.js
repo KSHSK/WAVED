@@ -17,7 +17,7 @@ define([
     var PropertyAction = function(state) {
         Action.call(this, state);
 
-        this._newValues = [];
+        this._newValues = {};
 
         this.setState(state);
         // TODO: Validation, etc
@@ -75,8 +75,14 @@ define([
     };
 
     PropertyAction.prototype.apply = function() {
-        for (var i = 0; i < this._newValues.length; i++) {
-            this._target.viewModel.properties[i].value = this._newValues[i];
+        var targetProperties = this._target.viewModel.properties;
+        for (var key in this._newValues) {
+            var value = this._newValues[key];
+            for (var i = 0; i < targetProperties.length; i++) {
+                if (targetProperties[i].displayName === key) {
+                    this._target.viewModel.properties[i].value = this._newValues[key];
+                }
+            }
         }
     };
 

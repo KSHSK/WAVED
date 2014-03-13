@@ -13,6 +13,7 @@ define(['knockout',
         // TODO: Validation, etc
         this._templateName = undefined; // PropertyTemplateName, defined by subclasses.
         this._value = undefined; // Type determined by subclasses.
+        this._displayValue = undefined;
 
         this.message = '';
         this.error = false;
@@ -63,6 +64,7 @@ define(['knockout',
 
     Property.prototype.setState = function(state) {
         this._value = state.value;
+        this._displayValue = state.value;
         this.error = !this.isValidValue(this._value);
     };
 
