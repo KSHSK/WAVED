@@ -15,8 +15,6 @@ define([
         options = defined(options) ? options : {};
         Property.call(this, options);
 
-        this._displayValue = this._value;
-
         this._templateName = PropertyTemplateName.STRING;
         this._displayTemplateName = PropertyTemplateName.STRING_DISPLAY;
 

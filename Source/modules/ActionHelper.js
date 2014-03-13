@@ -37,16 +37,18 @@ define([
                 resizable: false,
                 width: 500,
                 modal: true,
-                closeOnEscape: false,
                 buttons: {
                     'Okay': function() {
 
                         if (!viewModel.selectedActionName.error) {
                             var actionValues = {};
                             var properties = viewModel.actionEditorAffectedComponent.viewModel.properties;
-                            for (var i = 0; i < properties.length; i++) {
-                                if (properties[i].displayValue !== properties[i].value) {
-                                    actionValues[properties[i].displayName] = properties[i].displayValue;
+                            for (var property in viewModel.actionEditorAffectedComponent.viewModel) {
+                                var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedComponent.viewModel[property]);
+                                if (propertyIndex > -1) {
+                                    if (properties[propertyIndex].displayValue !== properties[propertyIndex].value) {
+                                        actionValues[property] = properties[propertyIndex].displayValue;
+                                    }
                                 }
                             }
 
@@ -63,9 +65,6 @@ define([
                             viewModel.currentProject.addAction(action);
                             self.actionDialog.dialog('close');
                             self.resetActionEditor(viewModel);
-                        }
-                        else {
-                            viewModel.selectedActionName.message = viewModel.selectedActionName.errorMessage;
                         }
                     },
                     'Cancel': function() {
@@ -98,9 +97,13 @@ define([
                         if (!viewModel.selectedActionName.error) {
                             var actionValues = {};
                             var properties = viewModel.actionEditorAffectedComponent.viewModel.properties;
-                            for (var i = 0; i < properties.length; i++) {
-                                if (properties[i].displayValue !== properties[i].value) {
-                                    actionValues[properties[i].displayName] = properties[i].displayValue;
+
+                            for (var property in viewModel.actionEditorAffectedComponent.viewModel) {
+                                var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedComponent.viewModel[property]);
+                                if (propertyIndex > -1) {
+                                    if (properties[propertyIndex].displayValue !== properties[propertyIndex].value) {
+                                        actionValues[property] = properties[propertyIndex].displayValue;
+                                    }
                                 }
                             }
 
@@ -114,9 +117,6 @@ define([
 
                             self.actionDialog.dialog('close');
                             self.resetActionEditor(viewModel);
-                        }
-                        else {
-                            viewModel.selectedActionName.message = viewModel.selectedActionName.errorMessage;
                         }
                     },
                     'Cancel': function() {

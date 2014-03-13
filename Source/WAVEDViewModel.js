@@ -88,7 +88,7 @@ define(['jquery',
 
 
         this.selectedActionName = new StringProperty({
-            displayName: 'Project Name',
+            displayName: 'Action Name',
             value: '',
             validValue: createValidator({
                 minLength: 1,
@@ -104,7 +104,7 @@ define(['jquery',
         this.actionEditorDataSet = undefined;
 
         this.selectedEventName = new StringProperty({
-            displayName: 'Project Name',
+            displayName: 'Event Name',
             value: '',
             validValue: createValidator({
                 minLength: 1,

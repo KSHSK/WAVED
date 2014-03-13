@@ -34,7 +34,7 @@ define([
 
         this.setState(state);
 
-        // Test
+        // TODO: Figure out how Triggers should actually work.
         this._triggers.push(new Trigger({
             name: 'Button'
         }));
