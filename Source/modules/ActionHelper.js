@@ -32,7 +32,7 @@ define([
 
         addAction: function(viewModel) {
             var self = this;
-
+            self.resetActionEditor(viewModel);
             self.actionDialog.dialog({
                 resizable: false,
                 width: 500,
@@ -64,24 +64,23 @@ define([
                             // TODO: Validation to prevent two actions having same name?
                             viewModel.currentProject.addAction(action);
                             self.actionDialog.dialog('close');
-                            self.resetActionEditor(viewModel);
                         }
                     },
                     'Cancel': function() {
                         self.actionDialog.dialog('close');
-                        self.resetActionEditor(viewModel);
                     }
                 }
             });
         },
 
         editAction: function(viewModel) {
-            var self = this;
-
             if (!defined(viewModel.selectedAction)) {
                 displayMessage('Select an action to edit.');
                 return;
             }
+
+            var self = this;
+            self.resetActionEditor(viewModel);
 
             viewModel.selectedActionName.value = viewModel.selectedAction.name;
             viewModel.actionEditorAffectedComponent = viewModel.selectedAction.target;
@@ -116,12 +115,10 @@ define([
                             }
 
                             self.actionDialog.dialog('close');
-                            self.resetActionEditor(viewModel);
                         }
                     },
                     'Cancel': function() {
                         self.actionDialog.dialog('close');
-                        self.resetActionEditor(viewModel);
                     }
                 }
             });
