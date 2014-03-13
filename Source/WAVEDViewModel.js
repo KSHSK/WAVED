@@ -6,12 +6,14 @@ define([
         'modules/BindData',
         'modules/DeleteData',
         'models/Widget/ButtonWidget/Button',
+        'models/Widget/TextBlockWidget/TextBlock',
         'util/defined',
         'util/defaultValue',
         'models/Property/StringProperty',
         'models/Property/ArrayProperty',
         'util/createValidator',
-        'knockout'
+        'knockout',
+        'jquery'
     ], function(
         NewProject,
         LoadProject,
@@ -20,12 +22,14 @@ define([
         BindData,
         DeleteData,
         Button,
+        TextBlock,
         defined,
         defaultValue,
         StringProperty,
         ArrayProperty,
         createValidator,
-        ko) {
+        ko,
+        $) {
     'use strict';
 
     var self;
@@ -65,6 +69,9 @@ define([
         this._availableWidgets = [{
             name: 'Button',
             o: Button
+        }, {
+            name: 'Text Block',
+            o: TextBlock
         }];
 
         this.newProjectName = new StringProperty({

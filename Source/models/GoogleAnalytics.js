@@ -80,8 +80,8 @@ define([
     };
 
     GoogleAnalytics.prototype.set = function() {
-        if (!self.uaCode.error && !self.eventCategory.error && self.uaCode.value.length > 0
-            && self.eventCategory.value.length > 0) {
+        if (!self.uaCode.error && !self.eventCategory.error && self.uaCode.value.length > 0 &&
+            self.eventCategory.value.length > 0) {
 
             self._bound = true;
         }
