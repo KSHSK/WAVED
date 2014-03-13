@@ -1,4 +1,3 @@
-/*global define*/
 define([
         'models/Element/TooltipViewModel',
         'models/Constants/ComponentTemplateName',

@@ -1,4 +1,3 @@
-/*global define*/
 define([
         'models/Property/Property',
         'util/defined',

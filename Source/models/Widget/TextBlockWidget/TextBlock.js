@@ -1,4 +1,3 @@
-/*global define*/
 define([
         'models/Widget/USMapWidget/TextBlockViewModel',
         'models/Constants/ComponentTemplateName',

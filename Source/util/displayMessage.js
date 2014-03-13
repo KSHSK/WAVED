@@ -1,4 +1,4 @@
-/*global define*/
+/* global alert*/
 define(function() {
     'use strict';
 

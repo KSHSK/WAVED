@@ -1,4 +1,3 @@
-/*global define*/
 define(['./getQueryParams'], function(getQueryParams) {
     'use strict';
 

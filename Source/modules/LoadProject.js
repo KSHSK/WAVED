@@ -1,4 +1,3 @@
-/*global define*/
 /**
  * A module for loading an existing project.
  */
