@@ -1,4 +1,3 @@
-/*global define*/
 define(['knockout',
         'models/Property/StringProperty',
         'modules/ReadData',

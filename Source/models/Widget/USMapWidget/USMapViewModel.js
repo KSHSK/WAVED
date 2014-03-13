@@ -1,4 +1,3 @@
-/*global define*/
 define([
         'models/Property/Coloring/ColoringSelectionProperty',
         'models/Widget/WidgetViewModel',
