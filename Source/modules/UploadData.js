@@ -93,9 +93,7 @@ define([
                     var data = JSON.parse(dataString);
                     if (data.success) {
                         var options = {
-                            name: {
-                                value: dataSetName
-                            },
+                            name: dataSetName,
                             filename: data.filename,
                             referenceCount: 0
                         };

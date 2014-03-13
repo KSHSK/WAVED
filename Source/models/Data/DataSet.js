@@ -19,17 +19,7 @@ define(['knockout',
     var DataSet = function(state) {
         state = defined(state) ? state : {};
 
-        this._name = new StringProperty({
-            displayName: 'Name',
-            value: '',
-            validValue: createValidator({
-                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$'),
-                minLength: 1,
-                maxLength: 50
-            }),
-            errorMessage: 'May only contain alphanumerics, hypens (-), underscores(_) and spaces.'
-        });
-
+        this._name = '';
         this._filename = '';
         this._referenceCount = 0;
 
@@ -71,7 +61,7 @@ define(['knockout',
     DataSet.prototype.getState = function() {
         return {
             type: DataSet.getType(),
-            name: this.name.getState(),
+            name: this.name,
             filename: this.filename,
             referenceCount: this.referenceCount
         };
@@ -79,7 +69,7 @@ define(['knockout',
 
     DataSet.prototype.setState = function(state) {
         if (defined(state.name)) {
-            this._name.value = state.name.value;
+            this._name = state.name;
         }
 
         if (defined(state.referenceCount)) {

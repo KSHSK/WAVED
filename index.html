@@ -71,7 +71,7 @@
                         <select id="data-file-list" size="5" class="select-full-size"
                             data-bind="options: currentProject.unmarkedDataSets, 
                                 optionsText: function(item) {
-                                   return item.name.value + ' : ' + item.filename;
+                                   return item.name + ' : ' + item.filename;
                                 }, value: selectedDataSet"></select>
                     </div>
                     <br />
@@ -226,9 +226,9 @@
                 <tr>
                     <td>
                         <input type="checkbox" class="bind-data-selections"
-                            data-bind="attr: {'data-name': $data.name.value}" />
+                            data-bind="attr: {'data-name': $data.name}" />
                     </td>
-                    <td data-bind="text: $data.name.value"></td>
+                    <td data-bind="text: $data.name"></td>
                     <td data-bind="text: $data.filename"></td>
                 </tr>
             </tbody>

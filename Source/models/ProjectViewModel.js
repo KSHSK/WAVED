@@ -228,7 +228,7 @@ define([
     ProjectViewModel.prototype.getDataSet = function(name) {
         for (var index = 0; index < this._dataSets.length; index++) {
             var dataSet = this._dataSets[index];
-            if (dataSet.name.value === name) {
+            if (dataSet.name === name) {
                 return dataSet;
             }
         }
