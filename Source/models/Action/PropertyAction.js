@@ -61,13 +61,11 @@ define([
     };
 
     PropertyAction.prototype.getState = function() {
-        return {
-            'name': this._name,
-            'applyAutomatically': this._applyAutomatically,
-            'target': this._target.viewModel.name.value,
-            'newValues': this._newValues,
-            'type': PropertyAction.getType()
-        };
+        var state = Action.prototype.getState.call(this);
+        state.type = PropertyAction.getType();
+        state.target = this._target.viewModel.name.value;
+        state.newValues = this._newValues;
+        return state;
     };
 
     PropertyAction.getType = function() {
