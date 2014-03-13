@@ -1,4 +1,4 @@
-define(['./getQueryParams'], function(getQueryParams) {
+define(['./getQueryParams', 'jquery'], function(getQueryParams, $) {
     'use strict';
 
     /**

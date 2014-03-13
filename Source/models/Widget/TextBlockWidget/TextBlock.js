@@ -1,5 +1,5 @@
 define([
-        'models/Widget/USMapWidget/TextBlockViewModel',
+        'models/Widget/TextBlockWidget/TextBlockViewModel',
         'models/Constants/ComponentTemplateName',
         'knockout',
         'jquery'
