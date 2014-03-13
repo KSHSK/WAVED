@@ -1,4 +1,3 @@
-/*global define*/
 define(['./getQueryParams', 'jquery'], function(getQueryParams, $) {
     'use strict';
 

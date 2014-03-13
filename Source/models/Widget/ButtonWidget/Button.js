@@ -1,4 +1,3 @@
-/*global define*/
 define([
         'models/Widget/ButtonWidget/ButtonViewModel',
         'models/Constants/ComponentTemplateName',

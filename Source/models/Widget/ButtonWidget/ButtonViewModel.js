@@ -1,4 +1,3 @@
-/*global define*/
 define([
         'models/Event/Trigger',
         'models/Property/StringProperty',

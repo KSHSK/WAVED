@@ -1,4 +1,3 @@
-/*global define*/
 define(['jquery',
         'knockout',
         'models/Property/StringProperty',

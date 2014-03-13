@@ -1,4 +1,3 @@
-/*global define*/
 define([
         'models/SuperComponentViewModel',
         'models/Event/Trigger',
