@@ -49,7 +49,15 @@ define([
                 return this._displayValue;
             },
             set: function(value) {
-                this._displayValue = value;
+                if (!isNaN(Number(value)) && this.isValidValue(value)) {
+                    this.error = false;
+                    this.message = '';
+                    this._displayValue = Number(value);
+                }
+                else {
+                    this.error = true;
+                    this.message = this.errorMessage;
+                }
             }
         }
     });

@@ -51,7 +51,15 @@ define([
                 return this._displayValue;
             },
             set: function(value) {
-                this._displayValue = value;
+                if (typeof value === 'string' && this.isValidValue(value)) {
+                    this.error = false;
+                    this.message = '';
+                    this._displayValue = value;
+                }
+                else {
+                    this.error = true;
+                    this.message = this.errorMessage;
+                }
             }
         }
     });
