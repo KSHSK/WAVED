@@ -28,7 +28,6 @@ define([
     StringProperty.prototype.reset = function() {
         this._value = '';
         this.message = '';
-        this.error = false;
 
         // Force the view to update.
         ko.getObservable(this, '_value').valueHasMutated();
