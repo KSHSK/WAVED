@@ -23,7 +23,7 @@ define([
     ){
     'use strict';
 
-    var Event = function(state, availableWidgets) {
+    var Event = function(state) {
         state = defined(state) ? state : {};
 
         // TODO: Validation, etc
@@ -33,7 +33,7 @@ define([
         this._trigger = {}; // Trigger
         this._actions = []; // Action[]
 
-        this.setState(state, availableWidgets);
+        this.setState(state);
 
         ko.track(this);
     };
@@ -81,7 +81,7 @@ define([
         }
     });
 
-    Event.prototype.setState = function(state, availableWidgets) {
+    Event.prototype.setState = function(state) {
 
         if (defined(state.name)) {
             this._name = state.name;
@@ -107,12 +107,12 @@ define([
 
     Event.prototype.getState = function() {
         return {
-            'name': this._name.value,
+            'name': this._name,
             'eventType': this._eventType,
             'triggeringComponent': this._triggeringComponent.viewModel.name.value,
             'trigger': this._trigger.name,
             'actions': $.map(this._actions, function(action) {
-                return action.name.value;
+                return action.name;
             })
         };
 
