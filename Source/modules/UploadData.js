@@ -46,7 +46,7 @@ define([
                             if (viewModel.uploadDataName.error || viewModel.uploadDataFile.error) {
                                 viewModel.uploadDataName.message = viewModel.uploadDataName.errorMessage;
                                 viewModel.uploadDataFile.message = viewModel.uploadDataFile.errorMessage;
-                                return
+                                return;
                             }
 
                             self.uploadData(dataUploaded, viewModel);

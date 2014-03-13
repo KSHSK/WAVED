@@ -3,25 +3,29 @@ define([
         'knockout',
         'util/defined',
         'util/defaultValue',
+        'util/displayMessage',
+        'models/Action/Action',
+        'models/Action/PropertyAction',
+        'models/Action/QueryAction',
+        'models/Event/Event',
         'models/WorkspaceViewModel',
         'models/GoogleAnalytics',
         'models/Data/DataSet',
-        'models/Data/DataSubset',
-        'models/Action/PropertyAction',
-        'models/Action/QueryAction',
-        'models/Event/Event'
+        'models/Data/DataSubset'
     ], function(
         $,
         ko,
         defined,
         defaultValue,
+        displayMessage,
+        Action,
+        PropertyAction,
+        QueryAction,
+        Event,
         WorkspaceViewModel,
         GoogleAnalytics,
         DataSet,
-        DataSubset,
-        PropertyAction,
-        QueryAction,
-        Event) {
+        DataSubset) {
     'use strict';
 
     var self;
@@ -116,7 +120,7 @@ define([
     };
 
     ProjectViewModel.prototype.getState = function() {
-        var self = this;
+        self = this;
 
         return {
             'name': this._name,
@@ -190,6 +194,9 @@ define([
 
         if (defined(state.actions)) {
             this._actions = $.map(state.actions, function(itemState) {
+
+                itemState.target = self.getComponent(itemState.target);
+
                 if (itemState.type === PropertyAction.getType()) {
                     return new PropertyAction(itemState);
                 }
@@ -205,6 +212,14 @@ define([
 
         if (defined(state.events)) {
             this._events = $.map(state.events, function(itemState) {
+
+                itemState.triggeringComponent = self.getComponent(itemState.triggeringComponent);
+                // TODO: Trigger?
+                var actions = [];
+                for (var i = 0; i < itemState.actions.length; i++) {
+                    actions.push(self.getAction(itemState.actions[i]));
+                }
+                itemState.actions = actions;
                 return new Event(itemState);
             });
         }
@@ -217,11 +232,34 @@ define([
     };
 
     ProjectViewModel.prototype.addEvent = function(event) {
-        // TODO
+        this._events.push(event);
     };
 
     ProjectViewModel.prototype.addAction = function(action) {
-        // TODO
+        // TODO: Check that action doesn't already exist.
+        this._actions.push(action);
+    };
+
+    ProjectViewModel.prototype.getComponent = function(name) {
+        for (var index = 0; index < this._components.length; index++) {
+            var component = this._components[index];
+            if (component.viewModel.name.value === name) {
+                return component;
+            }
+        }
+
+        return null;
+    };
+
+    ProjectViewModel.prototype.getAction = function(name) {
+        for (var index = 0; index < this._actions.length; index++) {
+            var action = this._actions[index];
+            if (action.name === name) {
+                return action;
+            }
+        }
+
+        return null;
     };
 
     ProjectViewModel.prototype.getDataSet = function(name) {
@@ -249,11 +287,26 @@ define([
     };
 
     ProjectViewModel.prototype.removeEvent = function(event) {
-        //TODO
+        var index = self._events.indexOf(event);
+        if (index > -1) {
+            self._events.splice(index, 1);
+        }
     };
 
     ProjectViewModel.prototype.removeAction = function(action) {
-        //TODO
+        for (var i = 0; i < self._events.length; i++) {
+            for (var j = 0; j < self._events[i].actions[0].length; j++) {
+                if (self._events[i]._actions[0][j].name.value === action.name.value) {
+                    displayMessage('Action is in use by Event: ' + self._events[i].name.value);
+                    return;
+                }
+            }
+        }
+
+        var index = self._actions.indexOf(action);
+        if (index > -1) {
+            self._actions.splice(index, 1);
+        }
     };
 
     ProjectViewModel.prototype.refreshWorkspace = function() {
