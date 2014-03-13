@@ -17,38 +17,23 @@ define([
 
     var ButtonViewModel = function(state) {
         state = (defined(state)) ? state : {};
-        var hasHeight = defined(state.height);
-        var hasWidth = defined(state.width);
         WidgetViewModel.call(this, state);
 
-        var labelOptions;
-        if (defined(state.label)) {
-            labelOptions = {
-                displayName: state.label.displayName,
-                value: state.label.value
-            };
-        }
-        else {
-            var displayName = 'Label';
-            labelOptions = {
-                displayName: displayName,
-                value: ''
-            };
-        }
-        labelOptions.validValue = createValidator({
-            minLength: 1,
-            maxLength: 50
+        // Set label
+        this.label = new StringProperty({
+            displayName: 'Label',
+            value: '',
+            validValue: createValidator({
+                minLength: 1,
+                maxLength: 50
+            }),
+            errorMessage: 'Must be between 1 and 50 characters'
         });
-        labelOptions.errorMessage = 'Must be between 1 and 50 characters';
 
-        this.label = new StringProperty(labelOptions);
+        this.height.value = 5;
+        this.width.value = 10;
 
-        if (!hasHeight) {
-            this.height.value = 5;
-        }
-        if (!hasWidth) {
-            this.width.value = 10;
-        }
+        this.setState(state);
 
         // Test
         this._triggers.push(new Trigger({
@@ -76,13 +61,17 @@ define([
     };
 
     ButtonViewModel.prototype.setState = function(state) {
-        // TODO
+        WidgetViewModel.prototype.setState.call(this, state);
+
+        if (defined(state.label)) {
+            this.label.value = state.label.value;
+        }
     };
 
     Object.defineProperties(ButtonViewModel.prototype, {
         properties: {
             get: function() {
-                return [this._name, this.label, this.x, this.y, this.width, this.height, this.visible,
+                return [this.name, this.label, this.x, this.y, this.width, this.height, this.visible,
                 this.logGoogleAnalytics];
             }
         }

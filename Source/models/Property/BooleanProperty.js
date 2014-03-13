@@ -12,29 +12,18 @@ define([
     ){
     'use strict';
 
-    var BooleanProperty = function(state) {
-        Property.call(this, state);
-
-        state = defined(state) ? state : {};
-
-        this._value = state.value;
-        if (defined(state.validValue)) {
-            this.isValidValue = state.validValue;
-        }
-        else {
-            this.isValidValue = function(value) {
-                return true;
-            };
-        }
+    var BooleanProperty = function(options) {
+        options = defined(options) ? options : {};
+        Property.call(this, options);
 
         this._displayValue = this._value;
 
         this._templateName = PropertyTemplateName.BOOLEAN;
         this._displayTemplateName = PropertyTemplateName.BOOLEAN_DISPLAY;
 
-        ko.track(this);
+        this.setState(options);
 
-        this.error = !this.isValidValue(this._value);
+        ko.track(this);
     };
 
     BooleanProperty.prototype = Object.create(Property.prototype);

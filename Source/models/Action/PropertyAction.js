@@ -27,6 +27,13 @@ define([
         ko.track(this);
     };
 
+    /**
+     * Static method that returns the type String for this class.
+     */
+    PropertyAction.getType = function() {
+        return 'PropertyAction';
+    };
+
     PropertyAction.prototype = Object.create(Action.prototype);
 
     Object.defineProperties(PropertyAction.prototype, {

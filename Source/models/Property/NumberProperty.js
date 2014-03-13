@@ -12,29 +12,16 @@ define([
     ){
     'use strict';
 
-    var NumberProperty = function(state) {
-        Property.call(this, state);
-
-        state = defined(state) ? state : {};
-
-        this._value = state.value;
-        if (defined(state.validValue)) {
-            this.isValidValue = state.validValue;
-        }
-        else {
-            this.isValidValue = function(value) {
-                return true;
-            };
-        }
-
-        this._displayValue = this._value;
+    var NumberProperty = function(options) {
+        options = defined(options) ? options : {};
+        Property.call(this, options);
 
         this._templateName = PropertyTemplateName.NUMBER;
         this._displayTemplateName = PropertyTemplateName.NUMBER_DISPLAY;
 
-        ko.track(this);
+        this.setState(options);
 
-        this.error = !this.isValidValue(this._value);
+        ko.track(this);
     };
 
     NumberProperty.prototype = Object.create(Property.prototype);
