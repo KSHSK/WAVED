@@ -25,13 +25,12 @@ define([
     StringProperty.prototype = Object.create(Property.prototype);
 
     StringProperty.prototype.reset = function() {
-        // Set non-empty first in case the value was already empty. Otherwise, knockout won't update the display.
-        this._value = ' ';
         this._value = '';
-
         this.message = '';
-
         this.error = false;
+
+        // Force the view to update.
+        ko.getObservable(this, '_value').valueHasMutated();
     };
 
     Object.defineProperties(StringProperty.prototype, {

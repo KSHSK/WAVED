@@ -30,12 +30,7 @@ define([
 
             // Clear the inputs and errors.
             viewModel.uploadDataName.reset();
-
-            // Can't use reset on a file input.
-            viewModel.uploadDataFile._value = '';
-            viewModel.uploadDataFile.message = '';
-            viewModel.uploadDataFile.error = false;
-
+            viewModel.uploadDataFile.reset();
             self.uploadDataFileInput.val('');
 
             self.uploadDataDialog.dialog({
