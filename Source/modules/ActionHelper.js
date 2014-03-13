@@ -24,9 +24,21 @@ define([
         resetActionEditor: function(viewModel) {
             viewModel.actionEditorAffectedComponent = undefined;
             viewModel.actionEditorDataSet = undefined;
-            viewModel.selectedActionName.setBlank();
+            viewModel.selectedActionName.reset();
             viewModel.selectedActionType = '';
             $('#actionApplyAutomatically').attr('checked', false);
+        },
+
+        closeActionDialog: function(viewModel) {
+            this.actionDialog.dialog('close');
+
+            // Restore displayValue to value so that it's not shown as the new value
+            // if the action isn't applied automatically.
+            var properties = viewModel.actionEditorAffectedComponent.viewModel.properties;
+            for (var i = 0; i < properties.length; i++) {
+                properties[i].displayValue = properties[i].value;
+            }
+
         },
 
         addAction: function(viewModel) {
@@ -51,13 +63,6 @@ define([
                                 }
                             }
 
-                            // Restore displayValue to value so that it's not shown as the new value
-                            // if the action isn't applied automatically.
-                            for (var i = 0; i < properties.length; i++) {
-                                properties[i].displayValue = properties[i].value;
-                            }
-
-
                             // TODO: Handle QueryAction
                             // TODO: Ensure an action with the same name doesn't already exist. Display error message if so.
                             var action = new PropertyAction({
@@ -69,11 +74,11 @@ define([
 
                             // TODO: Validation to prevent two actions having same name?
                             viewModel.currentProject.addAction(action);
-                            self.actionDialog.dialog('close');
+                            self.closeActionDialog(viewModel);
                         }
                     },
                     'Cancel': function() {
-                        self.actionDialog.dialog('close');
+                        self.closeActionDialog(viewModel);
                     }
                 }
             });
@@ -116,10 +121,6 @@ define([
                                 }
                             }
 
-                            for (var i = 0; i < properties.length; i++) {
-                                properties[i].displayValue = properties[i].value;
-                            }
-
                             viewModel.selectedAction.name = viewModel.selectedActionName.value;
                             viewModel.selectedAction.target = viewModel.actionEditorAffectedComponent;
                             viewModel.selectedAction.newValues = actionValues;
@@ -128,11 +129,11 @@ define([
                                 viewModel.selectedAction.apply();
                             }
 
-                            self.actionDialog.dialog('close');
+                            self.closeActionDialog(viewModel);
                         }
                     },
                     'Cancel': function() {
-                        self.actionDialog.dialog('close');
+                        self.closeActionDialog(viewModel);
                     }
                 }
             });
