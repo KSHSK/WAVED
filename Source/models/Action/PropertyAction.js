@@ -48,12 +48,11 @@ define([
     });
 
     PropertyAction.prototype.setState = function(state) {
+        Action.prototype.setState.call(this, state);
 
         if (defined(state.newValues)) {
             this._newValues = state.newValues;
         }
-
-        Action.prototype.setState.call(this, state);
 
         if (this._applyAutomatically) {
             this.apply();

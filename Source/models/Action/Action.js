@@ -20,8 +20,6 @@ define(['jquery',
         this._target = undefined;
         this._applyAutomatically  = false;
 
-        this.setState(state);
-
         ko.track(this);
     };
 

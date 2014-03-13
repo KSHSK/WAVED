@@ -22,6 +22,7 @@ define([
         // TODO: Validation, etc
         // TODO: target visibility conflicts with Action _target visibility, issue?
         this._target = state.target; // DataSubset
+        // TODO: Rename this to something that makes more sense.
         this._newValues = state.newValues; // QueryNode
 
         ko.track(this);

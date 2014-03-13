@@ -193,8 +193,12 @@ define([
             });
         }
 
+        // TODO: Get action by name and pass the actual component to the action.
         if (defined(state.actions)) {
             this._actions = $.map(state.actions, function(itemState) {
+
+                itemState.target = self.getComponent(itemState.target);
+
                 if (itemState.type === PropertyAction.getType()) {
                     return new PropertyAction(itemState);
                 }
@@ -210,6 +214,14 @@ define([
 
         if (defined(state.events)) {
             this._events = $.map(state.events, function(itemState) {
+
+                itemState.triggeringComponent = self.getComponent(itemState.triggeringComponent);
+                // TODO: Trigger?
+                var actions = [];
+                for (var i = 0; i < itemState.actions.length; i++) {
+                    actions.push(self.getAction(itemState.actions[i]));
+                }
+                itemState.actions = actions;
                 return new Event(itemState);
             });
         }
@@ -233,8 +245,19 @@ define([
     ProjectViewModel.prototype.getComponent = function(name) {
         for (var index = 0; index < this._components.length; index++) {
             var component = this._components[index];
-            if (component.namevalue === name) {
+            if (component.viewModel.name.value === name) {
                 return component;
+            }
+        }
+
+        return null;
+    };
+
+    ProjectViewModel.prototype.getAction = function(name) {
+        for (var index = 0; index < this._actions.length; index++) {
+            var action = this._actions[index];
+            if (action.name === name) {
+                return action;
             }
         }
 
