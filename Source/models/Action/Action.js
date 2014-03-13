@@ -1,7 +1,13 @@
-define(['knockout',
+define(['jquery',
+        'knockout',
+        'models/Property/StringProperty',
+        'util/createValidator',
         'util/defined'
     ],function(
+        $,
         ko,
+        StringProperty,
+        createValidator,
         defined
     ){
     'use strict';
@@ -9,10 +15,9 @@ define(['knockout',
     var Action = function(state) {
         state = defined(state) ? state : {};
 
-        // TODO: Validation, etc
-        this._name = state.name; // StringProperty
-        this._target = state.target; // Any TODO: Get the actual target
-        this._applyAutomatically = state.applyAutomatically; // Boolean
+        this._name = '';
+        this._target = undefined;
+        this._applyAutomatically  = false;
 
         ko.track(this);
     };
@@ -45,8 +50,27 @@ define(['knockout',
         }
     });
 
-    Action.prototype.apply = function() {
-        // TODO
+    Action.prototype.setState = function(state) {
+        if (defined(state.name)) {
+            // TODO: Name Validation
+            this._name = state.name;
+        }
+
+        // TODO: Does this need to be different for Property/Query Actions?
+        if (defined(state.target)) {
+            this._target = state.target;
+        }
+
+        if (defined(state.applyAutomatically)) {
+            this._applyAutomatically = state.applyAutomatically;
+        }
+    };
+
+    Action.prototype.getState = function() {
+        return {
+            'name': this._name,
+            'applyAutomatically': this._applyAutomatically
+        };
     };
 
     return Action;

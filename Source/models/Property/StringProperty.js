@@ -16,6 +16,7 @@ define([
         Property.call(this, options);
 
         this._templateName = PropertyTemplateName.STRING;
+        this._displayTemplateName = PropertyTemplateName.STRING_DISPLAY;
 
         this.setState(options);
 
@@ -43,6 +44,23 @@ define([
                     this.error = false;
                     this.message = '';
                     this._value = value;
+                    this._displayValue = value;
+                }
+                else {
+                    this.error = true;
+                    this.message = this.errorMessage;
+                }
+            }
+        },
+        displayValue: {
+            get: function() {
+                return this._displayValue;
+            },
+            set: function(value) {
+                if (typeof value === 'string' && this.isValidValue(value)) {
+                    this.error = false;
+                    this.message = '';
+                    this._displayValue = value;
                 }
                 else {
                     this.error = true;
