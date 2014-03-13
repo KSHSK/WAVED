@@ -4,10 +4,12 @@
 define([
         'WAVEDViewModel',
         'models/Data/DataSet',
+        'util/defined',
         'jquery'
     ], function(
         WAVEDViewModel,
         DataSet,
+        defined,
         $) {
     'use strict';
 
@@ -53,7 +55,7 @@ define([
 
         bindData: function(viewModel, name) {
             var dataSet = viewModel.currentProject.getDataSet(name);
-            if (dataSet != null) {
+            if (defined(dataSet)) {
                 viewModel.selectedWidget.viewModel.bindData(dataSet);
             }
         },
@@ -64,7 +66,7 @@ define([
             var name = viewModel.selectedBoundData;
 
             var dataSet = viewModel.currentProject.getDataSet(name);
-            if (dataSet != null) {
+            if (defined(dataSet)) {
                 viewModel.selectedWidget.viewModel.unbindData(dataSet);
             }
         }
