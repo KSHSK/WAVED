@@ -51,12 +51,10 @@ define([
     };
 
     QueryAction.prototype.getState = function() {
-        return {
-            'name': this._name,
-            'applyAutomatically': this._applyAutomatically,
-            'target': this._target.name,
-            'type': QueryAction.getType()
-        };
+        var state = Action.prototype.getState.call(this);
+        state.type = QueryAction.getType();
+        state.target = this._target.viewModel.name.value;
+        return state;
     };
 
     return QueryAction;
