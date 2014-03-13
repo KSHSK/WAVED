@@ -1,4 +1,3 @@
-/*global define*/
 define([
         'models/Widget/GraphWidget/LineGraphWidget/LineGraphViewModel',
         'models/Constants/ComponentTemplateName',

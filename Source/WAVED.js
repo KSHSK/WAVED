@@ -1,4 +1,3 @@
-/*global define*/
 define(['WAVEDViewModel',
         'knockout',
         'jquery'

@@ -1,4 +1,3 @@
-/*global define*/
 /**
  * A module for saving a project.
  */

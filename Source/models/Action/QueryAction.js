@@ -1,4 +1,3 @@
-/*global define*/
 define([
         'models/Action/Action',
         'models/Data/DataSubset',
