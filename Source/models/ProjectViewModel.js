@@ -1,4 +1,4 @@
-/*global define, alert*/
+/*global define*/
 define([
         'jquery',
         'knockout',
@@ -6,14 +6,13 @@ define([
         'util/defaultValue',
         'util/displayMessage',
         'models/Action/Action',
+        'models/Action/PropertyAction',
+        'models/Action/QueryAction',
         'models/Event/Event',
         'models/WorkspaceViewModel',
         'models/GoogleAnalytics',
         'models/Data/DataSet',
-        'models/Data/DataSubset',
-        'models/Action/PropertyAction',
-        'models/Action/QueryAction',
-        'models/Event/Event'
+        'models/Data/DataSubset'
     ], function(
         $,
         ko,
@@ -21,14 +20,13 @@ define([
         defaultValue,
         displayMessage,
         Action,
+        PropertyAction,
+        QueryAction,
         Event,
         WorkspaceViewModel,
         GoogleAnalytics,
         DataSet,
-        DataSubset,
-        PropertyAction,
-        QueryAction,
-        Event) {
+        DataSubset) {
     'use strict';
 
     var self;
