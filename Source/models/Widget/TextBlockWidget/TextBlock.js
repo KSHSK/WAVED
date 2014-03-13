@@ -26,5 +26,12 @@ define([
         ko.applyBindings(viewModel, textBlock);
     };
 
+    /**
+     * Static method that returns the type String for this class's ViewModel.
+     */
+    TextBlock.getViewModelType = function() {
+        return TextBlockViewModel.getType();
+    };
+
     return TextBlock;
 });

@@ -26,5 +26,12 @@ define([
         ko.applyBindings(viewModel, usMap);
     };
 
+    /**
+     * Static method that returns the type String for this class's ViewModel.
+     */
+    USMap.getViewModelType = function() {
+        return USMapViewModel.getType();
+    };
+
     return USMap;
 });

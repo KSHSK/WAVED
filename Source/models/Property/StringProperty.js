@@ -12,29 +12,18 @@ define([
     ){
     'use strict';
 
-    var StringProperty = function(state) {
-        Property.call(this, state);
-
-        state = defined(state) ? state : {};
-
-        this._value = state.value;
-        if (defined(state.validValue)) {
-            this.isValidValue = state.validValue;
-        }
-        else {
-            this.isValidValue = function(value) {
-                return true;
-            };
-        }
+    var StringProperty = function(options) {
+        options = defined(options) ? options : {};
+        Property.call(this, options);
 
         this._displayValue = this._value;
 
         this._templateName = PropertyTemplateName.STRING;
         this._displayTemplateName = PropertyTemplateName.STRING_DISPLAY;
 
-        ko.track(this);
+        this.setState(options);
 
-        this.error = !this.isValidValue(this._value);
+        ko.track(this);
     };
 
     StringProperty.prototype = Object.create(Property.prototype);

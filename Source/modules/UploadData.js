@@ -84,7 +84,7 @@ define([
             }
 
             form.append('file', file);
-            form.append('projectName', viewModel.currentProject.name);
+            form.append('project', viewModel.currentProject.name);
 
             $.ajax({
                 type : 'POST',
