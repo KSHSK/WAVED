@@ -3,6 +3,7 @@
  */
 define([
         './UnsavedChanges',
+        './ReadData',
         './SaveProject',
         'models/ProjectViewModel',
         'util/updateQueryByName',
@@ -10,6 +11,7 @@ define([
         'knockout'
     ], function(
         UnsavedChangesModule,
+        ReadData,
         SaveProject,
         ProjectViewModel,
         updateQueryByName,
@@ -48,8 +50,7 @@ define([
         openCreateNewProjectDialog: function(projectCreated, viewModel) {
             var self = this;
             var createNewProjectDialog = $('#create-new-project-dialog');
-            viewModel.newProjectName._value = '';
-            viewModel.newProjectName.message = '';
+            viewModel.newProjectName.reset();
 
             createNewProjectDialog.dialog({
                 resizable: false,
@@ -101,10 +102,12 @@ define([
                         // Clear the workspace.
                         $('#waved-workspace').empty();
 
+                        // Update the data folder path.
+                        ReadData.dataFolderPath = data.dataFolder;
 
                         viewModel.currentProject = new ProjectViewModel({
                             name: data.projectName
-                        });
+                        }, viewModel.availableWidgets);
                         viewModel.newProjectName._value = '';
                         viewModel.dirty = false;
 

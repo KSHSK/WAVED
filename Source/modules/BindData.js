@@ -2,15 +2,17 @@
  * A module for loading data into a project
  */
 define([
+        'jquery',
         'WAVEDViewModel',
         'models/Data/DataSet',
         'util/defined',
-        'jquery'
+        'util/displayMessage'
     ], function(
+        $,
         WAVEDViewModel,
         DataSet,
         defined,
-        $) {
+        displayMessage) {
     'use strict';
 
     var BindData = {
@@ -35,6 +37,12 @@ define([
                 buttons: {
                     'Bind': function() {
                         var checked = $('.bind-data-selections:checked');
+
+                        if (checked.length === 0) {
+                            displayMessage('Select data to bind or click Cancel.');
+                            return;
+                        }
+
                         checked.each(function(index, item) {
                             var name = $(item).attr('data-name');
                             self.bindData(viewModel, name);
