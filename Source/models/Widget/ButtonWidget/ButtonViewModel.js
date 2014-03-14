@@ -4,14 +4,16 @@ define([
         'models/Widget/WidgetViewModel',
         'util/defined',
         'util/createValidator',
-        'knockout'
+        'knockout',
+        'models/Property/GlyphSize/GlyphSizeSelectionProperty'
     ],function(
         Trigger,
         StringProperty,
         WidgetViewModel,
         defined,
         createValidator,
-        ko){
+        ko,
+        GlyphSizeSelectionProperty){
     'use strict';
 
     var ButtonViewModel = function(state) {
@@ -38,6 +40,13 @@ define([
         this._triggers.push(new Trigger({
             name: 'Button'
         }));
+
+     // TODO: Remove, testing code
+        var fooOptions = {
+          displayName: 'GlyphSize',
+          value: ''
+        };
+        this.foo = new GlyphSizeSelectionProperty(fooOptions);
 
         ko.track(this);
     };
@@ -71,7 +80,7 @@ define([
         properties: {
             get: function() {
                 return [this.name, this.label, this.x, this.y, this.width, this.height, this.visible,
-                this.logGoogleAnalytics];
+                this.logGoogleAnalytics, this.foo];
             }
         }
     });
