@@ -3,6 +3,10 @@ html, body {
     padding: 0;
 }
 
+textarea {
+    resize: none;
+}
+
 /*** JQuery UI Overrides ***/
 .ui-widget {
     font-size: 14px;
