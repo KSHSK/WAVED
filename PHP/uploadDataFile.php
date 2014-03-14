@@ -33,7 +33,7 @@ if (!$success) {
     return;
 }
 
-$returnValue["filePath"] = $filePath;
+$returnValue["filename"] = $fileName;
 reportReturnValue($returnValue);
 
 ?>

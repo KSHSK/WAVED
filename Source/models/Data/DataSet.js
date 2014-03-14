@@ -1,8 +1,14 @@
 define(['knockout',
-        'util/defined'
+        'models/Property/StringProperty',
+        'modules/ReadData',
+        'util/defined',
+        'util/createValidator'
     ],function(
         ko,
-        defined
+        StringProperty,
+        ReadData,
+        defined,
+        createValidator
     ){
     'use strict';
 
@@ -12,9 +18,9 @@ define(['knockout',
     var DataSet = function(state) {
         state = defined(state) ? state : {};
 
-        this._name = ''; // String
-        this._filename = ''; // String
-        this._referenceCount = 0; // Number
+        this._name = '';
+        this._filename = '';
+        this._referenceCount = 0;
 
         this.setState(state);
 
@@ -61,9 +67,21 @@ define(['knockout',
     };
 
     DataSet.prototype.setState = function(state) {
-        this._name = state.name; // String
-        this._filename = state.filename; // String
-        this._referenceCount = state.referenceCount; // Number
+        if (defined(state.name)) {
+            this._name = state.name;
+        }
+
+        if (defined(state.referenceCount)) {
+            this._referenceCount = state.referenceCount;
+        }
+
+        if (defined(state.filename)) {
+            this._filename = state.filename;
+
+            if (!this.isMarkedForDeletion()) {
+                ReadData.readData(this);
+            }
+        }
     };
 
     Object.defineProperties(DataSet.prototype, {
@@ -81,11 +99,6 @@ define(['knockout',
             },
             set: function(value) {
                 this._filename = value;
-            }
-        },
-        basename: {
-            get: function() {
-                return this._filename.substr(this._filename.lastIndexOf('/')+1, this._filename.length);
             }
         },
         data: {
