@@ -17,7 +17,7 @@ define([
      *            The item instance used for the unique constraint. If not supplied, the unique constraint is not
      *            enforced.
      */
-    var getNamePropertyInstance = function(displayName, uniqueItemInstance) {
+    var getNamePropertyInstance = function(displayName, unique) {
         // Valid value options
         var validValueOptions = {
             regex: new RegExp('^[a-zA-Z0-9_\\- ]+$'),
@@ -26,11 +26,8 @@ define([
         };
 
         // Add unique option if uniqueItemInstance is supplied
-        if (defined(uniqueItemInstance)) {
-            validValueOptions.unique = {
-                namespace: 'name',
-                item: uniqueItemInstance
-            };
+        if (defined(unique) && defined(unique.namespace) && defined(unique.item)) {
+            validValueOptions.unique = unique;
         }
 
         return new StringProperty({
