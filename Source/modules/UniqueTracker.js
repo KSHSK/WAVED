@@ -69,6 +69,11 @@ define([
             return true;
         },
         isValueUnique: function(namespace, valueToCheck, itemToCheck) {
+            // If itemToCheck is not supplied, assume it's a new item.
+            if (!defined(itemToCheck)) {
+                itemToCheck = {};
+            }
+
             var valueItemMap = namespaceValueItemMap[namespace];
             if (!defined(valueItemMap)) {
                 return true;
