@@ -19,7 +19,8 @@ define(['jquery',
         'modules/DeleteData',
         'util/defined',
         'util/defaultValue',
-        'util/createValidator'
+        'util/createValidator',
+        'util/getNamePropertyInstance'
     ], function(
         $,
         ko,
@@ -42,7 +43,8 @@ define(['jquery',
         DeleteData,
         defined,
         defaultValue,
-        createValidator) {
+        createValidator,
+        getNamePropertyInstance) {
     'use strict';
 
     var self;
@@ -69,16 +71,7 @@ define(['jquery',
             this.eventTypes.push(eventType);
         }
 
-        this.newProjectName = new StringProperty({
-            displayName: 'Project Name',
-            value: '',
-            validValue: createValidator({
-                minLength: 1,
-                maxLength: 50,
-                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
-            }),
-            errorMessage: 'Must be between 1 and 50 characters.<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
-        });
+        this.newProjectName = getNamePropertyInstance('Project Name');
 
         this.loadProjectName = new ArrayProperty({
             displayName: 'Project Name',
@@ -86,16 +79,7 @@ define(['jquery',
             options: this.projectList
         });
 
-        this.uploadDataName = new StringProperty({
-            displayName: 'Name',
-            value: '',
-            validValue: createValidator({
-                minLength: 1,
-                maxLength: 50,
-                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
-            }),
-            errorMessage: 'Must be between 1 and 50 characters<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
-        });
+        this.uploadDataName = getNamePropertyInstance('Name');
 
         this.uploadDataFile = new StringProperty({
             displayName: 'File',
@@ -107,33 +91,13 @@ define(['jquery',
         });
 
 
-        this.selectedActionName = new StringProperty({
-            displayName: 'Action Name',
-            value: '',
-            validValue: createValidator({
-                minLength: 1,
-                maxLength: 50,
-                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
-            }),
-            errorMessage: 'Must be between 1 and 50 characters.<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
-        });
-
+        this.selectedActionName = getNamePropertyInstance('Action Name');
         this.selectedAction = undefined;
         this.selectedActionType = '';
         this.actionEditorAffectedComponent = undefined;
         this.actionEditorDataSet = undefined;
 
-        this.selectedEventName = new StringProperty({
-            displayName: 'Event Name',
-            value: '',
-            validValue: createValidator({
-                minLength: 1,
-                maxLength: 50,
-                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
-            }),
-            errorMessage: 'Must be between 1 and 50 characters.<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
-        });
-
+        this.selectedEventName = getNamePropertyInstance('Event Name');
         this.selectedEvent = undefined;
         this.eventEditorTriggeringComponent = undefined;
         this.eventEditorTrigger = undefined;

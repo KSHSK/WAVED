@@ -27,7 +27,7 @@ define([
                 minLength: 1,
                 maxLength: 50
             }),
-            errorMessage: 'Must be a unique value and between 1 and 50 characters.<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
+            errorMessage: 'Must be a unique value between 1 and 50 characters.<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
         };
 
         // Add unique option if uniqueItemInstance is supplied
