@@ -32,7 +32,10 @@ define([
 
         this.border = new NumberProperty({
             displayName: 'Border',
-            value: 1
+            value: 1,
+            validValue: createValidator({
+                min: 0
+            })
         });
 
         this.height.value = 5;
