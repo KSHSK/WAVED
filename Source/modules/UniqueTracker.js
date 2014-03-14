@@ -17,32 +17,6 @@ define([
     // For example: {namespace1: {myname: Widget1, actname: Action1}, namespace2: {eventword: Event1}}
     var namespaceValueItemMap = {};
 
-    function removeItem(namespace, item) {
-        var valueItemMap = namespaceValueItemMap[namespace];
-        if (defined(valueItemMap)) {
-            var oldValue = findValueByItem(namespace, item);
-            if (oldValue !== null) {
-                delete valueItemMap[oldValue];
-            }
-        }
-    }
-
-    function findValueByItem(namespace, itemToCheck) {
-        var valueItemMap = namespaceValueItemMap[namespace];
-        if (!defined(valueItemMap)) {
-            return null;
-        }
-
-        for (var value in valueItemMap) {
-            var item = valueItemMap[value];
-            if (itemToCheck === item) {
-                return value;
-            }
-        }
-
-        return null;
-    }
-
     var UniqueTracker = {
         /**
          * If the item has a unique name, adds the item and returns true. Otherwise, does nothing and returns false.
@@ -63,7 +37,7 @@ define([
             }
 
             // Remove old value if necessary.
-            removeItem(namespace, item);
+            this.removeItem(namespace, item);
 
             valueItemMap[value] = item;
             return true;
@@ -87,6 +61,30 @@ define([
             }
 
             return true;
+        },
+        removeItem: function(namespace, item) {
+            var valueItemMap = namespaceValueItemMap[namespace];
+            if (defined(valueItemMap)) {
+                var oldValue = this.findValueByItem(namespace, item);
+                if (oldValue !== null) {
+                    delete valueItemMap[oldValue];
+                }
+            }
+        },
+        findValueByItem: function(namespace, itemToCheck) {
+            var valueItemMap = namespaceValueItemMap[namespace];
+            if (!defined(valueItemMap)) {
+                return null;
+            }
+
+            for (var value in valueItemMap) {
+                var item = valueItemMap[value];
+                if (itemToCheck === item) {
+                    return value;
+                }
+            }
+
+            return null;
         }
     };
 

@@ -23,11 +23,11 @@ define([
             displayName: 'Text',
             value: '',
             validValue: createValidator({
-                minLength: 1,
+                minLength: 0,
                 maxLength: 500
             }),
             textArea: true,
-            errorMessage: 'Must be between 1 and 500 characters'
+            errorMessage: 'Must be between 0 and 500 characters'
         });
 
         this.border = new NumberProperty({
