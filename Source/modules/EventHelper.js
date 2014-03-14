@@ -19,7 +19,6 @@ define([
     'use strict';
 
     var EventHelper = {
-
         eventDialog: $('#event-editor-dialog'),
 
         resetEventEditor: function(viewModel) {
@@ -92,7 +91,9 @@ define([
                             return;
                         }
 
-                        if (!UniqueTracker.isValueUnique('name', viewModel.selectedEventName.value)) {
+                        if (!UniqueTracker.isValueUnique('name', viewModel.selectedEventName.value,
+                            viewModel.selectedEvent)) {
+
                             displayMessage('The name "' + viewModel.selectedEventName.value + '" is already in use.');
                             return;
                         }
