@@ -85,21 +85,25 @@ define([
                 resizable: false,
                 width: 500,
                 modal: true,
-                closeOnEscape: false,
                 buttons: {
                     'Save': function() {
-                        if (!viewModel.selectedEventName.error) {
-                            viewModel.selectedEvent.name = viewModel.selectedEventName.value;
-                            viewModel.selectedEvent.eventType =  viewModel.selectedEventType;
-                            viewModel.selectedEvent.triggeringComponent = viewModel.eventEditorTriggeringComponent;
-                            viewModel.selectedEvent.trigger = viewModel.eventEditorTrigger;
-                            viewModel.selectedEvent.actions = viewModel.selectedEventActions;
-
-                            self.eventDialog.dialog('close');
-                        }
-                        else {
+                        if (viewModel.selectedEventName.error) {
                             viewModel.selectedEventName.message = viewModel.selectedEventName.errorMessage;
+                            return;
                         }
+
+                        if (!UniqueTracker.isValueUnique('name', viewModel.selectedEventName.value)) {
+                            displayMessage('The name "' + viewModel.selectedEventName.value + '" is already in use.');
+                            return;
+                        }
+
+                        viewModel.selectedEvent.name = viewModel.selectedEventName.value;
+                        viewModel.selectedEvent.eventType =  viewModel.selectedEventType;
+                        viewModel.selectedEvent.triggeringComponent = viewModel.eventEditorTriggeringComponent;
+                        viewModel.selectedEvent.trigger = viewModel.eventEditorTrigger;
+                        viewModel.selectedEvent.actions = viewModel.selectedEventActions;
+
+                        self.eventDialog.dialog('close');
                     },
                     'Cancel': function() {
                         self.eventDialog.dialog('close');
