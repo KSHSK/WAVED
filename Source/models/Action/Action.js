@@ -1,12 +1,14 @@
 define(['jquery',
         'knockout',
         'models/Property/StringProperty',
+        'modules/UniqueTracker',
         'util/createValidator',
         'util/defined'
     ],function(
         $,
         ko,
         StringProperty,
+        UniqueTracker,
         createValidator,
         defined
     ){
@@ -29,6 +31,7 @@ define(['jquery',
             },
             set: function(value) {
                 this._name = value;
+                UniqueTracker.addValueIfUnique('name', this._name, this);
             }
         },
         // TODO: These not in the DD, should be required
@@ -53,7 +56,7 @@ define(['jquery',
     Action.prototype.setState = function(state) {
         if (defined(state.name)) {
             // TODO: Name Validation
-            this._name = state.name;
+            this.name = state.name;
         }
 
         // TODO: Does this need to be different for Property/Query Actions?
