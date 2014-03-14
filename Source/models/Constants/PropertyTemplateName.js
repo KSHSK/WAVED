@@ -4,6 +4,8 @@ define([], function(){
     var PropertyTemplateName = {
         STRING: 'stringPropertyTemplate',
         STRING_DISPLAY: 'stringDisplayPropertyTemplate',
+        LONG_STRING: 'longStringPropertyTemplate',
+        LONG_STRING_DISPLAY: 'longStringDisplayPropertyTemplate',
         NUMBER: 'numberPropertyTemplate',
         NUMBER_DISPLAY: 'numberDisplayPropertyTemplate',
         BOOLEAN: 'booleanPropertyTemplate',

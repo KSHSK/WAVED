@@ -1,11 +1,13 @@
 define([
         './Property',
         'util/defined',
+        'util/defaultValue',
         'models/Constants/PropertyTemplateName',
         'knockout'
     ],function(
         Property,
         defined,
+        defaultValue,
         PropertyTemplateName,
         ko
     ){
@@ -14,9 +16,15 @@ define([
     var StringProperty = function(options) {
         options = defined(options) ? options : {};
         Property.call(this, options);
+        var textArea = defaultValue(options.textArea, false);
 
-        this._templateName = PropertyTemplateName.STRING;
-        this._displayTemplateName = PropertyTemplateName.STRING_DISPLAY;
+        if (textArea) {
+            this._templateName = PropertyTemplateName.LONG_STRING;
+            this._displayTemplateName = PropertyTemplateName.LONG_STRING_DISPLAY;
+        } else {
+            this._templateName = PropertyTemplateName.STRING;
+            this._displayTemplateName = PropertyTemplateName.STRING_DISPLAY;
+        }
 
         this.setState(options);
 
