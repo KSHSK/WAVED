@@ -1,12 +1,14 @@
 define([
-        'models/Widget/WidgetViewModel',
+        'models/Event/Trigger',
         'models/Property/StringProperty',
+        'models/Widget/WidgetViewModel',
         'util/defined',
         'util/createValidator',
         'knockout'
     ],function(
-        WidgetViewModel,
+        Trigger,
         StringProperty,
+        WidgetViewModel,
         defined,
         createValidator,
         ko){
@@ -31,6 +33,11 @@ define([
         this.width.value = 10;
 
         this.setState(state);
+
+        // TODO: Figure out how Triggers should actually work.
+        this._triggers.push(new Trigger({
+            name: 'Button'
+        }));
 
         ko.track(this);
     };

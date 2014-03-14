@@ -119,9 +119,11 @@ define([
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
                     if (data.success) {
-
                         // Clear the workspace.
                         $('#waved-workspace').empty();
+
+                        // Update the data folder path.
+                        ReadData.dataFolderPath = data.dataFolder;
 
                         // Create the new project.
                         viewModel.currentProject = new ProjectViewModel(JSON.parse(data.projectState),
@@ -140,9 +142,6 @@ define([
                             // Save the project if some files were deleted.
                             var projectSaved = $.Deferred();
                             SaveProject.saveProject(projectSaved, viewModel.currentProject.name, viewModel);
-                        }).always(function() {
-                            // Read the contents of all data files.
-                            ReadData.readAllData(viewModel);
                         });
 
                         projectLoaded.resolve();
