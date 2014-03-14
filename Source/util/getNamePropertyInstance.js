@@ -18,27 +18,27 @@ define([
      *            enforced.
      */
     var getNamePropertyInstance = function(displayName, uniqueItemInstance) {
-        // General options.
-        var options = {
-            displayName: displayName,
-            value: '',
-            validValue: createValidator({
-                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$'),
-                minLength: 1,
-                maxLength: 50
-            }),
-            errorMessage: 'Must be a unique value between 1 and 50 characters.<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
+        // Valid value options
+        var validValueOptions = {
+            regex: new RegExp('^[a-zA-Z0-9_\\- ]+$'),
+            minLength: 1,
+            maxLength: 50
         };
 
         // Add unique option if uniqueItemInstance is supplied
         if (defined(uniqueItemInstance)) {
-            options.unique = {
+            validValueOptions.unique = {
                 namespace: 'name',
                 item: uniqueItemInstance
             };
         }
 
-        return new StringProperty(options);
+        return new StringProperty({
+            displayName: displayName,
+            value: '',
+            validValue: createValidator(validValueOptions),
+            errorMessage: 'Must be a unique value between 1 and 50 characters.<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
+        });
     };
 
     return getNamePropertyInstance;
