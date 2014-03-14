@@ -17,6 +17,7 @@ define(['jquery',
         'modules/UploadData',
         'modules/BindData',
         'modules/DeleteData',
+        'models/Widget/TextBlockWidget/TextBlock',
         'util/defined',
         'util/defaultValue',
         'util/createValidator'
@@ -40,6 +41,7 @@ define(['jquery',
         UploadData,
         BindData,
         DeleteData,
+        TextBlock,
         defined,
         defaultValue,
         createValidator) {
@@ -62,6 +64,9 @@ define(['jquery',
         this._availableWidgets = [{
             name: 'Button',
             o: Button
+        }, {
+            name: 'Text Block',
+            o: TextBlock
         }];
 
         this.eventTypes = [];
