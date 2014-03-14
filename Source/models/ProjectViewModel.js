@@ -1,40 +1,52 @@
-/*global define*/
 define([
         'jquery',
+        'knockout',
         'util/defined',
         'util/defaultValue',
+        'util/displayMessage',
+        'models/Action/Action',
+        'models/Action/PropertyAction',
+        'models/Action/QueryAction',
+        'models/Event/Event',
         'models/WorkspaceViewModel',
+        'models/GoogleAnalytics',
         'models/Data/DataSet',
-        './GoogleAnalytics',
-        'knockout'
+        'models/Data/DataSubset'
     ], function(
         $,
+        ko,
         defined,
         defaultValue,
+        displayMessage,
+        Action,
+        PropertyAction,
+        QueryAction,
+        Event,
         WorkspaceViewModel,
-        DataSet,
         GoogleAnalytics,
-        ko) {
+        DataSet,
+        DataSubset) {
     'use strict';
 
     var self;
-    var ProjectViewModel = function(options) {
+    var ProjectViewModel = function(state, availableWidgets) {
         self = this;
-        if (typeof options.name === 'undefined') {
+        state = defined(state) ? state : {};
+
+        if (typeof state.name === 'undefined') {
             throw new Error('ProjectViewModel name is required');
         }
 
-        this._name = options.name;
-        this._components = defaultValue(options.components, []);
-        this._dataSets = defaultValue(options.dataSet, []);
-        this._events = defaultValue(options.events, []);
-        this._actions = defaultValue(options.actions, []);
-        this._googleAnalytics = defaultValue(options.googleAnalytics, new GoogleAnalytics());
-        this._workspace = new WorkspaceViewModel(options.width, options.height);
-        this._dirty = false;
-        this._projectTree = undefined; // TODO
+        this._name = state.name;
+        this._googleAnalytics = new GoogleAnalytics();
+        this._workspace = new WorkspaceViewModel();
+        this._components = [this._workspace];
+        this._dataSets = [];
+        this._actions = [];
+        this._events = [];
 
-        this._components.push(this._workspace);
+        this.setState(state, availableWidgets);
+        // TODO: Update Project Tree if necessary.
 
         ko.track(this);
     };
@@ -108,11 +120,109 @@ define([
     };
 
     ProjectViewModel.prototype.getState = function() {
-        // TODO
+        self = this;
+
+        return {
+            'name': this._name,
+            'workspace': this._workspace.getState(),
+            'analytics': this._googleAnalytics.getState(),
+            'components': $.map(this._components, function(item) {
+                // Skip workspace.
+                if (item === self._workspace) {
+                    return null;
+                }
+
+                return item.viewModel.getState();
+            }),
+            'dataSets': $.map(this._dataSets, function(item) {
+                return item.getState();
+            }),
+            'actions': $.map(this._actions, function(item) {
+                return item.getState();
+            }),
+            'events': $.map(this._events, function(item) {
+                return item.getState();
+            })
+        };
     };
 
-    ProjectViewModel.prototype.setState = function(state) {
-        // TODO
+    ProjectViewModel.prototype.setState = function(state, availableWidgets) {
+        if (defined(state.name)) {
+            this._name = state.name;
+        }
+
+        if (defined(state.analytics)) {
+            this._googleAnalytics = new GoogleAnalytics(state.analytics);
+        }
+
+        if (defined(state.workspace)) {
+            this._workspace = new WorkspaceViewModel(state.workspace);
+        }
+
+
+        if (defined(state.components)) {
+            this._components = $.map(state.components, function(itemState) {
+                for (var index in availableWidgets) {
+                    var widget = availableWidgets[index];
+                    if (itemState.type === widget.o.getViewModelType()) {
+                        return new widget.o(itemState);
+                    }
+                }
+
+                // Invalid state.
+                return null;
+            });
+
+            // Insert workspace first.
+            this._components.unshift(this._workspace);
+        }
+
+        if (defined(state.dataSets)) {
+            this._dataSets = $.map(state.dataSets, function(itemState) {
+                if (itemState.type === DataSet.getType()) {
+                    return new DataSet(itemState);
+                }
+
+                if (itemState.type === DataSubset.getType()) {
+                    return new DataSubset(itemState);
+                }
+
+                // Invalid state.
+                return null;
+            });
+        }
+
+        if (defined(state.actions)) {
+            this._actions = $.map(state.actions, function(itemState) {
+
+                itemState.target = self.getComponent(itemState.target);
+
+                if (itemState.type === PropertyAction.getType()) {
+                    return new PropertyAction(itemState);
+                }
+
+                if (itemState.type === QueryAction.getType()) {
+                    return new QueryAction(itemState);
+                }
+
+                // Invalid state.
+                return null;
+            });
+        }
+
+        if (defined(state.events)) {
+            this._events = $.map(state.events, function(itemState) {
+
+                itemState.triggeringComponent = self.getComponent(itemState.triggeringComponent);
+                // TODO: Trigger?
+                var actions = [];
+                for (var i = 0; i < itemState.actions.length; i++) {
+                    actions.push(self.getAction(itemState.actions[i]));
+                }
+                itemState.actions = actions;
+                return new Event(itemState);
+            });
+        }
     };
 
     ProjectViewModel.prototype.addDataSet = function(data) {
@@ -122,11 +232,34 @@ define([
     };
 
     ProjectViewModel.prototype.addEvent = function(event) {
-        // TODO
+        this._events.push(event);
     };
 
     ProjectViewModel.prototype.addAction = function(action) {
-        // TODO
+        // TODO: Check that action doesn't already exist.
+        this._actions.push(action);
+    };
+
+    ProjectViewModel.prototype.getComponent = function(name) {
+        for (var index = 0; index < this._components.length; index++) {
+            var component = this._components[index];
+            if (component.viewModel.name.value === name) {
+                return component;
+            }
+        }
+
+        return null;
+    };
+
+    ProjectViewModel.prototype.getAction = function(name) {
+        for (var index = 0; index < this._actions.length; index++) {
+            var action = this._actions[index];
+            if (action.name === name) {
+                return action;
+            }
+        }
+
+        return null;
     };
 
     ProjectViewModel.prototype.getDataSet = function(name) {
@@ -142,8 +275,11 @@ define([
 
     // TODO: Do we want to allow removal using dataset instance and name?
     // The DD specifies this, but we should probably pick one.
-    ProjectViewModel.prototype.removeDataSet = function(data) {
-        // TODO
+    ProjectViewModel.prototype.removeDataSet = function(dataSet) {
+        var index = this._dataSets.indexOf(dataSet);
+        if (index > -1) {
+            this._dataSets.splice(index, 1);
+        }
     };
 
     ProjectViewModel.prototype.removeComponent = function(component) {
@@ -151,11 +287,26 @@ define([
     };
 
     ProjectViewModel.prototype.removeEvent = function(event) {
-        //TODO
+        var index = self._events.indexOf(event);
+        if (index > -1) {
+            self._events.splice(index, 1);
+        }
     };
 
     ProjectViewModel.prototype.removeAction = function(action) {
-        //TODO
+        for (var i = 0; i < self._events.length; i++) {
+            for (var j = 0; j < self._events[i].actions[0].length; j++) {
+                if (self._events[i]._actions[0][j].name.value === action.name.value) {
+                    displayMessage('Action is in use by Event: ' + self._events[i].name.value);
+                    return;
+                }
+            }
+        }
+
+        var index = self._actions.indexOf(action);
+        if (index > -1) {
+            self._actions.splice(index, 1);
+        }
     };
 
     ProjectViewModel.prototype.refreshWorkspace = function() {

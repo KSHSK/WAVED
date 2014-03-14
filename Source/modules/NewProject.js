@@ -1,15 +1,18 @@
-/*global define*/
 /**
  * A module for creating a new project.
  */
 define([
-        '../modules/UnsavedChanges',
-        '../models/ProjectViewModel',
+        './UnsavedChanges',
+        './ReadData',
+        './SaveProject',
+        'models/ProjectViewModel',
         'util/updateQueryByName',
         'jquery',
         'knockout'
     ], function(
         UnsavedChangesModule,
+        ReadData,
+        SaveProject,
         ProjectViewModel,
         updateQueryByName,
         $,
@@ -47,8 +50,7 @@ define([
         openCreateNewProjectDialog: function(projectCreated, viewModel) {
             var self = this;
             var createNewProjectDialog = $('#create-new-project-dialog');
-            viewModel.newProjectName._value = '';
-            viewModel.newProjectName.message = '';
+            viewModel.newProjectName.reset();
 
             createNewProjectDialog.dialog({
                 resizable: false,
@@ -97,14 +99,24 @@ define([
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
                     if (data.success) {
+                        // Clear the workspace.
+                        $('#waved-workspace').empty();
+
+                        // Update the data folder path.
+                        ReadData.dataFolderPath = data.dataFolder;
+
                         viewModel.currentProject = new ProjectViewModel({
                             name: data.projectName
-                        });
+                        }, viewModel.availableWidgets);
                         viewModel.newProjectName._value = '';
                         viewModel.dirty = false;
 
                         // Set the URL to include the current project name.
                         updateQueryByName('project', data.projectName);
+
+                        // Save state of new project.
+                        var projectSaved = $.Deferred();
+                        SaveProject.saveProject(projectSaved, viewModel.currentProject.name, viewModel);
 
                         projectCreated.resolve();
                     }

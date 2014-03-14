@@ -1,40 +1,46 @@
-/*global define*/
 define([
         './Property',
         'util/defined',
+        'util/defaultValue',
         'models/Constants/PropertyTemplateName',
         'knockout'
     ],function(
         Property,
         defined,
+        defaultValue,
         PropertyTemplateName,
         ko
     ){
     'use strict';
 
-    var StringProperty = function(state) {
-        Property.call(this, state);
+    var StringProperty = function(options) {
+        options = defined(options) ? options : {};
+        Property.call(this, options);
+        var textArea = defaultValue(options.textArea, false);
 
-        state = defined(state) ? state : {};
-
-        this._value = state.value;
-        if (defined(state.validValue)) {
-            this.isValidValue = state.validValue;
-        }
-        else {
-            this.isValidValue = function(value) {
-                return true;
-            };
+        if (textArea) {
+            this._templateName = PropertyTemplateName.LONG_STRING;
+            this._displayTemplateName = PropertyTemplateName.LONG_STRING_DISPLAY;
+        } else {
+            this._templateName = PropertyTemplateName.STRING;
+            this._displayTemplateName = PropertyTemplateName.STRING_DISPLAY;
         }
 
-        this._templateName = PropertyTemplateName.STRING;
+        this.setState(options);
 
         ko.track(this);
-
-        this.error = !this.isValidValue(this._value);
     };
 
     StringProperty.prototype = Object.create(Property.prototype);
+
+    StringProperty.prototype.reset = function() {
+        this._value = '';
+        this.message = '';
+        this.error = !this.isValidValue(this._value);
+
+        // Force the view to update.
+        ko.getObservable(this, '_value').valueHasMutated();
+    };
 
     Object.defineProperties(StringProperty.prototype, {
         value: {
@@ -46,6 +52,23 @@ define([
                     this.error = false;
                     this.message = '';
                     this._value = value;
+                    this._displayValue = value;
+                }
+                else {
+                    this.error = true;
+                    this.message = this.errorMessage;
+                }
+            }
+        },
+        displayValue: {
+            get: function() {
+                return this._displayValue;
+            },
+            set: function(value) {
+                if (typeof value === 'string' && this.isValidValue(value)) {
+                    this.error = false;
+                    this.message = '';
+                    this._displayValue = value;
                 }
                 else {
                     this.error = true;

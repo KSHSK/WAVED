@@ -1,4 +1,3 @@
-/*global define*/
 define([
         'models/Widget/GraphWidget/GraphViewModel',
         'util/defined',
@@ -15,6 +14,13 @@ define([
         GraphViewModel.call(this, state);
 
         ko.track(this);
+    };
+
+    /**
+     * Static method that returns the type String for this class.
+     */
+    LineGraphViewModel.getType = function() {
+        return 'LineGraph';
     };
 
     LineGraphViewModel.prototype = Object.create(GraphViewModel.prototype);

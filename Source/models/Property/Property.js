@@ -1,4 +1,3 @@
-/*global define*/
 define(['knockout',
         'util/defined'
     ],function(
@@ -7,15 +6,30 @@ define(['knockout',
     ){
     'use strict';
 
-    var Property = function(state) {
-        state = defined(state) ? state : {};
+    var Property = function(options) {
+        options = defined(options) ? options : {};
 
         // TODO: Validation, etc
-        this._displayName = state.displayName;
-        this._templateName = undefined; // PropertyTemplateName
-        this.errorMessage = defined(state.errorMessage) ? state.errorMessage : 'Invalid value';
+        this._templateName = undefined; // PropertyTemplateName, defined by subclasses.
+        this._value = undefined; // Type determined by subclasses.
+        this._displayValue = undefined;
+
         this.message = '';
         this.error = false;
+
+        this._displayName = options.displayName;
+        this.errorMessage = defined(options.errorMessage) ? options.errorMessage : 'Invalid value';
+
+        if (defined(options.validValue)) {
+            this.isValidValue = options.validValue;
+        }
+        else {
+            this.isValidValue = function(value) {
+                return true;
+            };
+        }
+
+        this.setState(options);
 
         ko.track(this);
     };
@@ -33,8 +47,25 @@ define(['knockout',
             set: function(templateName) {
                 this._templateName = templateName;
             }
+        },
+        displayTemplateName: {
+            get: function() {
+                return this._displayTemplateName;
+            }
         }
     });
+
+    Property.prototype.getState = function() {
+        return {
+            'value': this._value
+        };
+    };
+
+    Property.prototype.setState = function(state) {
+        this._value = state.value;
+        this._displayValue = state.value;
+        this.error = !this.isValidValue(this._value);
+    };
 
     Property.prototype.isValidValue = function() {
         // TODO: Abstract method

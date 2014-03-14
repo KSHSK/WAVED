@@ -1,6 +1,5 @@
-/*global define*/
 define([
-        'models/Widget/USMapWidget/TextBlockViewModel',
+        'models/Widget/TextBlockWidget/TextBlockViewModel',
         'models/Constants/ComponentTemplateName',
         'knockout',
         'jquery'
@@ -24,6 +23,13 @@ define([
 
         this.viewModel = viewModel;
         ko.applyBindings(viewModel, textBlock);
+    };
+
+    /**
+     * Static method that returns the type String for this class's ViewModel.
+     */
+    TextBlock.getViewModelType = function() {
+        return TextBlockViewModel.getType();
     };
 
     return TextBlock;

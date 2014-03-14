@@ -1,15 +1,18 @@
-/*global define*/
 /**
  * A module for Google Analytics integration
  */
 define([
         'models/Property/StringProperty',
         'util/createValidator',
+        'util/defined',
+        'util/defaultValue',
         'knockout',
         'jquery'
     ], function(
         StringProperty,
         createValidator,
+        defined,
+        defaultValue,
         ko,
         $) {
     'use strict';
@@ -17,12 +20,13 @@ define([
     var self;
     var GoogleAnalytics = function(state) {
         self = this;
+        state = defined(state) ? state : {};
+
         this.uaCode = new StringProperty({
             displayName: 'UA Code: ',
             value: '',
             validValue: createValidator({
-                minLength: 1,
-                regex: new RegExp('^((UA)(-)(\\d+)(-)(\\d+)){1}$', 'i')
+                regex: new RegExp('^$|^((UA)(-)(\\d+)(-)(\\d+)){1}$', 'i')
             }),
             errorMessage: 'UA code is not in the correct format. It should look like UA-####-##.'
         });
@@ -31,16 +35,16 @@ define([
             displayName: 'UA Code: ',
             value: '',
             validValue: createValidator({
-                minLength: 1,
-                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$', 'i')
+                regex: new RegExp('^$|^[a-zA-Z0-9_\\- ]+$', 'i')
             }),
             errorMessage: 'May only contain alphanumerics, hypens (-), underscores(_) and spaces.'
         });
 
         this._bound = false;
 
-        ko.track(this);
+        this.setState(state);
 
+        ko.track(this);
     };
 
     Object.defineProperties(GoogleAnalytics.prototype, {
@@ -51,8 +55,32 @@ define([
         }
     });
 
+    // TODO: Add to DD.
+    GoogleAnalytics.prototype.getState = function() {
+        return {
+            'uaCode': this.uaCode.getState(),
+            'eventCategory': this.eventCategory.getState(),
+            'bound': this.bound
+        };
+    };
+
+    // TODO: Add to DD.
+    GoogleAnalytics.prototype.setState = function(state) {
+        if (defined(state.uaCode)) {
+            this.uaCode.value = state.uaCode.value;
+        }
+
+        if (defined(state.eventCategory)) {
+            this.eventCategory.value = state.eventCategory.value;
+        }
+
+        if (defined(state.bound)) {
+            this._bound = state.bound;
+        }
+    };
+
     GoogleAnalytics.prototype.set = function() {
-        if (!self.uaCode.error && !self.eventCategory.error) {
+        if (!self.uaCode.error && !self.eventCategory.error && self.uaCode.value.length > 0 && self.eventCategory.value.length > 0) {
             self._bound = true;
         }
         else {

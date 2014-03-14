@@ -1,17 +1,22 @@
-/*global define*/
 /**
  * A module for loading an existing project.
  */
 define([
-        '../modules/UnsavedChanges',
-        '../models/ProjectViewModel',
-        'util/updateQueryByName',
-        'jquery'
+        'jquery',
+        './UnsavedChanges',
+        './ReadData',
+        './DeleteData',
+        './SaveProject',
+        'models/ProjectViewModel',
+        'util/updateQueryByName'
     ], function(
-        UnsavedChangesModule,
+        $,
+        UnsavedChanges,
+        ReadData,
+        DeleteData,
+        SaveProject,
         ProjectViewModel,
-        updateQueryByName,
-        $) {
+        updateQueryByName) {
     'use strict';
 
     var LoadProject = {
@@ -26,7 +31,7 @@ define([
             var projectClean = $.Deferred();
 
             if (viewModel.dirty === true) {
-                UnsavedChangesModule.handleUnsavedChanges(projectClean);
+                UnsavedChanges.handleUnsavedChanges(projectClean);
             }
             else {
                 // Project is already clean.
@@ -114,18 +119,30 @@ define([
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
                     if (data.success) {
-                        // Set the project name.
-                        viewModel.currentProject = new ProjectViewModel({
-                            name: data.projectName
-                        });
+                        // Clear the workspace.
+                        $('#waved-workspace').empty();
+
+                        // Update the data folder path.
+                        ReadData.dataFolderPath = data.dataFolder;
+
+                        // Create the new project.
+                        viewModel.currentProject = new ProjectViewModel(JSON.parse(data.projectState),
+                            viewModel.availableWidgets);
+
                         viewModel.dirty = false;
                         viewModel.loadProjectName._value = '';
 
                         // Set the URL to include the current project name.
                         updateQueryByName('project', data.projectName);
 
-                        // TODO: Remove files that are marked for deletion.
-                        // TODO: Read file contents for every DataSet in the state.
+                        // Delete marked data.
+                        var filesDeleted = DeleteData.deleteAllMarkedData(viewModel);
+
+                        $.when(filesDeleted).done(function() {
+                            // Save the project if some files were deleted.
+                            var projectSaved = $.Deferred();
+                            SaveProject.saveProject(projectSaved, viewModel.currentProject.name, viewModel);
+                        });
 
                         projectLoaded.resolve();
                     }

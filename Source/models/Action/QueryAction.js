@@ -1,16 +1,17 @@
-/*global define*/
 define([
         'models/Action/Action',
         'models/Data/DataSubset',
         'models/Data/QueryNode',
+        'util/defined',
         'knockout',
-        'util/defined'
+        'jquery'
     ],function(
         Action,
         DataSubset,
         QueryNode,
+        defined,
         ko,
-        defined
+        $
     ){
     'use strict';
 
@@ -19,13 +20,42 @@ define([
 
         // TODO: Validation, etc
         // TODO: target visibility conflicts with Action _target visibility, issue?
-        this.target = state.target; // DataSubset
-        this.newValues = state.newValues; // QueryNode
+        this._target = state.target; // DataSubset
+        // TODO: Rename this to something that makes more sense.
+        this._newValues = state.newValues; // QueryNode
 
         ko.track(this);
     };
 
+    /**
+     * Static method that returns the type String for this class.
+     */
+    QueryAction.getType = function() {
+        return 'QueryAction';
+    };
+
     QueryAction.prototype = Object.create(Action.prototype);
+
+    QueryAction.getType = function() {
+        return 'QueryAction';
+    };
+
+    QueryAction.prototype.setState = function(state) {
+
+        if (defined(state.newValues)) {
+            // TODO: Determine how to handle QueryNode
+            this._newValues = state.newValues;
+        }
+
+        Action.prototype.setState.call(this, state);
+    };
+
+    QueryAction.prototype.getState = function() {
+        var state = Action.prototype.getState.call(this);
+        state.type = QueryAction.getType();
+        state.target = this._target.viewModel.name.value;
+        return state;
+    };
 
     return QueryAction;
 });

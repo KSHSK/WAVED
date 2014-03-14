@@ -24,13 +24,16 @@
                 </div>
                 <div class="inline bottom">
                     <div class="menu-text" id="project-name" data-bind="text: currentProject.name"></div>
+                    
                     <button class="inline" id="new-button" data-bind="click: tryToCreateNewProject">New</button>
                     <button class="inline" id="load-button" data-bind="click: tryToLoadProject">Load</button>
 
                     <button class="inline" id="undo-button">Undo</button>
                     <button class="inline" id="redo-button">Redo</button>
                 
-                    <button class="inline" id="save-button">Save</button>
+                    <button class="inline" id="save-button" data-bind="click: saveProject">Save</button>
+                    <button class="inline" id="save-as-button">Save As</button>
+                    
                     <button class="inline" id="export-button">Export</button>
                 
                     <span class="menu-text">Select: </span>
@@ -53,7 +56,7 @@
                 </div>
                 <h3>Widgets</h3>
                 <div id="widgets-panel" data-bind="foreach: availableWidgets">
-                    <button data-bind="text: $data.name, click: $parent.addNewWidget"></button>
+                    <button data-bind="text: $data.name, click: $parent.addNewWidget"></button><br>
                 </div>
                 <h3>Data</h3>
                 <div>
@@ -61,14 +64,14 @@
                         <div>
                             <div class="inline">Source Files</div>
                             <div class="inline right">
-                                <button id="add-data-file-button" class="button-small" data-bind="click: tryToUploadData">Add Data File</button>
-                                <button id="delete-data-file-button" class="button-small" data-bind="click: markDataForDeletion">Delete Data File</button>
+                                <button class="button-small add-icon-button" data-bind="click: tryToUploadData">Add Data File</button>
+                                <button class="button-small delete-icon-button" data-bind="click: markDataForDeletion">Delete Data File</button>
                             </div>
                         </div>
                         <select id="data-file-list" size="5" class="select-full-size"
                             data-bind="options: currentProject.unmarkedDataSets, 
                                 optionsText: function(item) {
-                                   return item.name + ' : ' + item.basename;
+                                   return item.name + ' : ' + item.filename;
                                 }, value: selectedDataSet"></select>
                     </div>
                     <br />
@@ -76,9 +79,9 @@
                         <div>
                             <div class="inline">Data Subsets</div>
                             <div class="inline right">
-                                <button id="add-data-subset-button" class="button-small">Add Data Subset</button>
-                                <button id="edit-data-subset-button" class="button-small">Edit Data Subset</button>
-                                <button id="delete-data-subset-button" class="button-small">Delete Data Subset</button>
+                                <button class="button-small add-icon-button">Add Data Subset</button>
+                                <button class="button-small edit-icon-button">Edit Data Subset</button>
+                                <button class="button-small delete-icon-button">Delete Data Subset</button>
                             </div>
                         </div>
                         <select id="data-subset-list" size="5" class="select-full-size"></select>
@@ -90,12 +93,16 @@
                         <div>
                             <div class="inline">Actions</div>
                             <div class="inline right">
-                                <button id="add-action-button" class="button-small">Add Action</button>
-                                <button id="edit-action-button" class="button-small">Edit Action</button>
-                                <button id="delete-action-button" class="button-small">Delete Action</button>
+                                <button class="button-small add-icon-button" data-bind="click: addAction">Add Action</button>
+                                <button class="button-small edit-icon-button" data-bind="click: editAction">Edit Action</button>
+                                <button class="button-small delete-icon-button" data-bind="click: removeSelectedAction">Delete Action</button>
                             </div>
                         </div>
-                        <select id="action-list" size="10" class="select-full-size"></select>
+                        <select id="action-list" size="10" class="select-full-size" 
+                                data-bind="options: currentProject.actions,
+                                optionsText: function(action) {
+                                   return action.name;
+                                }, value: selectedAction"></select>
                     </div>
                 </div>
                 <h3>Events</h3>
@@ -104,12 +111,16 @@
                         <div>
                             <div class="inline">Events</div>
                             <div class="inline right">
-                                <button id="add-event-button" class="button-small">Add Event</button>
-                                <button id="edit-event-button" class="button-small">Edit Event</button>
-                                <button id="delete-event-button" class="button-small">Delete Event</button>
+                                <button class="button-small add-icon-button" data-bind="click: addEvent">Add Event</button>
+                                <button class="button-small edit-icon-button" data-bind="click: editEvent">Edit Event</button>
+                                <button class="button-small delete-icon-button" data-bind="click: removeSelectedEvent">Delete Event</button>
                             </div>
                         </div>
-                        <select id="event-list" size="10" class="select-full-size"></select>
+                        <select id="event-list" size="10" class="select-full-size"
+                                data-bind="options: currentProject.events,
+                                optionsText: function(event) {
+                                    return event.name;
+                                }, value: selectedEvent"></select>
                     </div>
                 </div>
                 <h3>Properties</h3>
@@ -124,15 +135,15 @@
                             <hr/>
                             <div class="inline">Bound Data</div>
                             <div class="inline right">
-                                <button id="bind-data-button" data-bind="click: tryToBindData" class="button-small">Bind Data</button>
-                                <button id="unbind-data-button" data-bind="click: unbindData" class="button-small">Unbind Data</button>
+                                <button data-bind="click: tryToBindData" class="button-small add-icon-button">Bind Data</button>
+                                <button data-bind="click: unbindData" class="button-small delete-icon-button">Unbind Data</button>
                             </div>
                         
                             <div data-bind="if: selectedWidget && typeof selectedWidget.viewModel.boundData !== 'undefined'">
                                 <select id="bound-data-list" size="5" class="select-full-size"
                                     data-bind="options: selectedWidget.viewModel.boundData, 
                                         optionsText: function(name) {
-                                           return name + ' : ' + currentProject.getDataSet(name).basename;
+                                           return name + ' : ' + currentProject.getDataSet(name).filename;
                                         }, value: selectedBoundData">
                                 </select>
                             </div>
@@ -144,14 +155,14 @@
                     <div>
                         <div class="inline" data-bind="visible: !currentProject.googleAnalytics.bound">
                             <label class="inline">Google Analytics UA Code</label>
-	                        <input type="text" data-bind="value: currentProject.googleAnalytics.uaCode.value, valueUpdate: 'keyup'"/>
-	                        <div class="error" data-bind="visible: currentProject.googleAnalytics.uaCode.error, html: currentProject.googleAnalytics.uaCode.message"></div>
-	                        <label class="inline">Google Analytics Event Category</label>
-	                        <input type="text" data-bind="value: currentProject.googleAnalytics.eventCategory.value, valueUpdate: 'keyup'" />
-	                        <div class="error" data-bind="visible: currentProject.googleAnalytics.eventCategory.error, html:currentProject.googleAnalytics.eventCategory.message"></div>
-	                        <div class="submit-button-panel">
-	                           <button id="google-analytics-add-button" class="button-small submit-button" data-bind="click: currentProject.googleAnalytics.set;">Add</button>
-	                           <button id="google-analytics-clear-button" class="button-small" data-bind="click: currentProject.googleAnalytics.clear">Clear</button>
+                            <input type="text" data-bind="value: currentProject.googleAnalytics.uaCode.value, valueUpdate: 'keyup'"/>
+                            <div class="error" data-bind="visible: currentProject.googleAnalytics.uaCode.error, html: currentProject.googleAnalytics.uaCode.message"></div>
+                            <label class="inline">Google Analytics Event Category</label>
+                            <input type="text" data-bind="value: currentProject.googleAnalytics.eventCategory.value, valueUpdate: 'keyup'" />
+                            <div class="error" data-bind="visible: currentProject.googleAnalytics.eventCategory.error, html:currentProject.googleAnalytics.eventCategory.message"></div>
+                            <div class="submit-button-panel">
+                               <button id="google-analytics-add-button" class="button-small submit-button" data-bind="click: currentProject.googleAnalytics.set;">Add</button>
+                               <button id="google-analytics-clear-button" class="button-small" data-bind="click: currentProject.googleAnalytics.clear">Clear</button>
                             </div>
                         </div>
                         <div class="inline" data-bind="visible: currentProject.googleAnalytics.bound">
@@ -184,26 +195,29 @@
         <label class="required">Project Name: <input id="create-new-project-name" data-bind="value: newProjectName.value, valueUpdate: 'keyup'"/> </label>
         <div class="error" data-bind="visible: newProjectName.error, html: newProjectName.message"></div>
     </div>
-    
+
     <div id="load-project-dialog" title="Load Project" class="dialog">
         <p>Please select an existing project to load.</p>
         <label class="required">Project Name: 
             <select id="load-project-select"
                 data-bind="options: projectList, value: loadProjectName.value">
             </select>
-            <button id="load-project-refresh-list" class="button-small" data-bind="click: updateProjectList">Refresh List</button>
+            <button class="button-small refresh-icon-button" data-bind="click: updateProjectList">Refresh List</button>
         </label>
         <div class="error" data-bind="visible: loadProjectName.error, html: loadProjectName.message"></div>
     </div>
     
     <div id="upload-data-dialog" title="Upload Data" class="dialog">
-        <label class="required" for="upload-data-name">Name: </label>
-        <input id="upload-data-name" type="text"/>
-        <p id="upload-data-name-error" class="error"></p>
-        
-        <label class="required" for="upload-data-file">File: </label>
-        <input id="upload-data-file" type="file"/>
-        <p id="upload-data-file-error" class="error"></p>
+        <div>
+            <label class="required" for="upload-data-name">Name: </label>
+            <input id="upload-data-name" type="text" data-bind="value: uploadDataName.value, valueUpdate: 'keyup'"/>
+            <div class="error" data-bind="visible: uploadDataName.error, html: uploadDataName.message"></div>
+        </div>
+        <div>
+            <label class="required" for="upload-data-file">File: </label>
+            <input id="upload-data-file" type="file" data-bind="value: uploadDataFile.value, valueUpdate: 'keyup'"/>
+            <div class="error" data-bind="visible: uploadDataFile.error, html: uploadDataFile.message"></div>
+        </div>
     </div>
     
     <div id="bind-data-dialog" title="Bind Data" class="dialog">
@@ -223,10 +237,100 @@
                             data-bind="attr: {'data-name': $data.name}" />
                     </td>
                     <td data-bind="text: $data.name"></td>
-                    <td data-bind="text: $data.basename"></td>
+                    <td data-bind="text: $data.filename"></td>
                 </tr>
             </tbody>
         </table>
+    </div>
+    
+    <div id="action-editor-dialog" title="Action Editor" class="dialog">
+        <div class="inline top padding15 dialogColumnMaxWidth">
+            <div class="required">Action Name:</div>
+            <div class="marginBottom10">
+                   <input data-bind="value: selectedActionName.value, valueUpdate: 'keyup'"/>
+                   <div class="error" data-bind="visible: selectedActionName.error, html: selectedActionName.message"></div>
+            </div>
+            <div>Action Type:</div>
+            <select class="marginBottom10 width100"
+                    data-bind="options: ['Property Action', 'Query Action'],
+                    value: selectedActionType">
+            </select>
+            <div>Affected Component:</div>
+            <select class="marginBottom10 width100"
+                    data-bind="options: currentProject.components, 
+                      optionsText: function(component) {
+                         return component.viewModel.name.value;
+                      },
+                  value: actionEditorAffectedComponent">
+            </select>
+            <!-- ko if: selectedActionType === 'Query Action' -->
+            <div>Dataset:</div>
+            <select class="marginBottom10 width100"
+                    data-bind="optionsCaption: 'None',
+                    options: currentProject.dataSets, 
+                      optionsText: function(dataSet) {
+                           return dataSet.name;
+                      },
+                  value: actionEditorDataSet">
+            </select>
+            <!-- /ko -->
+            <div>
+                <input type="checkbox" id="actionApplyAutomatically"></input>
+                <span>Apply Automatically</span>
+            </div>
+        </div>
+        <div class="inline top padding15">
+            <div>Options</div>
+            <!-- ko if: selectedActionType === 'Property Action' -->
+            <div data-bind="foreach: actionEditorAffectedComponent.viewModel.properties">
+                <!-- ko if:  $data.displayName !== 'Name' -->
+                <div data-bind="template: {name : $data.displayTemplateName, data: $data}"></div>
+                <!-- /ko -->
+            </div>
+            <!-- /ko -->
+            <!-- ko if: selectedActionType === 'Query Action' -->
+            <!-- TODO: Query Action Options -->
+            <!-- /ko -->
+        </div>
+    </div>
+    
+    <div id="event-editor-dialog" title="Event Editor" class="dialog">
+        <div>
+            <label class="inline required">Name: </label>
+            <input type="text" data-bind="value: selectedEventName.value, valueUpdate: 'keyup'"/>
+            <div class="error" data-bind="visible: selectedEventName.error, html: selectedEventName.message"></div>
+        </div>
+        <div>
+            <label class="inline">Event: </label>
+            <select data-bind="options: eventTypes, value: selectedEventType"></select>
+        </div>
+        <div>
+            <label class="inline">Triggering Component: </label>
+            <select data-bind="options: currentProject.components,
+                            optionsText: function(component) {
+                                return component.viewModel.name.value;
+                            }, value: eventEditorTriggeringComponent"></select>
+        </div>
+        <div>
+            <label class="inline">Trigger: </label>
+            <select data-bind="options: eventEditorTriggeringComponent.viewModel.triggers,
+                            optionsText: function(trigger) {
+                                return trigger.name;
+                            }, value: eventEditorTrigger"></select>
+        </div>
+        <div>
+            <div>
+            Action:
+            <button class="button-small add-icon-button right" data-bind="click: addAction">Add Action</button>
+            </div>
+            <div data-bind="foreach: currentProject.actions">
+                <div>
+                    <input type="checkbox" data-bind="checkedValue: $data, checked: $root.selectedEventActions"></input>
+                    <span data-bind="text: $data.name"></span>
+                </div>
+            </div>
+        </div>
+        
     </div>
     
     <div id="unsaved-changes-dialog" title="Unsaved Changes" class="dialog">
