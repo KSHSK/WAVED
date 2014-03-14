@@ -1,14 +1,14 @@
 define([
         'models/Widget/WidgetViewModel',
         'models/Property/StringProperty',
-        'models/Property/BooleanProperty',
+        'models/Property/NumberProperty',
         'util/defined',
         'util/createValidator',
         'knockout'
     ],function(
         WidgetViewModel,
         StringProperty,
-        BooleanProperty,
+        NumberProperty,
         defined,
         createValidator,
         ko){
@@ -24,18 +24,19 @@ define([
             value: '',
             validValue: createValidator({
                 minLength: 1,
-                maxLength: 50
+                maxLength: 500
             }),
-            errorMessage: 'Must be between 1 and 50 characters'
+            textArea: true,
+            errorMessage: 'Must be between 1 and 500 characters'
         });
 
-        this.border = new BooleanProperty({
+        this.border = new NumberProperty({
             displayName: 'Border',
-            value: true
+            value: 1
         });
 
         this.height.value = 5;
-        this.width.value = 10;
+        this.width.value = 15;
 
         this.setState(state);
 
