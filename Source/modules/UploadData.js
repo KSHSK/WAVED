@@ -1,27 +1,23 @@
-/*global define*/
 /**
  * A module for uploading data to the server
  */
 define([
+        'jquery',
         'WAVEDViewModel',
         'modules/SaveProject',
-        'modules/ReadData',
         'models/Data/DataSet',
-        'jquery'
+        'util/displayMessage'
     ], function(
+        $,
         WAVEDViewModel,
         SaveProject,
-        ReadData,
         DataSet,
-        $) {
+        displayMessage) {
     'use strict';
 
     var UploadData = {
         uploadDataDialog: $('#upload-data-dialog'),
-        uploadDataNameInput: $('#upload-data-name'),
-        uploadDataNameError: $('#upload-data-name-error'),
         uploadDataFileInput: $('#upload-data-file'),
-        uploadDataFileError: $('#upload-data-file-error'),
 
         tryToUploadData: function(viewModel){
             var dataUploaded = $.Deferred();
@@ -33,10 +29,9 @@ define([
             var self = this;
 
             // Clear the inputs and errors.
-            self.uploadDataNameInput.val('');
-            self.uploadDataNameError.text('');
+            viewModel.uploadDataName.reset();
+            viewModel.uploadDataFile.reset();
             self.uploadDataFileInput.val('');
-            self.uploadDataFileError.text('');
 
             self.uploadDataDialog.dialog({
                 resizable: false,
@@ -48,7 +43,14 @@ define([
                         text: 'Upload',
                         'class': 'submit-button',
                         click: function() {
+                            if (viewModel.uploadDataName.error || viewModel.uploadDataFile.error) {
+                                viewModel.uploadDataName.message = viewModel.uploadDataName.errorMessage;
+                                viewModel.uploadDataFile.message = viewModel.uploadDataFile.errorMessage;
+                                return;
+                            }
+
                             self.uploadData(dataUploaded, viewModel);
+
                             $.when(dataUploaded).done(function() {
                                 self.uploadDataDialog.dialog('close');
                             });
@@ -62,29 +64,22 @@ define([
         },
 
         uploadData: function(dataUploaded, viewModel){
-            /* TODO: validation */
-
             var self = this;
 
             // Don't allow leading or trailing white space.
-            var dataSetName = this.uploadDataNameInput.val().trim();
-            this.uploadDataNameInput.val(dataSetName);
-
-            // TODO Update/Remove condition when validation and error displaying is implemented.
-            if (dataSetName.length === 0) {
-                // TODO Handle when validation and error displaying is implemented.
-                return;
-            }
+            viewModel.uploadDataName.value = viewModel.uploadDataName.value.trim();
+            var dataSetName = viewModel.uploadDataName.value;
 
             var form = new FormData();
             var file = self.uploadDataFileInput[0].files[0];
             if (file === undefined) {
-                // TODO Handle when validation and error displaying is implemented.
+                // Just a precaution, but should never be called.
+                displayMessage('No file has been selected');
                 return;
             }
 
             form.append('file', file);
-            form.append('projectName', viewModel.currentProject.name);
+            form.append('project', viewModel.currentProject.name);
 
             $.ajax({
                 type : 'POST',
@@ -97,7 +92,7 @@ define([
                     if (data.success) {
                         var options = {
                             name: dataSetName,
-                            filename: data.filePath,
+                            filename: data.filename,
                             referenceCount: 0
                         };
 
@@ -105,18 +100,18 @@ define([
                         var dataSet = new DataSet(options);
                         viewModel.currentProject.addDataSet(dataSet);
 
-                        // TODO: Make sure this works once SaveProject is implemented.
+                        var projectSaved = $.Deferred();
+
                         // Automatically save the project to avoid inconsistencies with state and the file system.
-                        SaveProject.saveProject(viewModel.currentProject.name, viewModel);
+                        SaveProject.saveProject(projectSaved, viewModel.currentProject.name, viewModel);
 
-                        // Read the contents of the data file.
-                        ReadData.readData(dataSet);
-
-                        dataUploaded.resolve();
+                        $.when(projectSaved).done(function() {
+                            dataUploaded.resolve();
+                        });
                     }
                     else {
                         // Display error to user.
-                        // TODO Handle when validation and error displaying is implemented.
+                        displayMessage(data.errorMessage);
                     }
                 }
 

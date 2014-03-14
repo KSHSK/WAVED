@@ -13,11 +13,10 @@ if (!projectExists($projectName)) {
     return;
 }
 
-// Set the name of the project
+// Set project variables.
 $returnValue["projectName"] = $projectName;
-
-// Set state of project
 $returnValue["projectState"] = getProjectState($projectName);
+$returnValue["dataFolder"] = getDataFolder($projectName);
 
 reportReturnValue($returnValue);
 ?>

@@ -1,30 +1,50 @@
-/*global define*/
-define([
+define(['jquery',
+        'knockout',
+        'models/Action/Action',
+        'models/Constants/EventType',
+        'models/Event/Event',
+        'models/GoogleAnalytics',
+        'models/ProjectViewModel',
+        'models/Property/ArrayProperty',
+        'models/Property/StringProperty',
+        'models/WorkspaceViewModel',
+        'models/Widget/ButtonWidget/Button',
+        'modules/ActionHelper',
+        'modules/EventHelper',
         'modules/NewProject',
         'modules/LoadProject',
+        'modules/SaveProject',
         'modules/UploadData',
         'modules/BindData',
         'modules/DeleteData',
-        'models/Widget/ButtonWidget/Button',
+        'models/Widget/TextBlockWidget/TextBlock',
         'util/defined',
         'util/defaultValue',
-        'models/Property/StringProperty',
-        'models/Property/ArrayProperty',
-        'util/createValidator',
-        'knockout'
+        'util/createValidator'
     ], function(
+        $,
+        ko,
+        Action,
+        EventType,
+        Event,
+        GoogleAnalytics,
+        ProjectViewModel,
+        ArrayProperty,
+        StringProperty,
+        WorkspaceViewModel,
+        Button,
+        ActionHelper,
+        EventHelper,
         NewProject,
         LoadProject,
+        SaveProject,
         UploadData,
         BindData,
         DeleteData,
-        Button,
+        TextBlock,
         defined,
         defaultValue,
-        StringProperty,
-        ArrayProperty,
-        createValidator,
-        ko) {
+        createValidator) {
     'use strict';
 
     var self;
@@ -37,51 +57,93 @@ define([
         this._selectedDataSet = '';
         this._selectedBoundData = '';
 
-        this._currentProject = {
-            name: '',
-            workspace: {
-                height: {
-                    value: 600
-                },
-                width: {
-                    value: 750
-                }
-            },
-            googleAnalytics: {
-                uaCode: {
-                    value: '',
-                    error: false,
-                    message: ''
-                },
-                eventCategory: {
-                    value: '',
-                    error: false,
-                    message: ''
-                },
-                bound: false
-            }
-        };
+        this._currentProject = new ProjectViewModel({
+            name: ''
+        });
+
         this._availableWidgets = [{
             name: 'Button',
             o: Button
+        }, {
+            name: 'Text Block',
+            o: TextBlock
         }];
 
+        this.eventTypes = [];
+        for (var eventType in EventType) {
+            this.eventTypes.push(eventType);
+        }
+
         this.newProjectName = new StringProperty({
-                displayName: 'Project Name',
-                value: '',
-                validValue: createValidator({
-                    minLength: 1,
-                    maxLength: 50,
-                    regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
-                }),
-                errorMessage: 'Must be between 1 and 50 characters<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
-            });
+            displayName: 'Project Name',
+            value: '',
+            validValue: createValidator({
+                minLength: 1,
+                maxLength: 50,
+                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
+            }),
+            errorMessage: 'Must be between 1 and 50 characters.<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
+        });
 
         this.loadProjectName = new ArrayProperty({
-                displayName: 'Project Name',
-                value: '',
-                options: this.projectList
-            });
+            displayName: 'Project Name',
+            value: '',
+            options: this.projectList
+        });
+
+        this.uploadDataName = new StringProperty({
+            displayName: 'Name',
+            value: '',
+            validValue: createValidator({
+                minLength: 1,
+                maxLength: 50,
+                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
+            }),
+            errorMessage: 'Must be between 1 and 50 characters<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
+        });
+
+        this.uploadDataFile = new StringProperty({
+            displayName: 'File',
+            value: '',
+            validValue: createValidator({
+                minLength: 1
+            }),
+            errorMessage: 'Must select a file.'
+        });
+
+
+        this.selectedActionName = new StringProperty({
+            displayName: 'Action Name',
+            value: '',
+            validValue: createValidator({
+                minLength: 1,
+                maxLength: 50,
+                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
+            }),
+            errorMessage: 'Must be between 1 and 50 characters.<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
+        });
+
+        this.selectedAction = undefined;
+        this.selectedActionType = '';
+        this.actionEditorAffectedComponent = undefined;
+        this.actionEditorDataSet = undefined;
+
+        this.selectedEventName = new StringProperty({
+            displayName: 'Event Name',
+            value: '',
+            validValue: createValidator({
+                minLength: 1,
+                maxLength: 50,
+                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$')
+            }),
+            errorMessage: 'Must be between 1 and 50 characters.<br>Can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.'
+        });
+
+        this.selectedEvent = undefined;
+        this.eventEditorTriggeringComponent = undefined;
+        this.eventEditorTrigger = undefined;
+        this.selectedEventType = undefined;
+        this.selectedEventActions = [];
 
         ko.track(this);
     };
@@ -112,6 +174,39 @@ define([
 
     WAVEDViewModel.prototype.markDataForDeletion = function() {
         return DeleteData.markDataForDeletion(self);
+    };
+
+    WAVEDViewModel.prototype.addAction = function() {
+        return ActionHelper.addAction(self);
+    };
+
+    WAVEDViewModel.prototype.editAction = function() {
+        return ActionHelper.editAction(self);
+    };
+
+    WAVEDViewModel.prototype.removeSelectedAction = function() {
+        self._currentProject.removeAction(self.selectedAction);
+    };
+
+    WAVEDViewModel.prototype.addEvent = function() {
+        EventHelper.addEvent(self);
+    };
+
+    WAVEDViewModel.prototype.editEvent = function() {
+        EventHelper.editEvent(self);
+    };
+
+    WAVEDViewModel.prototype.removeSelectedEvent = function() {
+        self._currentProject.removeEvent(self.selectedEvent);
+    };
+
+    WAVEDViewModel.prototype.saveProject = function() {
+        var deferred = $.Deferred();
+        return SaveProject.saveProject(deferred, this.currentProject.name, self);
+    };
+
+    WAVEDViewModel.prototype.tryToSaveProject = function() {
+        return SaveProject.tryToSaveProject(self);
     };
 
     // TODO: Component

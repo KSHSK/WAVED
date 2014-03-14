@@ -1,4 +1,3 @@
-/*global define*/
 define([
         'models/Property/Coloring/ColoringSelectionProperty',
         'models/Widget/WidgetViewModel',
@@ -21,6 +20,13 @@ define([
         ko.track(this);
     };
 
+    /**
+     * Static method that returns the type String for this class.
+     */
+    USMapViewModel.getType = function() {
+        return 'USMap';
+    };
+
     USMapViewModel.prototype = Object.create(WidgetViewModel.prototype);
 
     USMapViewModel.prototype.getState = function() {
@@ -34,7 +40,7 @@ define([
     Object.defineProperties(USMapViewModel.prototype, {
         properties: {
             get: function() {
-                return [this._name, this.x, this.y, this.width, this.height, this.visible, this.logGoogleAnalytics,
+                return [this.name, this.x, this.y, this.width, this.height, this.visible, this.logGoogleAnalytics,
                 this.coloring];
             }
         }

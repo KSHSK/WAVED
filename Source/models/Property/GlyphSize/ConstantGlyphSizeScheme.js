@@ -1,4 +1,3 @@
-/*global define*/
 define([
         'models/Property/GlyphSize/GlyphSizeScheme',
         'models/Constants/GlyphSizeSchemeType',

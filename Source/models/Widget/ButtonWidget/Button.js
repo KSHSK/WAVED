@@ -1,4 +1,3 @@
-/*global define*/
 define([
         'models/Widget/ButtonWidget/ButtonViewModel',
         'models/Constants/ComponentTemplateName',
@@ -24,6 +23,13 @@ define([
 
         this.viewModel = viewModel;
         ko.applyBindings(viewModel, button);
+    };
+
+    /**
+     * Static method that returns the type String for this class's ViewModel.
+     */
+    Button.getViewModelType = function() {
+        return ButtonViewModel.getType();
     };
 
     return Button;

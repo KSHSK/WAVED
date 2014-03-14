@@ -1,4 +1,3 @@
-/*global define*/
 define([
         'models/Widget/GraphWidget/LineGraphWidget/LineGraphViewModel',
         'models/Constants/ComponentTemplateName',
@@ -24,6 +23,13 @@ define([
 
         this.viewModel = viewModel;
         ko.applyBindings(viewModel, lineGraph);
+    };
+
+    /**
+     * Static method that returns the type String for this class's ViewModel.
+     */
+    LineGraph.getViewModelType = function() {
+        return LineGraphViewModel.getType();
     };
 
     return LineGraph;

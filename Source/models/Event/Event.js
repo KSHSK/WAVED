@@ -1,18 +1,25 @@
-/*global define*/
 define([
         'models/ComponentViewModel',
         'models/Constants/EventType',
         'models/Action/Action',
+        'models/Action/PropertyAction',
+        'models/Action/QueryAction',
         'models/Event/Trigger',
+        'models/Property/StringProperty',
+        'util/defined',
         'knockout',
-        'util/defined'
+        'jquery'
     ],function(
         ComponentViewModel,
         EventType,
         Action,
+        PropertyAction,
+        QueryAction,
         Trigger,
+        StringProperty,
+        defined,
         ko,
-        defined
+        $
     ){
     'use strict';
 
@@ -20,11 +27,13 @@ define([
         state = defined(state) ? state : {};
 
         // TODO: Validation, etc
-        this._name = state.name; // StringProperty
-        this._eventType = state.eventType; // EventType
-        this._triggeringComponent = state.triggeringComponent; // ComponenetViewModel
-        this._trigger = undefined; // Trigger
-        this._action = state.action; // Action
+        this._name = '';
+        this._eventType = ''; // EventType
+        this._triggeringComponent = {}; // ComponentViewModel
+        this._trigger = {}; // Trigger
+        this._actions = []; // Action[]
+
+        this.setState(state);
 
         ko.track(this);
     };
@@ -41,8 +50,10 @@ define([
         eventType: {
             get: function() {
                 return this._eventType;
+            },
+            set: function(value) {
+                this._eventType = value;
             }
-        // TODO: Why does this not have a setter? Update DD with decision.
         },
         triggeringComponent: {
             get: function() {
@@ -60,15 +71,52 @@ define([
                 this._trigger = value;
             }
         },
-        action: {
+        actions: {
             get: function() {
-                return this._action;
+                return this._actions;
             },
             set: function(value) {
-                this._action = value;
+                this._actions = value;
             }
         }
     });
+
+    Event.prototype.setState = function(state) {
+
+        if (defined(state.name)) {
+            this._name = state.name;
+        }
+
+        if (defined(state.eventType)) {
+            this._eventType = state.eventType; // EventType
+        }
+
+        if (defined(state.triggeringComponent)){
+            this._triggeringComponent = state.triggeringComponent;
+        }
+
+        if (defined(state.trigger)){
+            // TODO: Make sure this is one of the triggers found on the triggeringComponent.
+            this._trigger = state.trigger;
+        }
+
+        if (defined(state.actions)){
+            this._actions = state.actions;
+        }
+    };
+
+    Event.prototype.getState = function() {
+        return {
+            'name': this._name,
+            'eventType': this._eventType,
+            'triggeringComponent': this._triggeringComponent.viewModel.name.value,
+            'trigger': this._trigger.name,
+            'actions': $.map(this._actions, function(action) {
+                return action.name;
+            })
+        };
+
+    };
 
     return Event;
 });

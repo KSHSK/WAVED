@@ -2,7 +2,7 @@
 include_once("CommonMethods.php");
 
 $file = $_FILES["file"];
-$projectName = $_POST["projectName"];
+$projectName = $_POST["project"];
 
 // Setup return object.
 $returnValue = getInitialReturnValue();
@@ -33,7 +33,7 @@ if (!$success) {
     return;
 }
 
-$returnValue["filePath"] = $filePath;
+$returnValue["filename"] = $fileName;
 reportReturnValue($returnValue);
 
 ?>

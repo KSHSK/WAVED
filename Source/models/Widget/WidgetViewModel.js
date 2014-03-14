@@ -1,4 +1,3 @@
-/*global define*/
 define([
         'jquery',
         'models/Property/StringProperty',
@@ -22,91 +21,54 @@ define([
     var WidgetViewModel = function(state) {
         ComponentViewModel.call(this, state);
 
-        var heightOptions;
-        if (defined(state.height)) {
-            heightOptions = {
-                displayName: state.height.displayName,
-                value: state.height.value
-            };
-        }
-        else {
-            heightOptions = {
-                displayName: 'Height',
-                value: 50
-            };
-        }
-        heightOptions.validValue = createValidator({
-            min: 1,
-            max: 100
+        // Set width
+        this.width = new NumberProperty({
+            displayName: 'Width',
+            value: 50,
+            validValue: createValidator({
+                min: 1,
+                max: 100
+            }),
+            errorMessage: 'Value must be between 1 and 100'
         });
-        heightOptions.errorMessage = 'Value must be between 1 and 100';
 
-        this.height = new NumberProperty(heightOptions);
-
-        var widthOptions;
-        if (defined(state.width)) {
-            widthOptions = {
-                displayName: state.width.displayName,
-                value: state.width.value
-            };
-        }
-        else {
-            widthOptions = {
-                displayName: 'Width',
-                value: 50
-            };
-        }
-        widthOptions.validValue =  createValidator({
-            min: 1,
-            max: 100
+        // Set height
+        this.height = new NumberProperty({
+            displayName: 'Height',
+            value: 50,
+            validValue: createValidator({
+                min: 1,
+                max: 100
+            }),
+            errorMessage: 'Value must be between 1 and 100'
         });
-        widthOptions.errorMessage = 'Value must be between 1 and 100';
-        this.width = new NumberProperty(widthOptions);
 
-        var xOptions;
-        if (defined(state.x)) {
-            xOptions = {
-                displayName: state.x.displayName,
-                value: state.x.value
-            };
-        }
-        else {
-            xOptions = {
-                displayName: 'X',
-                value: 0
-            };
-        }
-        xOptions.validValue = createValidator({
-            min: 0,
-            max: 100
+        // Set x
+        this.x = new NumberProperty({
+            displayName: 'X',
+            value: 0,
+            validValue: createValidator({
+                min: 0,
+                max: 100
+            }),
+            errorMessage: 'Value must be between 0 and 100'
         });
-        xOptions.errorMessage = 'Value must be between 0 and 100';
-        this.x = new NumberProperty(xOptions);
 
-        var yOptions;
-        if (defined(state.y)) {
-            yOptions = {
-                displayName: state.y.displayName,
-                value: state.y.value
-            };
-        }
-        else {
-            yOptions = {
-                displayName: 'Y',
-                value: 0
-            };
-        }
-        yOptions.validValue =  createValidator({
-            min: 0,
-            max: 100
+        // Set y
+        this.y = new NumberProperty({
+            displayName: 'Y',
+            value: 0,
+            validValue: createValidator({
+                min: 0,
+                max: 100
+            }),
+            errorMessage: 'Value must be between 0 and 100'
         });
-        yOptions.errorMessage = 'Value must be between 0 and 100';
-        this.y = new NumberProperty(yOptions);
 
-        // TODO: These things for real
-        this._subwidgetNames = defaultValue(state.subwidgets, []); // String[]
-        this._elementNames = defaultValue(state.elements, []); // String[]
-        this._boundData = defaultValue(state.boundData, []); // String[]
+        this._elementNames = []; // String[]
+        this._boundData = []; // String[]
+
+        // TODO: Set this.
         this._availableElements = []; // ComponentRecord[]
     };
 
@@ -115,23 +77,59 @@ define([
     Object.defineProperties(WidgetViewModel.prototype, {
         properties: {
             get: function() {
-                return [this._name, this.x, this.y, this.width, this.height, this.visible, this.logGoogleAnalytics];
+                return [this.name, this.x, this.y, this.width, this.height, this.visible, this.logGoogleAnalytics];
             }
         },
         boundData: {
             get: function() {
                 return this._boundData;
             }
+        },
+        elementNames: {
+            get: function() {
+                return this._elementNames;
+            }
         }
     });
 
-    WidgetViewModel.prototype.setState = function() {
-        // TODO
+    WidgetViewModel.prototype.getState = function() {
+        var state = ComponentViewModel.prototype.getState.call(this);
+        state.width = this.width.getState();
+        state.height = this.height.getState();
+        state.x = this.x.getState();
+        state.y = this.y.getState();
+        state.elementNames = this.elementNames;
+        state.boundData = this.boundData;
+
+        return state;
     };
 
-    WidgetViewModel.prototype.getState = function() {
-        // TODO
-        return {};
+    WidgetViewModel.prototype.setState = function(state) {
+        ComponentViewModel.prototype.setState.call(this, state);
+
+        if (defined(state.width)) {
+            this.width.value = state.width.value;
+        }
+
+        if (defined(state.height)) {
+            this.height.value = state.height.value;
+        }
+
+        if (defined(state.x)) {
+            this.x.value = state.x.value;
+        }
+
+        if (defined(state.y)) {
+            this.y.value = state.y.value;
+        }
+
+        if (defined(state.elements)) {
+            this._elementNames = state.elements;
+        }
+
+        if (defined(state.boundData)) {
+            this._boundData = state.boundData;
+        }
     };
 
     WidgetViewModel.prototype.addElement = function(elementName) {
