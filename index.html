@@ -123,7 +123,7 @@
                                 }, value: selectedEvent"></select>
                     </div>
                 </div>
-                <h3>Properties</h3>
+                <h3>Properties - <span data-bind="text: selectedComponent.viewModel.name.value"></span></h3>
                 <div id="properties-panel">
                     <div id="properties-panel-properties" data-bind="foreach: currentProject.components">
                         <div data-bind="foreach: $data.viewModel.properties, visible: $parent.selectedComponent == $data">
