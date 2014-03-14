@@ -26,11 +26,13 @@ define([
             value: undefined,
             options: []
         };
-        if (defined(state.dataSet.value)) {
+        if (defined(state.dataSet)) {
             dataSetOptions.value = state.dataSet.value;
         }
-        if(defined(state.dataSet.options) && state.dataSet.options.length > 0){
-            dataSetOptions.options = state.dataSet.options; // TODO: Should these just be populated from the data set itself?
+        if(defined(state.dataSet)){
+            if(state.dataSet.options.length > 0){
+                dataSetOptions.options = state.dataSet.options; // TODO: Should these just be populated from the data set itself?
+            }
         }
 
         this.dataSet = new ArrayProperty(dataSetOptions);
@@ -40,11 +42,14 @@ define([
             value: undefined,
             options: []
         };
-        if (defined(state.dataField.value)) {
+        if (defined(state.dataField)) {
             dataFieldOptions = state.dataField.value;
         }
-        if(defined(state.dataField.options) && state.dataField.options.length > 0){
-            dataFieldOptions = state.dataField.options;
+        if(defined(state.dataField)){
+            if(state.dataField.options.length > 0){
+                // TODO: Populate directly from the dataset
+                dataFieldOptions = state.dataField.options;
+            }
         }
 
         this.dataField = new ArrayProperty(dataFieldOptions);
@@ -66,12 +71,13 @@ define([
         }
     });
 
-    ScaledGlyphSizeScheme.prototype.setState = function(state) {
+    ScaledGlyphSizeScheme.prototype.getState = function(){
+        var state = {
+            dataSet: this.dataSet.getState(),
+            dataField: this.dataField.getState()
+        };
 
-    };
-
-    ScaledGlyphSizeScheme.prototype.getState = function() {
-
+        return state;
     };
 
     return ScaledGlyphSizeScheme;

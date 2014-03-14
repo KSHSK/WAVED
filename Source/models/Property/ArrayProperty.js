@@ -13,7 +13,6 @@ define([
     ){
     'use strict';
 
-
     var ArrayProperty = function(opts) {
         opts = defined(opts) ? opts : {};
         Property.call(this, opts);

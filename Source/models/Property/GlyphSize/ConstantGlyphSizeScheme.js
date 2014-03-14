@@ -28,7 +28,7 @@ define([
         }
 
         var stateSize = {
-            displayName: 'Size',
+            displayName: 'Size (%)',
             value: 10
         };
         if(defined(state.size) && state.size > 0){
@@ -54,12 +54,13 @@ define([
         }
     });
 
-    ConstantGlyphSizeScheme.prototype.setState = function(state) {
-
-    };
-
     ConstantGlyphSizeScheme.prototype.getState = function() {
+        var state = {
+            size: this.size,
+            type: this.getType()
+        };
 
+        return state;
     };
 
     return ConstantGlyphSizeScheme;
