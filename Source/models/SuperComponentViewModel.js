@@ -16,7 +16,10 @@ define([
 
     var SuperComponentViewModel = function(state) {
         // Set name
-        this.name = getNamePropertyInstance('Name', this);
+        this.name = getNamePropertyInstance('Name', {
+            namespace: 'name',
+            item: this
+        });
 
         ko.track(this);
     };
