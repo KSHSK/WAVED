@@ -91,8 +91,10 @@ define(['knockout',
                 return this._name;
             },
             set: function(value) {
-                this._name = value;
-                UniqueTracker.addValueIfUnique('name', this._name, this);
+                var success = UniqueTracker.addValueIfUnique('name', value, this);
+                if (success) {
+                    this._name = value;
+                }
             }
         },
         filename: {
