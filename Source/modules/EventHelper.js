@@ -1,6 +1,7 @@
 /*global define*/
 define([
         'WAVEDViewModel',
+        './UniqueTracker',
         'models/Event/Event',
         'util/defined',
         'util/displayMessage',
@@ -8,6 +9,7 @@ define([
         'jquery'
     ],function(
         WAVEDViewModel,
+        UniqueTracker,
         Event,
         defined,
         displayMessage,
@@ -37,20 +39,25 @@ define([
                 modal: true,
                 buttons: {
                     'Save': function() {
-                        if (!viewModel.selectedEventName.error) {
-                            var event = new Event({
-                                name: viewModel.selectedEventName.value,
-                                eventType: viewModel.selectedEventType,
-                                triggeringComponent: viewModel.eventEditorTriggeringComponent,
-                                trigger: viewModel.eventEditorTrigger,
-                                actions: viewModel.selectedEventActions
-                            });
-                            viewModel.currentProject.addEvent(event);
-                            self.eventDialog.dialog('close');
-                        }
-                        else {
+                        if (viewModel.selectedEventName.error) {
                             viewModel.selectedEventName.message = viewModel.selectedEventName.errorMessage;
+                            return;
                         }
+
+                        if (!UniqueTracker.isValueUnique('name', viewModel.selectedEventName.value)) {
+                            displayMessage('The name "' + viewModel.selectedEventName.value + '" is already in use.');
+                            return;
+                        }
+
+                        var event = new Event({
+                            name: viewModel.selectedEventName.value,
+                            eventType: viewModel.selectedEventType,
+                            triggeringComponent: viewModel.eventEditorTriggeringComponent,
+                            trigger: viewModel.eventEditorTrigger,
+                            actions: viewModel.selectedEventActions
+                        });
+                        viewModel.currentProject.addEvent(event);
+                        self.eventDialog.dialog('close');
                     },
                     'Cancel': function() {
                         self.eventDialog.dialog('close');

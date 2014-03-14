@@ -1,15 +1,16 @@
 define(['knockout',
         'models/Property/StringProperty',
         'modules/ReadData',
+        'modules/UniqueTracker',
         'util/defined',
         'util/createValidator'
     ],function(
         ko,
         StringProperty,
         ReadData,
+        UniqueTracker,
         defined,
-        createValidator
-    ){
+        createValidator){
     'use strict';
 
     // Constant for marked for deletion.
@@ -68,7 +69,7 @@ define(['knockout',
 
     DataSet.prototype.setState = function(state) {
         if (defined(state.name)) {
-            this._name = state.name;
+            this.name = state.name;
         }
 
         if (defined(state.referenceCount)) {
@@ -91,6 +92,7 @@ define(['knockout',
             },
             set: function(value) {
                 this._name = value;
+                UniqueTracker.addValueIfUnique('name', this._name, this);
             }
         },
         filename: {
