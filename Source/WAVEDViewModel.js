@@ -55,7 +55,7 @@ define(['jquery',
         this._dirty = false;
 
         this._projectList = [];
-        this._selectedWidget = '';
+        this._selectedComponent = '';
         this._selectedDataSet = '';
         this._selectedBoundData = '';
 
@@ -177,7 +177,7 @@ define(['jquery',
     WAVEDViewModel.prototype.addNewWidget = function(w) {
         var widget = new w.o();
         self._currentProject.addComponent(widget);
-        self._selectedWidget = widget;
+        self._selectedComponent = widget;
     };
 
     Object.defineProperties(WAVEDViewModel.prototype, {
@@ -207,7 +207,7 @@ define(['jquery',
             },
             set: function(value) {
                 this._currentProject = value;
-                this._selectedWidget = value.workspace;
+                this._selectedComponent = value.workspace;
             }
         },
         availableWidgets: {
@@ -215,12 +215,12 @@ define(['jquery',
                 return this._availableWidgets;
             }
         },
-        selectedWidget: {
+        selectedComponent: {
             get: function() {
-                return this._selectedWidget;
+                return this._selectedComponent;
             },
             set: function(value) {
-                this._selectedWidget = value;
+                this._selectedComponent = value;
             }
         },
         selectedDataSet: {
@@ -242,14 +242,14 @@ define(['jquery',
         availableDataForBinding: {
             // Returns the list of datasets that are not bound to the selected widget.
             get: function() {
-                if (!defined(this.currentProject) || !defined(this.selectedWidget)) {
+                if (!defined(this.currentProject) || !defined(this.selectedComponent)) {
                     return [];
                 }
 
                 // TODO: Make sure use of 'unmarkedDataSets' works after DataSubsets are implemented
                 // since implementation of that function could change at that point.
                 var dataSets = this.currentProject.unmarkedDataSets;
-                var boundDataNames = defaultValue(this.selectedWidget.viewModel.boundData, []);
+                var boundDataNames = defaultValue(this.selectedComponent.viewModel.boundData, []);
 
                 return dataSets.filter(function(dataSet) {
                     return boundDataNames.indexOf(dataSet.name) === -1;
