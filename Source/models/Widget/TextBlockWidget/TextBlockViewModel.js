@@ -35,7 +35,8 @@ define([
             value: 1,
             validValue: createValidator({
                 min: 0
-            })
+            }),
+            errorMessage: 'Value cannot be negative'
         });
 
         this.height.value = 5;
