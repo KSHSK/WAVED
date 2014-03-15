@@ -51,8 +51,19 @@
         <div id="accordion-container" class="inline top">
             <div id="accordion">
                 <h3>Project Tree</h3>
-                <div id="project-tree">
-                    // Project Tree
+                <div>
+	                <button class="right button-small delete-icon-button">Delete Project</button>
+	                <ul id='project-tree'>
+	                	<li>
+	                		<a data-bind="text: currentProject.name"></a>
+	                		<ul data-bind="foreach: currentProject.components">
+	                			<li class="tree-row" data-bind="css: {'tree-row-selected': $data == $parent.selectedWidget}">
+	                				<a data-bind="text: $data.viewModel.name.value, click: function(item) {$parent.selectedWidget=item;}"></a>
+	                				<!-- TODO: Elements -->
+	               				</li>
+	                		</ul>
+	                	</li>
+	                </ul>
                 </div>
                 <h3>Widgets</h3>
                 <div id="widgets-panel" data-bind="foreach: availableWidgets">

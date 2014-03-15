@@ -152,3 +152,20 @@ textarea:disabled {
     width: 100%;
     text-align: left;
 }
+
+#project-tree {
+	padding-left: 0;
+}
+
+#project-tree .tree-row * {
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+#project-tree .tree-row-selected {
+	font-weight: bold;
+}
+
+#project-tree .tree-row:hover * {
+	color: #3BB4BF;
+}
