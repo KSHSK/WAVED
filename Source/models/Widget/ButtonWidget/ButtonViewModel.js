@@ -34,6 +34,12 @@ define([
         this.height.value = 5;
         this.width.value = 10;
 
+        var fooOptions = {
+            displayName: 'GlyphSize',
+            value: ''
+        };
+        this.foo = new GlyphSizeSelectionProperty(fooOptions, this);
+
         this.setState(state);
 
         // TODO: Figure out how Triggers should actually work.
@@ -71,11 +77,7 @@ define([
 
         // TODO: Remove
         if(defined(state.foo)) {
-            var fooOptions = {
-              displayName: 'GlyphSize',
-              value: state.foo.value
-            };
-            this.foo = new GlyphSizeSelectionProperty(fooOptions, this);
+            this.foo.value = state.foo.value;
         }
     };
 
