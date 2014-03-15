@@ -6,7 +6,14 @@ define(['./getQueryParams', 'jquery'], function(getQueryParams, $) {
      */
     var updateQueryByName = function(key, value) {
         var params = getQueryParams();
-        params[key] = value;
+
+        if (value) {
+            params[key] = value;
+        }
+        else {
+            delete params[key];
+        }
+
         var newQuery = '?' + $.param(params, true);
         history.replaceState({}, '', newQuery);
     };
