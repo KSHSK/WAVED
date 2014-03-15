@@ -152,13 +152,12 @@ define([
         }
 
         if (defined(state.analytics)) {
-            this._googleAnalytics = new GoogleAnalytics(state.analytics);
+            this._googleAnalytics.setState(state.analytics);
         }
 
         if (defined(state.workspace)) {
-            this._workspace = new WorkspaceViewModel(state.workspace);
+            this._workspace.setState(state.workspace);
         }
-
 
         if (defined(state.components)) {
             this._components = $.map(state.components, function(itemState) {

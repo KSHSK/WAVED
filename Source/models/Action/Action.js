@@ -61,7 +61,6 @@ define(['jquery',
 
     Action.prototype.setState = function(state) {
         if (defined(state.name)) {
-            // TODO: Name Validation
             this.name = state.name;
         }
 

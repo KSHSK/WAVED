@@ -20,11 +20,11 @@ define([
     var WorkspaceViewModel = function(state) {
         state = defined(state) ? state : {};
 
-        // Set name
-        this.name = new StringProperty({
-            displayName: 'Name',
+        state.name = {
             value: 'Workspace'
-        });
+        };
+
+        SuperComponentViewModel.call(this, state);
 
         // Set width
         this.width = new NumberProperty({
@@ -62,6 +62,8 @@ define([
     };
 
     WorkspaceViewModel.prototype.setState = function(state) {
+        SuperComponentViewModel.prototype.setState.call(this, state);
+
         if (defined(state.width)) {
             this.width.value = state.width.value;
         }

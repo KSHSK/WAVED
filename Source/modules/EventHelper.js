@@ -92,8 +92,8 @@ define([
                             return;
                         }
 
-                        if (!UniqueTracker.isValueUnique('name', viewModel.selectedEventName.value,
-                            viewModel.selectedEvent)) {
+                        if (!UniqueTracker.isValueUnique(Event.getUniqueNameNamespace(),
+                            viewModel.selectedEventName.value, viewModel.selectedEvent)) {
 
                             displayMessage('The name "' + viewModel.selectedEventName.value + '" is already in use.');
                             return;
