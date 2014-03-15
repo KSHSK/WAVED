@@ -13,16 +13,16 @@ define([
     ){
     'use strict';
 
-    var ArrayProperty = function(state) {
-        state = defined(state) ? state : {};
-        Property.call(this, state);
+    var ArrayProperty = function(opts) {
+        opts = defined(opts) ? opts : {};
+        Property.call(this, opts);
 
         this._templateName = PropertyTemplateName.ARRAY;
 
         this._options = [];
 
         // Set a default isValidValue function if necessary.
-        if (!defined(state.validValue)) {
+        if (!defined(opts.validValue)) {
             this.isValidValue = function(value) {
                 if (defined(this._options) && this._options.length > 0) {
                     return (this._options.indexOf(value) !== -1);
@@ -31,7 +31,7 @@ define([
             };
         }
 
-        this.setState(state);
+        this.setState(opts);
 
         ko.track(this);
     };
