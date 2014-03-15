@@ -32,9 +32,8 @@ define([
         var dataSetOptions = {
             displayName: 'Data Set',
             value: undefined,
-            options: viewModel.boundData
+            options: []
         };
-
         this.dataSet = new ArrayProperty(dataSetOptions);
 
         var dataFieldOptions = {
@@ -46,20 +45,6 @@ define([
         this.dataField = new ArrayProperty(dataFieldOptions);
 
         ko.track(this);
-
-        // Subscribe to the value of dataSet in order to automatically update dataField's options
-        ko.getObservable(self.dataSet, '_value').subscribe(function(newValue) {
-            self.dataField.options = newValue.options;
-        });
-
-        // Set default selection. This MUST go after the subscribe in order to trigger dataField to update
-        viewModel.boundData.forEach(function(entry){
-            if(state.value.dataSet.name === entry.name){
-                self.dataSet.value = entry;
-                self.dataField.value = state.value.dataField;
-                return;
-            }
-        });
     };
 
     ScaledGlyphSizeScheme.prototype = Object.create(GlyphSizeScheme.prototype);
@@ -75,6 +60,45 @@ define([
             }
         }
     });
+
+    ScaledGlyphSizeScheme.prototype.setSelectionFromState = function(state, viewModel){
+        var self = this;
+
+        // Subscribe to the value of dataSet in order to automatically update dataField's options
+        ko.getObservable(self.dataSet, '_value').subscribe(function(newValue) {
+            if(defined(newValue)){
+                self.dataField.options = newValue.options;
+            }
+            else{
+                self.dataField.options = [];
+            }
+        });
+
+        self.dataSet.options = viewModel.boundData;
+
+        // Set default selection. This MUST go after the subscribe in order to trigger dataField to update
+        viewModel.boundData.forEach(function(entry){
+            if(state.dataSet === entry.name){
+                self.dataSet.value = entry;
+                self.dataField.value = state.dataField;
+                return;
+            }
+        });
+
+        // Allows for deselection
+        var isValidValue = function(value){
+           var undef = (value === undefined);
+           var validSelection = false;
+           if (defined(this._options) && this._options.length > 0) {
+               validSelection = (this._options.indexOf(value) !== -1);
+           }
+
+           return undef || validSelection;
+        };
+
+        this.dataSet.isValidValue = isValidValue;
+        this.dataField.isValidValue = isValidValue;
+    };
 
     ScaledGlyphSizeScheme.prototype.getState = function(){
         var state = {

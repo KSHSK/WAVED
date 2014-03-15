@@ -5,7 +5,8 @@ define([
         'util/defined',
         'util/createValidator',
         'knockout',
-        'models/Property/GlyphSize/GlyphSizeSelectionProperty'
+        'models/Property/GlyphSize/GlyphSizeSelectionProperty',
+        'models/Constants/GlyphSizeSchemeType'
     ],function(
         Trigger,
         StringProperty,
@@ -13,7 +14,8 @@ define([
         defined,
         createValidator,
         ko,
-        GlyphSizeSelectionProperty){
+        GlyphSizeSelectionProperty,
+        GlyphSizeSchemeType){
     'use strict';
 
     var ButtonViewModel = function(state) {
@@ -78,7 +80,7 @@ define([
         // A new GlyphSizeSelectionProperty is created here because it requires state.foo.value to property
         // set the dropdown to the correct selection
         if (defined(state.foo)){
-            this.foo = new GlyphSizeSelectionProperty({displayName: 'GlyphSize', value: state.foo.value}, this);
+            this.foo.setSelectedFromState(state.foo, this);
         }
     };
 
