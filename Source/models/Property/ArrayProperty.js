@@ -13,16 +13,19 @@ define([
     ){
     'use strict';
 
-    var ArrayProperty = function(opts) {
-        opts = defined(opts) ? opts : {};
-        Property.call(this, opts);
+    /**
+     * optionObject param is optional
+     */
+    var ArrayProperty = function(state) {
+        state = defined(state) ? state : {};
+        Property.call(this, state);
 
         this._templateName = PropertyTemplateName.ARRAY;
 
         this._options = [];
 
         // Set a default isValidValue function if necessary.
-        if (!defined(opts.validValue)) {
+        if (!defined(state.validValue)) {
             this.isValidValue = function(value) {
                 if (defined(this._options) && this._options.length > 0) {
                     return (this._options.indexOf(value) !== -1);
@@ -31,7 +34,7 @@ define([
             };
         }
 
-        this.setState(opts);
+        this.setState(state);
 
         ko.track(this);
     };
@@ -72,7 +75,7 @@ define([
 
     ArrayProperty.prototype.getState = function() {
         var state = Property.prototype.getState.call(this);
-        state._options = this.options;
+        state.options = this._options;
 
         return state;
     };

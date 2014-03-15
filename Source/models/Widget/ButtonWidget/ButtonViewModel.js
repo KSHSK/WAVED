@@ -41,13 +41,6 @@ define([
             name: 'Button'
         }));
 
-     // TODO: Remove, testing code
-        var fooOptions = {
-          displayName: 'GlyphSize',
-          value: ''
-        };
-        this.foo = new GlyphSizeSelectionProperty(fooOptions);
-
         ko.track(this);
     };
 
@@ -64,6 +57,7 @@ define([
         var state = WidgetViewModel.prototype.getState.call(this);
         state.type = ButtonViewModel.getType();
         state.label = this.label.getState();
+        state.foo = this.foo.getState(); // TODO: Remove
 
         return state;
     };
@@ -74,13 +68,22 @@ define([
         if (defined(state.label)) {
             this.label.value = state.label.value;
         }
+
+        // TODO: Remove
+        if(defined(state.foo)) {
+            var fooOptions = {
+              displayName: 'GlyphSize',
+              value: state.foo.value
+            };
+            this.foo = new GlyphSizeSelectionProperty(fooOptions, this);
+        }
     };
 
     Object.defineProperties(ButtonViewModel.prototype, {
         properties: {
             get: function() {
                 return [this.name, this.label, this.x, this.y, this.width, this.height, this.visible,
-                this.logGoogleAnalytics, this.foo];
+                this.logGoogleAnalytics, this.foo]; // TODO: Remove
             }
         }
     });
