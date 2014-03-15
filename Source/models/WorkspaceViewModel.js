@@ -16,15 +16,13 @@ define([
         ko){
     'use strict';
 
-    // TODO: The constructor takes in (Object state) in the DD
     var WorkspaceViewModel = function(state) {
         state = defined(state) ? state : {};
+        SuperComponentViewModel.call(this, state);
 
         state.name = {
             value: 'Workspace'
         };
-
-        SuperComponentViewModel.call(this, state);
 
         // Set width
         this.width = new NumberProperty({

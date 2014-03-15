@@ -18,7 +18,7 @@ define([
 
     var SuperComponentViewModel = function(state) {
         // Set name
-        this._name = getNamePropertyInstance('Name', {
+        this.name = getNamePropertyInstance('Name', {
             namespace: SuperComponentViewModel.getUniqueNameNamespace(),
             item: this
         });
@@ -34,18 +34,6 @@ define([
         properties: {
             get: function() {
                 return [this.name];
-            }
-        },
-        name: {
-            get: function() {
-                return this._name;
-            },
-            set: function(value) {
-                var success = UniqueTracker.addValueIfUnique(SuperComponentViewModel.getUniqueNameNamespace(), value,
-                    this);
-                if (success) {
-                    this._name = value;
-                }
             }
         }
     });
