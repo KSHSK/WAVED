@@ -69,7 +69,7 @@ define([
         },
 
         unbindData: function(viewModel) {
-            if(viewModel.selectedBoundData !== undefined){
+            if(defined(viewModel.selectedBoundData)){
                 var name = viewModel.selectedBoundData.name;
 
                 var dataSet = viewModel.currentProject.getDataSet(name);
