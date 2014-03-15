@@ -13,9 +13,6 @@ define([
     ){
     'use strict';
 
-    /**
-     * optionObject param is optional
-     */
     var ArrayProperty = function(state) {
         state = defined(state) ? state : {};
         Property.call(this, state);
