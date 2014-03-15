@@ -13,7 +13,7 @@ define([
      *
      * @param displayName
      *            The display name of the property.
-     * @param uniqueItemInstance
+     * @param unique
      *            The item instance used for the unique constraint. If not supplied, the unique constraint is not
      *            enforced.
      */
@@ -25,7 +25,7 @@ define([
             maxLength: 50
         };
 
-        // Add unique option if uniqueItemInstance is supplied
+        // Add unique option if unique is supplied
         if (defined(unique) && defined(unique.namespace) && defined(unique.item)) {
             validValueOptions.unique = unique;
         }
