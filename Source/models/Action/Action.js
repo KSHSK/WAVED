@@ -24,13 +24,17 @@ define(['jquery',
         ko.track(this);
     };
 
+    Action.getUniqueNameNamespace = function() {
+        return 'action-name';
+    };
+
     Object.defineProperties(Action.prototype, {
         name: {
             get: function() {
                 return this._name;
             },
             set: function(value) {
-                var success = UniqueTracker.addValueIfUnique('name', value, this);
+                var success = UniqueTracker.addValueIfUnique(Action.getUniqueNameNamespace(), value, this);
                 if (success) {
                     this._name = value;
                 }

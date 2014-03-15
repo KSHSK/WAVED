@@ -178,6 +178,10 @@ define(['jquery',
         var widget = new w.o();
         self._currentProject.addComponent(widget);
         self._selectedComponent = widget;
+
+        // TODO: Really shouldn't do any jQuery stuff in here.
+        // Open properties panel.
+        $('#accordion').accordion('option', 'active', 5);
     };
 
     Object.defineProperties(WAVEDViewModel.prototype, {

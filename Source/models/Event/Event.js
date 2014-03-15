@@ -40,13 +40,17 @@ define([
         ko.track(this);
     };
 
+    Event.getUniqueNameNamespace = function() {
+        return 'event-name';
+    };
+
     Object.defineProperties(Event.prototype, {
         name: {
             get: function() {
                 return this._name;
             },
             set: function(value) {
-                var success = UniqueTracker.addValueIfUnique('name', value, this);
+                var success = UniqueTracker.addValueIfUnique(Event.getUniqueNameNamespace(), value, this);
                 if (success) {
                     this._name = value;
                 }

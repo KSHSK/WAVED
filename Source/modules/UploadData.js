@@ -51,7 +51,9 @@ define([
                                 return;
                             }
 
-                            if (!UniqueTracker.isValueUnique('name', viewModel.uploadDataName.value)) {
+                            if (!UniqueTracker.isValueUnique(DataSet.getUniqueNameNamespace(),
+                                viewModel.uploadDataName.value)) {
+
                                 displayMessage('The name "' + viewModel.uploadDataName.value + '" is already in use.');
                                 return;
                             }
