@@ -17,6 +17,8 @@ define([
     // For example: {namespace1: {myname: Widget1, actname: Action1}, namespace2: {eventword: Event1}}
     var namespaceValueItemMap = {};
 
+    var prefixCounter = {};
+
     var UniqueTracker = {
         /**
          * If the item has a unique name, adds the item and returns true. Otherwise, does nothing and returns false.
@@ -85,6 +87,20 @@ define([
             }
 
             return null;
+        },
+        getDefaultUniqueValue: function(namesapce, prefix, item) {
+            if (!defined(prefixCounter[prefix])) {
+                prefixCounter[prefix] = 1;
+            }
+
+            while (true) {
+                var value = prefix + prefixCounter[prefix].toString();
+                prefixCounter[prefix]++;
+
+                if (this.isValueUnique(namesapce, value, item)) {
+                    return value;
+                }
+            }
         }
     };
 

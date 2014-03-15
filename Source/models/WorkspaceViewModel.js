@@ -2,6 +2,7 @@ define([
         'models/SuperComponentViewModel',
         'models/Property/StringProperty',
         'models/Property/NumberProperty',
+        'modules/UniqueTracker',
         'util/createValidator',
         'util/defined',
         'util/defaultValue',
@@ -10,6 +11,7 @@ define([
         SuperComponentViewModel,
         StringProperty,
         NumberProperty,
+        UniqueTracker,
         createValidator,
         defined,
         defaultValue,
@@ -18,11 +20,12 @@ define([
 
     var WorkspaceViewModel = function(state) {
         state = defined(state) ? state : {};
-        SuperComponentViewModel.call(this, state);
 
-        state.name = {
+        // Set name
+        this.name = new StringProperty({
+            displayName: 'Name',
             value: 'Workspace'
-        };
+        });
 
         // Set width
         this.width = new NumberProperty({
@@ -44,6 +47,8 @@ define([
             errorMessage: 'Value must be greater than 0'
         });
 
+        UniqueTracker.addValueIfUnique(SuperComponentViewModel.getUniqueNameNamespace(), this.name.value, this);
+
         this.setState(state);
 
         ko.track(this);
@@ -60,8 +65,6 @@ define([
     };
 
     WorkspaceViewModel.prototype.setState = function(state) {
-        SuperComponentViewModel.prototype.setState.call(this, state);
-
         if (defined(state.width)) {
             this.width.value = state.width.value;
         }
