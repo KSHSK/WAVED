@@ -37,8 +37,6 @@ define([
 
         this.dataSet = new ArrayProperty(dataSetOptions);
 
-
-
         var dataFieldOptions = {
             displayName: 'Data Field',
             value: undefined,
