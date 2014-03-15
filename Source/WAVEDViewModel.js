@@ -106,9 +106,10 @@ define(['jquery',
             displayName: 'File',
             value: '',
             validValue: createValidator({
-                minLength: 1
+                minLength: 1,
+                regex: new RegExp('.(csv|json|xml)$', 'i')
             }),
-            errorMessage: 'Must select a file.'
+            errorMessage: 'Must select a file with extension CSV, JSON, or XML'
         });
 
 
