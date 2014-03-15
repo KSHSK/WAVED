@@ -3,10 +3,12 @@
  */
 define([
         'd3',
-        'jquery'
+        'jquery',
+        'util/displayMessage'
     ], function(
         d3,
-        $) {
+        $,
+        displayMessage) {
     'use strict';
 
     var ReadData = {
@@ -16,6 +18,11 @@ define([
             return this.dataFolderPath + dataSet.filename;
         },
 
+        endsWithInsensitive: function(str, suffix) {
+            suffix = suffix.toLowerCase();
+            return str.toLowerCase().indexOf(suffix, str.length - suffix.length) !== -1;
+        },
+
         /**
          *
          * @param dataSet The DataSet containing the information to be read.
@@ -23,10 +30,35 @@ define([
         readData: function(dataSet) {
             var readComplete = $.Deferred();
 
-            d3.csv(this.getFilePath(dataSet), function(data) {
-                dataSet.data = data;
-                readComplete.resolve();
-            });
+            var path = this.getFilePath(dataSet);
+
+            if (this.endsWithInsensitive(path, '.csv')) {
+                d3.csv(path, function(error, data) {
+                    if (error) {
+                        displayMessage('Could not read data for ' + dataSet.name);
+                        return;
+                    }
+
+                    dataSet.data = data;
+                    readComplete.resolve();
+                });
+            }
+            else if (this.endsWithInsensitive(path, '.json')) {
+                d3.json(path, function(error, data) {
+                    if (error) {
+                        displayMessage('Could not read data for ' + dataSet.name);
+                        return;
+                    }
+
+                    // TODO: Extra processing will be needed to get JSON data to be in the same form as CSV data.
+                    dataSet.data = data;
+                    readComplete.resolve();
+                });
+            }
+            else {
+                // Invalid file type.
+                return;
+            }
 
             return readComplete.promise();
         },
