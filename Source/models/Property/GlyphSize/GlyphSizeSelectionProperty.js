@@ -27,16 +27,16 @@ define([
         this.error = '';
         this._value = '';
 
-        var constantGlyphSize = new ConstantGlyphSizeScheme(options);
-        var scaledGlyphSize = new ScaledGlyphSizeScheme(options, viewModel);
+        this.constantGlyphSize = new ConstantGlyphSizeScheme(options);
+        this.scaledGlyphSize = new ScaledGlyphSizeScheme(options, viewModel);
 
         var stateValueType;
         switch(options.value.type) {
             case GlyphSizeSchemeType.CONSTANT_SIZE:
-                stateValueType = constantGlyphSize;
+                stateValueType = this.constantGlyphSize;
                 break;
             case GlyphSizeSchemeType.SCALED_SIZE:
-                stateValueType = scaledGlyphSize;
+                stateValueType = this.scaledGlyphSize;
                 break;
             default:
                 stateValueType = undefined;
@@ -44,7 +44,7 @@ define([
         }
 
         // Always set this to the GlyphSizeSchemeType enums
-        this.sizeType = [constantGlyphSize, scaledGlyphSize];
+        this.sizeType = [this.constantGlyphSize, this.scaledGlyphSize];
 
         // Initially bind this to the sizeType specified by stateValueType
         // Will be set by the setter onwards
@@ -79,6 +79,22 @@ define([
         }
 
         return state;
+    };
+
+    GlyphSizeSelectionProperty.prototype.setSelectedFromState = function(state, viewModel) {
+        switch(state.value.type) {
+            case GlyphSizeSchemeType.CONSTANT_SIZE:
+                this.constantGlyphSize.size = state.value.size;
+                this._value = this.constantGlyphSize;
+                break;
+            case GlyphSizeSchemeType.SCALED_SIZE:
+                this.scaledGlyphSize.setSelectionFromState(state.value, viewModel);
+                this._value = this.scaledGlyphSize;
+                break;
+            default:
+                this._value = undefined;
+                break;
+        }
     };
 
     return GlyphSizeSelectionProperty;
