@@ -3,8 +3,10 @@ html, body {
     padding: 0;
 }
 
-textarea {
+textarea:disabled {
     resize: none;
+    color: #000;
+    background: #fff;
 }
 
 /*** JQuery UI Overrides ***/
