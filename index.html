@@ -52,8 +52,8 @@
             <div id="accordion">
                 <h3>Project Tree</h3>
                 <div>
-	                <button class="right button-small delete-icon-button">Delete Project</button>
-	                <ul id='project-tree'>
+	                <button class="right button-small delete-icon-button" data-bind="click: tryToDeleteProject">Delete Project</button>
+	                <ul id='project-tree' data-bind="visible: currentProject.name">
 	                	<li>
 	                		<a data-bind="text: currentProject.name"></a>
 	                		<ul data-bind="foreach: currentProject.components">
@@ -205,6 +205,11 @@
         <p>Please create a new project</p>
         <label class="required">Project Name: <input id="create-new-project-name" data-bind="value: newProjectName.value, valueUpdate: 'keyup'"/> </label>
         <div class="error" data-bind="visible: newProjectName.error, html: newProjectName.message"></div>
+    </div>
+    
+    <div id="delete-project-dialog" title="Delete Project" class="dialog">
+        <p>Are you sure you want to delete the project?</p>
+        <div class="error"></div>
     </div>
 
     <div id="load-project-dialog" title="Load Project" class="dialog">

@@ -14,6 +14,7 @@ define(['jquery',
         'modules/NewProject',
         'modules/LoadProject',
         'modules/SaveProject',
+        'modules/DeleteProject',
         'modules/UploadData',
         'modules/BindData',
         'modules/DeleteData',
@@ -38,6 +39,7 @@ define(['jquery',
         NewProject,
         LoadProject,
         SaveProject,
+        DeleteProject,
         UploadData,
         BindData,
         DeleteData,
@@ -207,6 +209,10 @@ define(['jquery',
 
     WAVEDViewModel.prototype.tryToSaveProject = function() {
         return SaveProject.tryToSaveProject(self);
+    };
+
+    WAVEDViewModel.prototype.tryToDeleteProject = function() {
+        return DeleteProject.tryToDeleteProject(self);
     };
 
     // TODO: Component
