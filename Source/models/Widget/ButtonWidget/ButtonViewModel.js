@@ -75,9 +75,10 @@ define([
             this.label.value = state.label.value;
         }
 
-        // TODO: Remove
-        if(defined(state.foo)) {
-            this.foo.value = state.foo.value;
+        // A new GlyphSizeSelectionProperty is created here because it requires state.foo.value to property
+        // set the dropdown to the correct selection
+        if (defined(state.foo)){
+            this.foo = new GlyphSizeSelectionProperty({displayName: 'GlyphSize', value: state.foo.value}, this);
         }
     };
 
