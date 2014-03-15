@@ -125,8 +125,8 @@ define([
                             return;
                         }
 
-                        if (!UniqueTracker.isValueUnique('name', viewModel.selectedActionName.value,
-                            viewModel.selectedAction)) {
+                        if (!UniqueTracker.isValueUnique(Action.getUniqueNameNamespace(),
+                            viewModel.selectedActionName.value, viewModel.selectedAction)) {
 
                             displayMessage('The name "' + viewModel.selectedActionName.value + '" is already in use.');
                             return;

@@ -1,33 +1,51 @@
 define([
-        'models/Property/StringProperty',
         'jquery',
+        'knockout',
+        'models/Property/StringProperty',
+        'modules/UniqueTracker',
         'util/defined',
         'util/createValidator',
-        'util/getNamePropertyInstance',
-        'knockout'
+        'util/getNamePropertyInstance'
     ], function(
-        StringProperty,
         $,
+        ko,
+        StringProperty,
+        UniqueTracker,
         defined,
         createValidator,
-        getNamePropertyInstance,
-        ko) {
+        getNamePropertyInstance) {
     'use strict';
 
     var SuperComponentViewModel = function(state) {
         // Set name
-        this.name = getNamePropertyInstance('Name', {
-            namespace: 'component-name',
+        this._name = getNamePropertyInstance('Name', {
+            namespace: SuperComponentViewModel.getUniqueNameNamespace(),
             item: this
         });
 
         ko.track(this);
     };
 
+    SuperComponentViewModel.getUniqueNameNamespace = function() {
+        return 'component-name';
+    };
+
     Object.defineProperties(SuperComponentViewModel.prototype, {
         properties: {
             get: function() {
                 return [this.name];
+            }
+        },
+        name: {
+            get: function() {
+                return this._name;
+            },
+            set: function(value) {
+                var success = UniqueTracker.addValueIfUnique(SuperComponentViewModel.getUniqueNameNamespace(), value,
+                    this);
+                if (success) {
+                    this._name = value;
+                }
             }
         }
     });

@@ -126,11 +126,12 @@ define([
                         ReadData.dataFolderPath = data.dataFolder;
 
                         // Create the new project.
-                        viewModel.currentProject = new ProjectViewModel(JSON.parse(data.projectState),
+                        viewModel.currentProject.setState(JSON.parse(data.projectState),
                             viewModel.availableWidgets);
 
                         viewModel.dirty = false;
                         viewModel.loadProjectName._value = '';
+                        viewModel.selectedComponent = viewModel.workspace;
 
                         // Set the URL to include the current project name.
                         updateQueryByName('project', data.projectName);
