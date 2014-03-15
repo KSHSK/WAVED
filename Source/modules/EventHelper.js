@@ -1,4 +1,3 @@
-/*global define*/
 define([
         'WAVEDViewModel',
         './UniqueTracker',
@@ -43,7 +42,9 @@ define([
                             return;
                         }
 
-                        if (!UniqueTracker.isValueUnique('name', viewModel.selectedEventName.value)) {
+                        if (!UniqueTracker.isValueUnique(Event.getUniqueNameNamespace(),
+                            viewModel.selectedEventName.value)) {
+
                             displayMessage('The name "' + viewModel.selectedEventName.value + '" is already in use.');
                             return;
                         }

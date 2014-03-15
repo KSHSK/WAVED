@@ -1,7 +1,7 @@
-/*global define*/
 define([
         'WAVEDViewModel',
         './UniqueTracker',
+        'models/Action/Action',
         'models/Action/PropertyAction',
         'models/Action/QueryAction',
         'util/defined',
@@ -11,6 +11,7 @@ define([
     ],function(
         WAVEDViewModel,
         UniqueTracker,
+        Action,
         PropertyAction,
         QueryAction,
         defined,
@@ -57,7 +58,9 @@ define([
                             return;
                         }
 
-                        if (!UniqueTracker.isValueUnique('name', viewModel.selectedActionName.value)) {
+                        if (!UniqueTracker.isValueUnique(Action.getUniqueNameNamespace(),
+                            viewModel.selectedActionName.value)) {
+
                             displayMessage('The name "' + viewModel.selectedActionName.value + '" is already in use.');
                             return;
                         }

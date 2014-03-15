@@ -35,6 +35,9 @@ define(['knockout',
         return 'DataSet';
     };
 
+    DataSet.getUniqueNameNamespace = function() {
+        return 'dataset-name';
+    };
 
     DataSet.prototype.incrementReferenceCount = function() {
         // Don't change if marked for deletion.
@@ -91,7 +94,7 @@ define(['knockout',
                 return this._name;
             },
             set: function(value) {
-                var success = UniqueTracker.addValueIfUnique('name', value, this);
+                var success = UniqueTracker.addValueIfUnique(DataSet.getUniqueNameNamespace(), value, this);
                 if (success) {
                     this._name = value;
                 }

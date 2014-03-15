@@ -17,7 +17,7 @@ define([
     var SuperComponentViewModel = function(state) {
         // Set name
         this.name = getNamePropertyInstance('Name', {
-            namespace: 'name',
+            namespace: 'component-name',
             item: this
         });
 
