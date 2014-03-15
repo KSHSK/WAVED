@@ -27,15 +27,14 @@ define([
             };
         }
 
+        // Default size
         var stateSize = {
             displayName: 'Size (%)',
             value: 10
         };
-        if(defined(state.value.size) && state.value.size.value > 0){
-            stateSize.value = state.value.size.value;
-        }
-
         this.size = new NumberProperty(stateSize);
+
+        this.setState(state);
 
         ko.track(this);
     };
@@ -61,6 +60,12 @@ define([
         };
 
         return state;
+    };
+
+    ConstantGlyphSizeScheme.prototype.setState = function(state) {
+        if(defined(state.value.size) && state.value.size.value > 0){
+            this.size.value = state.value.size.value;
+        }
     };
 
     return ConstantGlyphSizeScheme;
