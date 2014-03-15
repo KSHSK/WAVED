@@ -20,7 +20,7 @@ define([
     'use strict';
 
     var GlyphSizeSelectionProperty = function(options, viewModel) {
-        options = defined(options) ? options : { displayName: 'Glyph Size', value: '' };
+        options = defined(options) ? options : {};
         Property.call(this, options);
 
         this._templateName = PropertyTemplateName.GLYPH_SIZE;
@@ -71,20 +71,20 @@ define([
         var state = Property.prototype.getState.call(this);
 
         // Overwrite state.value with our own value
-        if(this._value !== undefined){
+        if(defined(this._value)){
             state.value = this._value.getState();
-        }
-        else{
-            state.value = undefined;
         }
 
         return state;
     };
 
     GlyphSizeSelectionProperty.prototype.setSelectedFromState = function(state, viewModel) {
+        if(!defined(state.value)){
+            return;
+        }
         switch(state.value.type) {
             case GlyphSizeSchemeType.CONSTANT_SIZE:
-                this.constantGlyphSize.size = state.value.size;
+                this.constantGlyphSize.size.value = state.value.size.value;
                 this._value = this.constantGlyphSize;
                 break;
             case GlyphSizeSchemeType.SCALED_SIZE:
