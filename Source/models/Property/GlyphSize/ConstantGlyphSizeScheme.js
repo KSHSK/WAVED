@@ -23,7 +23,7 @@ define([
 
         if(!defined(state.validValue)){
             state.validValue = function(value) {
-                return (defined(this.size) && this.size > 0);
+                return (defined(this.size.value) && this.size.value > 0);
             };
         }
 
