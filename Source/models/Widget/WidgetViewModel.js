@@ -6,7 +6,8 @@ define([
         'models/ComponentViewModel',
         'util/defined',
         'util/defaultValue',
-        'util/createValidator'
+        'util/createValidator',
+        'd3'
     ], function(
         $,
         StringProperty,
@@ -15,7 +16,8 @@ define([
         ComponentViewModel,
         defined,
         defaultValue,
-        createValidator) {
+        createValidator,
+        d3) {
     'use strict';
 
     var WidgetViewModel = function(state) {
@@ -153,11 +155,25 @@ define([
     };
 
     WidgetViewModel.prototype.bindData = function(dataSet) {
-        var name = dataSet.name;
+        var dataObject = d3.values(dataSet.data)[0];
+        var dataFields = Object.getOwnPropertyNames(dataObject);
+
+        var set = {
+            name: dataSet.name,
+            options: dataFields
+        };
 
         // Don't bind the same data twice.
-        if (this._boundData.indexOf(name) === -1) {
-            this._boundData.push(name);
+        var found = false;
+        for(var index = 0; index < this._boundData.length; index++){
+            if(set.name === this._boundData[index].name){
+                found = true;
+                break;
+            }
+        }
+
+        if(!found){
+            this._boundData.push(set);
             dataSet.incrementReferenceCount();
         }
     };
@@ -166,10 +182,12 @@ define([
         var name = dataSet.name;
 
         // Only unbind if the data is bound.
-        var index = this._boundData.indexOf(name);
-        if (index > -1) {
-            this._boundData.splice(index, 1);
-            dataSet.decrementReferenceCount();
+        for(var index = 0; index < this._boundData.length; index++){
+            if(name === this._boundData[index].name){
+                this._boundData.splice(index, 1);
+                dataSet.decrementReferenceCount();
+                break;
+            }
         }
     };
 

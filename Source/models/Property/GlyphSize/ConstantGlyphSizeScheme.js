@@ -31,8 +31,8 @@ define([
             displayName: 'Size (%)',
             value: 10
         };
-        if(defined(state.size) && state.size > 0){
-            stateSize.value = state.size;
+        if(defined(state.value.size) && state.value.size.value > 0){
+            stateSize.value = state.value.size.value;
         }
 
         this.size = new NumberProperty(stateSize);
@@ -56,7 +56,7 @@ define([
 
     ConstantGlyphSizeScheme.prototype.getState = function() {
         var state = {
-            size: this.size,
+            size: this.size.getState(),
             type: this.getType()
         };
 

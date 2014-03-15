@@ -5,6 +5,7 @@ define([
         'models/Constants/GlyphSizeSchemeType',
         'models/Property/GlyphSize/ConstantGlyphSizeScheme',
         'models/Property/GlyphSize/ScaledGlyphSizeScheme',
+        'models/Widget/WidgetViewModel',
         'knockout'
     ],function(
         Property,
@@ -13,11 +14,12 @@ define([
         GlyphSizeSchemeType,
         ConstantGlyphSizeScheme,
         ScaledGlyphSizeScheme,
+        WidgetViewModel,
         ko
     ){
     'use strict';
 
-    var GlyphSizeSelectionProperty = function(options) {
+    var GlyphSizeSelectionProperty = function(options, viewModel) {
         options = defined(options) ? options : { displayName: 'Glyph Size', value: '' };
         Property.call(this, options);
 
@@ -26,7 +28,7 @@ define([
         this._value = '';
 
         var constantGlyphSize = new ConstantGlyphSizeScheme(options);
-        var scaledGlyphSize = new ScaledGlyphSizeScheme(options);
+        var scaledGlyphSize = new ScaledGlyphSizeScheme(options, viewModel);
 
         var stateValueType;
         switch(options.value.type) {
@@ -37,12 +39,12 @@ define([
                 stateValueType = scaledGlyphSize;
                 break;
             default:
-                stateValueType = scaledGlyphSize; // TODO: make undefined
+                stateValueType = undefined;
                 break;
         }
 
         // Always set this to the GlyphSizeSchemeType enums
-        this.sizeType = ko.observableArray([constantGlyphSize, scaledGlyphSize]);
+        this.sizeType = [constantGlyphSize, scaledGlyphSize];
 
         // Initially bind this to the sizeType specified by stateValueType
         // Will be set by the setter onwards
@@ -64,27 +66,19 @@ define([
         }
     });
 
-    // TODO: Uhhhh...this isn't right
-    GlyphSizeSelectionProperty.prototype.getSelectedSizeType = function(schemeType) {
-        if(schemeType === GlyphSizeSchemeType.CONSTANT_SIZE){
-            return new ConstantGlyphSizeScheme();
-        }
-        else if(schemeType === GlyphSizeSchemeType.SCALED_SIZE){
-            return new ScaledGlyphSizeScheme();
-        }
-    };
-
     GlyphSizeSelectionProperty.prototype.getState = function() {
         // This actually sets state.value to an object, we don't want that
         var state = Property.prototype.getState.call(this);
 
         // Overwrite state.value with our own value
-        if(this._value !== 'undefined'){
+        if(this._value !== undefined){
             state.value = this._value.getState();
         }
         else{
-            state.value = '';
+            state.value = undefined;
         }
+
+        return state;
     };
 
     return GlyphSizeSelectionProperty;

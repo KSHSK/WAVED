@@ -2,21 +2,29 @@ define([
         'models/Property/GlyphSize/GlyphSizeScheme',
         'models/Constants/GlyphSizeSchemeType',
         'models/Property/ArrayProperty',
+        'models/Widget/WidgetViewModel',
+        'models/ProjectViewModel',
         'knockout',
         'jquery',
         'util/defined',
-        'util/defaultValue'
+        'util/defaultValue',
+        'WAVED'
     ],function(
         GlyphSizeScheme,
         GlyphSizeSchemeType,
         ArrayProperty,
+        WidgetViewModel,
+        ProjectViewModel,
         ko,
         $,
         defined,
-        defaultValue){
+        defaultValue,
+        WAVED){
     'use strict';
 
-    var ScaledGlyphSizeScheme = function(state) {
+    var ScaledGlyphSizeScheme = function(state, viewModel) {
+        var self = this;
+
         state = defined(state) ? state : {};
 
         GlyphSizeScheme.call(this, state);
@@ -24,37 +32,38 @@ define([
         var dataSetOptions = {
             displayName: 'Data Set',
             value: undefined,
-            options: []
+            options: viewModel.boundData
         };
-        if (defined(state.dataSet)) {
-            dataSetOptions.value = state.dataSet.value;
-        }
-        if(defined(state.dataSet)){
-            if(state.dataSet.options.length > 0){
-                dataSetOptions.options = state.dataSet.options; // TODO: Should these just be populated from the data set itself?
-            }
-        }
 
         this.dataSet = new ArrayProperty(dataSetOptions);
+
+
 
         var dataFieldOptions = {
             displayName: 'Data Field',
             value: undefined,
             options: []
         };
-        if (defined(state.dataField)) {
-            dataFieldOptions = state.dataField.value;
-        }
-        if(defined(state.dataField)){
-            if(state.dataField.options.length > 0){
-                // TODO: Populate directly from the dataset
-                dataFieldOptions = state.dataField.options;
-            }
-        }
 
         this.dataField = new ArrayProperty(dataFieldOptions);
 
         ko.track(this);
+
+        // Subscribe to the value of dataSet in order to automatically update dataField's options
+        ko.getObservable(self.dataSet, '_value').subscribe(function(newValue) {
+            self.dataField.options = newValue.options;
+        });
+
+        // Set default selection. This MUST go after the subscribe in order to trigger dataField to update
+        viewModel.boundData.forEach(function(entry){
+            if(state.value.dataSet.value.name === entry.name){
+                self.dataSet.value = entry;
+                self.dataField.value = state.value.dataField.value;
+                return;
+            }
+        });
+
+
     };
 
     ScaledGlyphSizeScheme.prototype = Object.create(GlyphSizeScheme.prototype);
@@ -74,7 +83,8 @@ define([
     ScaledGlyphSizeScheme.prototype.getState = function(){
         var state = {
             dataSet: this.dataSet.getState(),
-            dataField: this.dataField.getState()
+            dataField: this.dataField.getState(),
+            type: this.getType()
         };
 
         return state;

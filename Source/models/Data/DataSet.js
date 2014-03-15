@@ -2,13 +2,15 @@ define(['knockout',
         'models/Property/StringProperty',
         'modules/ReadData',
         'util/defined',
-        'util/createValidator'
+        'util/createValidator',
+        'd3'
     ],function(
         ko,
         StringProperty,
         ReadData,
         defined,
-        createValidator
+        createValidator,
+        d3
     ){
     'use strict';
 
