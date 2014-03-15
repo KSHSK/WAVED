@@ -60,8 +60,6 @@ define([
                 return;
             }
         });
-
-
     };
 
     ScaledGlyphSizeScheme.prototype = Object.create(GlyphSizeScheme.prototype);
