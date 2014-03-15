@@ -2,7 +2,6 @@ define([
         'jquery',
         'knockout',
         'models/Property/StringProperty',
-        'modules/UniqueTracker',
         'util/defined',
         'util/createValidator',
         'util/getNamePropertyInstance'
@@ -10,7 +9,6 @@ define([
         $,
         ko,
         StringProperty,
-        UniqueTracker,
         defined,
         createValidator,
         getNamePropertyInstance) {
