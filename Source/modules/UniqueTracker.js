@@ -28,6 +28,10 @@ define([
          * @returns {Boolean}
          */
         addValueIfUnique: function(namespace, value, item) {
+            if (item === null || !defined(item)) {
+                return false;
+            }
+
             if (!this.isValueUnique(namespace, value, item)) {
                 return false;
             }
