@@ -288,7 +288,7 @@ define(['jquery',
                 var boundDataSets = defaultValue(this.selectedWidget.viewModel.boundData, []);
 
                 return dataSets.filter(function(dataSet) {
-                    for(var index=0; index < boundDataSets.length; index++){
+                    for(var index = 0; index < boundDataSets.length; index++){
                         if(boundDataSets[index]._name === dataSet.name){
                             return false;
                         }
