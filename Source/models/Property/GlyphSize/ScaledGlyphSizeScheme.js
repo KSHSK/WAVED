@@ -111,11 +111,11 @@ define([
                     if(defined(self.dataSet.value.data) && self.dataSet.value.dataFields.length >= 0){
                         if(entry.dataFields.length >= 0){
                             self.dataField.value = state.dataField;
-                            window.clearInterval(interval);
+                            clearInterval(interval);
                         }
                     }
                     else{
-                        window.clearInterval(interval);
+                        clearInterval(interval);
                     }
                 }, 100);
 
