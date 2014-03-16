@@ -146,7 +146,31 @@ define(['jquery',
         this.selectedEventActions = [];
 
         ko.track(this);
+
+        registerDirtyListeners();
     };
+
+    function registerDirtyListeners() {
+        // Component is added or removed.
+        ko.getObservable(self.currentProject, '_components').subscribe(function(changes) {
+            self.dirty = true;
+        }, null, 'arrayChange');
+
+        // DataSet is added or removed.
+        ko.getObservable(self.currentProject, '_dataSets').subscribe(function(changes) {
+            self.dirty = true;
+        }, null, 'arrayChange');
+
+        // Action is added or removed.
+        ko.getObservable(self.currentProject, '_actions').subscribe(function(changes) {
+            self.dirty = true;
+        }, null, 'arrayChange');
+
+        // Event is added or removed.
+        ko.getObservable(self.currentProject, '_events').subscribe(function(changes) {
+            self.dirty = true;
+        }, null, 'arrayChange');
+    }
 
     WAVEDViewModel.prototype.tryToCreateNewProject = function() {
         return NewProject.tryToCreateNewProject(self);
@@ -240,10 +264,6 @@ define(['jquery',
         currentProject: {
             get: function() {
                 return this._currentProject;
-            },
-            set: function(value) {
-                this._currentProject = value;
-                this._selectedWidget = value.workspace;
             }
         },
         availableWidgets: {
