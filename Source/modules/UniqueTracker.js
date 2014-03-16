@@ -92,7 +92,7 @@ define([
 
             return null;
         },
-        getDefaultUniqueValue: function(namesapce, prefix, item) {
+        getDefaultUniqueValue: function(namespace, prefix, item) {
             if (!defined(prefixCounter[prefix])) {
                 prefixCounter[prefix] = 1;
             }
@@ -101,7 +101,7 @@ define([
                 var value = prefix + prefixCounter[prefix].toString();
                 prefixCounter[prefix]++;
 
-                if (this.isValueUnique(namesapce, value, item)) {
+                if (this.isValueUnique(namespace, value, item)) {
                     return value;
                 }
             }

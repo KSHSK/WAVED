@@ -9,7 +9,7 @@ define([
     'use strict';
 
     /**
-     * Gets an standard name String property instance.
+     * Gets a standard name String property instance.
      *
      * @param displayName
      *            The display name of the property.
