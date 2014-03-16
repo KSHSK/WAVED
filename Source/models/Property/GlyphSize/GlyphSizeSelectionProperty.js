@@ -78,7 +78,7 @@ define([
         return state;
     };
 
-    GlyphSizeSelectionProperty.prototype.setSelectedFromState = function(state, viewModel) {
+    GlyphSizeSelectionProperty.prototype.setState = function(state, viewModel) {
         if(!defined(state.value)){
             return;
         }
@@ -88,7 +88,7 @@ define([
                 this._value = this.constantGlyphSize;
                 break;
             case GlyphSizeSchemeType.SCALED_SIZE:
-                this.scaledGlyphSize.setSelectionFromState(state.value, viewModel);
+                this.scaledGlyphSize.setState(state.value, viewModel);
                 this._value = this.scaledGlyphSize;
                 break;
             default:

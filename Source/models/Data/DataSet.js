@@ -2,13 +2,17 @@ define(['knockout',
         'models/Property/StringProperty',
         'modules/ReadData',
         'util/defined',
-        'util/createValidator'
+        'util/createValidator',
+        'd3',
+        'jquery'
     ],function(
         ko,
         StringProperty,
         ReadData,
         defined,
-        createValidator
+        createValidator,
+        d3,
+        $
     ){
     'use strict';
 
@@ -21,6 +25,7 @@ define(['knockout',
         this._name = '';
         this._filename = '';
         this._referenceCount = 0;
+        this._dataFields = [];
 
         this.setState(state);
 
@@ -67,6 +72,7 @@ define(['knockout',
     };
 
     DataSet.prototype.setState = function(state) {
+        var self = this;
         if (defined(state.name)) {
             this._name = state.name;
         }
@@ -79,7 +85,11 @@ define(['knockout',
             this._filename = state.filename;
 
             if (!this.isMarkedForDeletion()) {
-                ReadData.readData(this);
+                // Populate the dataFields array once readData() is done
+                $.when(ReadData.readData(this)).done(function(){
+                    var values = d3.values(self._data)[0];
+                    self._dataFields = Object.getOwnPropertyNames(values);
+                });
             }
         }
     };
@@ -114,6 +124,14 @@ define(['knockout',
         referenceCount: {
             get: function() {
                 return this._referenceCount;
+            }
+        },
+        dataFields: {
+            get: function() {
+                return this._dataFields;
+            },
+            set: function(fields){
+                this._dataFields = fields;
             }
         }
     });

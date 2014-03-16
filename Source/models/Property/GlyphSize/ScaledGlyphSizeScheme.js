@@ -44,7 +44,24 @@ define([
 
         this.dataField = new ArrayProperty(dataFieldOptions);
 
+        // Allows for deselection
+        var isValidValue = function(value){
+           var undef = (value === undefined);
+           var validSelection = false;
+           if (defined(this._options) && this._options.length > 0) {
+               validSelection = (this._options.indexOf(value) !== -1);
+           }
+
+           return undef || validSelection;
+        };
+
+        this.dataSet.isValidValue = isValidValue;
+        this.dataField.isValidValue = isValidValue;
+
         ko.track(this);
+
+        // Must call this after ko.track
+        this.setState(state, viewModel);
     };
 
     ScaledGlyphSizeScheme.prototype = Object.create(GlyphSizeScheme.prototype);
@@ -61,13 +78,15 @@ define([
         }
     });
 
-    ScaledGlyphSizeScheme.prototype.setSelectionFromState = function(state, viewModel){
+    ScaledGlyphSizeScheme.prototype.setState = function(state, viewModel){
         var self = this;
 
         // Subscribe to the value of dataSet in order to automatically update dataField's options
         ko.getObservable(self.dataSet, '_value').subscribe(function(newValue) {
             if(defined(newValue)){
-                self.dataField.options = newValue.options;
+
+                // TODO: Find a workaround. The data isn't done loading yet.
+                window.setTimeout(function(){self.dataField.options = newValue.dataFields;}, 500);
             }
             else{
                 self.dataField.options = [];
@@ -78,31 +97,24 @@ define([
 
         // Set default selection. This MUST go after the subscribe in order to trigger dataField to update
         viewModel.boundData.forEach(function(entry){
-            if(state.dataSet === entry.name){
+            if(defined(state.dataSet) && (state.dataSet === entry.name)){
                 self.dataSet.value = entry;
-                self.dataField.value = state.dataField;
+
+                // TODO: Find a workaround. The data isn't done loading yet.
+                window.setTimeout(function(){self.dataField.value = state.dataField;}, 500);
                 return;
             }
         });
-
-        // Allows for deselection
-        var isValidValue = function(value){
-           var undef = (value === undefined);
-           var validSelection = false;
-           if (defined(this._options) && this._options.length > 0) {
-               validSelection = (this._options.indexOf(value) !== -1);
-           }
-
-           return undef || validSelection;
-        };
-
-        this.dataSet.isValidValue = isValidValue;
-        this.dataField.isValidValue = isValidValue;
     };
 
     ScaledGlyphSizeScheme.prototype.getState = function(){
+        var set;
+        if(defined(this.dataSet.getState().value)){
+            set = this.dataSet.getState().value._name;
+        }
+
         var state = {
-            dataSet: this.dataSet.getState().value,
+            dataSet: set,
             dataField: this.dataField.getState().value,
             type: this.getType()
         };

@@ -289,13 +289,12 @@ define(['jquery',
 
                 return dataSets.filter(function(dataSet) {
                     for(var index=0; index < boundDataSets.length; index++){
-                        if(boundDataSets[index].name === dataSet.name){
+                        if(boundDataSets[index]._name === dataSet.name){
                             return false;
                         }
                     }
 
                     return true;
-                    //return boundDataNames.indexOf(dataSet.name) === -1;
                 });
             }
         }
