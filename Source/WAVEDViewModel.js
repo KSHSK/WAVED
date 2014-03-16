@@ -151,24 +151,44 @@ define(['jquery',
     };
 
     function registerDirtyListeners() {
+        function setDirty() {
+            self.dirty = true;
+        }
+
+        function arrayChanged(changes) {
+            self.dirty = true;
+
+            changes.forEach(function(change) {
+                if (change.status === 'added') {
+                    var subscriber = change.value.viewModel || change.value;
+                    subscriber.subscribeChanges(setDirty);
+                }
+                else if (change.status === 'deleted') {
+                    // TODO
+                }
+            });
+        }
+
         // Component is added or removed.
         ko.getObservable(self.currentProject, '_components').subscribe(function(changes) {
-            self.dirty = true;
+            arrayChanged(changes);
         }, null, 'arrayChange');
 
         // DataSet is added or removed.
         ko.getObservable(self.currentProject, '_dataSets').subscribe(function(changes) {
-            self.dirty = true;
+            arrayChanged(changes);
         }, null, 'arrayChange');
 
         // Action is added or removed.
         ko.getObservable(self.currentProject, '_actions').subscribe(function(changes) {
-            self.dirty = true;
+            // TODO: Uncomment and subscribe for actions.
+//            arrayChanged(changes);
         }, null, 'arrayChange');
 
         // Event is added or removed.
         ko.getObservable(self.currentProject, '_events').subscribe(function(changes) {
-            self.dirty = true;
+         // TODO: Uncomment and subscribe for events.
+//            arrayChanged(changes);
         }, null, 'arrayChange');
     }
 

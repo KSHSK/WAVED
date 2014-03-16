@@ -84,6 +84,17 @@ define(['knockout',
         }
     };
 
+    DataSet.prototype.subscribeChanges = function(setDirty) {
+        var properties = [this._name, this._filename, this._referenceCount];
+
+        // TODO: Fix.
+//        properties.forEach(function(prop) {
+//            ko.getObservable(this, '_value').subscribe(function(newValue) {
+//                setDirty();
+//            });
+//        });
+    };
+
     Object.defineProperties(DataSet.prototype, {
         name: {
             get: function() {
