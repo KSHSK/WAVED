@@ -327,5 +327,49 @@ define([
         //TODO
     };
 
+    ProjectViewModel.prototype.subscribeChanges = function(setDirty) {
+        function arrayChanged(changes) {
+            setDirty();
+
+            changes.forEach(function(change) {
+                var subscriber = change.value.viewModel || change.value;
+                if (change.status === 'added') {
+                    subscriber.subscribeChanges(setDirty);
+                }
+                else if (change.status === 'deleted') {
+                    subscriber.subscriptions.forEach(function(subscription) {
+                        subscription.dispose();
+                    });
+                }
+            });
+        }
+
+        // Workspace changed.
+        this.workspace.subscribeChanges(setDirty);
+
+        // Google Analytics changed.
+        this.googleAnalytics.subscribeChanges(setDirty);
+
+        // Component is added or removed.
+        ko.getObservable(this, '_components').subscribe(function(changes) {
+            arrayChanged(changes);
+        }, null, 'arrayChange');
+
+        // DataSet is added or removed.
+        ko.getObservable(this, '_dataSets').subscribe(function(changes) {
+            arrayChanged(changes);
+        }, null, 'arrayChange');
+
+        // Action is added or removed.
+        ko.getObservable(this, '_actions').subscribe(function(changes) {
+            arrayChanged(changes);
+        }, null, 'arrayChange');
+
+        // Event is added or removed.
+        ko.getObservable(this, '_events').subscribe(function(changes) {
+            arrayChanged(changes);
+        }, null, 'arrayChange');
+    };
+
     return ProjectViewModel;
 });

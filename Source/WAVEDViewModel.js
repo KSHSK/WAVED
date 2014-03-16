@@ -147,56 +147,10 @@ define(['jquery',
 
         ko.track(this);
 
-        registerDirtyListeners();
+        this.currentProject.subscribeChanges(function() {
+            self.dirty = true;
+        });
     };
-
-    function registerDirtyListeners() {
-        function setDirty() {
-            self.dirty = true;
-        }
-
-        function arrayChanged(changes) {
-            self.dirty = true;
-
-            changes.forEach(function(change) {
-                var subscriber = change.value.viewModel || change.value;
-                if (change.status === 'added') {
-                    subscriber.subscribeChanges(setDirty);
-                }
-                else if (change.status === 'deleted') {
-                    subscriber.subscriptions.forEach(function(subscription) {
-                        subscription.dispose();
-                    });
-                }
-            });
-        }
-
-        // Workspace changed.
-        self.currentProject.workspace.subscribeChanges(setDirty);
-
-        // Google Analytics changed.
-        self.currentProject.googleAnalytics.subscribeChanges(setDirty);
-
-        // Component is added or removed.
-        ko.getObservable(self.currentProject, '_components').subscribe(function(changes) {
-            arrayChanged(changes);
-        }, null, 'arrayChange');
-
-        // DataSet is added or removed.
-        ko.getObservable(self.currentProject, '_dataSets').subscribe(function(changes) {
-            arrayChanged(changes);
-        }, null, 'arrayChange');
-
-        // Action is added or removed.
-        ko.getObservable(self.currentProject, '_actions').subscribe(function(changes) {
-            arrayChanged(changes);
-        }, null, 'arrayChange');
-
-        // Event is added or removed.
-        ko.getObservable(self.currentProject, '_events').subscribe(function(changes) {
-            arrayChanged(changes);
-        }, null, 'arrayChange');
-    }
 
     WAVEDViewModel.prototype.tryToCreateNewProject = function() {
         return NewProject.tryToCreateNewProject(self);
