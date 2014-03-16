@@ -48,5 +48,13 @@ define([
         }
     };
 
+    SuperComponentViewModel.prototype.subscribeChanges = function(setDirty) {
+        this.properties.forEach(function(prop) {
+            ko.getObservable(prop, '_value').subscribe(function(newValue) {
+                setDirty();
+            });
+        });
+    };
+
     return SuperComponentViewModel;
 });

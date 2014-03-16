@@ -152,16 +152,16 @@ define([
         }
 
         if (defined(state.analytics)) {
-            this._googleAnalytics = new GoogleAnalytics(state.analytics);
+            this._googleAnalytics.setState(state.analytics);
         }
 
         if (defined(state.workspace)) {
-            this._workspace = new WorkspaceViewModel(state.workspace);
+            this._workspace.setState(state.workspace);
         }
 
         if (defined(state.components)) {
             // Clear array.
-            this._components.length = 0;
+            this._components.length = 1;
 
             var newComponents = $.map(state.components, function(itemState) {
                 for (var index in availableWidgets) {
@@ -174,9 +174,6 @@ define([
                 // Invalid state.
                 return null;
             });
-
-            // Insert workspace first.
-            this._components.push(this._workspace);
 
             this._components.push.apply(this._components, newComponents);
         }
