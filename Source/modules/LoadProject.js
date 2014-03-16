@@ -7,6 +7,7 @@ define([
         './ReadData',
         './DeleteData',
         './SaveProject',
+        './UniqueTracker',
         'models/ProjectViewModel',
         'util/updateQueryByName'
     ], function(
@@ -15,6 +16,7 @@ define([
         ReadData,
         DeleteData,
         SaveProject,
+        UniqueTracker,
         ProjectViewModel,
         updateQueryByName) {
     'use strict';
@@ -124,6 +126,8 @@ define([
 
                         // Update the data folder path.
                         ReadData.dataFolderPath = data.dataFolder;
+
+                        UniqueTracker.reset();
 
                         // Create the new project.
                         viewModel.currentProject.setState(JSON.parse(data.projectState),

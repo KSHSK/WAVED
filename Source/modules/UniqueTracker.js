@@ -105,6 +105,10 @@ define([
                     return value;
                 }
             }
+        },
+        reset: function() {
+            namespaceValueItemMap = {};
+            prefixCounter = {};
         }
     };
 
