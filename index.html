@@ -215,7 +215,7 @@
         </div>
         <div>
             <label class="required" for="upload-data-file">File: </label>
-            <input id="upload-data-file" type="file" data-bind="value: uploadDataFile.value, valueUpdate: 'keyup'"/>
+            <input id="upload-data-file" type="file" accept=".csv,.json" data-bind="value: uploadDataFile.value, valueUpdate: 'keyup'"/>
             <div class="error" data-bind="visible: uploadDataFile.error, html: uploadDataFile.message"></div>
         </div>
     </div>
