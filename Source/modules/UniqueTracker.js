@@ -97,14 +97,13 @@ define([
                 prefixCounter[prefix] = 1;
             }
 
-            while (true) {
-                var value = prefix + prefixCounter[prefix].toString();
+            var value;
+            do {
+                value = prefix + prefixCounter[prefix].toString();
                 prefixCounter[prefix]++;
+            } while(!this.isValueUnique(namespace, value, item));
 
-                if (this.isValueUnique(namespace, value, item)) {
-                    return value;
-                }
-            }
+            return value;
         },
         reset: function() {
             namespaceValueItemMap = {};
