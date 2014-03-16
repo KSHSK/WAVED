@@ -88,7 +88,9 @@ define(['knockout',
                 // Populate the dataFields array once readData() is done
                 $.when(ReadData.readData(this)).done(function(){
                     var values = d3.values(self._data)[0];
-                    self._dataFields = Object.getOwnPropertyNames(values);
+                    if(defined(values)){
+                        self._dataFields = Object.keys(values);
+                    }
                 });
             }
         }

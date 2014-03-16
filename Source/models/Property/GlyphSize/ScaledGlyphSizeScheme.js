@@ -85,8 +85,14 @@ define([
         ko.getObservable(self.dataSet, '_value').subscribe(function(newValue) {
             if(defined(newValue)){
 
-                // TODO: Find a workaround. The data isn't done loading yet.
-                window.setTimeout(function(){self.dataField.options = newValue.dataFields;}, 500);
+                // Keep trying until data is ready, as long as data is a defined object.
+                var interval = setInterval(function(){
+                    if(defined(newValue.data)){
+                        self.dataField.options = newValue.dataFields;
+                        clearInterval(interval);
+                    }
+                }, 100);
+
             }
             else{
                 self.dataField.options = [];
@@ -100,8 +106,19 @@ define([
             if(defined(state.dataSet) && (state.dataSet === entry.name)){
                 self.dataSet.value = entry;
 
-                // TODO: Find a workaround. The data isn't done loading yet.
-                window.setTimeout(function(){self.dataField.value = state.dataField;}, 500);
+                var interval = setInterval(function(){
+                    // Make sure the data is loaded
+                    if(defined(self.dataSet.value.data) && self.dataSet.value.dataFields.length >= 0){
+                        if(entry.dataFields.length >= 0){
+                            self.dataField.value = state.dataField;
+                            window.clearInterval(interval);
+                        }
+                    }
+                    else{
+                        window.clearInterval(interval);
+                    }
+                }, 100);
+
                 return;
             }
         });
