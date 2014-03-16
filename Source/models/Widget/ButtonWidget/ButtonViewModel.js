@@ -18,7 +18,7 @@ define([
         GlyphSizeSchemeType){
     'use strict';
 
-    var ButtonViewModel = function(state) {
+    var ButtonViewModel = function(state, project) {
         state = (defined(state)) ? state : {};
         WidgetViewModel.call(this, state);
 
@@ -42,7 +42,7 @@ define([
         };
         this.foo = new GlyphSizeSelectionProperty(fooOptions, this);
 
-        this.setState(state);
+        this.setState(state, project);
 
         // TODO: Figure out how Triggers should actually work.
         this._triggers.push(new Trigger({
@@ -70,17 +70,15 @@ define([
         return state;
     };
 
-    ButtonViewModel.prototype.setState = function(state) {
-        WidgetViewModel.prototype.setState.call(this, state);
+    ButtonViewModel.prototype.setState = function(state, project) {
+        WidgetViewModel.prototype.setState.call(this, state, project);
 
         if (defined(state.label)) {
             this.label.value = state.label.value;
         }
 
-        // A new GlyphSizeSelectionProperty is created here because it requires state.foo.value to property
-        // set the dropdown to the correct selection
         if (defined(state.foo)){
-            this.foo.setSelectedFromState(state.foo, this);
+            this.foo.setState(state.foo, this);
         }
     };
 

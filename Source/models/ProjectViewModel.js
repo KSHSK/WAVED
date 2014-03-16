@@ -159,24 +159,7 @@ define([
             this._workspace = new WorkspaceViewModel(state.workspace);
         }
 
-
-        if (defined(state.components)) {
-            this._components = $.map(state.components, function(itemState) {
-                for (var index in availableWidgets) {
-                    var widget = availableWidgets[index];
-                    if (itemState.type === widget.o.getViewModelType()) {
-                        return new widget.o(itemState);
-                    }
-                }
-
-                // Invalid state.
-                return null;
-            });
-
-            // Insert workspace first.
-            this._components.unshift(this._workspace);
-        }
-
+        // Must go before components
         if (defined(state.dataSets)) {
             this._dataSets = $.map(state.dataSets, function(itemState) {
                 if (itemState.type === DataSet.getType()) {
@@ -190,6 +173,24 @@ define([
                 // Invalid state.
                 return null;
             });
+        }
+
+        if (defined(state.components)) {
+            var self = this;
+            this._components = $.map(state.components, function(itemState) {
+                for (var index in availableWidgets) {
+                    var widget = availableWidgets[index];
+                    if (itemState.type === widget.o.getViewModelType()) {
+                        return new widget.o(itemState, self);
+                    }
+                }
+
+                // Invalid state.
+                return null;
+            });
+
+            // Insert workspace first.
+            this._components.unshift(this._workspace);
         }
 
         if (defined(state.actions)) {

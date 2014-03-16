@@ -101,12 +101,17 @@ define([
         state.x = this.x.getState();
         state.y = this.y.getState();
         state.elementNames = this.elementNames;
-        state.boundData = this.boundData;
 
+        var boundDataSetStates = [];
+        for(var index=0; index < this.boundData.length; index++){
+            boundDataSetStates.push(this.boundData[index].getState());
+        }
+
+        state.boundData = boundDataSetStates;
         return state;
     };
 
-    WidgetViewModel.prototype.setState = function(state) {
+    WidgetViewModel.prototype.setState = function(state, project) {
         ComponentViewModel.prototype.setState.call(this, state);
 
         if (defined(state.width)) {
@@ -130,7 +135,12 @@ define([
         }
 
         if (defined(state.boundData)) {
-            this._boundData = state.boundData;
+            for(var index=0; index < state.boundData.length; index++){
+                var dataSet = project.getDataSet(state.boundData[index].name);
+                if(dataSet !== null){
+                    this._boundData.push(dataSet);
+                }
+            }
         }
     };
 
@@ -155,25 +165,16 @@ define([
     };
 
     WidgetViewModel.prototype.bindData = function(dataSet) {
-        var dataObject = d3.values(dataSet.data)[0];
-        var dataFields = Object.getOwnPropertyNames(dataObject);
-
-        var set = {
-            name: dataSet.name,
-            options: dataFields
-        };
-
-        // Don't bind the same data twice.
         var found = false;
         for(var index = 0; index < this._boundData.length; index++){
-            if(set.name === this._boundData[index].name){
+            if(dataSet.name === this._boundData[index].name){
                 found = true;
                 break;
             }
         }
 
         if(!found){
-            this._boundData.push(set);
+            this._boundData.push(dataSet);
             dataSet.incrementReferenceCount();
         }
     };
