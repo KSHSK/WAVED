@@ -43,6 +43,24 @@ define([
     };
 
     Object.defineProperties(StringProperty.prototype, {
+        originalValue: {
+            get: function() {
+                return this._originalValue;
+            },
+            set: function(value) {
+                if (typeof value === 'string' && this.isValidValue(value)) {
+                    this.error = false;
+                    this.message = '';
+                    this._originalValue = value;
+                    this._value = value;
+                    this._displayValue = value;
+                }
+                else {
+                    this.error = true;
+                    this.message = this.errorMessage;
+                }
+            }
+        },
         value: {
             get: function() {
                 return this._value;

@@ -28,6 +28,24 @@ define([
     BooleanProperty.prototype = Object.create(Property.prototype);
 
     Object.defineProperties(BooleanProperty.prototype, {
+        originalValue: {
+            get: function() {
+                return this._originalValue;
+            },
+            set: function(value) {
+                if (typeof value === 'boolean' && this.isValidValue(value)) {
+                    this.error = false;
+                    this.message = '';
+                    this._originalValue = value;
+                    this._value = value;
+                    this._displayValue = value;
+                }
+                else {
+                    this.error = true;
+                    this.message = this.errorMessage;
+                }
+            }
+        },
         value: {
             get: function() {
                 return this._value;
