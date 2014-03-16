@@ -159,15 +159,23 @@ define(['jquery',
             self.dirty = true;
 
             changes.forEach(function(change) {
+                var subscriber = change.value.viewModel || change.value;
                 if (change.status === 'added') {
-                    var subscriber = change.value.viewModel || change.value;
                     subscriber.subscribeChanges(setDirty);
                 }
                 else if (change.status === 'deleted') {
-                    // TODO
+                    subscriber.subscriptions.forEach(function(subscription) {
+                        subscription.dispose();
+                    });
                 }
             });
         }
+
+        // Workspace changed.
+        self.currentProject.workspace.subscribeChanges(setDirty);
+
+        // Google Analytics changed.
+        self.currentProject.googleAnalytics.subscribeChanges(setDirty);
 
         // Component is added or removed.
         ko.getObservable(self.currentProject, '_components').subscribe(function(changes) {
@@ -181,14 +189,12 @@ define(['jquery',
 
         // Action is added or removed.
         ko.getObservable(self.currentProject, '_actions').subscribe(function(changes) {
-            // TODO: Uncomment and subscribe for actions.
-//            arrayChanged(changes);
+            arrayChanged(changes);
         }, null, 'arrayChange');
 
         // Event is added or removed.
         ko.getObservable(self.currentProject, '_events').subscribe(function(changes) {
-         // TODO: Uncomment and subscribe for events.
-//            arrayChanged(changes);
+            arrayChanged(changes);
         }, null, 'arrayChange');
     }
 

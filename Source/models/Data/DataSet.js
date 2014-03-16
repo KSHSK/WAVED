@@ -84,15 +84,25 @@ define(['knockout',
         }
     };
 
-    DataSet.prototype.subscribeChanges = function(setDirty) {
-        var properties = [this._name, this._filename, this._referenceCount];
+    DataSet.prototype.subscriptions = [];
 
-        // TODO: Fix.
-//        properties.forEach(function(prop) {
-//            ko.getObservable(this, '_value').subscribe(function(newValue) {
-//                setDirty();
-//            });
-//        });
+    DataSet.prototype.subscribeChanges = function(setDirty) {
+        var self = this;
+
+        var properties = [];
+        for ( var prop in this) {
+            if (this.hasOwnProperty(prop)) {
+                properties.push(prop);
+            }
+        }
+
+        properties.forEach(function(prop) {
+            var subscription = ko.getObservable(self, prop).subscribe(function(newValue) {
+                setDirty();
+            });
+
+            self.subscriptions.push(subscription);
+        });
     };
 
     Object.defineProperties(DataSet.prototype, {
