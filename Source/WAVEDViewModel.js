@@ -173,6 +173,8 @@ define(['jquery',
         return SaveProject.tryToSaveProject(self);
     };
 
+    WAVEDViewModel.prototype.propertiesPanelPosition = $('#accordion').children('div').index($('#properties-panel'));
+
     // TODO: Component
     WAVEDViewModel.prototype.addNewWidget = function(w) {
         var widget = new w.o();
@@ -181,7 +183,7 @@ define(['jquery',
 
         // TODO: Really shouldn't do any jQuery stuff in here.
         // Open properties panel.
-        $('#accordion').accordion('option', 'active', 5);
+        $('#accordion').accordion('option', 'active', self.propertiesPanelPosition);
     };
 
     Object.defineProperties(WAVEDViewModel.prototype, {
