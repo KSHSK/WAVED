@@ -39,8 +39,8 @@ define([
             errorMessage: 'Value must be a positive number'
         });
 
-        this.height.value = 5;
-        this.width.value = 15;
+        this.height.originalValue = 5;
+        this.width.originalValue = 15;
 
         this.setState(state);
 
@@ -70,10 +70,10 @@ define([
         WidgetViewModel.prototype.setState.call(this, state);
 
         if (defined(state.text)) {
-            this.text.value = state.text.value;
+            this.text.originalValue = state.text.value;
         }
         if (defined(state.border)) {
-            this.border.value = state.border.value;
+            this.border.originalValue = state.border.value;
         }
     };
 

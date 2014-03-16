@@ -29,8 +29,8 @@ define([
             errorMessage: 'Must be between 1 and 50 characters'
         });
 
-        this.height.value = 5;
-        this.width.value = 10;
+        this.height.originalValue = 5;
+        this.width.originalValue = 10;
 
         this.setState(state);
 
@@ -63,7 +63,7 @@ define([
         WidgetViewModel.prototype.setState.call(this, state);
 
         if (defined(state.label)) {
-            this.label.value = state.label.value;
+            this.label.originalValue = state.label.value;
         }
     };
 

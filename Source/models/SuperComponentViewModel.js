@@ -44,7 +44,7 @@ define([
 
     SuperComponentViewModel.prototype.setState = function(state) {
         if (defined(state.name)) {
-            this.name.value = state.name.value;
+            this.name.originalValue = state.name.value;
         }
     };
 
