@@ -5,6 +5,7 @@ define([
         './UnsavedChanges',
         './ReadData',
         './SaveProject',
+        './UniqueTracker',
         'models/ProjectViewModel',
         'util/updateQueryByName',
         'jquery',
@@ -13,6 +14,7 @@ define([
         UnsavedChangesModule,
         ReadData,
         SaveProject,
+        UniqueTracker,
         ProjectViewModel,
         updateQueryByName,
         $,
@@ -105,13 +107,15 @@ define([
                         // Update the data folder path.
                         ReadData.dataFolderPath = data.dataFolder;
 
-                        viewModel.currentProject.setState({
-                            name: data.projectName
-                        }, viewModel.availableWidgets);
+                        UniqueTracker.reset();
+
+                        viewModel.selectedComponent = viewModel.workspace;
+                        var defaultProject = new ProjectViewModel({name: data.projectName}, viewModel.availableWidgets);
+                        viewModel.currentProject.setState(defaultProject.getState(), viewModel.availableWidgets);
 
                         viewModel.newProjectName._value = '';
                         viewModel.dirty = false;
-                        viewModel.selectedComponent = viewModel.workspace;
+
 
                         // Set the URL to include the current project name.
                         updateQueryByName('project', data.projectName);

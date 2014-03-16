@@ -160,7 +160,8 @@ define([
         }
 
         if (defined(state.components)) {
-            this._components = $.map(state.components, function(itemState) {
+            this._components.length = 1;
+            var newComponents = $.map(state.components, function(itemState) {
                 for (var index in availableWidgets) {
                     var widget = availableWidgets[index];
                     if (itemState.type === widget.o.getViewModelType()) {
@@ -172,8 +173,7 @@ define([
                 return null;
             });
 
-            // Insert workspace first.
-            this._components.unshift(this._workspace);
+            this._components.push.apply(this._components, newComponents);
         }
 
         if (defined(state.dataSets)) {
