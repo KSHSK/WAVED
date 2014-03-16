@@ -159,7 +159,10 @@ define([
             this._workspace = new WorkspaceViewModel(state.workspace);
         }
 
-        // Must go before components
+        /*
+         * Must go before components because any components that depend on DataSets
+         * will need them to be available.
+         */
         if (defined(state.dataSets)) {
             this._dataSets = $.map(state.dataSets, function(itemState) {
                 if (itemState.type === DataSet.getType()) {
