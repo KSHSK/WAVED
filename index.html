@@ -54,10 +54,10 @@
                 <div>
 	                <button class="right button-small delete-icon-button" data-bind="click: tryToDeleteProject">Delete Project</button>
 	                <ul id='project-tree' data-bind="visible: currentProject.name">
-	                	<li>
+	                	<li class="tree-folder-icon">
 	                		<a data-bind="text: currentProject.name"></a>
 	                		<ul data-bind="foreach: currentProject.components">
-	                			<li class="tree-row" data-bind="css: {'tree-row-selected': $data == $parent.selectedWidget}">
+	                			<li class="tree-row tree-gear-icon" data-bind="css: {'tree-row-selected': $data == $parent.selectedWidget}">
 	                				<a data-bind="text: $data.viewModel.name.value, click: function(item) {$parent.selectedWidget=item;}"></a>
 	                				<!-- TODO: Elements -->
 	               				</li>
@@ -208,7 +208,8 @@
     </div>
     
     <div id="delete-project-dialog" title="Delete Project" class="dialog">
-        <p>Are you sure you want to delete the project?</p>
+        <p>Are you sure you want to delete this project?</p>
+        <p>This action can not be undone!</p>
         <div class="error"></div>
     </div>
 

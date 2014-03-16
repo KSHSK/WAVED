@@ -34,19 +34,15 @@ define([
 
             deleteProjectDialog.dialog({
                 resizable: false,
-                height: 250,
-                width: 400,
+                height: 220,
+                width: 350,
                 modal: true,
                 buttons: {
-                    'Delete Project': {
-                        text: 'Delete Project',
-                        'class': 'submit-button',
-                        click: function() {
-                            self.deleteProject(projectDeleted, viewModel);
-                            $.when(projectDeleted).done(function() {
-                                deleteProjectDialog.dialog('close');
-                            });
-                        }
+                    'Delete Project': function() {
+                        self.deleteProject(projectDeleted, viewModel);
+                        $.when(projectDeleted).done(function() {
+                            deleteProjectDialog.dialog('close');
+                        });
                     },
                     'Cancel': function() {
                         deleteProjectDialog.dialog('close');
@@ -71,24 +67,23 @@ define([
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
 
-                    if (data.success) {
-                        // Clear the workspace.
-                        $('#waved-workspace').empty();
-                        viewModel.currentProject = new ProjectViewModel({
-                            name: ''
-                        }, viewModel.availableWidgets);
-
-                        // Remove project name from URL
-                        updateQueryByName('project', '');
-
-                        // Open welcome dialog
-                        Welcome.openWelcomeDialog(viewModel);
-                        projectDeleted.resolve();
-                    }
-                    else {
+                    if (!data.success) {
                         // Display error to user.
                         $('#delete-project-dialog .error').html(data.errorMessage);
+                        return;
                     }
+
+                    // Clear the workspace.
+                    $('#waved-workspace').empty();
+
+                    // TODO : Clean up leftovers from deleted project
+
+                    // Remove project name from URL
+                    updateQueryByName('project', '');
+
+                    // Open welcome dialog
+                    Welcome.openWelcomeDialog(viewModel);
+                    projectDeleted.resolve();
                 }
             });
         }

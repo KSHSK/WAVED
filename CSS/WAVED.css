@@ -159,7 +159,6 @@ textarea:disabled {
 
 #project-tree .tree-row * {
 	cursor: pointer;
-	text-decoration: underline;
 }
 
 #project-tree .tree-row-selected {
@@ -168,4 +167,24 @@ textarea:disabled {
 
 #project-tree .tree-row:hover * {
 	color: #3BB4BF;
+}
+
+#project-tree li {
+	list-style: none;
+}
+
+#project-tree .tree-folder-icon:before {
+    background:url('../ThirdParty/jquery/css/waved-theme/images/ui-icons_3BB4BF_256x240.png') no-repeat -0px -96px;
+    width:16px;
+    height:16px;
+    display: inline-block;
+    content: " ";
+}
+
+#project-tree .tree-gear-icon:before {
+    background:url('../ThirdParty/jquery/css/waved-theme/images/ui-icons_3BB4BF_256x240.png') no-repeat -192px -112px;
+    width:16px;
+    height:16px;
+    display: inline-block;
+    content: " ";
 }
