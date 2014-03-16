@@ -159,9 +159,11 @@ define([
             this._workspace = new WorkspaceViewModel(state.workspace);
         }
 
-
         if (defined(state.components)) {
-            this._components = $.map(state.components, function(itemState) {
+            // Clear array.
+            this._components.length = 0;
+
+            var newComponents = $.map(state.components, function(itemState) {
                 for (var index in availableWidgets) {
                     var widget = availableWidgets[index];
                     if (itemState.type === widget.o.getViewModelType()) {
@@ -174,11 +176,16 @@ define([
             });
 
             // Insert workspace first.
-            this._components.unshift(this._workspace);
+            this._components.push(this._workspace);
+
+            this._components.push.apply(this._components, newComponents);
         }
 
         if (defined(state.dataSets)) {
-            this._dataSets = $.map(state.dataSets, function(itemState) {
+            // Clear array.
+            this._dataSets.length = 0;
+
+            var newDataSets = $.map(state.dataSets, function(itemState) {
                 if (itemState.type === DataSet.getType()) {
                     return new DataSet(itemState);
                 }
@@ -190,11 +197,15 @@ define([
                 // Invalid state.
                 return null;
             });
+
+            this._dataSets.push.apply(this._dataSets, newDataSets);
         }
 
         if (defined(state.actions)) {
-            this._actions = $.map(state.actions, function(itemState) {
+            // Clear array.
+            this._actions.length = 0;
 
+            var newActions = $.map(state.actions, function(itemState) {
                 itemState.target = self.getComponent(itemState.target);
 
                 if (itemState.type === PropertyAction.getType()) {
@@ -208,11 +219,15 @@ define([
                 // Invalid state.
                 return null;
             });
+
+            this._actions.push.apply(this._actions, newActions);
         }
 
         if (defined(state.events)) {
-            this._events = $.map(state.events, function(itemState) {
+            // Clear array.
+            this._events.length = 0;
 
+            var newEvents = $.map(state.events, function(itemState) {
                 itemState.triggeringComponent = self.getComponent(itemState.triggeringComponent);
                 // TODO: Trigger?
                 var actions = [];
@@ -222,6 +237,8 @@ define([
                 itemState.actions = actions;
                 return new Event(itemState);
             });
+
+            this._events.push.apply(this._events, newEvents);
         }
     };
 

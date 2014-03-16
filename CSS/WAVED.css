@@ -152,3 +152,8 @@ textarea:disabled {
     width: 100%;
     text-align: left;
 }
+
+.dirty {
+    color: red;
+    font-weight: bold;
+}
