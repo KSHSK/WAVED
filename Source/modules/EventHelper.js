@@ -42,7 +42,7 @@ define([
                                 name: viewModel.selectedEventName.value,
                                 eventType: viewModel.selectedEventType,
                                 triggeringComponent: viewModel.eventEditorTriggeringComponent,
-                                trigger: viewModel.eventEditorTrigger,
+                                trigger: $('#event-trigger-select').prop('selectedIndex'),
                                 actions: viewModel.selectedEventActions
                             });
                             viewModel.currentProject.addEvent(event);
@@ -82,12 +82,15 @@ define([
                 buttons: {
                     'Save': function() {
                         if (!viewModel.selectedEventName.error) {
+                            viewModel.selectedEvent.unregister();
+
                             viewModel.selectedEvent.name = viewModel.selectedEventName.value;
                             viewModel.selectedEvent.eventType =  viewModel.selectedEventType;
                             viewModel.selectedEvent.triggeringComponent = viewModel.eventEditorTriggeringComponent;
                             viewModel.selectedEvent.trigger = viewModel.eventEditorTrigger;
                             viewModel.selectedEvent.actions = viewModel.selectedEventActions;
 
+                            viewModel.selectedEvent.register();
                             self.eventDialog.dialog('close');
                         }
                         else {

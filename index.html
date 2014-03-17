@@ -313,7 +313,7 @@
         </div>
         <div>
             <label class="inline">Trigger: </label>
-            <select data-bind="options: eventEditorTriggeringComponent.viewModel.triggers,
+            <select id="event-trigger-select" data-bind="options: eventEditorTriggeringComponent.viewModel.triggers,
                             optionsText: function(trigger) {
                                 return trigger.name;
                             }, value: eventEditorTrigger"></select>
