@@ -153,7 +153,7 @@ textarea:disabled {
 	padding-left: 0;
 }
 
-#project-tree .tree-row * {
+#project-tree .tree-row {
 	cursor: pointer;
 }
 
@@ -161,7 +161,7 @@ textarea:disabled {
 	font-weight: bold;
 }
 
-#project-tree .tree-row:hover * {
+#project-tree .tree-row:hover {
 	color: #3BB4BF;
 }
 
