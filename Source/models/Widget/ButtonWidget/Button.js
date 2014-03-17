@@ -1,11 +1,13 @@
 define([
         'models/Widget/ButtonWidget/ButtonViewModel',
         'models/Constants/ComponentTemplateName',
+        'models/Event/Trigger',
         'knockout',
         'jquery'
     ],function(
         ButtonViewModel,
         ComponentTemplateName,
+        Trigger,
         ko,
         $){
     'use strict';
@@ -16,14 +18,28 @@ define([
         var viewModel = new ButtonViewModel(state);
 
         var $workspace = $('#waved-workspace');
+
+        // TODO: make this an attribute, use jquery $buttondiv.on(click, function(event))
+        // unbind $ele.off('click', ) --> look into this.
         var button = document.createElement('div');
         button.className = 'widget-container';
         $(button).attr('data-bind', 'template: {name: \'' + this._templateName + '\'}');
         $workspace.append(button);
 
+        viewModel.triggers.push(new Trigger('Button', button));
+
+        this._domElement = button;
         this.viewModel = viewModel;
         ko.applyBindings(viewModel, button);
     };
+
+    Object.defineProperties(Button.prototype, {
+        domElement: {
+            get: function() {
+                return this._domElement;
+            }
+        }
+    });
 
     /**
      * Static method that returns the type String for this class's ViewModel.

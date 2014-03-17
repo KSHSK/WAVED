@@ -23,7 +23,9 @@ define([
     ){
     'use strict';
 
+    var self;
     var Event = function(state) {
+        self = this;
         state = defined(state) ? state : {};
 
         // TODO: Validation, etc
@@ -34,6 +36,14 @@ define([
         this._actions = []; // Action[]
 
         this.setState(state);
+
+        this.applyActions = function() {
+            for (var i = 0; i < self.actions.length; i++) {
+                self.actions[i].apply();
+            }
+        };
+
+        this.register();
 
         ko.track(this);
     };
@@ -96,8 +106,7 @@ define([
         }
 
         if (defined(state.trigger)){
-            // TODO: Make sure this is one of the triggers found on the triggeringComponent.
-            this._trigger = state.trigger;
+            this._trigger = this._triggeringComponent.viewModel.triggers[state.trigger];
         }
 
         if (defined(state.actions)){
@@ -110,12 +119,20 @@ define([
             'name': this._name,
             'eventType': this._eventType,
             'triggeringComponent': this._triggeringComponent.viewModel.name.value,
-            'trigger': this._trigger.name,
+            'trigger': this._triggeringComponent.viewModel.triggers.indexOf(this._trigger),
             'actions': $.map(this._actions, function(action) {
                 return action.name;
             })
         };
 
+    };
+
+    Event.prototype.register = function() {
+        $(this._trigger.domElement).on(this._eventType.toLowerCase(), self.applyActions);
+    };
+
+    Event.prototype.unregister = function() {
+        $(this._trigger.domElement).off(this._eventType.toLowerCase(), self.applyActions);
     };
 
     return Event;
