@@ -23,7 +23,10 @@
                     </a>
                 </div>
                 <div class="inline bottom">
-                    <div class="menu-text" id="project-name" data-bind="text: currentProject.name"></div>
+                    <div>
+                        <span class="menu-text" id="project-name" data-bind="text: currentProject.name"></span>
+                        <span class="dirty" data-bind="visible: dirty"> (Unsaved Changes)</span>
+                    </div>
                     
                     <button class="inline" id="new-button" data-bind="click: tryToCreateNewProject">New</button>
                     <button class="inline" id="load-button" data-bind="click: tryToLoadProject">Load</button>

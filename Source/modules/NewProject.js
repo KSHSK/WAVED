@@ -105,7 +105,7 @@ define([
                         // Update the data folder path.
                         ReadData.dataFolderPath = data.dataFolder;
 
-                        viewModel.currentProject = new ProjectViewModel({
+                        viewModel.currentProject.setState({
                             name: data.projectName
                         }, viewModel.availableWidgets);
                         viewModel.newProjectName._value = '';
