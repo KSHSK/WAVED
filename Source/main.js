@@ -7,7 +7,8 @@ require.config({
         infuser: '../ThirdParty/knockout/koExternalTemplateEngine/infuser-amd',
         TrafficCop: '../ThirdParty/knockout/koExternalTemplateEngine/TrafficCop',
         koExternalTemplateEngine: '../ThirdParty/knockout/koExternalTemplateEngine/koExternalTemplateEngine-amd',
-        d3: '../ThirdParty/d3/d3.v3'
+        d3: '../ThirdParty/d3/d3.v3',
+        topojson: '../ThirdParty/d3/topojson.v1.min'
     },
 
     shim: {
@@ -26,6 +27,10 @@ require.config({
         },
         'd3': {
             'exports': 'd3'
+        },
+        'topojson': {
+            'exports': 'topojson',
+            deps: ['d3']
         }
     },
 

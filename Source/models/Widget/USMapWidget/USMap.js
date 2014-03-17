@@ -18,7 +18,8 @@ define([
         var $workspace = $('#waved-workspace');
         var usMap = document.createElement('div');
         usMap.className = 'widget-container';
-        $(usMap).attr('data-bind', 'template: {name: \'' + this._templateName + '\'}');
+        $(usMap).attr('data-bind', 'template: {name: \'' + this._templateName + '\', ' +
+            'afterRender: render}');
         $workspace.append(usMap);
 
         this.viewModel = viewModel;
