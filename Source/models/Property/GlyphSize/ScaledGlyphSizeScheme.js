@@ -114,9 +114,6 @@ define([
                             clearInterval(interval);
                         }
                     }
-                    else{
-                        clearInterval(interval);
-                    }
                 }, 100);
 
                 return;
@@ -127,7 +124,7 @@ define([
     ScaledGlyphSizeScheme.prototype.getState = function(){
         var set;
         if(defined(this.dataSet.getState().value)){
-            set = this.dataSet.getState().value._name;
+            set = this.dataSet.getState().value.name;
         }
 
         var state = {
