@@ -126,7 +126,7 @@ define([
                         ReadData.dataFolderPath = data.dataFolder;
 
                         // Create the new project.
-                        viewModel.currentProject = new ProjectViewModel(JSON.parse(data.projectState),
+                        viewModel.currentProject.setState(JSON.parse(data.projectState),
                             viewModel.availableWidgets);
 
                         viewModel.dirty = false;
