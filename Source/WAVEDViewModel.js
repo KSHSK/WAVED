@@ -9,6 +9,7 @@ define(['jquery',
         'models/Property/StringProperty',
         'models/WorkspaceViewModel',
         'models/Widget/ButtonWidget/Button',
+        'models/ProjectTree',
         'modules/ActionHelper',
         'modules/EventHelper',
         'modules/NewProject',
@@ -34,6 +35,7 @@ define(['jquery',
         StringProperty,
         WorkspaceViewModel,
         Button,
+        ProjectTree,
         ActionHelper,
         EventHelper,
         NewProject,
@@ -62,6 +64,8 @@ define(['jquery',
         this._currentProject = new ProjectViewModel({
             name: ''
         });
+
+        this._projectTree = new ProjectTree();
 
         this._availableWidgets = [{
             name: 'Button',
@@ -215,6 +219,18 @@ define(['jquery',
         return DeleteProject.tryToDeleteProject(self);
     };
 
+    WAVEDViewModel.prototype.tryToDeleteFromProjectTree = function() {
+        return self._projectTree.tryToDeleteSelected(self);
+    };
+
+    WAVEDViewModel.prototype.isSelectedInProjectTree = function(type, value) {
+        return self._projectTree.isSelected(self, type, value);
+    };
+
+    WAVEDViewModel.prototype.selectInProjectTree = function(type, value) {
+        self._projectTree.select(self, type, value);
+    };
+
     // TODO: Component
     WAVEDViewModel.prototype.addNewWidget = function(w) {
         var widget = new w.o();
@@ -296,6 +312,11 @@ define(['jquery',
                 return dataSets.filter(function(dataSet) {
                     return boundDataNames.indexOf(dataSet.name) === -1;
                 });
+            }
+        },
+        projectTree: {
+            get: function() {
+                return this._projectTree;
             }
         }
     });
