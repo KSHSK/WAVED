@@ -124,7 +124,27 @@ define([
                 return action.name;
             })
         };
+    };
+    
+    Event.prototype.subscriptions = [];
 
+    Event.prototype.subscribeChanges = function(setDirty) {
+        var self = this;
+
+        var properties = [];
+        for ( var prop in this) {
+            if (this.hasOwnProperty(prop)) {
+                properties.push(prop);
+            }
+        }
+
+        properties.forEach(function(prop) {
+            var subscription = ko.getObservable(self, prop).subscribe(function(newValue) {
+                setDirty();
+            });
+
+            self.subscriptions.push(subscription);
+        });
     };
 
     return Event;

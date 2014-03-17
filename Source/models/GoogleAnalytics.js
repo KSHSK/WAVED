@@ -115,5 +115,19 @@ define([
         self.eventCategory.message = '';
     };
 
+    GoogleAnalytics.prototype.subscribeChanges = function(setDirty) {
+        ko.getObservable(this.uaCode, '_value').subscribe(function(newValue) {
+            setDirty();
+        });
+
+        ko.getObservable(this.eventCategory, '_value').subscribe(function(newValue) {
+            setDirty();
+        });
+
+        ko.getObservable(this, '_bound').subscribe(function(newValue) {
+            setDirty();
+        });
+    };
+
     return GoogleAnalytics;
 });
