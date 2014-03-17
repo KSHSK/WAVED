@@ -23,6 +23,8 @@ define([
         // TODO: target visibility conflicts with Action _target visibility, issue?
         // TODO: Make private in order to do type checking, validation, etc? Update DD with decision
         this.target = state.target;
+
+        // TODO: Should this be private _dataSet? Update DD if changed.
         this.dataSet = state.dataSet;
 
         ko.track(this);

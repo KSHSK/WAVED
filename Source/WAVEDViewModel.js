@@ -112,9 +112,10 @@ define(['jquery',
             displayName: 'File',
             value: '',
             validValue: createValidator({
-                minLength: 1
+                minLength: 1,
+                regex: new RegExp('.(csv|json)$', 'i')
             }),
-            errorMessage: 'Must select a file.'
+            errorMessage: 'Must select a file with extension CSV or JSON.'
         });
 
 
@@ -152,6 +153,10 @@ define(['jquery',
         this.selectedEventActions = [];
 
         ko.track(this);
+
+        this.currentProject.subscribeChanges(function() {
+            self.dirty = true;
+        });
     };
 
     WAVEDViewModel.prototype.tryToCreateNewProject = function() {
@@ -262,10 +267,6 @@ define(['jquery',
         currentProject: {
             get: function() {
                 return this._currentProject;
-            },
-            set: function(value) {
-                this._currentProject = value;
-                this._selectedWidget = value.workspace;
             }
         },
         availableWidgets: {
