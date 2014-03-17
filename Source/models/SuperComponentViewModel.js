@@ -48,5 +48,19 @@ define([
         }
     };
 
+    SuperComponentViewModel.prototype.subscriptions = [];
+
+    SuperComponentViewModel.prototype.subscribeChanges = function(setDirty) {
+        var self = this;
+
+        this.properties.forEach(function(prop) {
+            var subscription = ko.getObservable(prop, '_value').subscribe(function(newValue) {
+                setDirty();
+            });
+
+            self.subscriptions.push(subscription);
+        });
+    };
+
     return SuperComponentViewModel;
 });

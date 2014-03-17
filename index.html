@@ -23,7 +23,10 @@
                     </a>
                 </div>
                 <div class="inline bottom">
-                    <div class="menu-text" id="project-name" data-bind="text: currentProject.name"></div>
+                    <div>
+                        <span class="menu-text" id="project-name" data-bind="text: currentProject.name"></span>
+                        <span class="dirty" data-bind="visible: dirty"> (Unsaved Changes)</span>
+                    </div>
                     
                     <button class="inline" id="new-button" data-bind="click: tryToCreateNewProject">New</button>
                     <button class="inline" id="load-button" data-bind="click: tryToLoadProject">Load</button>
@@ -261,7 +264,7 @@
         </div>
         <div>
             <label class="required" for="upload-data-file">File: </label>
-            <input id="upload-data-file" type="file" data-bind="value: uploadDataFile.value, valueUpdate: 'keyup'"/>
+            <input id="upload-data-file" type="file" accept=".csv,.json" data-bind="value: uploadDataFile.value, valueUpdate: 'keyup'"/>
             <div class="error" data-bind="visible: uploadDataFile.error, html: uploadDataFile.message"></div>
         </div>
     </div>
