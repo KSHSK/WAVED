@@ -38,7 +38,7 @@ define([
 
         this.height.value = 100;
         this.width.value = 100;
-        this.name.value = 'USMap';
+        this.name.value = 'USMap1';
 
         this.setState(state);
 
