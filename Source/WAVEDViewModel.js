@@ -147,6 +147,10 @@ define(['jquery',
         this.selectedEventActions = [];
 
         ko.track(this);
+
+        this.currentProject.subscribeChanges(function() {
+            self.dirty = true;
+        });
     };
 
     WAVEDViewModel.prototype.tryToCreateNewProject = function() {
@@ -241,10 +245,6 @@ define(['jquery',
         currentProject: {
             get: function() {
                 return this._currentProject;
-            },
-            set: function(value) {
-                this._currentProject = value;
-                this._selectedWidget = value.workspace;
             }
         },
         availableWidgets: {
