@@ -160,7 +160,9 @@ define([
         }
 
         if (defined(state.components)) {
+            // Clear array.
             this._components.length = 1;
+
             var newComponents = $.map(state.components, function(itemState) {
                 for (var index in availableWidgets) {
                     var widget = availableWidgets[index];
@@ -177,7 +179,10 @@ define([
         }
 
         if (defined(state.dataSets)) {
-            this._dataSets = $.map(state.dataSets, function(itemState) {
+            // Clear array.
+            this._dataSets.length = 0;
+
+            var newDataSets = $.map(state.dataSets, function(itemState) {
                 if (itemState.type === DataSet.getType()) {
                     return new DataSet(itemState);
                 }
@@ -189,11 +194,15 @@ define([
                 // Invalid state.
                 return null;
             });
+
+            this._dataSets.push.apply(this._dataSets, newDataSets);
         }
 
         if (defined(state.actions)) {
-            this._actions = $.map(state.actions, function(itemState) {
+            // Clear array.
+            this._actions.length = 0;
 
+            var newActions = $.map(state.actions, function(itemState) {
                 itemState.target = self.getComponent(itemState.target);
 
                 if (itemState.type === PropertyAction.getType()) {
@@ -207,11 +216,15 @@ define([
                 // Invalid state.
                 return null;
             });
+
+            this._actions.push.apply(this._actions, newActions);
         }
 
         if (defined(state.events)) {
-            this._events = $.map(state.events, function(itemState) {
+            // Clear array.
+            this._events.length = 0;
 
+            var newEvents = $.map(state.events, function(itemState) {
                 itemState.triggeringComponent = self.getComponent(itemState.triggeringComponent);
                 // TODO: Trigger?
                 var actions = [];
@@ -221,6 +234,8 @@ define([
                 itemState.actions = actions;
                 return new Event(itemState);
             });
+
+            this._events.push.apply(this._events, newEvents);
         }
     };
 
@@ -310,6 +325,50 @@ define([
 
     ProjectViewModel.prototype.refreshWorkspace = function() {
         //TODO
+    };
+
+    ProjectViewModel.prototype.subscribeChanges = function(setDirty) {
+        function arrayChanged(changes) {
+            setDirty();
+
+            changes.forEach(function(change) {
+                var subscriber = change.value.viewModel || change.value;
+                if (change.status === 'added') {
+                    subscriber.subscribeChanges(setDirty);
+                }
+                else if (change.status === 'deleted') {
+                    subscriber.subscriptions.forEach(function(subscription) {
+                        subscription.dispose();
+                    });
+                }
+            });
+        }
+
+        // Workspace changed.
+        this.workspace.subscribeChanges(setDirty);
+
+        // Google Analytics changed.
+        this.googleAnalytics.subscribeChanges(setDirty);
+
+        // Component is added or removed.
+        ko.getObservable(this, '_components').subscribe(function(changes) {
+            arrayChanged(changes);
+        }, null, 'arrayChange');
+
+        // DataSet is added or removed.
+        ko.getObservable(this, '_dataSets').subscribe(function(changes) {
+            arrayChanged(changes);
+        }, null, 'arrayChange');
+
+        // Action is added or removed.
+        ko.getObservable(this, '_actions').subscribe(function(changes) {
+            arrayChanged(changes);
+        }, null, 'arrayChange');
+
+        // Event is added or removed.
+        ko.getObservable(this, '_events').subscribe(function(changes) {
+            arrayChanged(changes);
+        }, null, 'arrayChange');
     };
 
     return ProjectViewModel;
