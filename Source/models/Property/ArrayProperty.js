@@ -31,6 +31,12 @@ define([
             };
         }
 
+        if(!defined(opts.getOptionText)) {
+            this.getOptionText = function(value){
+                return value;
+            };
+        }
+
         this.setState(opts);
 
         ko.track(this);
@@ -78,6 +84,7 @@ define([
 
     ArrayProperty.prototype.setState = function(state) {
         this._options = defaultValue(state.options, []);
+        this.getOptionText = state.getOptionText;
 
         // Need to call this after this._options is set, so the isValidValue function works.
         Property.prototype.setState.call(this, state);

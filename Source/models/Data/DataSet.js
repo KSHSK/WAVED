@@ -62,6 +62,10 @@ define(['knockout',
         return (this._referenceCount === MARKED_FOR_DELETION);
     };
 
+    DataSet.prototype.getNameAndFilename = function() {
+        return this._name + ' : ' + this._filename;
+    };
+
     DataSet.prototype.getState = function() {
         return {
             type: DataSet.getType(),

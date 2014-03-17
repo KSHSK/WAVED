@@ -32,14 +32,20 @@ define([
         var dataSetOptions = {
             displayName: 'Data Set',
             value: undefined,
-            options: []
+            options: [],
+            getOptionText: function(value){
+                return value.getNameAndFilename();
+            }
         };
         this.dataSet = new ArrayProperty(dataSetOptions);
 
         var dataFieldOptions = {
             displayName: 'Data Field',
             value: undefined,
-            options: []
+            options: [],
+            getOptionText: function(value){
+                return value;
+            }
         };
 
         this.dataField = new ArrayProperty(dataFieldOptions);
