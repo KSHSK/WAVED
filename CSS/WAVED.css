@@ -76,10 +76,6 @@ textarea:disabled {
     width: 300px;
 }
 
-#project-tree {
-    min-height: 300px;
-}
-
 #workspace-container {
     padding: 10px 10px 10px 5px;
 }
@@ -171,6 +167,10 @@ textarea:disabled {
 
 #project-tree li {
 	list-style: none;
+}
+
+#project-tree ul {
+	padding-left: 16px;
 }
 
 #project-tree .tree-folder-icon:before {
