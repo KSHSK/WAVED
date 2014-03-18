@@ -22,9 +22,9 @@ define([
         GlyphSizeSchemeType){
     'use strict';
 
-    var ButtonViewModel = function(state, project) {
+    var ButtonViewModel = function(state, getDataSet) {
         state = (defined(state)) ? state : {};
-        WidgetViewModel.call(this, state);
+        WidgetViewModel.call(this, state, getDataSet);
 
         if (!defined(state.name)) {
             var namespace = SuperComponentViewModel.getUniqueNameNamespace();
@@ -51,7 +51,7 @@ define([
         };
         this.foo = new GlyphSizeSelectionProperty(fooOptions, this);
 
-        this.setState(state, project);
+        this.setState(state);
 
         // TODO: Figure out how Triggers should actually work.
         this._triggers.push(new Trigger({
@@ -79,8 +79,8 @@ define([
         return state;
     };
 
-    ButtonViewModel.prototype.setState = function(state, project) {
-        WidgetViewModel.prototype.setState.call(this, state, project);
+    ButtonViewModel.prototype.setState = function(state) {
+        WidgetViewModel.prototype.setState.call(this, state);
 
         if (defined(state.label)) {
             this.label.value = state.label.value;

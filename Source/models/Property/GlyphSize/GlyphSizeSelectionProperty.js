@@ -3,6 +3,7 @@ define([
         'util/defined',
         'models/Constants/PropertyTemplateName',
         'models/Constants/GlyphSizeSchemeType',
+        'models/Property/GlyphSize/GlyphSizeScheme',
         'models/Property/GlyphSize/ConstantGlyphSizeScheme',
         'models/Property/GlyphSize/ScaledGlyphSizeScheme',
         'models/Widget/WidgetViewModel',
@@ -12,6 +13,7 @@ define([
         defined,
         PropertyTemplateName,
         GlyphSizeSchemeType,
+        GlyphSizeScheme,
         ConstantGlyphSizeScheme,
         ScaledGlyphSizeScheme,
         WidgetViewModel,
@@ -56,6 +58,11 @@ define([
     GlyphSizeSelectionProperty.prototype = Object.create(Property.prototype);
 
     Object.defineProperties(GlyphSizeSelectionProperty.prototype, {
+        properties: {
+            get: function() {
+                return [this._value, this.constantGlyphSize, this.scaledGlyphSize];
+            }
+        },
         value: {
             get: function() {
                 return this._value;
