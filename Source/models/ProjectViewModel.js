@@ -4,6 +4,7 @@ define([
         'util/defined',
         'util/defaultValue',
         'util/displayMessage',
+        'util/subscribeObservable',
         'models/Action/Action',
         'models/Action/PropertyAction',
         'models/Action/QueryAction',
@@ -18,6 +19,7 @@ define([
         defined,
         defaultValue,
         displayMessage,
+        subscribeObservable,
         Action,
         PropertyAction,
         QueryAction,
@@ -371,24 +373,16 @@ define([
         this.googleAnalytics.subscribeChanges(setDirty);
 
         // Component is added or removed.
-        ko.getObservable(this, '_components').subscribe(function(changes) {
-            arrayChanged(changes);
-        }, null, 'arrayChange');
+        subscribeObservable(this, '_components', arrayChanged, null, 'arrayChange');
 
         // DataSet is added or removed.
-        ko.getObservable(this, '_dataSets').subscribe(function(changes) {
-            arrayChanged(changes);
-        }, null, 'arrayChange');
+        subscribeObservable(this, '_dataSets', arrayChanged, null, 'arrayChange');
 
         // Action is added or removed.
-        ko.getObservable(this, '_actions').subscribe(function(changes) {
-            arrayChanged(changes);
-        }, null, 'arrayChange');
+        subscribeObservable(this, '_actions', arrayChanged, null, 'arrayChange');
 
         // Event is added or removed.
-        ko.getObservable(this, '_events').subscribe(function(changes) {
-            arrayChanged(changes);
-        }, null, 'arrayChange');
+        subscribeObservable(this, '_events', arrayChanged, null, 'arrayChange');
     };
 
     return ProjectViewModel;

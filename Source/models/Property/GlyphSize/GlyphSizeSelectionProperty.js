@@ -60,7 +60,7 @@ define([
     Object.defineProperties(GlyphSizeSelectionProperty.prototype, {
         properties: {
             get: function() {
-                return [this._value, this.constantGlyphSize, this.scaledGlyphSize];
+                return [this.constantGlyphSize, this.scaledGlyphSize];
             }
         },
         value: {
@@ -102,6 +102,10 @@ define([
                 this._value = undefined;
                 break;
         }
+    };
+
+    Property.prototype.getSubscribableNestedProperties = function(){
+        return [this.constantGlyphSize, this.scaledGlyphSize];
     };
 
     return GlyphSizeSelectionProperty;

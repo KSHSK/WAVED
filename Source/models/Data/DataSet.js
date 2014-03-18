@@ -4,6 +4,7 @@ define(['knockout',
         'modules/UniqueTracker',
         'util/defined',
         'util/createValidator',
+        'util/subscribeObservable',
         'd3',
         'jquery'
     ],function(
@@ -13,6 +14,7 @@ define(['knockout',
         UniqueTracker,
         defined,
         createValidator,
+        subscribeObservable,
         d3,
         $
     ){
@@ -120,11 +122,11 @@ define(['knockout',
         }
 
         properties.forEach(function(prop) {
-            var subscription = ko.getObservable(self, prop).subscribe(function(newValue) {
-                setDirty();
-            });
+            var subscription = subscribeObservable(self, prop, setDirty);
 
-            self.subscriptions.push(subscription);
+            if(subscription !== null){
+                self.subscriptions.push(subscription);
+            }
         });
     };
 

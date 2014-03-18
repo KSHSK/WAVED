@@ -4,14 +4,16 @@ define([
         'models/Property/StringProperty',
         'util/defined',
         'util/createValidator',
-        'util/getNamePropertyInstance'
+        'util/getNamePropertyInstance',
+        'util/subscribeObservable'
     ], function(
         $,
         ko,
         StringProperty,
         defined,
         createValidator,
-        getNamePropertyInstance) {
+        getNamePropertyInstance,
+        subscribeObservable) {
     'use strict';
 
     var SuperComponentViewModel = function(state) {
@@ -52,14 +54,43 @@ define([
 
     SuperComponentViewModel.prototype.subscribeChanges = function(setDirty) {
         var self = this;
-
-        this.properties.forEach(function(prop) {
-            var subscription = ko.getObservable(prop, '_value').subscribe(function(newValue) {
-                setDirty();
-            });
-
+        self.properties.forEach(function(prop) {
+            var subscription = subscribeObservable(prop, '_value', setDirty);
             self.subscriptions.push(subscription);
+
+            self.recursiveSubscribeChanges(self, prop, setDirty);
         });
+    };
+
+    SuperComponentViewModel.prototype.recursiveSubscribeChanges = function(self, prop, setDirty){
+        if(prop === undefined){
+            return;
+        }
+
+        // This means the property is an object that holds other properties
+        if(defined(prop.getSubscribableNestedProperties)){
+            var nestedProperties = prop.getSubscribableNestedProperties();
+            if(defined(nestedProperties) && nestedProperties.length > 0){
+
+                nestedProperties.forEach(function(nestedProp){
+                    var nestedSubscription = subscribeObservable(nestedProp, '_value', setDirty);
+
+                    if(nestedSubscription !== null){
+                        self.subscriptions.push(nestedSubscription);
+                    }
+
+                    self.recursiveSubscribeChanges(self, nestedProp, setDirty);
+                });
+            }
+        }
+        else{
+            // The nesting stops here, look for properties like normal
+            prop.properties.forEach(function(value){
+                var subscription = subscribeObservable(value, '_value', setDirty);
+
+                self.subscriptions.push(subscription);
+            });
+        }
     };
 
     return SuperComponentViewModel;
