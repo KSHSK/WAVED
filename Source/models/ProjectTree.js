@@ -19,8 +19,7 @@ define(['knockout',
             case self.SelectedTypeEnum.PROJECT:
                 return wavedViewModel.tryToDeleteProject();
             case self.SelectedTypeEnum.COMPONENT:
-                // TODO : Try to delete component
-                return;
+                return wavedViewModel.removeSelectedComponent();
             case self.SelectedTypeEnum.DATA:
                 return wavedViewModel.markDataForDeletion();
             case self.SelectedTypeEnum.ACTION:
