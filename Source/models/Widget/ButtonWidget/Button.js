@@ -19,8 +19,6 @@ define([
 
         var $workspace = $('#waved-workspace');
 
-        // TODO: make this an attribute, use jquery $buttondiv.on(click, function(event))
-        // unbind $ele.off('click', ) --> look into this.
         var button = document.createElement('div');
         button.className = 'widget-container';
         $(button).attr('data-bind', 'template: {name: \'' + this._templateName + '\'}');
