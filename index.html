@@ -45,7 +45,9 @@
                             data-bind="options: currentProject.components, 
                                 optionsText: function(item) {
                                    return item.viewModel.name.value;
-                                }, value: selectedComponent">
+                                },
+                                value: selectedComponent,
+                                event: {change: openPropertiesPanel}">
                     </select>
                     <button class="inline" id="refresh-button">Refresh</button>
                 </div>                
