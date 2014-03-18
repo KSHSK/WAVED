@@ -42,6 +42,8 @@ define([
 
         this.setState(state);
 
+        this._isRendered = false;
+
         // TODO: triggers?
         this._triggers.push(new Trigger({
             name: 'US Map'
@@ -106,15 +108,21 @@ define([
                     .datum(topojson.mesh(json, json, function(a, b){ return a !== b; }))
                     .attr('id', 'state-borders')
                     .attr('d', path);
+                self._isRendered =  true;
             }
         });
     };
 
     USMapViewModel.prototype.updateSvg = function() {
-        self._svg.selectAll('path')
-            .style('fill', function(d) {
-                return self.coloring.value;
-            });
+        var interval = setInterval(function(){
+            if (self._isRendered) {
+                self._svg.selectAll('path')
+                .style('fill', function(d) {
+                    return self.coloring.value;
+                });
+                clearInterval(interval);
+            }
+        }, 100);
     };
 
     Object.defineProperties(USMapViewModel.prototype, {
