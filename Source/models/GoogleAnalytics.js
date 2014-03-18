@@ -122,7 +122,7 @@ define([
 
         subscribeObservable(this.eventCategory, '_value', setDirty);
 
-        subscribeObservable(this.uaCode, '_bound', setDirty);
+        subscribeObservable(this, '_bound', setDirty);
     };
 
     return GoogleAnalytics;
