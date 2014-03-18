@@ -38,7 +38,7 @@ define(['knockout',
             case self.SelectedTypeEnum.PROJECT:
                 return true;
             case self.SelectedTypeEnum.COMPONENT:
-                return wavedViewModel.selectedWidget === value;
+                return wavedViewModel.selectedComponent === value;
             case self.SelectedTypeEnum.DATA:
                 return wavedViewModel.selectedDataSet === value;
             case self.SelectedTypeEnum.ACTION:
@@ -55,7 +55,7 @@ define(['knockout',
             case self.SelectedTypeEnum.PROJECT:
                 break;
             case self.SelectedTypeEnum.COMPONENT:
-                wavedViewModel.selectedWidget = value;
+                wavedViewModel.selectedComponent = value;
             case self.SelectedTypeEnum.DATA:
                 wavedViewModel.selectedDataSet = value;
             case self.SelectedTypeEnum.ACTION:
