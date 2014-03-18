@@ -1,22 +1,31 @@
 define([
+        'knockout',
+        'models/SuperComponentViewModel',
         'models/Event/Trigger',
         'models/Property/StringProperty',
         'models/Widget/WidgetViewModel',
+        'modules/UniqueTracker',
         'util/defined',
-        'util/createValidator',
-        'knockout'
+        'util/createValidator'
     ],function(
+        ko,
+        SuperComponentViewModel,
         Trigger,
         StringProperty,
         WidgetViewModel,
+        UniqueTracker,
         defined,
-        createValidator,
-        ko){
+        createValidator){
     'use strict';
 
     var ButtonViewModel = function(state) {
         state = (defined(state)) ? state : {};
         WidgetViewModel.call(this, state);
+
+        if (!defined(state.name)) {
+            var namespace = SuperComponentViewModel.getUniqueNameNamespace();
+            this.name.value = UniqueTracker.getDefaultUniqueValue(namespace, ButtonViewModel.getType(), this);
+        }
 
         // Set label
         this.label = new StringProperty({

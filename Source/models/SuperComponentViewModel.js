@@ -1,31 +1,31 @@
 define([
-        'models/Property/StringProperty',
         'jquery',
+        'knockout',
+        'models/Property/StringProperty',
         'util/defined',
         'util/createValidator',
-        'knockout'
+        'util/getNamePropertyInstance'
     ], function(
-        StringProperty,
         $,
+        ko,
+        StringProperty,
         defined,
         createValidator,
-        ko) {
+        getNamePropertyInstance) {
     'use strict';
 
     var SuperComponentViewModel = function(state) {
         // Set name
-        this.name = new StringProperty({
-            displayName: 'Name',
-            value: '',
-            validValue: createValidator({
-                regex: new RegExp('^[a-zA-Z0-9_\\- ]+$'),
-                minLength: 1,
-                maxLength: 50
-            }),
-            errorMessage: 'May only contain alphanumerics, hypens (-), underscores(_) and spaces.'
+        this.name = getNamePropertyInstance('Name', {
+            namespace: SuperComponentViewModel.getUniqueNameNamespace(),
+            item: this
         });
 
         ko.track(this);
+    };
+
+    SuperComponentViewModel.getUniqueNameNamespace = function() {
+        return 'component-name';
     };
 
     Object.defineProperties(SuperComponentViewModel.prototype, {
