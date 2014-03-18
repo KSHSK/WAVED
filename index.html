@@ -54,50 +54,54 @@
         <div id="accordion-container" class="inline top">
             <div id="accordion">
                 <h3>Project Tree</h3>
-                <div>
-	                <button class="right button-small delete-icon-button" data-bind="click: tryToDeleteFromProjectTree">Delete</button>
-	                <ul id='project-tree' data-bind="visible: currentProject.name">
-	                	<li class="tree-folder-icon">
-	                			<a class="tree-row" data-bind="css: {'tree-row-selected': isSelectedInProjectTree(projectTree.SelectedTypeEnum.PROJECT, currentProject.name) },text: currentProject.name, click: selectInProjectTree(projectTree.SelectedTypeEnum.PROJECT, currentProject.name)"></a>
-	                		<ul>
-	                			<li class="tree-folder-icon">
-	                				Components
-			                		<ul data-bind="foreach: currentProject.components">
-			                			<li class="tree-gear-icon" data-bind="css: {'tree-row-selected': $parent.isSelectedInProjectTree($parent.projectTree.SelectedTypeEnum.COMPONENT, $data) }">
-			                				<a class="tree-row" data-bind="text: $data.viewModel.name.value, click: $parent.selectInProjectTree($parent.projectTree.SelectedTypeEnum.COMPONENT, $data)"></a>
-			                				<!-- TODO: Elements -->
-			               				</li>
-			                		</ul>
-		                		</li>
-		                		<li class="tree-folder-icon">
-		                			Data
-		                			<ul data-bind="foreach: currentProject.unmarkedDataSets">
-			                			<li class="tree-gear-icon" data-bind="css: {'tree-row-selected': $parent.isSelectedInProjectTree($parent.projectTree.SelectedTypeEnum.DATA, $data) }">
-			                				<a class="tree-row" data-bind="text: $data.name, click: $parent.selectInProjectTree($parent.projectTree.SelectedTypeEnum.DATA, $data)"></a>
-			               				</li>
-			                		</ul>
-	                			</li>
-		                		<li class="tree-folder-icon">
-		                			Actions
-		                			<ul data-bind="foreach: currentProject.actions">
-			                			<li class="tree-gear-icon" data-bind="css: {'tree-row-selected': $parent.isSelectedInProjectTree($parent.projectTree.SelectedTypeEnum.ACTION, $data) }">
-			                				<a class="tree-row" data-bind="text: $data.name, click: $parent.selectInProjectTree($parent.projectTree.SelectedTypeEnum.ACTION, $data)"></a>
-			               				</li>
-			                		</ul>
-	                			</li>
-		                		<li class="tree-folder-icon">
-		                			Events
-		                			<ul data-bind="foreach: currentProject.events">
-			                			<li class="tree-gear-icon" data-bind="css: {'tree-row-selected': $parent.isSelectedInProjectTree($parent.projectTree.SelectedTypeEnum.EVENT, $data) }">
-			                				<a class="tree-row" data-bind="text: $data.name, click: $parent.selectInProjectTree($parent.projectTree.SelectedTypeEnum.EVENT, $data)"></a>
-			               				</li>
-			                		</ul>
-	                			</li>
-	                		</ul>
-	                	</li>
-	                </ul>
-                </div>
-                <h3>Widgets</h3>
+				<div>
+					<button class="right button-small delete-icon-button"
+						data-bind="click: tryToDeleteFromProjectTree">Delete</button>
+					<ul id='project-tree' data-bind="visible: currentProject.name">
+						<li class="tree-folder-icon"><a class="tree-row"
+							data-bind="css: {'tree-row-selected': isSelectedInProjectTree(projectTree.SelectedTypeEnum.PROJECT, currentProject.name) },text: currentProject.name, click: function() { selectInProjectTree(projectTree.SelectedTypeEnum.PROJECT, currentProject.name) }"></a>
+							<ul>
+								<li class="tree-folder-icon">Components
+									<ul data-bind="foreach: currentProject.components">
+										<li class="tree-gear-icon"
+											data-bind="css: {'tree-row-selected': $parent.isSelectedInProjectTree($parent.projectTree.SelectedTypeEnum.COMPONENT, $data) }">
+											<a class="tree-row"
+											data-bind="text: $data.viewModel.name.value, click: function(data) { $parent.selectInProjectTree($parent.projectTree.SelectedTypeEnum.COMPONENT, $data) }"></a>
+											<!-- TODO: Elements -->
+										</li>
+									</ul>
+								</li>
+								<li class="tree-folder-icon">Data
+									<ul data-bind="foreach: currentProject.unmarkedDataSets">
+										<li class="tree-gear-icon"
+											data-bind="css: {'tree-row-selected': $parent.isSelectedInProjectTree($parent.projectTree.SelectedTypeEnum.DATA, $data) }">
+											<a class="tree-row"
+											data-bind="text: $data.name, click: function(data) { $parent.selectInProjectTree($parent.projectTree.SelectedTypeEnum.DATA, $data) }"></a>
+										</li>
+									</ul>
+								</li>
+								<li class="tree-folder-icon">Actions
+									<ul data-bind="foreach: currentProject.actions">
+										<li class="tree-gear-icon"
+											data-bind="css: {'tree-row-selected': $parent.isSelectedInProjectTree($parent.projectTree.SelectedTypeEnum.ACTION, $data) }">
+											<a class="tree-row"
+											data-bind="text: $data.name, click: function(data) { $parent.selectInProjectTree($parent.projectTree.SelectedTypeEnum.ACTION, data) }"></a>
+										</li>
+									</ul>
+								</li>
+								<li class="tree-folder-icon">Events
+									<ul data-bind="foreach: currentProject.events">
+										<li class="tree-gear-icon"
+											data-bind="css: {'tree-row-selected': $parent.isSelectedInProjectTree($parent.projectTree.SelectedTypeEnum.EVENT, $data) }">
+											<a class="tree-row"
+											data-bind="text: $data.name, click: function(data) { $parent.selectInProjectTree($parent.projectTree.SelectedTypeEnum.EVENT, data) }"></a>
+										</li>
+									</ul>
+								</li>
+							</ul></li>
+					</ul>
+				</div>
+				<h3>Widgets</h3>
                 <div id="widgets-panel" data-bind="foreach: availableWidgets">
                     <button data-bind="text: $data.name, click: $parent.addNewWidget"></button><br>
                 </div>
