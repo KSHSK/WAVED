@@ -8,6 +8,7 @@ define([
         'jquery',
         'util/defined',
         'util/defaultValue',
+        'util/subscribeObservable',
         'WAVED'
     ],function(
         GlyphSizeScheme,
@@ -19,6 +20,7 @@ define([
         $,
         defined,
         defaultValue,
+        subscribeObservable,
         WAVED){
     'use strict';
 
@@ -88,7 +90,7 @@ define([
         var self = this;
 
         // Subscribe to the value of dataSet in order to automatically update dataField's options
-        ko.getObservable(self.dataSet, '_value').subscribe(function(newValue) {
+        subscribeObservable(self.dataSet, '_value', function(newValue){
             if(defined(newValue)){
 
                 // Keep trying until data is ready, as long as data is a defined object.

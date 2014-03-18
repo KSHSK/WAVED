@@ -8,6 +8,7 @@ define([
         'models/Property/StringProperty',
         'modules/UniqueTracker',
         'util/defined',
+        'util/subscribeObservable',
         'knockout',
         'jquery'
     ],function(
@@ -20,6 +21,7 @@ define([
         StringProperty,
         UniqueTracker,
         defined,
+        subscribeObservable,
         ko,
         $
     ){
@@ -125,7 +127,7 @@ define([
             })
         };
     };
-    
+
     Event.prototype.subscriptions = [];
 
     Event.prototype.subscribeChanges = function(setDirty) {
@@ -139,11 +141,11 @@ define([
         }
 
         properties.forEach(function(prop) {
-            var subscription = ko.getObservable(self, prop).subscribe(function(newValue) {
-                setDirty();
-            });
+            var subscription = subscribeObservable(self, prop, setDirty);
 
-            self.subscriptions.push(subscription);
+            if(subscription !== null){
+                self.subscriptions.push(subscription);
+            }
         });
     };
 

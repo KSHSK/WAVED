@@ -35,11 +35,6 @@ define(['knockout',
     };
 
     Object.defineProperties(Property.prototype, {
-        properties: {
-            get: function() {
-                return [this._value, this._displayValue, this._displayName];
-            }
-        },
         displayName: {
             get: function() {
                 return this._displayName;
@@ -82,6 +77,13 @@ define(['knockout',
 
     Property.prototype.setValue = function(value) {
         // TODO: Abstract method
+    };
+
+    /**
+     * Return any objects in a Property that are Properties or may contain Properties
+     */
+    Property.prototype.getSubscribableNestedProperties = function(){
+        // Abstract
     };
 
     return Property;

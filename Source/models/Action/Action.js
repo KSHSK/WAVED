@@ -3,14 +3,16 @@ define(['jquery',
         'models/Property/StringProperty',
         'modules/UniqueTracker',
         'util/createValidator',
-        'util/defined'
+        'util/defined',
+        'util/subscribeObservable'
     ],function(
         $,
         ko,
         StringProperty,
         UniqueTracker,
         createValidator,
-        defined
+        defined,
+        subscribeObservable
     ){
     'use strict';
 
@@ -94,11 +96,11 @@ define(['jquery',
         }
 
         properties.forEach(function(prop) {
-            var subscription = ko.getObservable(self, prop).subscribe(function(newValue) {
-                setDirty();
-            });
+            var subscription = subscribeObservable(self, prop, setDirty);
 
-            self.subscriptions.push(subscription);
+            if(subscription !== null){
+                self.subscriptions.push(subscription);
+            }
         });
     };
 
