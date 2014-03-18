@@ -6,6 +6,7 @@ define([
         'models/Action/QueryAction',
         'models/Event/Trigger',
         'models/Property/StringProperty',
+        'modules/UniqueTracker',
         'util/defined',
         'knockout',
         'jquery'
@@ -17,6 +18,7 @@ define([
         QueryAction,
         Trigger,
         StringProperty,
+        UniqueTracker,
         defined,
         ko,
         $
@@ -38,13 +40,20 @@ define([
         ko.track(this);
     };
 
+    Event.getUniqueNameNamespace = function() {
+        return 'event-name';
+    };
+
     Object.defineProperties(Event.prototype, {
         name: {
             get: function() {
                 return this._name;
             },
             set: function(value) {
-                this._name = value;
+                var success = UniqueTracker.addValueIfUnique(Event.getUniqueNameNamespace(), value, this);
+                if (success) {
+                    this._name = value;
+                }
             }
         },
         eventType: {
@@ -84,7 +93,7 @@ define([
     Event.prototype.setState = function(state) {
 
         if (defined(state.name)) {
-            this._name = state.name;
+            this.name = state.name;
         }
 
         if (defined(state.eventType)) {

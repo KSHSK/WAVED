@@ -1,33 +1,42 @@
 define([
+        'knockout',
+        'models/SuperComponentViewModel',
         'models/Widget/WidgetViewModel',
         'models/Property/StringProperty',
         'models/Property/NumberProperty',
+        'modules/UniqueTracker',
         'util/defined',
-        'util/createValidator',
-        'knockout'
+        'util/createValidator'
     ],function(
+        ko,
+        SuperComponentViewModel,
         WidgetViewModel,
         StringProperty,
         NumberProperty,
+        UniqueTracker,
         defined,
-        createValidator,
-        ko){
+        createValidator){
     'use strict';
 
     var TextBlockViewModel = function(state) {
         state = (defined(state)) ? state : {};
         WidgetViewModel.call(this, state);
 
+        if (!defined(state.name)) {
+            var namespace = SuperComponentViewModel.getUniqueNameNamespace();
+            this.name.value = UniqueTracker.getDefaultUniqueValue(namespace, TextBlockViewModel.getType(), this);
+        }
+
         // Set label
         this.text = new StringProperty({
             displayName: 'Text',
             value: '',
             validValue: createValidator({
-                minLength: 1,
+                minLength: 0,
                 maxLength: 500
             }),
             textArea: true,
-            errorMessage: 'Must be between 1 and 500 characters'
+            errorMessage: 'Must be between 0 and 500 characters'
         });
 
         this.border = new NumberProperty({

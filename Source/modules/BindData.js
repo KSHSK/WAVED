@@ -4,12 +4,14 @@
 define([
         'jquery',
         'WAVEDViewModel',
+        'models/Widget/WidgetViewModel',
         'models/Data/DataSet',
         'util/defined',
         'util/displayMessage'
     ], function(
         $,
         WAVEDViewModel,
+        WidgetViewModel,
         DataSet,
         defined,
         displayMessage) {
@@ -62,20 +64,28 @@ define([
         },
 
         bindData: function(viewModel, name) {
+            if (!(viewModel.selectedComponent.viewModel instanceof WidgetViewModel)) {
+                return;
+            }
+
             var dataSet = viewModel.currentProject.getDataSet(name);
             if (defined(dataSet)) {
-                viewModel.selectedWidget.viewModel.bindData(dataSet);
+                viewModel.selectedComponent.viewModel.bindData(dataSet);
             }
         },
 
         unbindData: function(viewModel) {
+            if (!(viewModel.selectedComponent.viewModel instanceof WidgetViewModel)) {
+                return;
+            }
+
             //TODO: Check if the data is in use before unbinding it.
 
             var name = viewModel.selectedBoundData;
 
             var dataSet = viewModel.currentProject.getDataSet(name);
             if (defined(dataSet)) {
-                viewModel.selectedWidget.viewModel.unbindData(dataSet);
+                viewModel.selectedComponent.viewModel.unbindData(dataSet);
             }
         }
 
