@@ -211,6 +211,10 @@ define(['jquery',
         self._currentProject.removeEvent(self.selectedEvent);
     };
 
+    WAVEDViewModel.prototype.removeSelectedComponent = function() {
+        self._currentProject.removeComponent(self.selectedWidget);
+    };
+
     WAVEDViewModel.prototype.saveProject = function() {
         var deferred = $.Deferred();
         return SaveProject.saveProject(deferred, this.currentProject.name, self);
