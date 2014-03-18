@@ -20,8 +20,14 @@ define([
         d3) {
     'use strict';
 
-    var WidgetViewModel = function(state) {
+    var self;
+    var WidgetViewModel = function(state, getDataSet) {
         ComponentViewModel.call(this, state);
+        self = this;
+
+        this.getDataSetByName = function(dataSetName){
+            return getDataSet(dataSetName);
+        };
 
         // Set width
         this.width = new NumberProperty({
@@ -111,7 +117,7 @@ define([
         return state;
     };
 
-    WidgetViewModel.prototype.setState = function(state, project) {
+    WidgetViewModel.prototype.setState = function(state) {
         ComponentViewModel.prototype.setState.call(this, state);
 
         if (defined(state.width)) {
@@ -136,7 +142,7 @@ define([
 
         if (defined(state.boundData)) {
             for(var index=0; index < state.boundData.length; index++){
-                var dataSet = project.getDataSet(state.boundData[index].name);
+                var dataSet = self.getDataSetByName(state.boundData[index].name);
                 if(dataSet !== null){
                     this._boundData.push(dataSet);
                 }

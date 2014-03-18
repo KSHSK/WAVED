@@ -35,6 +35,11 @@ define(['knockout',
     };
 
     Object.defineProperties(Property.prototype, {
+        properties: {
+            get: function() {
+                return [this._value, this._displayValue, this._displayName];
+            }
+        },
         displayName: {
             get: function() {
                 return this._displayName;

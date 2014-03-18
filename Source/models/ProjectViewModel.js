@@ -187,7 +187,7 @@ define([
                 for (var index in availableWidgets) {
                     var widget = availableWidgets[index];
                     if (itemState.type === widget.o.getViewModelType()) {
-                        return new widget.o(itemState, self);
+                        return new widget.o(itemState, self.getDataSet);
                     }
                 }
 
@@ -297,8 +297,8 @@ define([
     };
 
     ProjectViewModel.prototype.getDataSet = function(name) {
-        for (var index = 0; index < this._dataSets.length; index++) {
-            var dataSet = this._dataSets[index];
+        for (var index = 0; index < self._dataSets.length; index++) {
+            var dataSet = self._dataSets[index];
             if (dataSet.name === name) {
                 return dataSet;
             }

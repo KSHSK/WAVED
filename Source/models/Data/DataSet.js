@@ -111,9 +111,11 @@ define(['knockout',
         var self = this;
 
         var properties = [];
-        for ( var prop in this) {
+        for (var prop in this) {
             if (this.hasOwnProperty(prop)) {
-                properties.push(prop);
+                if(prop !== '_data' && prop !== '_dataFields'){
+                    properties.push(prop);
+                }
             }
         }
 
