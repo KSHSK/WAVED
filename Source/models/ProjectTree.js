@@ -30,7 +30,7 @@ define(['knockout',
     };
 
     ProjectTree.prototype.isSelected = function(wavedViewModel, type, value) {
-        if (self.selectedType != type) {
+        if (self.selectedType !== type) {
             return false;
         }
 
@@ -56,12 +56,16 @@ define(['knockout',
                 break;
             case self.SelectedTypeEnum.COMPONENT:
                 wavedViewModel.selectedComponent = value;
+                break;
             case self.SelectedTypeEnum.DATA:
                 wavedViewModel.selectedDataSet = value;
+                break;
             case self.SelectedTypeEnum.ACTION:
                 wavedViewModel.selectedAction = value;
+                break;
             case self.SelectedTypeEnum.EVENT:
                 wavedViewModel.selectedEvent = value;
+                break;
         }
     };
 
