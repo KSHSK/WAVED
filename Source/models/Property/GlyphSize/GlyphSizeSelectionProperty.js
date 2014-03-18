@@ -104,7 +104,7 @@ define([
         }
     };
 
-    Property.prototype.getSubscribableNestedProperties = function(){
+    GlyphSizeSelectionProperty.prototype.getSubscribableNestedProperties = function(){
         return [this.constantGlyphSize, this.scaledGlyphSize];
     };
 
