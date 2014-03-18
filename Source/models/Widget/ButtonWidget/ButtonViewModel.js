@@ -1,16 +1,20 @@
 define([
+        'models/SuperComponentViewModel',
         'models/Event/Trigger',
         'models/Property/StringProperty',
         'models/Widget/WidgetViewModel',
+        'modules/UniqueTracker',
         'util/defined',
         'util/createValidator',
         'knockout',
         'models/Property/GlyphSize/GlyphSizeSelectionProperty',
         'models/Constants/GlyphSizeSchemeType'
     ],function(
+        SuperComponentViewModel,
         Trigger,
         StringProperty,
         WidgetViewModel,
+        UniqueTracker,
         defined,
         createValidator,
         ko,
@@ -21,6 +25,11 @@ define([
     var ButtonViewModel = function(state, project) {
         state = (defined(state)) ? state : {};
         WidgetViewModel.call(this, state);
+
+        if (!defined(state.name)) {
+            var namespace = SuperComponentViewModel.getUniqueNameNamespace();
+            this.name.value = UniqueTracker.getDefaultUniqueValue(namespace, ButtonViewModel.getType(), this);
+        }
 
         // Set label
         this.label = new StringProperty({
