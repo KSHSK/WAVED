@@ -2,8 +2,8 @@ define([], function(){
     'use strict';
 
     var EventType = {
-        CLICK: 'Mouse click',
-        MOUSEOVER: 'Mouse move'
+        CLICK: 'click',
+        MOUSEOVER: 'mouseover'
         // TODO: Figure out hover. jQuery hover binds handlers for both mouseenter and mouseout
     };
 
