@@ -12,10 +12,14 @@ define(['knockout',
         ReadData,
         UniqueTracker,
         defined,
+<<<<<<< HEAD
         createValidator,
         d3,
         $
     ){
+=======
+        createValidator){
+>>>>>>> master
     'use strict';
 
     // Constant for marked for deletion.
@@ -83,7 +87,7 @@ define(['knockout',
     DataSet.prototype.setState = function(state) {
         var self = this;
         if (defined(state.name)) {
-            this._name = state.name;
+            this.name = state.name;
         }
 
         if (defined(state.referenceCount)) {

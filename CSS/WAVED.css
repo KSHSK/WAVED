@@ -152,3 +152,11 @@ textarea:disabled {
     width: 100%;
     text-align: left;
 }
+
+.dirty {
+    color: #E63241;
+    font-family: arial;
+    font-size: 0.7em;
+    font-style: italic;
+    font-weight: lighter;
+}

@@ -4,13 +4,15 @@
 define([
         'jquery',
         'WAVEDViewModel',
-        'modules/SaveProject',
+        './SaveProject',
+        './UniqueTracker',
         'models/Data/DataSet',
         'util/displayMessage'
     ], function(
         $,
         WAVEDViewModel,
         SaveProject,
+        UniqueTracker,
         DataSet,
         displayMessage) {
     'use strict';
@@ -49,8 +51,14 @@ define([
                                 return;
                             }
 
-                            self.uploadData(dataUploaded, viewModel);
+                            if (!UniqueTracker.isValueUnique(DataSet.getUniqueNameNamespace(),
+                                viewModel.uploadDataName.value)) {
 
+                                displayMessage('The name "' + viewModel.uploadDataName.value + '" is already in use.');
+                                return;
+                            }
+
+                            self.uploadData(dataUploaded, viewModel);
                             $.when(dataUploaded).done(function() {
                                 self.uploadDataDialog.dialog('close');
                             });

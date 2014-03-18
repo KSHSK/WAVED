@@ -23,7 +23,10 @@
                     </a>
                 </div>
                 <div class="inline bottom">
-                    <div class="menu-text" id="project-name" data-bind="text: currentProject.name"></div>
+                    <div>
+                        <span class="menu-text" id="project-name" data-bind="text: currentProject.name"></span>
+                        <span class="dirty" data-bind="visible: dirty"> (Unsaved Changes)</span>
+                    </div>
                     
                     <button class="inline" id="new-button" data-bind="click: tryToCreateNewProject">New</button>
                     <button class="inline" id="load-button" data-bind="click: tryToLoadProject">Load</button>
@@ -42,7 +45,9 @@
                             data-bind="options: currentProject.components, 
                                 optionsText: function(item) {
                                    return item.viewModel.name.value;
-                                }, value: selectedWidget">
+                                },
+                                value: selectedComponent,
+                                event: {change: openPropertiesPanel}">
                     </select>
                     <button class="inline" id="refresh-button">Refresh</button>
                 </div>                
@@ -123,15 +128,15 @@
                                 }, value: selectedEvent"></select>
                     </div>
                 </div>
-                <h3>Properties</h3>
+                <h3>Properties - <span data-bind="text: selectedComponent.viewModel.name.value"></span></h3>
                 <div id="properties-panel">
                     <div id="properties-panel-properties" data-bind="foreach: currentProject.components">
-                        <div data-bind="foreach: $data.viewModel.properties, visible: $parent.selectedWidget == $data">
+                        <div data-bind="foreach: $data.viewModel.properties, visible: $parent.selectedComponent == $data">
                             <div data-bind="template: {name : $data.templateName, data: $data}"></div>
                         </div>
                     </div>
-                    <div id="properties-panel-bound-data" data-bind="visible: selectedWidget && selectedWidget.viewModel.boundData !== 'undefined'">                        
-                        <div data-bind="visible: selectedWidget && typeof selectedWidget.viewModel.boundData !== 'undefined'">
+                    <div id="properties-panel-bound-data" data-bind="visible: selectedComponent && selectedComponent.viewModel.boundData !== 'undefined'">                        
+                        <div data-bind="visible: selectedComponent && typeof selectedComponent.viewModel.boundData !== 'undefined'">
                             <hr/>
                             <div class="inline">Bound Data</div>
                             <div class="inline right">
@@ -139,9 +144,9 @@
                                 <button data-bind="click: unbindData" class="button-small delete-icon-button">Unbind Data</button>
                             </div>
                         
-                            <div data-bind="if: selectedWidget && typeof selectedWidget.viewModel.boundData !== 'undefined'">
+                            <div data-bind="if: selectedComponent && typeof selectedComponent.viewModel.boundData !== 'undefined'">
                                 <select id="bound-data-list" size="5" class="select-full-size"
-                                    data-bind="options: selectedWidget.viewModel.boundData, 
+                                    data-bind="options: selectedComponent.viewModel.boundData, 
                                         optionsText: function(data) {
                                            return currentProject.getDataSet(data._name).getNameAndFilename();
                                         }, value: selectedBoundData">
@@ -215,7 +220,7 @@
         </div>
         <div>
             <label class="required" for="upload-data-file">File: </label>
-            <input id="upload-data-file" type="file" data-bind="value: uploadDataFile.value, valueUpdate: 'keyup'"/>
+            <input id="upload-data-file" type="file" accept=".csv,.json" data-bind="value: uploadDataFile.value, valueUpdate: 'keyup'"/>
             <div class="error" data-bind="visible: uploadDataFile.error, html: uploadDataFile.message"></div>
         </div>
     </div>

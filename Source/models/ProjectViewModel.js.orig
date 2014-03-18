@@ -159,6 +159,7 @@ define([
             this._workspace.setState(state.workspace);
         }
 
+<<<<<<< HEAD
         /*
          * Must go before components because any components that depend on DataSets
          * will need them to be available.
@@ -180,10 +181,14 @@ define([
 
         if (defined(state.components)) {
             var self = this;
+            this._components = $.map(state.components, function(itemState) {
+=======
+        if (defined(state.components)) {
             // Clear array.
             this._components.length = 1;
 
             var newComponents = $.map(state.components, function(itemState) {
+>>>>>>> master
                 for (var index in availableWidgets) {
                     var widget = availableWidgets[index];
                     if (itemState.type === widget.o.getViewModelType()) {
@@ -198,6 +203,8 @@ define([
             this._components.push.apply(this._components, newComponents);
         }
 
+<<<<<<< HEAD
+=======
         if (defined(state.dataSets)) {
             // Clear array.
             this._dataSets.length = 0;
@@ -218,6 +225,7 @@ define([
             this._dataSets.push.apply(this._dataSets, newDataSets);
         }
 
+>>>>>>> master
         if (defined(state.actions)) {
             // Clear array.
             this._actions.length = 0;
