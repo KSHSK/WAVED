@@ -73,18 +73,20 @@ define([
             if(defined(nestedProperties) && nestedProperties.length > 0){
 
                 nestedProperties.forEach(function(nestedProp){
+                    // Subscribe to the nestedProperty itself
                     var nestedSubscription = subscribeObservable(nestedProp, '_value', setDirty);
 
                     if(nestedSubscription !== null){
                         self.subscriptions.push(nestedSubscription);
                     }
 
+                    // Traverse down the tree
                     self.recursiveSubscribeChanges(self, nestedProp, setDirty);
                 });
             }
         }
         else{
-            // The nesting stops here, look for properties like normal
+            // The nesting stops here, look for properties like normal (we've reached the bottom of the tree)
             prop.properties.forEach(function(value){
                 var subscription = subscribeObservable(value, '_value', setDirty);
 
