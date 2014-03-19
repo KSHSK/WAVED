@@ -55,7 +55,7 @@ define([
         // Allows for deselection
         var isValidValue = function(value){
            var undef = (value === undefined);
-           var validSelection = false;
+           var validSelection = true;
            if (defined(this._options) && this._options.length > 0) {
                validSelection = (this._options.indexOf(value) !== -1);
            }
@@ -113,16 +113,7 @@ define([
         viewModel.boundData.forEach(function(entry){
             if(defined(state.dataSet) && (state.dataSet === entry.name)){
                 self.dataSet.value = entry;
-
-                var interval = setInterval(function(){
-                    // Make sure the data is loaded
-                    if(defined(self.dataSet.value.data) && self.dataSet.value.dataFields.length >= 0){
-                        if(entry.dataFields.length >= 0){
-                            self.dataField.value = state.dataField;
-                            clearInterval(interval);
-                        }
-                    }
-                }, 100);
+                self.dataField.value = state.dataField;
 
                 return;
             }
