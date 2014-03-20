@@ -60,21 +60,17 @@ define([
                 width: 400,
                 modal: true,
                 buttons: {
-                    'Create Project': {
-                        text: 'Create Project',
-                        'class': 'submit-button',
-                        click: function() {
-                            var value = viewModel.newProjectName.value;
+                    'Create Project': function() {
+                        var value = viewModel.newProjectName.value;
 
-                            if (!viewModel.newProjectName.error) {
-                                self.createNewProject(projectCreated, viewModel);
-                                $.when(projectCreated).done(function() {
-                                    createNewProjectDialog.dialog('close');
-                                });
-                            }
-                            else {
-                                viewModel.newProjectName.message = viewModel.newProjectName.errorMessage;
-                            }
+                        if (!viewModel.newProjectName.error) {
+                            self.createNewProject(projectCreated, viewModel);
+                            $.when(projectCreated).done(function() {
+                                createNewProjectDialog.dialog('close');
+                            });
+                        }
+                        else {
+                            viewModel.newProjectName.message = viewModel.newProjectName.errorMessage;
                         }
                     },
                     'Cancel': function() {
@@ -122,7 +118,7 @@ define([
 
                         // Save state of new project.
                         var projectSaved = $.Deferred();
-                        SaveProject.saveProject(projectSaved, viewModel.currentProject.name, viewModel);
+                        SaveProject.saveProject(projectSaved, viewModel);
 
                         projectCreated.resolve();
                     }
