@@ -21,6 +21,7 @@ define([
         $(button).attr('data-bind', 'template: {name: \'' + this._templateName + '\'}');
         $workspace.append(button);
 
+        this.domElement = button;
         this.viewModel = viewModel;
         ko.applyBindings(viewModel, button);
     };

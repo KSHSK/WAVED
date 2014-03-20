@@ -179,6 +179,9 @@ define(['jquery',
         var component = self._selectedComponent;
         self._selectedComponent = self.currentProject.workspace;
         self._currentProject.removeComponent(component);
+
+        // Remove the DOM element.
+        component.domElement.remove();
     };
 
     WAVEDViewModel.prototype.saveProject = function() {
