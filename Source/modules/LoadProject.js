@@ -146,7 +146,7 @@ define([
                         $.when(filesDeleted).done(function() {
                             // Save the project if some files were deleted.
                             var projectSaved = $.Deferred();
-                            SaveProject.saveProject(projectSaved, viewModel.currentProject.name, viewModel);
+                            SaveProject.saveProject(projectSaved, viewModel);
                         });
 
                         projectLoaded.resolve();

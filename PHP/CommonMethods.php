@@ -92,8 +92,8 @@ function recursiveRmdir($baseDir) {
  * Returns the data folder for the given project.
  * @param String $projectName
  */
-function getDataFolder($projectName) {
-    return "projects/" . $projectName . "/data/";
+function getDataFolder($projectName, $offset = "") {
+    return $offset . "projects/" . $projectName . "/data/";
 }
 
 /**
@@ -216,6 +216,21 @@ function saveProject(&$returnValue, $projectName, $projectState) {
     // Set the name of the project
     $returnValue["projectName"] = $projectName;
     return true;
+}
+
+// Copies the data files from $fromProjectName's data folder to $toProjectName's data folder.
+function copyDataFiles($fromProjectName, $toProjectName) {
+    $offset = "../";
+    
+    $fromDataFolder = getDataFolder($fromProjectName, $offset);
+    $toDataFolder = getDataFolder($toProjectName, $offset);
+    
+    $contents = array_diff(scandir($fromDataFolder), array('.', '..'));
+    
+    
+    foreach ($contents as $file) {
+        copy($fromDataFolder . $file, $toDataFolder . $file);
+    }
 }
 
 ?>
