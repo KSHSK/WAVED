@@ -2,13 +2,15 @@
  * A module for saving a project.
  */
 define([
-        '../WAVEDViewModel',
+        'jquery',
+        'WAVEDViewModel',
         'util/displayMessage',
-        'jquery'
+        'util/updateQueryByName'
     ], function(
+        $,
         WAVEDViewModel,
         displayMessage,
-        $) {
+        updateQueryByName) {
     'use strict';
 
     var SaveProject = {
@@ -63,8 +65,6 @@ define([
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
                     if (data.success) {
-                        // Set the project name in case this is a "Save As"
-                        viewModel.currentProject.name = data.projectName;
                         viewModel.dirty = false;
 
                         displayMessage('The project was successfully saved');
@@ -98,8 +98,12 @@ define([
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
                     if (data.success) {
-                        // Set the project name in case this is a "Save As"
+                        // Set the project name since the name has changed.
                         viewModel.currentProject.name = data.projectName;
+
+                        // Set the URL to include the current project name.
+                        updateQueryByName('project', data.projectName);
+
                         viewModel.dirty = false;
 
                         displayMessage('The project was successfully saved');
