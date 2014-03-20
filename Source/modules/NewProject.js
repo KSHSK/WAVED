@@ -7,7 +7,6 @@ define([
         './SaveProject',
         './UniqueTracker',
         'models/ProjectViewModel',
-        'util/updateQueryByName',
         'jquery',
         'knockout'
     ], function(
@@ -16,7 +15,6 @@ define([
         SaveProject,
         UniqueTracker,
         ProjectViewModel,
-        updateQueryByName,
         $,
         ko) {
     'use strict';
