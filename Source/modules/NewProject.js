@@ -112,10 +112,6 @@ define([
                         viewModel.newProjectName._value = '';
                         viewModel.dirty = false;
 
-
-                        // Set the URL to include the current project name.
-                        updateQueryByName('project', data.projectName);
-
                         // Save state of new project.
                         var projectSaved = $.Deferred();
                         SaveProject.saveProject(projectSaved, viewModel);

@@ -137,9 +137,6 @@ define([
                         viewModel.loadProjectName._value = '';
                         viewModel.selectedComponent = viewModel.workspace;
 
-                        // Set the URL to include the current project name.
-                        updateQueryByName('project', data.projectName);
-
                         // Delete marked data.
                         var filesDeleted = DeleteData.deleteAllMarkedData(viewModel);
 
