@@ -32,10 +32,10 @@ define([
             displayName: 'Label',
             value: '',
             validValue: createValidator({
-                minLength: 1,
+                minLength: 0,
                 maxLength: 50
             }),
-            errorMessage: 'Must be between 1 and 50 characters'
+            errorMessage: 'Must be between 0 and 50 characters'
         });
 
         this.height.value = 5;
