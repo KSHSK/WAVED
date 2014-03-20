@@ -21,6 +21,7 @@ define([
         $(textBlock).attr('data-bind', 'template: {name: \'' + this._templateName + '\'}');
         $workspace.append(textBlock);
 
+        this.domElement = textBlock;
         this.viewModel = viewModel;
         ko.applyBindings(viewModel, textBlock);
     };
