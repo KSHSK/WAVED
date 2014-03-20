@@ -101,9 +101,6 @@ define([
                         // Set the project name since the name has changed.
                         viewModel.currentProject.name = data.projectName;
 
-                        // Set the URL to include the current project name.
-                        updateQueryByName('project', data.projectName);
-
                         viewModel.dirty = false;
 
                         displayMessage('The project was successfully saved');
