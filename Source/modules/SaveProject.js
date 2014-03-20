@@ -4,13 +4,11 @@
 define([
         'jquery',
         'WAVEDViewModel',
-        'util/displayMessage',
-        'util/updateQueryByName'
+        'util/displayMessage'
     ], function(
         $,
         WAVEDViewModel,
-        displayMessage,
-        updateQueryByName) {
+        displayMessage) {
     'use strict';
 
     var SaveProject = {

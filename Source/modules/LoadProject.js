@@ -8,8 +8,7 @@ define([
         './DeleteData',
         './SaveProject',
         './UniqueTracker',
-        'models/ProjectViewModel',
-        'util/updateQueryByName'
+        'models/ProjectViewModel'
     ], function(
         $,
         UnsavedChanges,
@@ -17,8 +16,7 @@ define([
         DeleteData,
         SaveProject,
         UniqueTracker,
-        ProjectViewModel,
-        updateQueryByName) {
+        ProjectViewModel) {
     'use strict';
 
     var LoadProject = {
