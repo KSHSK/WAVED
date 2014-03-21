@@ -4,6 +4,7 @@ define([
         'models/Property/StringProperty',
         'models/Widget/WidgetViewModel',
         'util/defined',
+        'util/displayMessage',
         'knockout',
         'd3',
         'jquery',
@@ -14,6 +15,7 @@ define([
         StringProperty,
         WidgetViewModel,
         defined,
+        displayMessage,
         ko,
         d3,
         $,
@@ -90,7 +92,7 @@ define([
         self._g = self._svg.append('g');
         d3.json('data/states.json', function(error, json) {
             if (error) {
-                alert('error creating map');
+                displayMessage('error creating map');
             } else {
                 self._g.append('g')
                     .attr('id', 'states')
@@ -109,20 +111,18 @@ define([
                     .attr('id', 'state-borders')
                     .attr('d', path);
                 self._isRendered =  true;
+                self.updateSvg();
             }
         });
     };
 
     USMapViewModel.prototype.updateSvg = function() {
-        var interval = setInterval(function(){
-            if (self._isRendered) {
-                self._svg.selectAll('path')
-                .style('fill', function(d) {
-                    return self.coloring.value;
-                });
-                clearInterval(interval);
-            }
-        }, 100);
+        if (self._isRendered) {
+            self._svg.selectAll('path')
+            .style('fill', function(d) {
+                return self.coloring.value;
+            });
+        }
     };
 
     Object.defineProperties(USMapViewModel.prototype, {
