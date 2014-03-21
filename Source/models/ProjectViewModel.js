@@ -299,10 +299,6 @@ define([
         }
     };
 
-    ProjectViewModel.prototype.removeComponent = function(component) {
-        //TODO
-    };
-
     ProjectViewModel.prototype.removeEvent = function(event) {
         var index = self._events.indexOf(event);
         if (index > -1) {
