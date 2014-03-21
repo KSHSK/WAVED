@@ -76,10 +76,6 @@ textarea:disabled {
     width: 300px;
 }
 
-#project-tree {
-    min-height: 300px;
-}
-
 #workspace-container {
     padding: 10px 10px 10px 5px;
 }
@@ -151,6 +147,46 @@ textarea:disabled {
 #bind-data-table {
     width: 100%;
     text-align: left;
+}
+
+#project-tree {
+	padding-left: 0;
+}
+
+#project-tree .tree-row {
+	cursor: pointer;
+}
+
+#project-tree .tree-row-selected {
+	font-weight: bold;
+}
+
+#project-tree .tree-row:hover {
+	color: #3BB4BF;
+}
+
+#project-tree li {
+	list-style: none;
+}
+
+#project-tree ul {
+	padding-left: 16px;
+}
+
+#project-tree .tree-folder-icon:before {
+    background:url('../ThirdParty/jquery/css/waved-theme/images/ui-icons_3BB4BF_256x240.png') no-repeat -0px -96px;
+    width:16px;
+    height:16px;
+    display: inline-block;
+    content: " ";
+}
+
+#project-tree .tree-gear-icon:before {
+    background:url('../ThirdParty/jquery/css/waved-theme/images/ui-icons_3BB4BF_256x240.png') no-repeat -192px -112px;
+    width:16px;
+    height:16px;
+    display: inline-block;
+    content: " ";
 }
 
 .dirty {
