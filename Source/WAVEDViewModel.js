@@ -9,11 +9,13 @@ define(['jquery',
         'models/Property/StringProperty',
         'models/WorkspaceViewModel',
         'models/Widget/ButtonWidget/Button',
+        'models/ProjectTree',
         'modules/ActionHelper',
         'modules/EventHelper',
         'modules/NewProject',
         'modules/LoadProject',
         'modules/SaveProject',
+        'modules/DeleteProject',
         'modules/UploadData',
         'modules/BindData',
         'modules/DeleteData',
@@ -35,11 +37,13 @@ define(['jquery',
         StringProperty,
         WorkspaceViewModel,
         Button,
+        ProjectTree,
         ActionHelper,
         EventHelper,
         NewProject,
         LoadProject,
         SaveProject,
+        DeleteProject,
         UploadData,
         BindData,
         DeleteData,
@@ -64,6 +68,8 @@ define(['jquery',
         this._currentProject = new ProjectViewModel({
             name: ''
         });
+
+        this._projectTree = new ProjectTree();
 
         this._availableWidgets = [{
             name: 'Button',
@@ -174,6 +180,15 @@ define(['jquery',
         self._currentProject.removeEvent(self.selectedEvent);
     };
 
+    WAVEDViewModel.prototype.removeSelectedComponent = function() {
+        var component = self._selectedComponent;
+        self._selectedComponent = self.currentProject.workspace;
+        self._currentProject.removeComponent(component);
+
+        // Remove the DOM element.
+        component.domElement.remove();
+    };
+
     WAVEDViewModel.prototype.saveProject = function() {
         var deferred = $.Deferred();
         return SaveProject.saveProject(deferred, this.currentProject.name, self);
@@ -181,6 +196,22 @@ define(['jquery',
 
     WAVEDViewModel.prototype.tryToSaveProject = function() {
         return SaveProject.tryToSaveProject(self);
+    };
+
+    WAVEDViewModel.prototype.tryToDeleteProject = function() {
+        return DeleteProject.tryToDeleteProject(self);
+    };
+
+    WAVEDViewModel.prototype.tryToDeleteFromProjectTree = function() {
+        return self._projectTree.tryToDeleteSelected(self);
+    };
+
+    WAVEDViewModel.prototype.isSelectedInProjectTree = function(type, value) {
+        return self._projectTree.isSelected(self, type, value);
+    };
+
+    WAVEDViewModel.prototype.selectInProjectTree = function(type, value) {
+        self._projectTree.select(self, type, value);
     };
 
     WAVEDViewModel.prototype.propertiesPanelPosition = $('#accordion').children('div').index($('#properties-panel'));
@@ -269,6 +300,11 @@ define(['jquery',
                 return dataSets.filter(function(dataSet) {
                     return boundDataNames.indexOf(dataSet.name) === -1;
                 });
+            }
+        },
+        projectTree: {
+            get: function() {
+                return this._projectTree;
             }
         }
     });
