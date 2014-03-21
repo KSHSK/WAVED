@@ -112,7 +112,9 @@
                 </div>
                 <h3>Widgets</h3>
                 <div id="widgets-panel" data-bind="foreach: availableWidgets">
-                    <button data-bind="text: $data.name, click: $parent.addNewWidget"></button><br>
+                    <div class="widget-selector">
+                        <img data-bind="attr: {src: $data.icon} , click: $parent.addNewWidget" />
+                    </div>
                 </div>
                 <h3>Data</h3>
                 <div>
