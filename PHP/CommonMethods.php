@@ -137,6 +137,12 @@ function validProjectName($projectName, &$returnValue) {
     return true;
 }
 
+/**
+ * Creates a new project with the name $projectName.
+ * @param unknown_type $returnValue The return value to set errors and information on.
+ * @param unknown_type $projectName The name of the new project.
+ * @return boolean true if the project was successfully created; otherwise, false.
+ */
 function createProject(&$returnValue, $projectName) {
     global $projectSerializer;
     
@@ -185,6 +191,13 @@ function createProject(&$returnValue, $projectName) {
     return true;
 }
 
+/**
+ * Saves the project $projectName with the state $projectState.
+ * @param unknown_type $returnValue The return value to set errors and information on.
+ * @param unknown_type $projectName The name of the new project.
+ * @param unknown_type $projectState The new state of the project.
+ * @return boolean true if the project was successfully saved; otherwise, false.
+ */
 function saveProject(&$returnValue, $projectName, $projectState) {
     global $projectSerializer;
 
@@ -218,8 +231,14 @@ function saveProject(&$returnValue, $projectName, $projectState) {
     return true;
 }
 
-// Copies the data files from $fromProjectName's data folder to $toProjectName's data folder.
-function copyDataFiles($fromProjectName, $toProjectName) {
+/**
+ * Copies the data files from $fromProjectName's data folder to $toProjectName's data folder.
+ * @param unknown_type $returnValue The return value to set errors and information on.
+ * @param unknown_type $fromProjectName The name of the project currently with data files.
+ * @param unknown_type $toProjectName The name of the project to which the data files are copied.
+ * @return boolean true if all data files were successfully copied; otherwise, false.
+ */
+function copyDataFiles(&$returnValue, $fromProjectName, $toProjectName) {
     $offset = "../";
     
     $fromDataFolder = getDataFolder($fromProjectName, $offset);
@@ -227,10 +246,16 @@ function copyDataFiles($fromProjectName, $toProjectName) {
     
     $contents = array_diff(scandir($fromDataFolder), array('.', '..'));
     
-    
+    $success = true;
     foreach ($contents as $file) {
-        copy($fromDataFolder . $file, $toDataFolder . $file);
+        $success = copy($fromDataFolder . $file, $toDataFolder . $file) && $success;
     }
+    
+    if (!$success) {
+        setReturnValueError($returnValue, "Could not copy data files to new project.");
+    }
+    
+    return $success;
 }
 
 ?>

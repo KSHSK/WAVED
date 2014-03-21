@@ -257,7 +257,7 @@
         <p>Please save the project under a new name</p>
         <label class="required" for="save-project-as-name" data-bind="text: saveProjectAsName.displayName"></label>
         <input id="save-project-as-name" data-bind="value: saveProjectAsName.value, valueUpdate: 'keyup'"/>
-        <div class="error" data-bind="visible: newProjectName.error, html: newProjectName.message"></div>
+        <div class="error" data-bind="visible: saveProjectAsName.error, html: saveProjectAsName.message"></div>
     </div>
     
     <div id="delete-project-dialog" title="Delete Project" class="dialog">

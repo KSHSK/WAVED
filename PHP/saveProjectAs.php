@@ -27,7 +27,7 @@ if (!$success) {
 }
 
 // Copy data files
-copyDataFiles($oldProjectName, $projectName);
+copyDataFiles($returnValue, $oldProjectName, $projectName);
 
 reportReturnValue($returnValue);
 ?>
