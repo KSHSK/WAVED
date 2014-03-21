@@ -10,7 +10,7 @@ define(['knockout'], function(ko) {
             return null;
         }
         else{
-            return ko.getObservable(container, observableName).subscribe(function(newValue){
+            return observable.subscribe(function(newValue){
                 return action(newValue);
             }, target, event);
         }
