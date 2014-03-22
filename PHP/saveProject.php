@@ -9,7 +9,7 @@ $returnValue = getInitialReturnValue();
 $projectName = $_POST["project"];
 $projectState = $_POST["state"];
 
-saveProject($returnValue, $projectName, $projectState);
+$returnValue = saveProject($returnValue, $projectName, $projectState);
 reportReturnValue($returnValue);
 
 ?>

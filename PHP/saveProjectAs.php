@@ -11,23 +11,23 @@ $projectName = $_POST["project"];
 $projectState = $_POST["state"];
 
 // Create project
-$success = createProject($returnValue, $projectName);
+$returnValue = createProject($returnValue, $projectName);
 
-if (!$success) {
+if (!$returnValue["success"]) {
     reportReturnValue($returnValue);
     return;
 }
 
 // Save project state
-$success = saveProject($returnValue, $projectName, $projectState);
+$returnValue = saveProject($returnValue, $projectName, $projectState);
 
-if (!$success) {
+if (!$returnValue["success"]) {
     reportReturnValue($returnValue);
     return;
 }
 
 // Copy data files
-copyDataFiles($returnValue, $oldProjectName, $projectName);
+$returnValue = copyDataFiles($returnValue, $oldProjectName, $projectName);
 
 reportReturnValue($returnValue);
 ?>
