@@ -139,9 +139,9 @@ function validProjectName($projectName, &$returnValue) {
 
 /**
  * Creates a new project with the name $projectName.
- * @param unknown_type $returnValue The return value to set errors and information on.
- * @param unknown_type $projectName The name of the new project.
- * @return boolean true if the project was successfully created; otherwise, false.
+ * @param array $returnValue The return value to set errors and information on.
+ * @param string $projectName The name of the new project.
+ * @return array $returnValue with updated values.
  */
 function createProject($returnValue, $projectName) {
     global $projectSerializer;
@@ -193,10 +193,10 @@ function createProject($returnValue, $projectName) {
 
 /**
  * Saves the project $projectName with the state $projectState.
- * @param unknown_type $returnValue The return value to set errors and information on.
- * @param unknown_type $projectName The name of the new project.
- * @param unknown_type $projectState The new state of the project.
- * @return boolean true if the project was successfully saved; otherwise, false.
+ * @param array $returnValue The return value to set errors and information on.
+ * @param string $projectName The name of the new project.
+ * @param string $projectState The new state of the project.
+ * @return array $returnValue with updated values.
  */
 function saveProject($returnValue, $projectName, $projectState) {
     global $projectSerializer;
@@ -233,10 +233,10 @@ function saveProject($returnValue, $projectName, $projectState) {
 
 /**
  * Copies the data files from $fromProjectName's data folder to $toProjectName's data folder.
- * @param unknown_type $returnValue The return value to set errors and information on.
- * @param unknown_type $fromProjectName The name of the project currently with data files.
- * @param unknown_type $toProjectName The name of the project to which the data files are copied.
- * @return boolean true if all data files were successfully copied; otherwise, false.
+ * @param array $returnValue The return value to set errors and information on.
+ * @param string $fromProjectName The name of the project currently with data files.
+ * @param string $toProjectName The name of the project to which the data files are copied.
+ * @return array $returnValue with updated values.
  */
 function copyDataFiles($returnValue, $fromProjectName, $toProjectName) {
     $offset = "../";
