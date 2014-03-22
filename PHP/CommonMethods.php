@@ -143,18 +143,18 @@ function validProjectName($projectName, &$returnValue) {
  * @param unknown_type $projectName The name of the new project.
  * @return boolean true if the project was successfully created; otherwise, false.
  */
-function createProject(&$returnValue, $projectName) {
+function createProject($returnValue, $projectName) {
     global $projectSerializer;
     
     // Make sure the project name is valid.
     if (!validProjectName($projectName, $returnValue)) {
-        return false;
+        return $returnValue;
     }
 
     // Check if the project already exists.
     if (projectExists($projectName)) {
         setReturnValueError($returnValue, "This project already exists.");
-        return false;
+        return $returnValue;
     }
     
     // Create the directory for the project.
@@ -166,7 +166,7 @@ function createProject(&$returnValue, $projectName) {
     
     if (!$success) {
         setReturnValueError($returnValue, "Unknown error creating new project directory.");
-        return false;
+        return $returnValue;
     }
     
     $projectState = "{}";
@@ -180,7 +180,7 @@ function createProject(&$returnValue, $projectName) {
     
         // Report error
         setReturnValueError($returnValue, "Unknown error registering new project.");
-        return false;
+        return $returnValue;
     }
 
     // Set project variables.
@@ -188,7 +188,7 @@ function createProject(&$returnValue, $projectName) {
     $returnValue["projectState"] = $projectState;
     $returnValue["dataFolder"] = getDataFolder($projectName);
     
-    return true;
+    return $returnValue;
 }
 
 /**
@@ -198,23 +198,23 @@ function createProject(&$returnValue, $projectName) {
  * @param unknown_type $projectState The new state of the project.
  * @return boolean true if the project was successfully saved; otherwise, false.
  */
-function saveProject(&$returnValue, $projectName, $projectState) {
+function saveProject($returnValue, $projectName, $projectState) {
     global $projectSerializer;
 
     // Check if the project exists.
     if (empty($projectName)) {
         setReturnValueError($returnValue, "A project name must be given.");
-        return false;
+        return $returnValue;
     }
     else if (!projectExists($projectName)) {
         setReturnValueError($returnValue, "This project does not exist.");
-        return false;
+        return $returnValue;
     }
     
     // Check that a state was given
     if (empty($projectState)) {
         setReturnValueError($returnValue, "A project state must be given.");
-        return false;
+        return $returnValue;
     }
     
     // Create and serialize Project object
@@ -223,12 +223,12 @@ function saveProject(&$returnValue, $projectName, $projectState) {
     
     if(!$success) {
         setReturnValueError($returnValue, "Unknown error updating project.");
-        return false;
+        return $returnValue;
     }
     
     // Set the name of the project
     $returnValue["projectName"] = $projectName;
-    return true;
+    return $returnValue;
 }
 
 /**
@@ -238,7 +238,7 @@ function saveProject(&$returnValue, $projectName, $projectState) {
  * @param unknown_type $toProjectName The name of the project to which the data files are copied.
  * @return boolean true if all data files were successfully copied; otherwise, false.
  */
-function copyDataFiles(&$returnValue, $fromProjectName, $toProjectName) {
+function copyDataFiles($returnValue, $fromProjectName, $toProjectName) {
     $offset = "../";
     
     $fromDataFolder = getDataFolder($fromProjectName, $offset);
@@ -255,7 +255,7 @@ function copyDataFiles(&$returnValue, $fromProjectName, $toProjectName) {
         setReturnValueError($returnValue, "Could not copy data files to new project.");
     }
     
-    return $success;
+    return $returnValue;
 }
 
 ?>

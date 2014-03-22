@@ -5,7 +5,7 @@ include_once("CommonMethods.php");
 $returnValue = getInitialReturnValue();
 
 $projectName = $_POST["project"];
-createProject($returnValue, $projectName);
+$returnValue = createProject($returnValue, $projectName);
 reportReturnValue($returnValue);
 
 ?>
