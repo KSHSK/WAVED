@@ -70,9 +70,11 @@ define(['jquery',
         this._projectTree = new ProjectTree();
 
         this._availableWidgets = [{
+            name: 'Button',
             icon: Button.iconLocation(),
             o: Button
         }, {
+            name: 'Text Block',
             icon: TextBlock.iconLocation(),
             o: TextBlock
         }];
