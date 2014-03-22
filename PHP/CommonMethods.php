@@ -112,29 +112,29 @@ function projectHasDataFile($projectName, $fileName) {
 
 /**
  * Checks to see if the project name is valid.
- * @param string $projectName
- * @param array $returnValue
- * @return boolean
+ * @param string $projectName The name of the project.
+ * @param array $returnValue The initial return value.
+ * @return array $returnValue with updated values.
  */
-function validProjectName($projectName, &$returnValue) {
+function validProjectName($projectName, $returnValue) {
     if ($projectName === null) {
         setReturnValueError($returnValue, "The project name is required.");
-        return false;
+        return $returnValue;
     }
 
     $len = strlen($projectName);
     if ($len < 1 || $len > 50) {
         setReturnValueError($returnValue, "The project name must be between 1 and 50 characters.");
-        return false;
+        return $returnValue;
     }
 
     $pattern = "/^[a-zA-Z0-9_\- ]+$/";
     if (preg_match($pattern, $projectName) !== 1) {
         setReturnValueError($returnValue, "The project name can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.");
-        return false;
+        return $returnValue;
     }
 
-    return true;
+    return $returnValue;
 }
 
 /**
@@ -147,7 +147,8 @@ function createProject($returnValue, $projectName) {
     global $projectSerializer;
     
     // Make sure the project name is valid.
-    if (!validProjectName($projectName, $returnValue)) {
+    $returnValue = validProjectName($projectName, $returnValue);
+    if (!$returnValue["success"]) {
         return $returnValue;
     }
 
