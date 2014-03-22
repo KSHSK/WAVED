@@ -166,7 +166,10 @@ define([
          * will need them to be available.
          */
         if (defined(state.dataSets)) {
-            this._dataSets = $.map(state.dataSets, function(itemState) {
+            // Clear array.
+            this._dataSets.length = 0;
+
+            var newDataSets = $.map(state.dataSets, function(itemState) {
                 if (itemState.type === DataSet.getType()) {
                     return new DataSet(itemState);
                 }
@@ -178,6 +181,8 @@ define([
                 // Invalid state.
                 return null;
             });
+
+            this._dataSets.push.apply(this._dataSets, newDataSets);
         }
 
         if (defined(state.components)) {
@@ -198,26 +203,6 @@ define([
             });
 
             this._components.push.apply(this._components, newComponents);
-        }
-
-        if (defined(state.dataSets)) {
-            // Clear array.
-            this._dataSets.length = 0;
-
-            var newDataSets = $.map(state.dataSets, function(itemState) {
-                if (itemState.type === DataSet.getType()) {
-                    return new DataSet(itemState);
-                }
-
-                if (itemState.type === DataSubset.getType()) {
-                    return new DataSubset(itemState);
-                }
-
-                // Invalid state.
-                return null;
-            });
-
-            this._dataSets.push.apply(this._dataSets, newDataSets);
         }
 
         if (defined(state.actions)) {
