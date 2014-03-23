@@ -92,7 +92,6 @@ define([
         // Subscribe to the value of dataSet in order to automatically update dataField's options
         subscribeObservable(self.dataSet, '_value', function(newValue){
             if(defined(newValue)){
-
                 // Keep trying until data is ready, as long as data is a defined object.
                 var interval = setInterval(function(){
                     if(defined(newValue.data)){
@@ -104,8 +103,17 @@ define([
             }
             else{
                 self.dataField.options = [];
+                self.dataField.value = undefined; // Reset the dataField selection
             }
         });
+
+        // Properly unset the dataSet value when the options disappear (when the bound data is unbound)
+        subscribeObservable(self.dataSet, '_options', function(newValue){
+            if(defined(self.dataSet.value) && (newValue.indexOf(self.dataSet.value) === -1)){
+                    self.dataSet.value = undefined;
+            }
+        });
+
 
         self.dataSet.options = viewModel.boundData;
 
