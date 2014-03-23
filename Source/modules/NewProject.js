@@ -115,7 +115,7 @@ define([
 
                         viewModel.newProjectName._value = '';
                         viewModel.dirty = false;
-
+                        viewModel.resetHistory();
 
                         // Set the URL to include the current project name.
                         updateQueryByName('project', data.projectName);

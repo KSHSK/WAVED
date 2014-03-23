@@ -38,6 +38,7 @@ define([
                         // Set the project name in case this is a "Save As"
                         viewModel.currentProject.name = data.projectName;
                         viewModel.dirty = false;
+                        viewModel.resetHistory();
 
                         displayMessage('The project was successfully saved');
                         projectSaved.resolve();
