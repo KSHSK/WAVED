@@ -62,6 +62,8 @@ define(['jquery',
         this._historyIndex = undefined;
         this.resetHistory();
 
+        this._undoOrRedoCalled = false;
+
         this._projectList = [];
         this._selectedComponent = '';
         this._selectedDataSet = '';
@@ -71,7 +73,8 @@ define(['jquery',
             name: ''
         },
         this.setUndoNewChangeFunction,
-        this.setRedoPreviousChangeFunction);
+        this.setRedoPreviousChangeFunction,
+        this.changeFromUndoRedoFunction);
 
         this._projectTree = new ProjectTree();
 
@@ -164,6 +167,10 @@ define(['jquery',
         self._history[index].redoChange = changeFunction;
     };
 
+    WAVEDViewModel.prototype.changeFromUndoRedoFunction = function() {
+        return self._undoOrRedoCalled;
+    };
+
     WAVEDViewModel.prototype.undo = function() {
         if (!this.isUndoAllowed()) {
             return;
@@ -174,7 +181,9 @@ define(['jquery',
         this._historyIndex--;
 
         if (defined(changeFunction)) {
+            this._undoOrRedoCalled = true;
             changeFunction();
+            this._undoOrRedoCalled = false;
         }
     };
 
@@ -188,7 +197,9 @@ define(['jquery',
         this._historyIndex++;
 
         if (defined(changeFunction)) {
+            this._undoOrRedoCalled = true;
             changeFunction();
+            this._undoOrRedoCalled = false;
         }
     };
 

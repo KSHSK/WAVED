@@ -118,7 +118,7 @@ define(['knockout',
 
     DataSet.prototype.subscribed = false;
 
-    DataSet.prototype.subscribeChanges = function(setDirty) {
+    DataSet.prototype.subscribeChanges = function(setDirty, addUndoHistoryFunction, addRedoHistoryFunction) {
         var self = this;
 
         var properties = [];
