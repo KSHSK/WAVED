@@ -74,10 +74,6 @@ define([
         if (defined(state.label)) {
             this.label.value = state.label.value;
         }
-
-        if (defined(state.foo)){
-            this.foo.setState(state.foo, this);
-        }
     };
 
     Object.defineProperties(ButtonViewModel.prototype, {
