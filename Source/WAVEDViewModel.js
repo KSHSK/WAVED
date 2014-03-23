@@ -57,7 +57,7 @@ define(['jquery',
     var WAVEDViewModel = function() {
         self = this;
         this._dirty = false;
-        this._history = [];
+        this._history = [{}];
         this._historyIndex = 0;
 
         this._projectList = [];
@@ -122,37 +122,41 @@ define(['jquery',
 
         ko.track(this);
 
-        this.currentProject.subscribeChanges(function() {
-            self.dirty = true;
-        });
+        this.currentProject.subscribeChanges(
+            function() {
+                self.dirty = true;
+            },
+            this.setUndoNewChangeFunction,
+            this.setRedoPreviousChangeFunction
+        );
     };
 
     WAVEDViewModel.prototype.isUndoAllowed = function() {
-        return (this._historyIndex > 0);
+        return (self._historyIndex > 0);
     };
 
     WAVEDViewModel.prototype.isRedoAllowed = function() {
-        return (this._historyIndex < this._history.length);
+        return (self._historyIndex < self._history.length - 1);
     };
 
     WAVEDViewModel.prototype.setUndoNewChangeFunction = function(changeFunction) {
         // Remove history after historyIndex.
-        this._history.length = this._historyIndex + 1;
+        self._history.length = self._historyIndex + 1;
 
-        this._history.push({
+        self._history.push({
             undoChange: changeFunction
         });
 
-        this._historyIndex++;
+        self._historyIndex++;
     };
 
     WAVEDViewModel.prototype.setRedoPreviousChangeFunction = function(changeFunction) {
-        var index = this._historyIndex - 1;
-        if (!defined(this._history[index])) {
-            this._history[index] = {};
+        var index = self._historyIndex - 1;
+        if (!defined(self._history[index])) {
+            self._history[index] = {};
         }
 
-        this._history[index].redoChange = changeFunction;
+        self._history[index].redoChange = changeFunction;
     };
 
     WAVEDViewModel.prototype.undo = function() {
@@ -163,7 +167,10 @@ define(['jquery',
         var changeFunction = this._history[this._historyIndex].undoChange;
 
         this._historyIndex--;
-        changeFunction();
+
+        if (defined(changeFunction)) {
+            changeFunction();
+        }
     };
 
     WAVEDViewModel.prototype.redo = function() {
@@ -174,7 +181,10 @@ define(['jquery',
         var changeFunction = this._history[this._historyIndex].redoChange;
 
         this._historyIndex++;
-        changeFunction();
+
+        if (defined(changeFunction)) {
+            changeFunction();
+        }
     };
 
     WAVEDViewModel.prototype.tryToCreateNewProject = function() {
@@ -235,7 +245,7 @@ define(['jquery',
         self._currentProject.removeComponent(component);
 
         // Remove the DOM element.
-        component.domElement.remove();
+        component.removeFromWorkspace();
     };
 
     WAVEDViewModel.prototype.saveProject = function() {

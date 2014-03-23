@@ -330,7 +330,7 @@ define([
         //TODO
     };
 
-    ProjectViewModel.prototype.subscribeChanges = function(setDirty) {
+    ProjectViewModel.prototype.subscribeChanges = function(setDirty, addUndo, addRedo) {
         function arrayChanged(changes, list) {
             setDirty();
 
