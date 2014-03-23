@@ -87,7 +87,7 @@ define(['jquery',
 
     Action.prototype.subscribed = false;
 
-    Action.prototype.subscribeChanges = function(setDirty) {
+    Action.prototype.subscribeChanges = function(setDirty, addUndoHistoryFunction, addRedoHistoryFunction) {
         var self = this;
 
         var properties = [];

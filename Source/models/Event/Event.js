@@ -132,7 +132,7 @@ define([
 
     Event.prototype.subscribed = false;
 
-    Event.prototype.subscribeChanges = function(setDirty) {
+    Event.prototype.subscribeChanges = function(setDirty, addUndoHistoryFunction, addRedoHistoryFunction) {
         var self = this;
 
         var properties = [];

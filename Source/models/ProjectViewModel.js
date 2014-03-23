@@ -33,10 +33,12 @@ define([
     var self;
     var addUndoHistoryFunction;
     var addRedoHistoryFunction;
-    var ProjectViewModel = function(state, undoFunction, redoFunction) {
+    var changeFromUndoRedoFunction;
+    var ProjectViewModel = function(state, undoFunction, redoFunction, changeFromFunction) {
         self = this;
         addUndoHistoryFunction = undoFunction;
         addRedoHistoryFunction = redoFunction;
+        changeFromUndoRedoFunction = changeFromFunction;
 
         state = defined(state) ? state : {};
 
@@ -447,7 +449,8 @@ define([
                 if (change.status === 'added') {
                     // Subscribe to dirty changes if not already subscribed.
                     if (!subscriber.subscribed) {
-                        subscriber.subscribeChanges(setDirty);
+                        subscriber.subscribeChanges(setDirty, addUndoHistoryFunction, addRedoHistoryFunction,
+                            changeFromUndoRedoFunction);
                     }
                 }
             });
