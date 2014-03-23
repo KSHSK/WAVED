@@ -31,8 +31,13 @@ define([
     'use strict';
 
     var self;
-    var ProjectViewModel = function(state, availableWidgets) {
+    var addUndoHistoryFunction;
+    var addRedoHistoryFunction;
+    var ProjectViewModel = function(state, undoFunction, redoFunction) {
         self = this;
+        addUndoHistoryFunction = undoFunction;
+        addRedoHistoryFunction = redoFunction;
+
         state = defined(state) ? state : {};
 
         if (typeof state.name === 'undefined') {
@@ -47,8 +52,7 @@ define([
         this._actions = [];
         this._events = [];
 
-        this.setState(state, availableWidgets);
-        // TODO: Update Project Tree if necessary.
+        this.setState(state);
 
         ko.track(this);
     };
@@ -234,37 +238,73 @@ define([
 
     // TODO: Update this to make it more generic to Components, temporarily just using this._components in the
     // methods
-    ProjectViewModel.prototype.addComponent = function(component) {
+    ProjectViewModel.prototype.addComponent = function(component, ignoreHistory) {
         this._components.push(component);
 
         // Add the DOM element.
         component.addToWorkspace();
+
+        if (ignoreHistory !== true) {
+            // Undo by removing the item.
+            addUndoHistoryFunction(function() {
+                self.removeComponent(component, true);
+            });
+
+            // Redo by readding the item.
+            addRedoHistoryFunction(function() {
+                self.addComponent(component, true);
+            });
+        }
     };
 
-    ProjectViewModel.prototype.removeComponent = function(component) {
-        if (component !== this._workspace) {
-            var index = this._components.indexOf(component);
-            if (index > -1) {
-                this._components.splice(index, 1);
+    ProjectViewModel.prototype.addDataSet = function(data, ignoreHistory) {
+        if (data instanceof DataSet) {
+            this._dataSets.push(data);
 
-                // Remove the DOM element.
-                component.removeFromWorkspace();
+            if (ignoreHistory !== true) {
+                // Undo by removing the item.
+                addUndoHistoryFunction(function() {
+                    self.removeDataSet(data, true);
+                });
+
+                // Redo by readding the item.
+                addRedoHistoryFunction(function() {
+                    self.addDataSet(data, true);
+                });
             }
         }
     };
 
-    ProjectViewModel.prototype.addDataSet = function(data) {
-        if (data instanceof DataSet) {
-            this._dataSets.push(data);
+    ProjectViewModel.prototype.addAction = function(action, ignoreHistory) {
+        this._actions.push(action);
+
+        if (ignoreHistory !== true) {
+            // Undo by removing the item.
+            addUndoHistoryFunction(function() {
+                self.removeAction(action, true);
+            });
+
+            // Redo by readding the item.
+            addRedoHistoryFunction(function() {
+                self.addAction(action, true);
+            });
         }
     };
 
-    ProjectViewModel.prototype.addEvent = function(event) {
+    ProjectViewModel.prototype.addEvent = function(event, ignoreHistory) {
         this._events.push(event);
-    };
 
-    ProjectViewModel.prototype.addAction = function(action) {
-        this._actions.push(action);
+        if (ignoreHistory !== true) {
+            // Undo by removing the item.
+            addUndoHistoryFunction(function() {
+                self.removeEvent(event, true);
+            });
+
+            // Redo by readding the item.
+            addRedoHistoryFunction(function() {
+                self.addEvent(event, true);
+            });
+        }
     };
 
     ProjectViewModel.prototype.getComponent = function(name) {
@@ -272,17 +312,6 @@ define([
             var component = this._components[index];
             if (component.viewModel.name.value === name) {
                 return component;
-            }
-        }
-
-        return null;
-    };
-
-    ProjectViewModel.prototype.getAction = function(name) {
-        for (var index = 0; index < this._actions.length; index++) {
-            var action = this._actions[index];
-            if (action.name === name) {
-                return action;
             }
         }
 
@@ -300,23 +329,67 @@ define([
         return null;
     };
 
+    ProjectViewModel.prototype.getAction = function(name) {
+        for (var index = 0; index < this._actions.length; index++) {
+            var action = this._actions[index];
+            if (action.name === name) {
+                return action;
+            }
+        }
+
+        return null;
+    };
+
+    ProjectViewModel.prototype.getEvent = function(name) {
+        // TODO
+    };
+
+    ProjectViewModel.prototype.removeComponent = function(component, ignoreHistory) {
+        if (component !== this._workspace) {
+            var index = this._components.indexOf(component);
+            if (index > -1) {
+                this._components.splice(index, 1);
+
+                // Remove the DOM element.
+                component.removeFromWorkspace();
+
+                if (ignoreHistory !== true) {
+                    // Undo by removing the item.
+                    addUndoHistoryFunction(function() {
+                        self.addComponent(component, true);
+                    });
+
+                    // Redo by readding the item.
+                    addRedoHistoryFunction(function() {
+                        self.removeComponent(component, true);
+                    });
+                }
+            }
+        }
+    };
+
     // TODO: Do we want to allow removal using dataset instance and name?
     // The DD specifies this, but we should probably pick one.
-    ProjectViewModel.prototype.removeDataSet = function(dataSet) {
+    ProjectViewModel.prototype.removeDataSet = function(dataSet, ignoreHistory) {
         var index = this._dataSets.indexOf(dataSet);
         if (index > -1) {
             this._dataSets.splice(index, 1);
+
+            if (ignoreHistory !== true) {
+                // Undo by removing the item.
+                addUndoHistoryFunction(function() {
+                    self.addDataSet(dataSet, true);
+                });
+
+                // Redo by readding the item.
+                addRedoHistoryFunction(function() {
+                    self.removeDataSet(dataSet, true);
+                });
+            }
         }
     };
 
-    ProjectViewModel.prototype.removeEvent = function(event) {
-        var index = self._events.indexOf(event);
-        if (index > -1) {
-            self._events.splice(index, 1);
-        }
-    };
-
-    ProjectViewModel.prototype.removeAction = function(action) {
+    ProjectViewModel.prototype.removeAction = function(action, ignoreHistory) {
         for (var i = 0; i < self._events.length; i++) {
             for (var j = 0; j < self._events[i].actions[0].length; j++) {
                 if (self._events[i]._actions[0][j].name.value === action.name.value) {
@@ -329,6 +402,37 @@ define([
         var index = self._actions.indexOf(action);
         if (index > -1) {
             self._actions.splice(index, 1);
+
+            if (ignoreHistory !== true) {
+                // Undo by removing the item.
+                addUndoHistoryFunction(function() {
+                    self.addAction(action, true);
+                });
+
+                // Redo by readding the item.
+                addRedoHistoryFunction(function() {
+                    self.removeAction(action, true);
+                });
+            }
+        }
+    };
+
+    ProjectViewModel.prototype.removeEvent = function(event, ignoreHistory) {
+        var index = self._events.indexOf(event);
+        if (index > -1) {
+            self._events.splice(index, 1);
+
+            if (ignoreHistory !== true) {
+                // Undo by removing the item.
+                addUndoHistoryFunction(function() {
+                    self.addEvent(event, true);
+                });
+
+                // Redo by readding the item.
+                addRedoHistoryFunction(function() {
+                    self.removeEvent(event, true);
+                });
+            }
         }
     };
 
@@ -336,8 +440,8 @@ define([
         //TODO
     };
 
-    ProjectViewModel.prototype.subscribeChanges = function(setDirty, addUndoHistoryFunction, addRedoHistoryFunction) {
-        function arrayChanged(changes, addItemFunction, removeItemFunction) {
+    ProjectViewModel.prototype.subscribeChanges = function(setDirty) {
+        function arrayChanged(changes) {
             setDirty();
 
             changes.forEach(function(change) {
@@ -347,31 +451,11 @@ define([
                 if (change.status === 'added') {
                     // Subscribe to dirty changes.
                     subscriber.subscribeChanges(setDirty);
-
-                    // Undo by removing the item.
-                    addUndoHistoryFunction(function() {
-                        removeItemFunction(item);
-                    });
-
-                    // Redo by readding the item.
-                    addRedoHistoryFunction(function() {
-                        addItemFunction(item);
-                    });
                 }
                 else if (change.status === 'deleted') {
                     // Dispose of dirty changes.
                     subscriber.subscriptions.forEach(function(subscription) {
                         subscription.dispose();
-                    });
-
-                    // Undo by removing the item.
-                    addUndoHistoryFunction(function() {
-                        addItemFunction(item);
-                    });
-
-                    // Redo by readding the item.
-                    addRedoHistoryFunction(function() {
-                        removeItemFunction(item);
                     });
                 }
             });

@@ -110,7 +110,7 @@ define([
                         UniqueTracker.reset();
 
                         viewModel.selectedComponent = viewModel.workspace;
-                        var defaultProject = new ProjectViewModel({name: data.projectName}, viewModel.availableWidgets);
+                        var defaultProject = new ProjectViewModel({name: data.projectName});
                         viewModel.currentProject.setState(defaultProject.getState(), viewModel.availableWidgets);
 
                         viewModel.newProjectName._value = '';

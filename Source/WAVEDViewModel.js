@@ -69,7 +69,9 @@ define(['jquery',
 
         this._currentProject = new ProjectViewModel({
             name: ''
-        });
+        },
+        this.setUndoNewChangeFunction,
+        this.setRedoPreviousChangeFunction);
 
         this._projectTree = new ProjectTree();
 
