@@ -109,6 +109,8 @@ define(['knockout',
 
     DataSet.prototype.subscriptions = [];
 
+    DataSet.prototype.subscribed = false;
+
     DataSet.prototype.subscribeChanges = function(setDirty) {
         var self = this;
 
@@ -128,6 +130,8 @@ define(['knockout',
                 self.subscriptions.push(subscription);
             }
         });
+
+        this.subscribed = true;
     };
 
     Object.defineProperties(DataSet.prototype, {

@@ -52,6 +52,8 @@ define([
 
     SuperComponentViewModel.prototype.subscriptions = [];
 
+    SuperComponentViewModel.prototype.subscribed = false;
+
     SuperComponentViewModel.prototype.subscribeChanges = function(setDirty) {
         var self = this;
         self.properties.forEach(function(prop) {
@@ -60,6 +62,8 @@ define([
 
             self.recursiveSubscribeChanges(self, prop, setDirty);
         });
+
+        this.subscribed = true;
     };
 
     SuperComponentViewModel.prototype.recursiveSubscribeChanges = function(self, prop, setDirty){

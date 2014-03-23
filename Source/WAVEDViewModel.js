@@ -126,13 +126,9 @@ define(['jquery',
 
         ko.track(this);
 
-        this.currentProject.subscribeChanges(
-            function() {
-                self.dirty = true;
-            },
-            this.setUndoNewChangeFunction,
-            this.setRedoPreviousChangeFunction
-        );
+        this.currentProject.subscribeChanges(function() {
+            self.dirty = true;
+        });
     };
 
     WAVEDViewModel.prototype.resetHistory = function() {
