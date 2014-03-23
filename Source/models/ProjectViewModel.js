@@ -106,27 +106,6 @@ define([
         }
     });
 
-    // TODO: Update this to make it more generic to Components, temporarily just using this._components in the
-    // methods
-    ProjectViewModel.prototype.addComponent = function(component) {
-        this._components.push(component);
-
-        // Add the DOM element.
-        component.addToWorkspace();
-    };
-
-    ProjectViewModel.prototype.removeComponent = function(component) {
-        if (component !== this._workspace) {
-            var index = this._components.indexOf(component);
-            if (index > -1) {
-                this._components.splice(index, 1);
-
-                // Remove the DOM element.
-                component.removeFromWorkspace();
-            }
-        }
-    };
-
     ProjectViewModel.prototype.getState = function() {
         self = this;
 
@@ -196,8 +175,6 @@ define([
         }
 
         if (defined(state.components)) {
-            var self = this;
-
             // Clear array except for Workspace.
             this._components.length = 1;
 
@@ -252,6 +229,27 @@ define([
                 var event = new Event(itemState);
                 self.addEvent(event);
             });
+        }
+    };
+
+    // TODO: Update this to make it more generic to Components, temporarily just using this._components in the
+    // methods
+    ProjectViewModel.prototype.addComponent = function(component) {
+        this._components.push(component);
+
+        // Add the DOM element.
+        component.addToWorkspace();
+    };
+
+    ProjectViewModel.prototype.removeComponent = function(component) {
+        if (component !== this._workspace) {
+            var index = this._components.indexOf(component);
+            if (index > -1) {
+                this._components.splice(index, 1);
+
+                // Remove the DOM element.
+                component.removeFromWorkspace();
+            }
         }
     };
 
@@ -338,18 +336,42 @@ define([
         //TODO
     };
 
-    ProjectViewModel.prototype.subscribeChanges = function(setDirty, addUndo, addRedo) {
-        function arrayChanged(changes, list) {
+    ProjectViewModel.prototype.subscribeChanges = function(setDirty, addUndoHistoryFunction, addRedoHistoryFunction) {
+        function arrayChanged(changes, addItemFunction, removeItemFunction) {
             setDirty();
 
             changes.forEach(function(change) {
-                var subscriber = change.value.viewModel || change.value;
+                var item = change.value;
+                var subscriber = item.viewModel || item;
+
                 if (change.status === 'added') {
+                    // Subscribe to dirty changes.
                     subscriber.subscribeChanges(setDirty);
+
+                    // Undo by removing the item.
+                    addUndoHistoryFunction(function() {
+                        removeItemFunction(item);
+                    });
+
+                    // Redo by readding the item.
+                    addRedoHistoryFunction(function() {
+                        addItemFunction(item);
+                    });
                 }
                 else if (change.status === 'deleted') {
+                    // Dispose of dirty changes.
                     subscriber.subscriptions.forEach(function(subscription) {
                         subscription.dispose();
+                    });
+
+                    // Undo by removing the item.
+                    addUndoHistoryFunction(function() {
+                        addItemFunction(item);
+                    });
+
+                    // Redo by readding the item.
+                    addRedoHistoryFunction(function() {
+                        removeItemFunction(item);
                     });
                 }
             });
@@ -363,22 +385,22 @@ define([
 
         // Component is added or removed.
         subscribeObservable(this, '_components', function(changes) {
-            arrayChanged(changes, self._components);
+            arrayChanged(changes, self.addComponent.bind(self), self.removeComponent.bind(self));
         }, null, 'arrayChange');
 
         // DataSet is added or removed.
         subscribeObservable(this, '_dataSets', function(changes) {
-            arrayChanged(changes, self._dataSets);
+            arrayChanged(changes, self.addDataSet.bind(self), self.removeDataSet.bind(self));
         }, null, 'arrayChange');
 
         // Action is added or removed.
         subscribeObservable(this, '_actions', function(changes) {
-            arrayChanged(changes, self._actions);
+            arrayChanged(changes, self.addAction.bind(self), self.removeAction.bind(self));
         }, null, 'arrayChange');
 
         // Event is added or removed.
         subscribeObservable(this, '_events', function(changes) {
-            arrayChanged(changes, self._events);
+            arrayChanged(changes, self.addEvent.bind(self), self.removeEvent.bind(self));
         }, null, 'arrayChange');
     };
 

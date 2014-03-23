@@ -57,8 +57,10 @@ define(['jquery',
     var WAVEDViewModel = function() {
         self = this;
         this._dirty = false;
-        this._history = [{}];
-        this._historyIndex = 0;
+
+        this._history = undefined;
+        this._historyIndex = undefined;
+        this.resetHistory();
 
         this._projectList = [];
         this._selectedComponent = '';
@@ -129,6 +131,11 @@ define(['jquery',
             this.setUndoNewChangeFunction,
             this.setRedoPreviousChangeFunction
         );
+    };
+
+    WAVEDViewModel.prototype.resetHistory = function() {
+        self._history = [{}];
+        self._historyIndex = 0;
     };
 
     WAVEDViewModel.prototype.isUndoAllowed = function() {
