@@ -292,10 +292,16 @@ define(['jquery',
                 // TODO: Make sure use of 'unmarkedDataSets' works after DataSubsets are implemented
                 // since implementation of that function could change at that point.
                 var dataSets = this.currentProject.unmarkedDataSets;
-                var boundDataNames = defaultValue(this.selectedComponent.viewModel.boundData, []);
+                var boundDataSets = defaultValue(this.selectedComponent.viewModel.boundData, []);
 
                 return dataSets.filter(function(dataSet) {
-                    return boundDataNames.indexOf(dataSet.name) === -1;
+                    for(var index = 0; index < boundDataSets.length; index++){
+                        if(boundDataSets[index]._name === dataSet.name){
+                            return false;
+                        }
+                    }
+
+                    return true;
                 });
             }
         },
