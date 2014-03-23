@@ -264,14 +264,14 @@ define([
 
             // Don't add history if called from undo/redo.
             if (ignoreHistory !== true) {
-                // Undo by removing the item.
+                // Undo by marking the DataSet for deletion.
                 addUndoHistoryFunction(function() {
-                    self.removeDataSet(data, true);
+                    data.markForDeletion();
                 });
 
-                // Redo by readding the item.
+                // Redo by reseting the DataSet's reference count.
                 addRedoHistoryFunction(function() {
-                    self.addDataSet(data, true);
+                    data.resetReferenceCount();
                 });
             }
         }
@@ -380,18 +380,7 @@ define([
         if (index > -1) {
             this._dataSets.splice(index, 1);
 
-            // Don't add history if called from undo/redo.
-            if (ignoreHistory !== true) {
-                // Undo by removing the item.
-                addUndoHistoryFunction(function() {
-                    self.addDataSet(dataSet, true);
-                });
-
-                // Redo by readding the item.
-                addRedoHistoryFunction(function() {
-                    self.removeDataSet(dataSet, true);
-                });
-            }
+            // Cannot undo/redo removing a DataSet.
         }
     };
 
