@@ -453,18 +453,13 @@ define([
             setDirty();
 
             changes.forEach(function(change) {
-                var item = change.value;
-                var subscriber = item.viewModel || item;
+                var subscriber = change.value.viewModel || change.value;
 
                 if (change.status === 'added') {
-                    // Subscribe to dirty changes.
-                    subscriber.subscribeChanges(setDirty);
-                }
-                else if (change.status === 'deleted') {
-                    // Dispose of dirty changes.
-                    subscriber.subscriptions.forEach(function(subscription) {
-                        subscription.dispose();
-                    });
+                    // Subscribe to dirty changes if not already subscribed.
+                    if (!subscriber.subscribed) {
+                        subscriber.subscribeChanges(setDirty);
+                    }
                 }
             });
         }
@@ -477,22 +472,22 @@ define([
 
         // Component is added or removed.
         subscribeObservable(this, '_components', function(changes) {
-            arrayChanged(changes, self.addComponent.bind(self), self.removeComponent.bind(self));
+            arrayChanged(changes);
         }, null, 'arrayChange');
 
         // DataSet is added or removed.
         subscribeObservable(this, '_dataSets', function(changes) {
-            arrayChanged(changes, self.addDataSet.bind(self), self.removeDataSet.bind(self));
+            arrayChanged(changes);
         }, null, 'arrayChange');
 
         // Action is added or removed.
         subscribeObservable(this, '_actions', function(changes) {
-            arrayChanged(changes, self.addAction.bind(self), self.removeAction.bind(self));
+            arrayChanged(changes);
         }, null, 'arrayChange');
 
         // Event is added or removed.
         subscribeObservable(this, '_events', function(changes) {
-            arrayChanged(changes, self.addEvent.bind(self), self.removeEvent.bind(self));
+            arrayChanged(changes);
         }, null, 'arrayChange');
     };
 

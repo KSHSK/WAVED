@@ -130,6 +130,8 @@ define([
 
     Event.prototype.subscriptions = [];
 
+    Event.prototype.subscribed = false;
+
     Event.prototype.subscribeChanges = function(setDirty) {
         var self = this;
 
@@ -147,6 +149,8 @@ define([
                 self.subscriptions.push(subscription);
             }
         });
+
+        this.subscribed = true;
     };
 
     return Event;

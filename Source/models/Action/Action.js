@@ -85,6 +85,8 @@ define(['jquery',
 
     Action.prototype.subscriptions = [];
 
+    Action.prototype.subscribed = false;
+
     Action.prototype.subscribeChanges = function(setDirty) {
         var self = this;
 
@@ -102,6 +104,8 @@ define(['jquery',
                 self.subscriptions.push(subscription);
             }
         });
+
+        this.subscribed = true;
     };
 
     return Action;
