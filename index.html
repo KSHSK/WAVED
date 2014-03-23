@@ -129,7 +129,7 @@
                         <select id="data-file-list" size="5" class="select-full-size"
                             data-bind="options: currentProject.unmarkedDataSets, 
                                 optionsText: function(item) {
-                                   return item.name + ' : ' + item.filename;
+                                   return item.getNameAndFilename();
                                 }, value: selectedDataSet"></select>
                     </div>
                     <br />
@@ -200,8 +200,8 @@
                             <div data-bind="if: selectedComponent && typeof selectedComponent.viewModel.boundData !== 'undefined'">
                                 <select id="bound-data-list" size="5" class="select-full-size"
                                     data-bind="options: selectedComponent.viewModel.boundData, 
-                                        optionsText: function(name) {
-                                           return name + ' : ' + currentProject.getDataSet(name).filename;
+                                        optionsText: function(data) {
+                                           return currentProject.getDataSet(data._name).getNameAndFilename();
                                         }, value: selectedBoundData">
                                 </select>
                             </div>

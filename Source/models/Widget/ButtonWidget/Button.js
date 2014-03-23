@@ -10,10 +10,10 @@ define([
         $){
     'use strict';
 
-    var Button = function(state) {
+    var Button = function(state, getDataSet) {
         this._templateName = ComponentTemplateName.BUTTON;
 
-        var viewModel = new ButtonViewModel(state);
+        var viewModel = new ButtonViewModel(state, getDataSet);
 
         var $workspace = $('#waved-workspace');
         var button = document.createElement('div');
