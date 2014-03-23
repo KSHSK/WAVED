@@ -1,26 +1,26 @@
 define([
-        'knockout',
         'models/SuperComponentViewModel',
         'models/Event/Trigger',
         'models/Property/StringProperty',
         'models/Widget/WidgetViewModel',
         'modules/UniqueTracker',
         'util/defined',
-        'util/createValidator'
+        'util/createValidator',
+        'knockout'
     ],function(
-        ko,
         SuperComponentViewModel,
         Trigger,
         StringProperty,
         WidgetViewModel,
         UniqueTracker,
         defined,
-        createValidator){
+        createValidator,
+        ko){
     'use strict';
 
-    var ButtonViewModel = function(state) {
+    var ButtonViewModel = function(state, getDataSet) {
         state = (defined(state)) ? state : {};
-        WidgetViewModel.call(this, state);
+        WidgetViewModel.call(this, state, getDataSet);
 
         if (!defined(state.name)) {
             var namespace = SuperComponentViewModel.getUniqueNameNamespace();
