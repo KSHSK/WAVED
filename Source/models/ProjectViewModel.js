@@ -244,6 +244,7 @@ define([
         // Add the DOM element.
         component.addToWorkspace();
 
+        // Don't add history if called from undo/redo.
         if (ignoreHistory !== true) {
             // Undo by removing the item.
             addUndoHistoryFunction(function() {
@@ -261,6 +262,7 @@ define([
         if (data instanceof DataSet) {
             this._dataSets.push(data);
 
+            // Don't add history if called from undo/redo.
             if (ignoreHistory !== true) {
                 // Undo by removing the item.
                 addUndoHistoryFunction(function() {
@@ -278,6 +280,7 @@ define([
     ProjectViewModel.prototype.addAction = function(action, ignoreHistory) {
         this._actions.push(action);
 
+        // Don't add history if called from undo/redo.
         if (ignoreHistory !== true) {
             // Undo by removing the item.
             addUndoHistoryFunction(function() {
@@ -294,6 +297,7 @@ define([
     ProjectViewModel.prototype.addEvent = function(event, ignoreHistory) {
         this._events.push(event);
 
+        // Don't add history if called from undo/redo.
         if (ignoreHistory !== true) {
             // Undo by removing the item.
             addUndoHistoryFunction(function() {
@@ -353,6 +357,7 @@ define([
                 // Remove the DOM element.
                 component.removeFromWorkspace();
 
+                // Don't add history if called from undo/redo.
                 if (ignoreHistory !== true) {
                     // Undo by removing the item.
                     addUndoHistoryFunction(function() {
@@ -375,6 +380,7 @@ define([
         if (index > -1) {
             this._dataSets.splice(index, 1);
 
+            // Don't add history if called from undo/redo.
             if (ignoreHistory !== true) {
                 // Undo by removing the item.
                 addUndoHistoryFunction(function() {
@@ -403,6 +409,7 @@ define([
         if (index > -1) {
             self._actions.splice(index, 1);
 
+            // Don't add history if called from undo/redo.
             if (ignoreHistory !== true) {
                 // Undo by removing the item.
                 addUndoHistoryFunction(function() {
@@ -422,6 +429,7 @@ define([
         if (index > -1) {
             self._events.splice(index, 1);
 
+            // Don't add history if called from undo/redo.
             if (ignoreHistory !== true) {
                 // Undo by removing the item.
                 addUndoHistoryFunction(function() {
