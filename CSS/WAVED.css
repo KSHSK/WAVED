@@ -196,3 +196,12 @@ textarea:disabled {
     font-style: italic;
     font-weight: lighter;
 }
+
+.widget-selector {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.widget-selector img {
+    cursor: pointer;
+}

@@ -33,5 +33,9 @@ define([
         return ButtonViewModel.getType();
     };
 
+    Button.iconLocation = function() {
+        return 'Source/models/Widget/ButtonWidget/button-icon.png';
+    };
+
     return Button;
 });
