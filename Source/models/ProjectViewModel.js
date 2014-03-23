@@ -110,6 +110,9 @@ define([
     // methods
     ProjectViewModel.prototype.addComponent = function(component) {
         this._components.push(component);
+
+        // Add the DOM element.
+        component.addToWorkspace();
     };
 
     ProjectViewModel.prototype.removeComponent = function(component) {
@@ -117,6 +120,9 @@ define([
             var index = this._components.indexOf(component);
             if (index > -1) {
                 this._components.splice(index, 1);
+
+                // Remove the DOM element.
+                component.removeFromWorkspace();
             }
         }
     };
@@ -149,6 +155,8 @@ define([
     };
 
     ProjectViewModel.prototype.setState = function(state, availableWidgets) {
+        var self = this;
+
         if (defined(state.name)) {
             this._name = state.name;
         }
@@ -169,80 +177,81 @@ define([
             // Clear array.
             this._dataSets.length = 0;
 
-            var newDataSets = $.map(state.dataSets, function(itemState) {
+            var newDataSets = $.each(state.dataSets, function(itemIndex, itemState) {
+                var dataSet;
+
                 if (itemState.type === DataSet.getType()) {
-                    return new DataSet(itemState);
+                    dataSet = new DataSet(itemState);
+                }
+                else if (itemState.type === DataSubset.getType()) {
+                    dataSet = new DataSubset(itemState);
+                }
+                else {
+                    // Invalid state.
+                    return;
                 }
 
-                if (itemState.type === DataSubset.getType()) {
-                    return new DataSubset(itemState);
-                }
-
-                // Invalid state.
-                return null;
+                self.addDataSet(dataSet);
             });
-
-            this._dataSets.push.apply(this._dataSets, newDataSets);
         }
 
         if (defined(state.components)) {
             var self = this;
-            // Clear array.
+
+            // Clear array except for Workspace.
             this._components.length = 1;
 
-            var newComponents = $.map(state.components, function(itemState) {
-                for (var index in availableWidgets) {
+            var newComponents = $.each(state.components, function(itemIndex, itemState) {
+                for (var index = 0; index < availableWidgets.length; index++) {
                     var widget = availableWidgets[index];
                     if (itemState.type === widget.o.getViewModelType()) {
-                        return new widget.o(itemState, self.getDataSet);
+                        var component =  new widget.o(itemState, self.getDataSet);
+                        self.addComponent(component);
                     }
                 }
-
-                // Invalid state.
-                return null;
             });
-
-            this._components.push.apply(this._components, newComponents);
         }
 
         if (defined(state.actions)) {
             // Clear array.
             this._actions.length = 0;
 
-            var newActions = $.map(state.actions, function(itemState) {
-                itemState.target = self.getComponent(itemState.target);
+            var newActions = $.each(state.actions, function(itemIndex, itemState) {
+                var action;
 
                 if (itemState.type === PropertyAction.getType()) {
-                    return new PropertyAction(itemState);
+                    itemState.target = self.getComponent(itemState.target);
+                    action = new PropertyAction(itemState);
+                }
+                else if (itemState.type === QueryAction.getType()) {
+                    action = new QueryAction(itemState);
+                }
+                else {
+                    // Invalid state.
+                    return;
                 }
 
-                if (itemState.type === QueryAction.getType()) {
-                    return new QueryAction(itemState);
-                }
-
-                // Invalid state.
-                return null;
+                self.addAction(action);
             });
-
-            this._actions.push.apply(this._actions, newActions);
         }
 
         if (defined(state.events)) {
             // Clear array.
             this._events.length = 0;
 
-            var newEvents = $.map(state.events, function(itemState) {
+            var newEvents = $.each(state.events, function(itemIndex, itemState) {
                 itemState.triggeringComponent = self.getComponent(itemState.triggeringComponent);
                 // TODO: Trigger?
                 var actions = [];
                 for (var i = 0; i < itemState.actions.length; i++) {
                     actions.push(self.getAction(itemState.actions[i]));
                 }
-                itemState.actions = actions;
-                return new Event(itemState);
-            });
 
-            this._events.push.apply(this._events, newEvents);
+                itemState.actions = actions;
+
+                var event = new Event(itemState);
+                self.addEvent(event);
+            });
         }
     };
 
@@ -257,7 +266,6 @@ define([
     };
 
     ProjectViewModel.prototype.addAction = function(action) {
-        // TODO: Check that action doesn't already exist.
         this._actions.push(action);
     };
 

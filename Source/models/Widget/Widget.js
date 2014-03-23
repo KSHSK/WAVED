@@ -8,7 +8,7 @@ define([
 
     var Widget = function(state, getDataSet) {
         this._templateName = undefined; // Defined by subclasses.
-        this.domElement = undefined; // Defined by subclasses.
+        this._domElement = undefined; // Defined by subclasses.
         this.viewModel = undefined; // Defined by subclasses.
     };
 
@@ -17,11 +17,11 @@ define([
     };
 
     Widget.prototype.addToWorkspace = function() {
-        workspace.append(this.domElement);
+        workspace.append(this._domElement);
     };
 
     Widget.prototype.removeFromWorkspace = function() {
-        this.domElement.detach();
+        this._domElement.detach();
     };
 
     return Widget;

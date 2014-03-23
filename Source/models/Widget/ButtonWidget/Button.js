@@ -22,10 +22,8 @@ define([
         var button = this.newWidgetContainer();
         button.attr('data-bind', 'template: {name: \'' + this._templateName + '\'}');
 
-        this.domElement = button;
+        this._domElement = button;
         this.viewModel = viewModel;
-
-        this.addToWorkspace();
 
         ko.applyBindings(viewModel, button[0]);
     };

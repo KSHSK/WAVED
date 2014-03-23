@@ -22,10 +22,8 @@ define([
         var textBlock = this.newWidgetContainer();
         textBlock.attr('data-bind', 'template: {name: \'' + this._templateName + '\'}');
 
-        this.domElement = textBlock;
+        this._domElement = textBlock;
         this.viewModel = viewModel;
-
-        this.addToWorkspace();
 
         ko.applyBindings(viewModel, textBlock[0]);
     };
