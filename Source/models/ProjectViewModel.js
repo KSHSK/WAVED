@@ -331,7 +331,7 @@ define([
     };
 
     ProjectViewModel.prototype.subscribeChanges = function(setDirty) {
-        function arrayChanged(changes) {
+        function arrayChanged(changes, list) {
             setDirty();
 
             changes.forEach(function(change) {
@@ -354,16 +354,24 @@ define([
         this.googleAnalytics.subscribeChanges(setDirty);
 
         // Component is added or removed.
-        subscribeObservable(this, '_components', arrayChanged, null, 'arrayChange');
+        subscribeObservable(this, '_components', function(changes) {
+            arrayChanged(changes, self._components);
+        }, null, 'arrayChange');
 
         // DataSet is added or removed.
-        subscribeObservable(this, '_dataSets', arrayChanged, null, 'arrayChange');
+        subscribeObservable(this, '_dataSets', function(changes) {
+            arrayChanged(changes, self._dataSets);
+        }, null, 'arrayChange');
 
         // Action is added or removed.
-        subscribeObservable(this, '_actions', arrayChanged, null, 'arrayChange');
+        subscribeObservable(this, '_actions', function(changes) {
+            arrayChanged(changes, self._actions);
+        }, null, 'arrayChange');
 
         // Event is added or removed.
-        subscribeObservable(this, '_events', arrayChanged, null, 'arrayChange');
+        subscribeObservable(this, '_events', function(changes) {
+            arrayChanged(changes, self._events);
+        }, null, 'arrayChange');
     };
 
     return ProjectViewModel;

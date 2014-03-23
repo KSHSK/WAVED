@@ -31,8 +31,8 @@
                     <button class="inline" id="new-button" data-bind="click: tryToCreateNewProject">New</button>
                     <button class="inline" id="load-button" data-bind="click: tryToLoadProject">Load</button>
 
-                    <button class="inline" id="undo-button">Undo</button>
-                    <button class="inline" id="redo-button">Redo</button>
+                    <button class="inline" id="undo-button" data-bind="click: undo, disable: !isUndoAllowed(), css: {'ui-state-disabled': !isUndoAllowed()}">Undo</button>
+                    <button class="inline" id="redo-button" data-bind="click: redo, disable: !isRedoAllowed(), css: {'ui-state-disabled': !isRedoAllowed()}">Redo</button>
                 
                     <button class="inline" id="save-button" data-bind="click: saveProject">Save</button>
                     <button class="inline" id="save-as-button">Save As</button>
