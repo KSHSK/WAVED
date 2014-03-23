@@ -65,6 +65,13 @@ define(['knockout',
         this._referenceCount = MARKED_FOR_DELETION;
     };
 
+    DataSet.prototype.resetReferenceCount = function() {
+        // Can only be used when the DataSet is marked for deletion.
+        if (this._referenceCount === MARKED_FOR_DELETION) {
+            this._referenceCount = 0;
+        }
+    };
+
     DataSet.prototype.isMarkedForDeletion = function() {
         return (this._referenceCount === MARKED_FOR_DELETION);
     };
