@@ -457,7 +457,8 @@ define([
         }
 
         // Workspace changed.
-        this.workspace.subscribeChanges(setDirty);
+        this.workspace.subscribeChanges(setDirty, addUndoHistoryFunction, addRedoHistoryFunction,
+            changeFromUndoRedoFunction);
 
         // Google Analytics changed.
         this.googleAnalytics.subscribeChanges(setDirty);
