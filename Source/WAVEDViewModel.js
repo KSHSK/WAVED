@@ -57,6 +57,8 @@ define(['jquery',
     var WAVEDViewModel = function() {
         self = this;
         this._dirty = false;
+        this._history = [];
+        this._historyIndex = 0;
 
         this._projectList = [];
         this._selectedComponent = '';
@@ -123,6 +125,56 @@ define(['jquery',
         this.currentProject.subscribeChanges(function() {
             self.dirty = true;
         });
+    };
+
+    WAVEDViewModel.prototype.isUndoAllowed = function() {
+        return (this._historyIndex > 0);
+    };
+
+    WAVEDViewModel.prototype.isRedoAllowed = function() {
+        return (this._historyIndex < this._history.length);
+    };
+
+    WAVEDViewModel.prototype.setUndoNewChangeFunction = function(changeFunction) {
+        // Remove history after historyIndex.
+        this._history.length = this._historyIndex + 1;
+
+        this._history.push({
+            undoChange: changeFunction
+        });
+
+        this._historyIndex++;
+    };
+
+    WAVEDViewModel.prototype.setRedoPreviousChangeFunction = function(changeFunction) {
+        var index = this._historyIndex - 1;
+        if (!defined(this._history[index])) {
+            this._history[index] = {};
+        }
+
+        this._history[index].redoChange = changeFunction;
+    };
+
+    WAVEDViewModel.prototype.undo = function() {
+        if (!this.isUndoAllowed()) {
+            return;
+        }
+
+        var changeFunction = this._history[this._historyIndex].undoChange;
+
+        this._historyIndex--;
+        changeFunction();
+    };
+
+    WAVEDViewModel.prototype.redo = function() {
+        if (!this.isRedoAllowed()) {
+            return;
+        }
+
+        var changeFunction = this._history[this._historyIndex].redoChange;
+
+        this._historyIndex++;
+        changeFunction();
     };
 
     WAVEDViewModel.prototype.tryToCreateNewProject = function() {
@@ -308,6 +360,16 @@ define(['jquery',
         projectTree: {
             get: function() {
                 return this._projectTree;
+            }
+        },
+        history: {
+            get: function() {
+                return this._history;
+            }
+        },
+        historyIndex: {
+            get: function() {
+                return this._historyIndex;
             }
         }
     });
