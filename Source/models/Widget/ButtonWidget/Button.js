@@ -10,11 +10,9 @@ define([
         $){
     'use strict';
 
-    // TODO: Remove getDataSet
     var Button = function(state, getDataSet) {
         this._templateName = ComponentTemplateName.BUTTON;
 
-        // TODO: Remove getDataSet
         var viewModel = new ButtonViewModel(state, getDataSet);
 
         var $workspace = $('#waved-workspace');
