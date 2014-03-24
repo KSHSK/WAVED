@@ -128,11 +128,9 @@ define([
         };
     };
 
-    Event.prototype.subscriptions = [];
-
     Event.prototype.subscribed = false;
 
-    Event.prototype.subscribeChanges = function(propertyChangeSubscriber) {
+    Event.prototype.subscribeChanges = function(setDirty) {
         var self = this;
 
         var properties = [];
@@ -143,11 +141,7 @@ define([
         }
 
         properties.forEach(function(prop) {
-            // Subscribe undo change.
-            propertyChangeSubscriber.subscribeBeforeChange(self, prop);
-
-            // Subscribe redo and dirty changes.
-            propertyChangeSubscriber.subscribeChange(self, prop);
+            subscribeObservable(self, prop, setDirty);
         });
 
         this.subscribed = true;

@@ -1,6 +1,7 @@
 define([
         'WAVEDViewModel',
         './UniqueTracker',
+        './HistoryMonitor',
         'models/Event/Event',
         'util/defined',
         'util/displayMessage',
@@ -9,6 +10,7 @@ define([
     ],function(
         WAVEDViewModel,
         UniqueTracker,
+        HistoryMonitor,
         Event,
         defined,
         displayMessage,
@@ -65,7 +67,6 @@ define([
                 }
             });
         },
-
         editEvent: function(viewModel) {
             if (!defined(viewModel.selectedEvent)) {
                 displayMessage('Select an event to edit.');
@@ -79,7 +80,7 @@ define([
             viewModel.selectedEventType = viewModel.selectedEvent.eventType;
             viewModel.eventEditorTriggeringComponent = viewModel.selectedEvent.triggeringComponent;
             viewModel.eventEditorTrigger = viewModel.selectedEvent.trigger;
-            viewModel.selectedEventActions = viewModel.selectedEvent.actions;
+            viewModel.selectedEventActions = viewModel.selectedEvent.actions.slice(0);
 
             self.eventDialog.dialog({
                 resizable: false,
@@ -99,31 +100,7 @@ define([
                             return;
                         }
 
-                        // Update values only if changed.
-                        var name = viewModel.selectedEventName.value;
-                        if (viewModel.selectedEvent.name !== name) {
-                            viewModel.selectedEvent.name = name;
-                        }
-
-                        var eventType = viewModel.selectedEventType;
-                        if (viewModel.selectedEvent.eventType !== eventType) {
-                            viewModel.selectedEvent.eventType = eventType;
-                        }
-
-                        var triggeringComponent = viewModel.eventEditorTriggeringComponent;
-                        if (viewModel.selectedEvent.triggeringComponent !== triggeringComponent) {
-                            viewModel.selectedEvent.triggeringComponent = triggeringComponent;
-                        }
-
-                        var trigger = viewModel.eventEditorTrigger;
-                        if (viewModel.selectedEvent.trigger !== trigger) {
-                            viewModel.selectedEvent.trigger = trigger;
-                        }
-
-                        var actions = viewModel.selectedEventActions;
-                        if (viewModel.selectedEvent.actions !== actions) {
-                            viewModel.selectedEvent.actions = actions;
-                        }
+                        self.updateEditChanges(viewModel);
 
                         self.eventDialog.dialog('close');
                     },
@@ -132,6 +109,43 @@ define([
                     }
                 }
             });
+        },
+        updateEditChanges: function(viewModel) {
+            var event = viewModel.selectedEvent;
+
+            var oldName = event.name;
+            var oldEventType = event.eventType;
+            var oldTriggeringComponent = event.triggeringComponent;
+            var oldTrigger = event.trigger;
+            var oldActions = event.actions;
+
+            function undoChange() {
+                event.name = oldName;
+                event.eventType = oldEventType;
+                event.triggeringComponent = oldTriggeringComponent;
+                event.trigger = oldTrigger;
+                event.actions = oldActions;
+            }
+
+            var newName = viewModel.selectedEventName.value;
+            var newEventType = viewModel.selectedEventType;
+            var newTriggeringComponent = viewModel.eventEditorTriggeringComponent;
+            var newTrigger = viewModel.eventEditorTrigger;
+            var newActions = viewModel.selectedEventActions;
+
+            function executeChange() {
+                event.name = newName;
+                event.eventType = newEventType;
+                event.triggeringComponent = newTriggeringComponent;
+                event.trigger = newTrigger;
+                event.actions = newActions;
+            }
+
+            var historyMonitor = HistoryMonitor.getInstance();
+            historyMonitor.addUndoChange(undoChange);
+            historyMonitor.addRedoChange(executeChange);
+
+            executeChange();
         }
 
     };

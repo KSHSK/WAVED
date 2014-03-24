@@ -83,11 +83,9 @@ define(['jquery',
         };
     };
 
-    Action.prototype.subscriptions = [];
-
     Action.prototype.subscribed = false;
 
-    Action.prototype.subscribeChanges = function(propertyChangeSubscriber) {
+    Action.prototype.subscribeChanges = function(setDirty) {
         var self = this;
 
         var properties = [];
@@ -98,11 +96,7 @@ define(['jquery',
         }
 
         properties.forEach(function(prop) {
-            // Subscribe undo change.
-            propertyChangeSubscriber.subscribeBeforeChange(self, prop);
-
-            // Subscribe redo and dirty changes.
-            propertyChangeSubscriber.subscribeChange(self, prop);
+            subscribeObservable(self, prop, setDirty);
         });
 
         this.subscribed = true;

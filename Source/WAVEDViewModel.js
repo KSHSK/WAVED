@@ -62,7 +62,7 @@ define(['jquery',
         this._historyIndex = undefined;
         this.resetHistory();
 
-        this._undoOrRedoCalled = false;
+        this._undoRedoSubscriptionPaused = false;
 
         this._projectList = [];
         this._selectedComponent = '';
@@ -75,7 +75,8 @@ define(['jquery',
         this.setDirty,
         this.setUndoNewChangeFunction,
         this.setRedoPreviousChangeFunction,
-        this.changeFromUndoRedoFunction);
+        this.isUndoRedoSubscriptionPaused,
+        this.setUndoRedoSubscriptionPaused);
 
         this._projectTree = new ProjectTree();
 
@@ -170,8 +171,12 @@ define(['jquery',
         self._history[index].redoChange = changeFunction;
     };
 
-    WAVEDViewModel.prototype.changeFromUndoRedoFunction = function() {
-        return self._undoOrRedoCalled;
+    WAVEDViewModel.prototype.isUndoRedoSubscriptionPaused = function() {
+        return self._undoRedoSubscriptionPaused;
+    };
+
+    WAVEDViewModel.prototype.setUndoRedoSubscriptionPaused = function(value) {
+        self._undoRedoSubscriptionPaused = value;
     };
 
     WAVEDViewModel.prototype.undo = function() {
@@ -184,9 +189,9 @@ define(['jquery',
         this._historyIndex--;
 
         if (defined(changeFunction)) {
-            this._undoOrRedoCalled = true;
+            this._undoRedoSubscriptionPaused = true;
             changeFunction();
-            this._undoOrRedoCalled = false;
+            this._undoRedoSubscriptionPaused = false;
         }
     };
 
@@ -200,9 +205,9 @@ define(['jquery',
         this._historyIndex++;
 
         if (defined(changeFunction)) {
-            this._undoOrRedoCalled = true;
+            this._undoRedoSubscriptionPaused = true;
             changeFunction();
-            this._undoOrRedoCalled = false;
+            this._undoRedoSubscriptionPaused = false;
         }
     };
 
