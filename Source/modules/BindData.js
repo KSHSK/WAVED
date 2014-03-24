@@ -79,16 +79,17 @@ define([
                 return;
             }
 
+            if(defined(viewModel.selectedBoundData)){
+                var name = viewModel.selectedBoundData.name;
+
+                var dataSet = viewModel.currentProject.getDataSet(name);
+                if (defined(dataSet)) {
+                    viewModel.selectedComponent.viewModel.unbindData(dataSet);
+                }
+
             //TODO: Check if the data is in use before unbinding it.
-
-            var name = viewModel.selectedBoundData;
-
-            var dataSet = viewModel.currentProject.getDataSet(name);
-            if (defined(dataSet)) {
-                viewModel.selectedComponent.viewModel.unbindData(dataSet);
             }
         }
-
     };
 
     return BindData;

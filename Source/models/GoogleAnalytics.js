@@ -6,6 +6,7 @@ define([
         'util/createValidator',
         'util/defined',
         'util/defaultValue',
+        'util/subscribeObservable',
         'knockout',
         'jquery'
     ], function(
@@ -13,6 +14,7 @@ define([
         createValidator,
         defined,
         defaultValue,
+        subscribeObservable,
         ko,
         $) {
     'use strict';
@@ -116,17 +118,11 @@ define([
     };
 
     GoogleAnalytics.prototype.subscribeChanges = function(setDirty) {
-        ko.getObservable(this.uaCode, '_value').subscribe(function(newValue) {
-            setDirty();
-        });
+        subscribeObservable(this.uaCode, '_value', setDirty);
 
-        ko.getObservable(this.eventCategory, '_value').subscribe(function(newValue) {
-            setDirty();
-        });
+        subscribeObservable(this.eventCategory, '_value', setDirty);
 
-        ko.getObservable(this, '_bound').subscribe(function(newValue) {
-            setDirty();
-        });
+        subscribeObservable(this, '_bound', setDirty);
     };
 
     return GoogleAnalytics;
