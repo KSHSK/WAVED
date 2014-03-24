@@ -66,20 +66,16 @@ define(['jquery',
         this._historyIndex = undefined;
         this.resetHistory();
 
-        this._undoRedoSubscriptionPaused = false;
-
         this._projectList = [];
         this._selectedComponent = '';
         this._selectedDataSet = '';
         this._selectedBoundData = '';
 
-        // Create the PropertyChangeSubscriber singleton that everything else will use.
-        this.propertyChangeSubscriber = new PropertyChangeSubscriber(this.setDirty, this.setUndoNewChangeFunction,
-            this.setRedoPreviousChangeFunction, this.isUndoRedoSubscriptionPaused);
-
         // Create the HistoryMonitor singleton that everything else will use.
-        this.historyMonitor = new HistoryMonitor(this.setUndoNewChangeFunction, this.setRedoPreviousChangeFunction,
-            this.setUndoRedoSubscriptionPaused);
+        this.historyMonitor = new HistoryMonitor(this.setUndoNewChangeFunction, this.setRedoPreviousChangeFunction);
+
+        // Create the PropertyChangeSubscriber singleton that everything else will use.
+        this.propertyChangeSubscriber = new PropertyChangeSubscriber(this.setDirty);
 
         this._currentProject = new ProjectViewModel({
             name: ''
@@ -179,14 +175,6 @@ define(['jquery',
         self._history[index].redoChange = changeFunction;
     };
 
-    WAVEDViewModel.prototype.isUndoRedoSubscriptionPaused = function() {
-        return self._undoRedoSubscriptionPaused;
-    };
-
-    WAVEDViewModel.prototype.setUndoRedoSubscriptionPaused = function(value) {
-        self._undoRedoSubscriptionPaused = value;
-    };
-
     WAVEDViewModel.prototype.undo = function() {
         if (!this.isUndoAllowed()) {
             return;
@@ -197,9 +185,7 @@ define(['jquery',
         this._historyIndex--;
 
         if (defined(changeFunction)) {
-            this._undoRedoSubscriptionPaused = true;
-            changeFunction();
-            this._undoRedoSubscriptionPaused = false;
+            this.historyMonitor.executeIgnoreHistory(changeFunction);
         }
     };
 
@@ -213,9 +199,7 @@ define(['jquery',
         this._historyIndex++;
 
         if (defined(changeFunction)) {
-            this._undoRedoSubscriptionPaused = true;
-            changeFunction();
-            this._undoRedoSubscriptionPaused = false;
+            this.historyMonitor.executeIgnoreHistory(changeFunction);
         }
     };
 

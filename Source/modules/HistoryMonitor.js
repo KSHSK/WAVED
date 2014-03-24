@@ -7,8 +7,8 @@ define(['knockout',
 
     var instance;
     var initialized = false;
-    var HistoryMonitor = function(addUndoHistoryFunction, addRedoHistoryFunction,
-        setUndoRedoSubscriptionPaused) {
+    var undoRedoSubscriptionPaused = false;
+    var HistoryMonitor = function(addUndoHistoryFunction, addRedoHistoryFunction) {
 
         if (initialized) {
             return HistoryMonitor.getInstance();
@@ -16,7 +16,6 @@ define(['knockout',
 
         this.addUndoHistory = addUndoHistoryFunction;
         this.addRedoHistory = addRedoHistoryFunction;
-        this.setUndoRedoSubscriptionPaused = setUndoRedoSubscriptionPaused;
 
         instance = this;
         initialized = true;
@@ -26,12 +25,18 @@ define(['knockout',
         return instance;
     };
 
-    HistoryMonitor.prototype.pauseUndoRedoSubscription = function() {
-        this.setUndoRedoSubscriptionPaused(true);
+    HistoryMonitor.prototype.isUndoRedoSubscriptionPaused = function() {
+        return undoRedoSubscriptionPaused;
     };
 
-    HistoryMonitor.prototype.resumeUndoRedoSubscription = function() {
-        this.setUndoRedoSubscriptionPaused(false);
+    /**
+     * Executes the given function, ignoring changes that would normally be added to the history.
+     * @param func
+     */
+    HistoryMonitor.prototype.executeIgnoreHistory = function(func) {
+        undoRedoSubscriptionPaused = true;
+        func();
+        undoRedoSubscriptionPaused = false;
     };
 
     HistoryMonitor.prototype.addUndoChange = function(undoFunction) {
