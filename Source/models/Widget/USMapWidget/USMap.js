@@ -33,5 +33,9 @@ define([
         return USMapViewModel.getType();
     };
 
+    USMap.iconLocation = function() {
+        return 'Source/models/Widget/USMapWidget/usmap-icon.png';
+    };
+
     return USMap;
 });
