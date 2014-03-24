@@ -132,22 +132,22 @@ define([
 
     Event.prototype.subscribed = false;
 
-    Event.prototype.subscribeChanges = function(setDirty, addUndoHistoryFunction, addRedoHistoryFunction) {
+    Event.prototype.subscribeChanges = function(propertyChangeSubscriber) {
         var self = this;
 
         var properties = [];
-        for ( var prop in this) {
+        for (var prop in this) {
             if (this.hasOwnProperty(prop)) {
                 properties.push(prop);
             }
         }
 
         properties.forEach(function(prop) {
-            var subscription = subscribeObservable(self, prop, setDirty);
+            // Subscribe undo change.
+            propertyChangeSubscriber.subscribeBeforeChange(self, prop);
 
-            if(subscription !== null){
-                self.subscriptions.push(subscription);
-            }
+            // Subscribe redo and dirty changes.
+            propertyChangeSubscriber.subscribeChange(self, prop);
         });
 
         this.subscribed = true;

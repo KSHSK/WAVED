@@ -50,8 +50,6 @@ define([
         }
     };
 
-    SuperComponentViewModel.prototype.subscriptions = [];
-
     SuperComponentViewModel.prototype.subscribed = false;
 
     SuperComponentViewModel.prototype.subscribeChanges = function(propertyChangeSubscriber) {
@@ -69,18 +67,10 @@ define([
         var self = this;
 
         // Subscribe undo change.
-        var subscription = propertyChangeSubscriber.subscribeBeforeChange(prop, name);
-
-        if (subscription !== null) {
-            self.subscriptions.push(subscription);
-        }
+        propertyChangeSubscriber.subscribeBeforeChange(prop, name);
 
         // Subscribe redo and dirty changes.
-        subscription = propertyChangeSubscriber.subscribeChange(prop, name);
-
-        if (subscription !== null) {
-            self.subscriptions.push(subscription);
-        }
+        propertyChangeSubscriber.subscribeChange(prop, name);
     };
 
     SuperComponentViewModel.prototype.recursiveSubscribeChanges = function(prop, propertyChangeSubscriber) {

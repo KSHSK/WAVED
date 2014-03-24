@@ -114,11 +114,9 @@ define(['knockout',
         }
     };
 
-    DataSet.prototype.subscriptions = [];
-
     DataSet.prototype.subscribed = false;
 
-    DataSet.prototype.subscribeChanges = function(setDirty, addUndoHistoryFunction, addRedoHistoryFunction) {
+    DataSet.prototype.subscribeChanges = function(propertyChangeSubscriber) {
         var self = this;
 
         var properties = [];
@@ -131,11 +129,11 @@ define(['knockout',
         }
 
         properties.forEach(function(prop) {
-            var subscription = subscribeObservable(self, prop, setDirty);
+            // Subscribe undo change.
+            propertyChangeSubscriber.subscribeBeforeChange(self, prop);
 
-            if(subscription !== null){
-                self.subscriptions.push(subscription);
-            }
+            // Subscribe redo and dirty changes.
+            propertyChangeSubscriber.subscribeChange(self, prop);
         });
 
         this.subscribed = true;
