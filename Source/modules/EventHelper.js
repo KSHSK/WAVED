@@ -99,11 +99,31 @@ define([
                             return;
                         }
 
-                        viewModel.selectedEvent.name = viewModel.selectedEventName.value;
-                        viewModel.selectedEvent.eventType =  viewModel.selectedEventType;
-                        viewModel.selectedEvent.triggeringComponent = viewModel.eventEditorTriggeringComponent;
-                        viewModel.selectedEvent.trigger = viewModel.eventEditorTrigger;
-                        viewModel.selectedEvent.actions = viewModel.selectedEventActions;
+                        // Update values only if changed.
+                        var name = viewModel.selectedEventName.value;
+                        if (viewModel.selectedEvent.name !== name) {
+                            viewModel.selectedEvent.name = name;
+                        }
+
+                        var eventType = viewModel.selectedEventType;
+                        if (viewModel.selectedEvent.eventType !== eventType) {
+                            viewModel.selectedEvent.eventType = eventType;
+                        }
+
+                        var triggeringComponent = viewModel.eventEditorTriggeringComponent;
+                        if (viewModel.selectedEvent.triggeringComponent !== triggeringComponent) {
+                            viewModel.selectedEvent.triggeringComponent = triggeringComponent;
+                        }
+
+                        var trigger = viewModel.eventEditorTrigger;
+                        if (viewModel.selectedEvent.trigger !== trigger) {
+                            viewModel.selectedEvent.trigger = trigger;
+                        }
+
+                        var actions = viewModel.selectedEventActions;
+                        if (viewModel.selectedEvent.actions !== actions) {
+                            viewModel.selectedEvent.actions = actions;
+                        }
 
                         self.eventDialog.dialog('close');
                     },

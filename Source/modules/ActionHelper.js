@@ -143,10 +143,26 @@ define([
                             }
                         }
 
-                        viewModel.selectedAction.name = viewModel.selectedActionName.value;
-                        viewModel.selectedAction.target = viewModel.actionEditorAffectedComponent;
-                        viewModel.selectedAction.newValues = actionValues;
-                        viewModel.selectedAction.applyAutomatically = $('#actionApplyAutomatically').is(':checked');
+                        // Update values only if changed.
+                        var name = viewModel.selectedActionName.value;
+                        if (viewModel.selectedAction.name !== name) {
+                            viewModel.selectedAction.name = name;
+                        }
+
+                        var target = viewModel.actionEditorAffectedComponent;
+                        if (viewModel.selectedAction.target !== target) {
+                            viewModel.selectedAction.target = target;
+                        }
+
+                        if (viewModel.selectedAction.newValues !== actionValues) {
+                            viewModel.selectedAction.newValues = actionValues;
+                        }
+
+                        var auto = $('#actionApplyAutomatically').is(':checked');
+                        if (viewModel.selectedAction.applyAutomatically !== auto) {
+                            viewModel.selectedAction.applyAutomatically = auto;
+                        }
+
                         if (viewModel.selectedAction.applyAutomatically) {
                             viewModel.selectedAction.apply();
                         }
