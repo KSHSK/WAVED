@@ -6,12 +6,12 @@ define(['knockout',
     'use strict';
 
     var PropertyChangeSubscriber = function(setDirtyFunction, addUndoHistoryFunction, addRedoHistoryFunction,
-        changeFromUndoRedoFunction) {
+        pauseUndoRedoSubscriptionFunction) {
 
         this.setDirty = setDirtyFunction;
         this.addUndoHistory = addUndoHistoryFunction;
         this.addRedoHistory = addRedoHistoryFunction;
-        this.changeFromUndoRedo = changeFromUndoRedoFunction;
+        this.pauseUndoRedoSubscription = pauseUndoRedoSubscriptionFunction;
     };
 
     /**
@@ -21,7 +21,7 @@ define(['knockout',
         var self = this;
 
         return subscribeObservable(container, observableName, function(oldValue) {
-            if (!self.changeFromUndoRedo()) {
+            if (!self.pauseUndoRedoSubscription()) {
                 self.addUndoHistory(function() {
                     container[observableName] = oldValue;
                 });
@@ -38,7 +38,7 @@ define(['knockout',
         return subscribeObservable(container, observableName, function(newValue) {
             self.setDirty();
 
-            if (!self.changeFromUndoRedo()) {
+            if (!self.pauseUndoRedoSubscription()) {
                 self.addRedoHistory(function() {
                     container[observableName] = newValue;
                 });

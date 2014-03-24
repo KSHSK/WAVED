@@ -1,12 +1,14 @@
 define([
         'models/Action/Action',
         'models/Data/DataSet',
+        'modules/HistoryMonitor',
         'util/defined',
         'knockout',
         'jquery'
     ],function(
         Action,
         DataSet,
+        HistoryMonitor,
         defined,
         ko,
         $
@@ -75,9 +77,15 @@ define([
     };
 
     PropertyAction.prototype.apply = function() {
+        // Don't add individual changes from to the history.
+        var historyMonitor = HistoryMonitor.getInstance();
+        historyMonitor.pauseUndoRedoSubscription();
+
         for (var key in this._newValues) {
             this._target.viewModel[key].value = this._newValues[key];
         }
+
+        historyMonitor.resumeUndoRedoSubscription();
     };
 
     return PropertyAction;

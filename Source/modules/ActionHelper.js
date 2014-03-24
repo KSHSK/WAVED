@@ -1,6 +1,7 @@
 define([
         'WAVEDViewModel',
         './UniqueTracker',
+        './HistoryMonitor',
         'models/Action/Action',
         'models/Action/PropertyAction',
         'models/Action/QueryAction',
@@ -11,6 +12,7 @@ define([
     ],function(
         WAVEDViewModel,
         UniqueTracker,
+        HistoryMonitor,
         Action,
         PropertyAction,
         QueryAction,
@@ -108,8 +110,8 @@ define([
             viewModel.selectedActionName.value = viewModel.selectedAction.name;
             viewModel.actionEditorAffectedComponent = viewModel.selectedAction.target;
             $('#actionApplyAutomatically').prop('checked', viewModel.selectedAction.applyAutomatically ? true : false);
+
             // Set the displayValues to match those saved in the Action
-            var properties = viewModel.actionEditorAffectedComponent.viewModel.properties;
             for (var key in viewModel.selectedAction.newValues) {
                 viewModel.actionEditorAffectedComponent.viewModel[key].displayValue = viewModel.selectedAction.newValues[key];
             }
@@ -132,40 +134,7 @@ define([
                             return;
                         }
 
-                        var actionValues = {};
-
-                        for (var property in viewModel.actionEditorAffectedComponent.viewModel) {
-                            var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedComponent.viewModel[property]);
-                            if (propertyIndex > -1) {
-                                if (properties[propertyIndex].displayValue !== properties[propertyIndex].value) {
-                                    actionValues[property] = properties[propertyIndex].displayValue;
-                                }
-                            }
-                        }
-
-                        // Update values only if changed.
-                        var name = viewModel.selectedActionName.value;
-                        if (viewModel.selectedAction.name !== name) {
-                            viewModel.selectedAction.name = name;
-                        }
-
-                        var target = viewModel.actionEditorAffectedComponent;
-                        if (viewModel.selectedAction.target !== target) {
-                            viewModel.selectedAction.target = target;
-                        }
-
-                        if (viewModel.selectedAction.newValues !== actionValues) {
-                            viewModel.selectedAction.newValues = actionValues;
-                        }
-
-                        var auto = $('#actionApplyAutomatically').is(':checked');
-                        if (viewModel.selectedAction.applyAutomatically !== auto) {
-                            viewModel.selectedAction.applyAutomatically = auto;
-                        }
-
-                        if (viewModel.selectedAction.applyAutomatically) {
-                            viewModel.selectedAction.apply();
-                        }
+                        self.updateEditChanges(viewModel);
 
                         self.closeActionDialog(viewModel);
                     },
@@ -174,9 +143,61 @@ define([
                     }
                 }
             });
-        }
+        },
+        updateEditChanges: function(viewModel) {
+            var properties = viewModel.actionEditorAffectedComponent.viewModel.properties;
+            var action = viewModel.selectedAction;
 
+            var oldName = viewModel.selectedAction.name;
+            var oldTarget = viewModel.selectedAction.target;
+            var oldNewValues = viewModel.selectedAction.newValues;
+            var oldApplyAutomatically = viewModel.selectedAction.applyAutomatically;
+
+            function undoChange() {
+                action.name = oldName;
+                action.target = oldTarget;
+                action.newValues = oldNewValues;
+                action.applyAutomatically = oldApplyAutomatically;
+
+                if (action.applyAutomatically) {
+                    action.apply();
+                }
+            }
+
+            var actionValues = {};
+
+            for (var property in viewModel.actionEditorAffectedComponent.viewModel) {
+                var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedComponent.viewModel[property]);
+                if (propertyIndex > -1) {
+                    if (properties[propertyIndex].displayValue !== properties[propertyIndex].value) {
+                        actionValues[property] = properties[propertyIndex].displayValue;
+                    }
+                }
+            }
+
+            var newName = viewModel.selectedActionName.value;
+            var newTarget = viewModel.actionEditorAffectedComponent;
+            var newApplyAutomatically = $('#actionApplyAutomatically').is(':checked');
+
+            function executeChange() {
+                action.name = newName;
+                action.target = newTarget;
+                action.newValues = actionValues;
+                action.applyAutomatically = newApplyAutomatically;
+
+                if (action.applyAutomatically) {
+                    action.apply();
+                }
+            }
+
+            var historyMonitor = HistoryMonitor.getInstance();
+            historyMonitor.addUndoChange(undoChange);
+            historyMonitor.addRedoChange(executeChange);
+
+            executeChange();
+        }
     };
+
 
     return ActionHelper;
 });

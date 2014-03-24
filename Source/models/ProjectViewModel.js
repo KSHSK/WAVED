@@ -13,7 +13,8 @@ define([
         'models/GoogleAnalytics',
         'models/Data/DataSet',
         'models/Data/DataSubset',
-        'modules/PropertyChangeSubscriber'
+        'modules/PropertyChangeSubscriber',
+        'modules/HistoryMonitor'
     ], function(
         $,
         ko,
@@ -29,24 +30,34 @@ define([
         GoogleAnalytics,
         DataSet,
         DataSubset,
-        PropertyChangeSubscriber) {
+        PropertyChangeSubscriber,
+        HistoryMonitor) {
     'use strict';
 
     var self;
     var setDirty;
     var addUndoHistoryFunction;
     var addRedoHistoryFunction;
-    var changeFromUndoRedoFunction;
+    var isUndoRedoSubscriptionPausedFunction;
+    var setUndoRedoSubscriptionPaused;
     var propertyChangeSubscriber;
-    var ProjectViewModel = function(state, setDirtyFunction, undoFunction, redoFunction, changeFromFunction) {
+    var historyMonitor;
+    var ProjectViewModel = function(state, setDirtyFunction, undoFunction, redoFunction, undoRedoPausedFunction,
+        setUndoRedoPaused) {
+
         self = this;
         setDirty = setDirtyFunction;
         addUndoHistoryFunction = undoFunction;
         addRedoHistoryFunction = redoFunction;
-        changeFromUndoRedoFunction = changeFromFunction;
+        isUndoRedoSubscriptionPausedFunction = undoRedoPausedFunction;
+        setUndoRedoSubscriptionPaused = setUndoRedoPaused;
 
         propertyChangeSubscriber = new PropertyChangeSubscriber(setDirty, addUndoHistoryFunction, addRedoHistoryFunction,
-            changeFromUndoRedoFunction);
+            isUndoRedoSubscriptionPausedFunction);
+
+        // Create the instance of the HistoryMonitor that everything else will use.
+        historyMonitor = new HistoryMonitor(setDirty, addUndoHistoryFunction, addRedoHistoryFunction,
+            setUndoRedoSubscriptionPaused);
 
         state = defined(state) ? state : {};
 
@@ -448,16 +459,31 @@ define([
     };
 
     ProjectViewModel.prototype.subscribeChanges = function() {
+        function componentArrayChanged(changes) {
+            setDirty();
+
+            changes.forEach(function(change) {
+                if (change.status === 'added') {
+                    var subscriber = change.value.viewModel;
+
+                    // Subscribe to changes if not already subscribed.
+                    if (!subscriber.subscribed) {
+                        subscriber.subscribeChanges(propertyChangeSubscriber);
+                    }
+                }
+            });
+        }
+
         function arrayChanged(changes) {
             setDirty();
 
             changes.forEach(function(change) {
-                var subscriber = change.value.viewModel || change.value;
-
                 if (change.status === 'added') {
-                    // Subscribe to dirty changes if not already subscribed.
+                    var subscriber = change.value;
+
+                    // Subscribe to changes if not already subscribed.
                     if (!subscriber.subscribed) {
-                        subscriber.subscribeChanges(propertyChangeSubscriber);
+                        subscriber.subscribeChanges(setDirty);
                     }
                 }
             });
@@ -471,7 +497,7 @@ define([
 
         // Component is added or removed.
         subscribeObservable(this, '_components', function(changes) {
-            arrayChanged(changes);
+            componentArrayChanged(changes);
         }, null, 'arrayChange');
 
         // DataSet is added or removed.
