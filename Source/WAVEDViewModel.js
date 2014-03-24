@@ -81,6 +81,7 @@ define(['jquery',
             o: TextBlock
         }, {
             name: 'US Map',
+            icon: USMap.iconLocation(),
             o: USMap
         }];
 
