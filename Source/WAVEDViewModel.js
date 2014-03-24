@@ -84,7 +84,7 @@ define(['jquery',
         this._currentProject = new ProjectViewModel({
             name: ''
         },
-        this.propertyChangeSubscriber);
+        this.setDirty);
 
         this._projectTree = new ProjectTree();
 
