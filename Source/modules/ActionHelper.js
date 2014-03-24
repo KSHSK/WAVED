@@ -111,9 +111,14 @@ define([
             viewModel.actionEditorAffectedComponent = viewModel.selectedAction.target;
             $('#actionApplyAutomatically').prop('checked', viewModel.selectedAction.applyAutomatically ? true : false);
 
+            var component = viewModel.actionEditorAffectedComponent.viewModel;
             // Set the displayValues to match those saved in the Action
+            for (var index in component.properties) {
+                component.properties[index].displayValue = component.properties[index].value;
+            }
+
             for (var key in viewModel.selectedAction.newValues) {
-                viewModel.actionEditorAffectedComponent.viewModel[key].displayValue = viewModel.selectedAction.newValues[key];
+                component[key].displayValue = viewModel.selectedAction.newValues[key];
             }
 
             self.actionDialog.dialog({
@@ -148,10 +153,10 @@ define([
             var properties = viewModel.actionEditorAffectedComponent.viewModel.properties;
             var action = viewModel.selectedAction;
 
-            var oldName = viewModel.selectedAction.name;
-            var oldTarget = viewModel.selectedAction.target;
-            var oldNewValues = viewModel.selectedAction.newValues;
-            var oldApplyAutomatically = viewModel.selectedAction.applyAutomatically;
+            var oldName = action.name;
+            var oldTarget = action.target;
+            var oldNewValues = $.extend({}, action.newValues);
+            var oldApplyAutomatically = action.applyAutomatically;
 
             function undoChange() {
                 action.name = oldName;
