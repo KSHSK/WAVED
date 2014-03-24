@@ -36,7 +36,7 @@ define([
 
         this.render = function() {
             if (self._ready) {
-                var w = $('#waved-workspace').width(); //TODO: this can't use percentages
+                var w = $('#waved-workspace').width();
                 var w2 = w *self.width.value/100;
                 var h = $('#waved-workspace').height();
                 var h2 = h * self.height.value/100;
