@@ -35,12 +35,12 @@ define([
     'use strict';
 
     var self;
-    var propertyChangeSubscriber;
+    var setDirty;
     var historyMonitor;
-    var ProjectViewModel = function(state) {
+    var ProjectViewModel = function(state, setDirtyLocal) {
         self = this;
 
-        propertyChangeSubscriber = PropertyChangeSubscriber.getInstance();
+        setDirty = setDirtyLocal;
         historyMonitor = HistoryMonitor.getInstance();
 
         state = defined(state) ? state : {};
@@ -243,8 +243,13 @@ define([
 
     // TODO: Update this to make it more generic to Components, temporarily just using this._components in the
     // methods
-    ProjectViewModel.prototype.addComponent = function(component, ignoreHistory) {
-        this._components.push(component);
+    ProjectViewModel.prototype.addComponent = function(component, ignoreHistory, index) {
+        if (defined(index)) {
+            this._components.splice(index, 0, component);
+        }
+        else {
+            this._components.push(component);
+        }
 
         // Add the DOM element.
         component.addToWorkspace();
@@ -282,8 +287,13 @@ define([
         }
     };
 
-    ProjectViewModel.prototype.addAction = function(action, ignoreHistory) {
-        this._actions.push(action);
+    ProjectViewModel.prototype.addAction = function(action, ignoreHistory, index) {
+        if (defined(index)) {
+            this._actions.splice(index, 0, action);
+        }
+        else {
+            this._actions.push(action);
+        }
 
         // Don't add history if called from undo/redo.
         if (ignoreHistory !== true) {
@@ -299,8 +309,13 @@ define([
         }
     };
 
-    ProjectViewModel.prototype.addEvent = function(event, ignoreHistory) {
-        this._events.push(event);
+    ProjectViewModel.prototype.addEvent = function(event, ignoreHistory, index) {
+        if (defined(index)) {
+            this._events.splice(index, 0, event);
+        }
+        else {
+            this._events.push(event);
+        }
 
         // Don't add history if called from undo/redo.
         if (ignoreHistory !== true) {
@@ -366,7 +381,7 @@ define([
                 if (ignoreHistory !== true) {
                     // Undo by removing the item.
                     historyMonitor.addUndoHistory(function() {
-                        self.addComponent(component, true);
+                        self.addComponent(component, true, index);
                     });
 
                     // Redo by readding the item.
@@ -407,7 +422,7 @@ define([
             if (ignoreHistory !== true) {
                 // Undo by removing the item.
                 historyMonitor.addUndoHistory(function() {
-                    self.addAction(action, true);
+                    self.addAction(action, true, index);
                 });
 
                 // Redo by readding the item.
@@ -427,7 +442,7 @@ define([
             if (ignoreHistory !== true) {
                 // Undo by removing the item.
                 historyMonitor.addUndoHistory(function() {
-                    self.addEvent(event, true);
+                    self.addEvent(event, true, index);
                 });
 
                 // Redo by readding the item.
@@ -444,7 +459,7 @@ define([
 
     ProjectViewModel.prototype.subscribeChanges = function() {
         function arrayChanged(changes) {
-            propertyChangeSubscriber.setDirty();
+            setDirty();
 
             changes.forEach(function(change) {
                 if (change.status === 'added') {
@@ -452,17 +467,17 @@ define([
 
                     // Subscribe to changes if not already subscribed.
                     if (!subscriber.subscribed) {
-                        subscriber.subscribeChanges(propertyChangeSubscriber);
+                        subscriber.subscribeChanges();
                     }
                 }
             });
         }
 
         // Workspace changed.
-        this.workspace.subscribeChanges(propertyChangeSubscriber);
+        this.workspace.subscribeChanges();
 
         // Google Analytics changed.
-        this.googleAnalytics.subscribeChanges(propertyChangeSubscriber);
+        this.googleAnalytics.subscribeChanges();
 
         // Component is added or removed.
         subscribeObservable(this, '_components', function(changes) {

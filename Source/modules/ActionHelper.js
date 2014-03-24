@@ -112,6 +112,7 @@ define([
             $('#actionApplyAutomatically').prop('checked', viewModel.selectedAction.applyAutomatically ? true : false);
 
             var component = viewModel.actionEditorAffectedComponent.viewModel;
+
             // Set the displayValues to match those saved in the Action
             for (var index in component.properties) {
                 component.properties[index].displayValue = component.properties[index].value;
