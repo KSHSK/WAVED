@@ -77,15 +77,17 @@ define([
     };
 
     PropertyAction.prototype.apply = function() {
-        // Don't add individual changes from to the history.
+        var self = this;
         var historyMonitor = HistoryMonitor.getInstance();
-        historyMonitor.pauseUndoRedoSubscription();
 
-        for (var key in this._newValues) {
-            this._target.viewModel[key].value = this._newValues[key];
-        }
+        var executeChange = function() {
+            for (var key in self._newValues) {
+                self._target.viewModel[key].value = self._newValues[key];
+            }
+        };
 
-        historyMonitor.resumeUndoRedoSubscription();
+        // Don't add individual changes to the history.
+        historyMonitor.executeIgnoreHistory(executeChange);
     };
 
     return PropertyAction;

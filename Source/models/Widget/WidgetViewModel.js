@@ -198,39 +198,37 @@ define([
             historyMonitor.addUndoChange(undoChange);
             historyMonitor.addRedoChange(executeChange);
 
-            historyMonitor.pauseUndoRedoSubscription();
-            executeChange();
-            historyMonitor.resumeUndoRedoSubscription();
+            historyMonitor.executeIgnoreHistory(executeChange);
         }
     };
+
 
     WidgetViewModel.prototype.unbindData = function(dataSet) {
         var self = this;
         var name = dataSet.name;
 
-        var undoChange = function(index) {
-            self._boundData.splice(index, 0, dataSet);
-            dataSet.incrementReferenceCount();
-        };
-
-        var executeChange = function(index) {
-            self._boundData.splice(index, 1);
-            dataSet.decrementReferenceCount();
-        };
+        // Find index of dataSet by name.
+        var index = $.map(this._boundData, function(item) {
+            return item.name;
+        }).indexOf(name);
 
         // Only unbind if the data is bound.
-        for(var index = 0; index < this._boundData.length; index++){
-            if(name === this._boundData[index].name){
-                var historyMonitor = HistoryMonitor.getInstance();
-                historyMonitor.addUndoChange(undoChange.bind(this, index));
-                historyMonitor.addRedoChange(executeChange.bind(this, index));
+        if (index > -1) {
+            var undoChange = function() {
+                self._boundData.splice(index, 0, dataSet);
+                dataSet.incrementReferenceCount();
+            };
 
-                historyMonitor.pauseUndoRedoSubscription();
-                executeChange(index);
-                historyMonitor.resumeUndoRedoSubscription();
+            var executeChange = function() {
+                self._boundData.splice(index, 1);
+                dataSet.decrementReferenceCount();
+            };
 
-                break;
-            }
+            var historyMonitor = HistoryMonitor.getInstance();
+            historyMonitor.addUndoChange(undoChange);
+            historyMonitor.addRedoChange(executeChange);
+
+            historyMonitor.executeIgnoreHistory(executeChange);
         }
     };
 

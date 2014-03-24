@@ -200,9 +200,7 @@ define([
             historyMonitor.addUndoChange(undoChange);
             historyMonitor.addRedoChange(executeChange);
 
-            historyMonitor.pauseUndoRedoSubscription();
-            executeChange();
-            historyMonitor.resumeUndoRedoSubscription();
+            historyMonitor.executeIgnoreHistory(executeChange);
         }
     };
 

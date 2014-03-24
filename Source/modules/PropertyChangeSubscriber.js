@@ -1,23 +1,22 @@
 define(['knockout',
+        'modules/HistoryMonitor',
         'util/subscribeObservable'
     ], function(
         ko,
+        HistoryMonitor,
         subscribeObservable) {
     'use strict';
 
     var instance;
     var initialized = false;
-    var PropertyChangeSubscriber = function(setDirtyFunction, addUndoHistoryFunction, addRedoHistoryFunction,
-        isUndoRedoSubscriptionPausedFunction) {
+    var PropertyChangeSubscriber = function(setDirtyFunction) {
 
         if (initialized) {
             return PropertyChangeSubscriber.getInstance();
         }
 
         this.setDirty = setDirtyFunction;
-        this.addUndoHistory = addUndoHistoryFunction;
-        this.addRedoHistory = addRedoHistoryFunction;
-        this.isUndoRedoSubscriptionPaused = isUndoRedoSubscriptionPausedFunction;
+        this.historyMonitor = HistoryMonitor.getInstance();
 
         instance = this;
         initialized = true;
@@ -34,8 +33,8 @@ define(['knockout',
         var self = this;
 
         return subscribeObservable(container, observableName, function(oldValue) {
-            if (!self.isUndoRedoSubscriptionPaused()) {
-                self.addUndoHistory(function() {
+            if (!self.historyMonitor.isUndoRedoSubscriptionPaused()) {
+                self.historyMonitor.addUndoHistory(function() {
                     container[observableName] = oldValue;
                 });
             }
@@ -51,8 +50,8 @@ define(['knockout',
         return subscribeObservable(container, observableName, function(newValue) {
             self.setDirty();
 
-            if (!self.isUndoRedoSubscriptionPaused()) {
-                self.addRedoHistory(function() {
+            if (!self.historyMonitor.isUndoRedoSubscriptionPaused()) {
+                self.historyMonitor.addRedoHistory(function() {
                     container[observableName] = newValue;
                 });
             }
@@ -68,7 +67,7 @@ define(['knockout',
         return subscribeObservable(container, observableName, function(changes) {
             self.setDirty();
 
-            if (self.isUndoRedoSubscriptionPaused()) {
+            if (self.historyMonitor.isUndoRedoSubscriptionPaused()) {
                 return;
             }
 
@@ -78,20 +77,20 @@ define(['knockout',
                 var index = change.index;
 
                 if (change.status === 'added') {
-                    self.addUndoHistory(function() {
+                    self.historyMonitor.addUndoHistory(function() {
                         list.splice(index, 1);
                     });
 
-                    self.addRedoHistory(function() {
+                    self.historyMonitor.addRedoHistory(function() {
                         list.splice(index, 0, item);
                     });
                 }
                 else if (change.status === 'deleted') {
-                    self.addUndoHistory(function() {
+                    self.historyMonitor.addUndoHistory(function() {
                         list.splice(index, 0, item);
                     });
 
-                    self.addRedoHistory(function() {
+                    self.historyMonitor.addRedoHistory(function() {
                         list.splice(index, 1);
                     });
                 }
