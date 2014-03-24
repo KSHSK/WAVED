@@ -2,6 +2,7 @@ define(['knockout',
         'models/Property/StringProperty',
         'modules/ReadData',
         'modules/UniqueTracker',
+        'modules/PropertyChangeSubscriber',
         'util/defined',
         'util/createValidator',
         'util/subscribeObservable',
@@ -12,6 +13,7 @@ define(['knockout',
         StringProperty,
         ReadData,
         UniqueTracker,
+        PropertyChangeSubscriber,
         defined,
         createValidator,
         subscribeObservable,
@@ -116,8 +118,9 @@ define(['knockout',
 
     DataSet.prototype.subscribed = false;
 
-    DataSet.prototype.subscribeChanges = function(propertyChangeSubscriber) {
+    DataSet.prototype.subscribeChanges = function() {
         var self = this;
+        var propertyChangeSubscriber = PropertyChangeSubscriber.getInstance();
 
         var properties = [];
         for (var prop in this) {

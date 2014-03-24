@@ -199,7 +199,7 @@ define([
             historyMonitor.addRedoChange(executeChange);
 
             historyMonitor.pauseUndoRedoSubscription();
-            executeChange(index);
+            executeChange();
             historyMonitor.resumeUndoRedoSubscription();
         }
     };

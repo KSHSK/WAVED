@@ -2,6 +2,7 @@ define([
         'jquery',
         'knockout',
         'models/Property/StringProperty',
+        'modules/PropertyChangeSubscriber',
         'util/defined',
         'util/createValidator',
         'util/getNamePropertyInstance',
@@ -10,6 +11,7 @@ define([
         $,
         ko,
         StringProperty,
+        PropertyChangeSubscriber,
         defined,
         createValidator,
         getNamePropertyInstance,
@@ -52,8 +54,9 @@ define([
 
     SuperComponentViewModel.prototype.subscribed = false;
 
-    SuperComponentViewModel.prototype.subscribeChanges = function(propertyChangeSubscriber) {
+    SuperComponentViewModel.prototype.subscribeChanges = function() {
         var self = this;
+        var propertyChangeSubscriber = PropertyChangeSubscriber.getInstance();
 
         self.properties.forEach(function(prop) {
             self.subscribeChange(prop, '_value', propertyChangeSubscriber);
