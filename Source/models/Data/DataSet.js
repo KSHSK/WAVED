@@ -3,14 +3,21 @@ define(['knockout',
         'modules/ReadData',
         'modules/UniqueTracker',
         'util/defined',
-        'util/createValidator'
+        'util/createValidator',
+        'util/subscribeObservable',
+        'd3',
+        'jquery'
     ],function(
         ko,
         StringProperty,
         ReadData,
         UniqueTracker,
         defined,
-        createValidator){
+        createValidator,
+        subscribeObservable,
+        d3,
+        $
+    ){
     'use strict';
 
     // Constant for marked for deletion.
@@ -22,6 +29,7 @@ define(['knockout',
         this._name = '';
         this._filename = '';
         this._referenceCount = 0;
+        this._dataFields = [];
 
         this.setState(state);
 
@@ -61,6 +69,10 @@ define(['knockout',
         return (this._referenceCount === MARKED_FOR_DELETION);
     };
 
+    DataSet.prototype.getNameAndFilename = function() {
+        return this._name + ' : ' + this._filename;
+    };
+
     DataSet.prototype.getState = function() {
         return {
             type: DataSet.getType(),
@@ -71,8 +83,9 @@ define(['knockout',
     };
 
     DataSet.prototype.setState = function(state) {
+        var self = this;
         if (defined(state.name)) {
-            this.name = state.name;
+            this._name = state.name;
         }
 
         if (defined(state.referenceCount)) {
@@ -83,7 +96,13 @@ define(['knockout',
             this._filename = state.filename;
 
             if (!this.isMarkedForDeletion()) {
-                ReadData.readData(this);
+                // Populate the dataFields array once readData() is done
+                $.when(ReadData.readData(this)).done(function(){
+                    var values = d3.values(self._data)[0];
+                    if(defined(values)){
+                        self._dataFields = Object.keys(values);
+                    }
+                });
             }
         }
     };
@@ -94,18 +113,20 @@ define(['knockout',
         var self = this;
 
         var properties = [];
-        for ( var prop in this) {
+        for (var prop in this) {
             if (this.hasOwnProperty(prop)) {
-                properties.push(prop);
+                if(prop !== '_data' && prop !== '_dataFields'){
+                    properties.push(prop);
+                }
             }
         }
 
         properties.forEach(function(prop) {
-            var subscription = ko.getObservable(self, prop).subscribe(function(newValue) {
-                setDirty();
-            });
+            var subscription = subscribeObservable(self, prop, setDirty);
 
-            self.subscriptions.push(subscription);
+            if(subscription !== null){
+                self.subscriptions.push(subscription);
+            }
         });
     };
 
@@ -142,6 +163,14 @@ define(['knockout',
         referenceCount: {
             get: function() {
                 return this._referenceCount;
+            }
+        },
+        dataFields: {
+            get: function() {
+                return this._dataFields;
+            },
+            set: function(fields){
+                this._dataFields = fields;
             }
         }
     });
