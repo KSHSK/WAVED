@@ -35,29 +35,13 @@ define([
     'use strict';
 
     var self;
-    var setDirty;
-    var addUndoHistoryFunction;
-    var addRedoHistoryFunction;
-    var isUndoRedoSubscriptionPausedFunction;
-    var setUndoRedoSubscriptionPaused;
     var propertyChangeSubscriber;
     var historyMonitor;
-    var ProjectViewModel = function(state, setDirtyFunction, undoFunction, redoFunction, undoRedoPausedFunction,
-        setUndoRedoPaused) {
-
+    var ProjectViewModel = function(state) {
         self = this;
-        setDirty = setDirtyFunction;
-        addUndoHistoryFunction = undoFunction;
-        addRedoHistoryFunction = redoFunction;
-        isUndoRedoSubscriptionPausedFunction = undoRedoPausedFunction;
-        setUndoRedoSubscriptionPaused = setUndoRedoPaused;
 
-        propertyChangeSubscriber = new PropertyChangeSubscriber(setDirty, addUndoHistoryFunction, addRedoHistoryFunction,
-            isUndoRedoSubscriptionPausedFunction);
-
-        // Create the instance of the HistoryMonitor that everything else will use.
-        historyMonitor = new HistoryMonitor(setDirty, addUndoHistoryFunction, addRedoHistoryFunction,
-            setUndoRedoSubscriptionPaused);
+        propertyChangeSubscriber = PropertyChangeSubscriber.getInstance();
+        historyMonitor = HistoryMonitor.getInstance();
 
         state = defined(state) ? state : {};
 
@@ -268,12 +252,12 @@ define([
         // Don't add history if called from undo/redo.
         if (ignoreHistory !== true) {
             // Undo by removing the item.
-            addUndoHistoryFunction(function() {
+            historyMonitor.addUndoHistory(function() {
                 self.removeComponent(component, true);
             });
 
             // Redo by readding the item.
-            addRedoHistoryFunction(function() {
+            historyMonitor.addRedoHistory(function() {
                 self.addComponent(component, true);
             });
         }
@@ -286,12 +270,12 @@ define([
             // Don't add history if called from undo/redo.
             if (ignoreHistory !== true) {
                 // Undo by marking the DataSet for deletion.
-                addUndoHistoryFunction(function() {
+                historyMonitor.addUndoHistory(function() {
                     data.markForDeletion();
                 });
 
                 // Redo by reseting the DataSet's reference count.
-                addRedoHistoryFunction(function() {
+                historyMonitor.addRedoHistory(function() {
                     data.resetReferenceCount();
                 });
             }
@@ -304,12 +288,12 @@ define([
         // Don't add history if called from undo/redo.
         if (ignoreHistory !== true) {
             // Undo by removing the item.
-            addUndoHistoryFunction(function() {
+            historyMonitor.addUndoHistory(function() {
                 self.removeAction(action, true);
             });
 
             // Redo by readding the item.
-            addRedoHistoryFunction(function() {
+            historyMonitor.addRedoHistory(function() {
                 self.addAction(action, true);
             });
         }
@@ -321,12 +305,12 @@ define([
         // Don't add history if called from undo/redo.
         if (ignoreHistory !== true) {
             // Undo by removing the item.
-            addUndoHistoryFunction(function() {
+            historyMonitor.addUndoHistory(function() {
                 self.removeEvent(event, true);
             });
 
             // Redo by readding the item.
-            addRedoHistoryFunction(function() {
+            historyMonitor.addRedoHistory(function() {
                 self.addEvent(event, true);
             });
         }
@@ -381,12 +365,12 @@ define([
                 // Don't add history if called from undo/redo.
                 if (ignoreHistory !== true) {
                     // Undo by removing the item.
-                    addUndoHistoryFunction(function() {
+                    historyMonitor.addUndoHistory(function() {
                         self.addComponent(component, true);
                     });
 
                     // Redo by readding the item.
-                    addRedoHistoryFunction(function() {
+                    historyMonitor.addRedoHistory(function() {
                         self.removeComponent(component, true);
                     });
                 }
@@ -422,12 +406,12 @@ define([
             // Don't add history if called from undo/redo.
             if (ignoreHistory !== true) {
                 // Undo by removing the item.
-                addUndoHistoryFunction(function() {
+                historyMonitor.addUndoHistory(function() {
                     self.addAction(action, true);
                 });
 
                 // Redo by readding the item.
-                addRedoHistoryFunction(function() {
+                historyMonitor.addRedoHistory(function() {
                     self.removeAction(action, true);
                 });
             }
@@ -442,12 +426,12 @@ define([
             // Don't add history if called from undo/redo.
             if (ignoreHistory !== true) {
                 // Undo by removing the item.
-                addUndoHistoryFunction(function() {
+                historyMonitor.addUndoHistory(function() {
                     self.addEvent(event, true);
                 });
 
                 // Redo by readding the item.
-                addRedoHistoryFunction(function() {
+                historyMonitor.addRedoHistory(function() {
                     self.removeEvent(event, true);
                 });
             }
@@ -460,7 +444,7 @@ define([
 
     ProjectViewModel.prototype.subscribeChanges = function() {
         function arrayChanged(changes) {
-            setDirty();
+            propertyChangeSubscriber.setDirty();
 
             changes.forEach(function(change) {
                 if (change.status === 'added') {

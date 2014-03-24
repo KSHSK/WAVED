@@ -5,13 +5,26 @@ define(['knockout',
         subscribeObservable) {
     'use strict';
 
+    var instance;
+    var initialized = false;
     var PropertyChangeSubscriber = function(setDirtyFunction, addUndoHistoryFunction, addRedoHistoryFunction,
         isUndoRedoSubscriptionPausedFunction) {
+
+        if (initialized) {
+            return PropertyChangeSubscriber.getInstance();
+        }
 
         this.setDirty = setDirtyFunction;
         this.addUndoHistory = addUndoHistoryFunction;
         this.addRedoHistory = addRedoHistoryFunction;
         this.isUndoRedoSubscriptionPaused = isUndoRedoSubscriptionPausedFunction;
+
+        instance = this;
+        initialized = true;
+    };
+
+    PropertyChangeSubscriber.getInstance = function() {
+        return instance;
     };
 
     /**

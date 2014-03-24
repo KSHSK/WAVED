@@ -19,6 +19,8 @@ define(['jquery',
         'modules/UploadData',
         'modules/BindData',
         'modules/DeleteData',
+        'modules/PropertyChangeSubscriber',
+        'modules/HistoryMonitor',
         'models/Widget/TextBlockWidget/TextBlock',
         'util/defined',
         'util/defaultValue',
@@ -46,6 +48,8 @@ define(['jquery',
         UploadData,
         BindData,
         DeleteData,
+        PropertyChangeSubscriber,
+        HistoryMonitor,
         TextBlock,
         defined,
         defaultValue,
@@ -69,14 +73,18 @@ define(['jquery',
         this._selectedDataSet = '';
         this._selectedBoundData = '';
 
+        // Create the PropertyChangeSubscriber singleton that everything else will use.
+        this.propertyChangeSubscriber = new PropertyChangeSubscriber(this.setDirty, this.setUndoNewChangeFunction,
+            this.setRedoPreviousChangeFunction, this.isUndoRedoSubscriptionPaused);
+
+        // Create the HistoryMonitor singleton that everything else will use.
+        this.historyMonitor = new HistoryMonitor(this.setUndoNewChangeFunction, this.setRedoPreviousChangeFunction,
+            this.setUndoRedoSubscriptionPaused);
+
         this._currentProject = new ProjectViewModel({
             name: ''
         },
-        this.setDirty,
-        this.setUndoNewChangeFunction,
-        this.setRedoPreviousChangeFunction,
-        this.isUndoRedoSubscriptionPaused,
-        this.setUndoRedoSubscriptionPaused);
+        this.propertyChangeSubscriber);
 
         this._projectTree = new ProjectTree();
 

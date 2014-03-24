@@ -7,6 +7,7 @@ define([
         'models/Event/Trigger',
         'models/Property/StringProperty',
         'modules/UniqueTracker',
+        'modules/PropertyChangeSubscriber',
         'util/defined',
         'util/subscribeObservable',
         'knockout',
@@ -20,6 +21,7 @@ define([
         Trigger,
         StringProperty,
         UniqueTracker,
+        PropertyChangeSubscriber,
         defined,
         subscribeObservable,
         ko,
@@ -130,8 +132,9 @@ define([
 
     Event.prototype.subscribed = false;
 
-    Event.prototype.subscribeChanges = function(propertyChangeSubscriber) {
+    Event.prototype.subscribeChanges = function() {
         var self = this;
+        var propertyChangeSubscriber = PropertyChangeSubscriber.getInstance();
 
         var properties = [];
         for (var prop in this) {
