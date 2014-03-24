@@ -72,6 +72,7 @@ define(['jquery',
         this._currentProject = new ProjectViewModel({
             name: ''
         },
+        this.setDirty,
         this.setUndoNewChangeFunction,
         this.setRedoPreviousChangeFunction,
         this.changeFromUndoRedoFunction);
@@ -129,9 +130,11 @@ define(['jquery',
 
         ko.track(this);
 
-        this.currentProject.subscribeChanges(function() {
-            self.dirty = true;
-        });
+        this.currentProject.subscribeChanges();
+    };
+
+    WAVEDViewModel.prototype.setDirty = function() {
+        self.dirty = true;
     };
 
     WAVEDViewModel.prototype.resetHistory = function() {

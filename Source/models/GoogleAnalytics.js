@@ -117,44 +117,15 @@ define([
         self.eventCategory.message = '';
     };
 
-    GoogleAnalytics.prototype.subscribeChanges = function(setDirty, addUndoHistoryFunction,
-        addRedoHistoryFunction, changeFromUndoRedoFunction) {
+    GoogleAnalytics.prototype.subscribeChanges = function(propertyChangeSubscriber) {
+        propertyChangeSubscriber.subscribeBeforeChange(this.uaCode, '_value');
+        propertyChangeSubscriber.subscribeChange(this.uaCode, '_value');
 
-        var propNamePairs = [{
-            prop: this.uaCode,
-            name: '_value'
-        }, {
-            prop: this.eventCategory,
-            name: '_value'
-        }, {
-            prop: this,
-            name: '_bound'
-        }];
+        propertyChangeSubscriber.subscribeBeforeChange(this.eventCategory, '_value');
+        propertyChangeSubscriber.subscribeChange(this.eventCategory, '_value');
 
-        propNamePairs.forEach(function(item) {
-            var prop = item.prop;
-            var name = item.name;
-
-            // Subscribe undo change.
-            subscribeObservable(prop, name, function(oldValue) {
-                if (!changeFromUndoRedoFunction()) {
-                    addUndoHistoryFunction(function() {
-                        prop[name] = oldValue;
-                    });
-                }
-            }, null, 'beforeChange');
-
-            // Subscribe redo and dirty changes.
-            subscribeObservable(prop, name, function(newValue) {
-                setDirty();
-
-                if (!changeFromUndoRedoFunction()) {
-                    addRedoHistoryFunction(function() {
-                        prop[name] = newValue;
-                    });
-                }
-            });
-        });
+        propertyChangeSubscriber.subscribeBeforeChange(this, '_bound');
+        propertyChangeSubscriber.subscribeChange(this, '_bound');
     };
 
     return GoogleAnalytics;

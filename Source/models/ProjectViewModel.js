@@ -12,7 +12,8 @@ define([
         'models/WorkspaceViewModel',
         'models/GoogleAnalytics',
         'models/Data/DataSet',
-        'models/Data/DataSubset'
+        'models/Data/DataSubset',
+        'modules/PropertyChangeSubscriber'
     ], function(
         $,
         ko,
@@ -27,18 +28,25 @@ define([
         WorkspaceViewModel,
         GoogleAnalytics,
         DataSet,
-        DataSubset) {
+        DataSubset,
+        PropertyChangeSubscriber) {
     'use strict';
 
     var self;
+    var setDirty;
     var addUndoHistoryFunction;
     var addRedoHistoryFunction;
     var changeFromUndoRedoFunction;
-    var ProjectViewModel = function(state, undoFunction, redoFunction, changeFromFunction) {
+    var propertyChangeSubscriber;
+    var ProjectViewModel = function(state, setDirtyFunction, undoFunction, redoFunction, changeFromFunction) {
         self = this;
+        setDirty = setDirtyFunction;
         addUndoHistoryFunction = undoFunction;
         addRedoHistoryFunction = redoFunction;
         changeFromUndoRedoFunction = changeFromFunction;
+
+        propertyChangeSubscriber = new PropertyChangeSubscriber(setDirty, addUndoHistoryFunction, addRedoHistoryFunction,
+            changeFromUndoRedoFunction);
 
         state = defined(state) ? state : {};
 
@@ -439,7 +447,7 @@ define([
         //TODO
     };
 
-    ProjectViewModel.prototype.subscribeChanges = function(setDirty) {
+    ProjectViewModel.prototype.subscribeChanges = function() {
         function arrayChanged(changes) {
             setDirty();
 
@@ -449,20 +457,17 @@ define([
                 if (change.status === 'added') {
                     // Subscribe to dirty changes if not already subscribed.
                     if (!subscriber.subscribed) {
-                        subscriber.subscribeChanges(setDirty, addUndoHistoryFunction, addRedoHistoryFunction,
-                            changeFromUndoRedoFunction);
+                        subscriber.subscribeChanges(propertyChangeSubscriber);
                     }
                 }
             });
         }
 
         // Workspace changed.
-        this.workspace.subscribeChanges(setDirty, addUndoHistoryFunction, addRedoHistoryFunction,
-            changeFromUndoRedoFunction);
+        this.workspace.subscribeChanges(propertyChangeSubscriber);
 
         // Google Analytics changed.
-        this.googleAnalytics.subscribeChanges(setDirty, addUndoHistoryFunction, addRedoHistoryFunction,
-            changeFromUndoRedoFunction);
+        this.googleAnalytics.subscribeChanges(propertyChangeSubscriber);
 
         // Component is added or removed.
         subscribeObservable(this, '_components', function(changes) {

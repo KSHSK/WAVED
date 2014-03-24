@@ -54,45 +54,37 @@ define([
 
     SuperComponentViewModel.prototype.subscribed = false;
 
-    SuperComponentViewModel.prototype.subscribeChanges = function(setDirty, addUndoHistoryFunction,
-        addRedoHistoryFunction, changeFromUndoRedoFunction) {
-
+    SuperComponentViewModel.prototype.subscribeChanges = function(propertyChangeSubscriber) {
         var self = this;
+
         self.properties.forEach(function(prop) {
-
-            // Subscribe undo change.
-            var subscription = subscribeObservable(prop, '_value', function(oldValue) {
-                if (!changeFromUndoRedoFunction()) {
-                    addUndoHistoryFunction(function() {
-                        prop._value = oldValue;
-                    });
-                }
-            }, null, 'beforeChange');
-
-            self.subscriptions.push(subscription);
-
-            // Subscribe redo and dirty changes.
-            subscription = subscribeObservable(prop, '_value', function(newValue) {
-                setDirty();
-
-                if (!changeFromUndoRedoFunction()) {
-                    addRedoHistoryFunction(function() {
-                        prop._value = newValue;
-                    });
-                }
-            });
-
-            self.subscriptions.push(subscription);
-
-            self.recursiveSubscribeChanges(self, prop, setDirty, addUndoHistoryFunction, addRedoHistoryFunction,
-                changeFromUndoRedoFunction);
+            self.subscribeChange(prop, '_value', propertyChangeSubscriber);
+            self.recursiveSubscribeChanges(prop, propertyChangeSubscriber);
         });
 
-        this.subscribed = true;
+        self.subscribed = true;
     };
 
-    SuperComponentViewModel.prototype.recursiveSubscribeChanges = function(self, prop, setDirty,
-        addUndoHistoryFunction, addRedoHistoryFunction, changeFromUndoRedoFunction) {
+    SuperComponentViewModel.prototype.subscribeChange = function(prop, name, propertyChangeSubscriber) {
+        var self = this;
+
+        // Subscribe undo change.
+        var subscription = propertyChangeSubscriber.subscribeBeforeChange(prop, name);
+
+        if (subscription !== null) {
+            self.subscriptions.push(subscription);
+        }
+
+        // Subscribe redo and dirty changes.
+        subscription = propertyChangeSubscriber.subscribeChange(prop, name);
+
+        if (subscription !== null) {
+            self.subscriptions.push(subscription);
+        }
+    };
+
+    SuperComponentViewModel.prototype.recursiveSubscribeChanges = function(prop, propertyChangeSubscriber) {
+        var self = this;
 
         if(prop === undefined){
             return;
@@ -105,26 +97,17 @@ define([
 
                 nestedProperties.forEach(function(nestedProp){
                     // Subscribe to the nestedProperty itself
-                    var nestedSubscription = subscribeObservable(nestedProp, '_value', setDirty,
-                        addUndoHistoryFunction, addRedoHistoryFunction, changeFromUndoRedoFunction);
-
-                    if(nestedSubscription !== null){
-                        self.subscriptions.push(nestedSubscription);
-                    }
+                    self.subscribeChange(nestedProp, '_value', propertyChangeSubscriber);
 
                     // Traverse down the tree
-                    self.recursiveSubscribeChanges(self, nestedProp, setDirty, addUndoHistoryFunction,
-                        addRedoHistoryFunction, changeFromUndoRedoFunction);
+                    self.recursiveSubscribeChanges(self, nestedProp, propertyChangeSubscriber);
                 });
             }
         }
         else{
             // The nesting stops here, look for properties like normal (we've reached the bottom of the tree)
             prop.properties.forEach(function(value){
-                var subscription = subscribeObservable(value, '_value', setDirty, addUndoHistoryFunction,
-                    addRedoHistoryFunction, changeFromUndoRedoFunction);
-
-                self.subscriptions.push(subscription);
+                self.subscribeChange(value, '_value', propertyChangeSubscriber);
             });
         }
     };
