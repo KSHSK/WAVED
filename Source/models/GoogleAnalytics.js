@@ -117,12 +117,44 @@ define([
         self.eventCategory.message = '';
     };
 
-    GoogleAnalytics.prototype.subscribeChanges = function(setDirty) {
-        subscribeObservable(this.uaCode, '_value', setDirty);
+    GoogleAnalytics.prototype.subscribeChanges = function(setDirty, addUndoHistoryFunction,
+        addRedoHistoryFunction, changeFromUndoRedoFunction) {
 
-        subscribeObservable(this.eventCategory, '_value', setDirty);
+        var propNamePairs = [{
+            prop: this.uaCode,
+            name: '_value'
+        }, {
+            prop: this.eventCategory,
+            name: '_value'
+        }, {
+            prop: this,
+            name: '_bound'
+        }];
 
-        subscribeObservable(this, '_bound', setDirty);
+        propNamePairs.forEach(function(item) {
+            var prop = item.prop;
+            var name = item.name;
+
+            // Subscribe undo change.
+            subscribeObservable(prop, name, function(oldValue) {
+                if (!changeFromUndoRedoFunction()) {
+                    addUndoHistoryFunction(function() {
+                        prop[name] = oldValue;
+                    });
+                }
+            }, null, 'beforeChange');
+
+            // Subscribe redo and dirty changes.
+            subscribeObservable(prop, name, function(newValue) {
+                setDirty();
+
+                if (!changeFromUndoRedoFunction()) {
+                    addRedoHistoryFunction(function() {
+                        prop[name] = newValue;
+                    });
+                }
+            });
+        });
     };
 
     return GoogleAnalytics;

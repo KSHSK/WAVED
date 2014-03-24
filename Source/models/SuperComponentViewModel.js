@@ -59,6 +59,8 @@ define([
 
         var self = this;
         self.properties.forEach(function(prop) {
+
+            // Subscribe undo change.
             var subscription = subscribeObservable(prop, '_value', function(oldValue) {
                 if (!changeFromUndoRedoFunction()) {
                     addUndoHistoryFunction(function() {
@@ -69,6 +71,7 @@ define([
 
             self.subscriptions.push(subscription);
 
+            // Subscribe redo and dirty changes.
             subscription = subscribeObservable(prop, '_value', function(newValue) {
                 setDirty();
 

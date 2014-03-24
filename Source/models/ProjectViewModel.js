@@ -461,7 +461,8 @@ define([
             changeFromUndoRedoFunction);
 
         // Google Analytics changed.
-        this.googleAnalytics.subscribeChanges(setDirty);
+        this.googleAnalytics.subscribeChanges(setDirty, addUndoHistoryFunction, addRedoHistoryFunction,
+            changeFromUndoRedoFunction);
 
         // Component is added or removed.
         subscribeObservable(this, '_components', function(changes) {
