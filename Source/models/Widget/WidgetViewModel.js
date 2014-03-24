@@ -4,6 +4,7 @@ define([
         'models/Property/NumberProperty',
         'models/Property/BooleanProperty',
         'models/ComponentViewModel',
+        'modules/HistoryMonitor',
         'util/defined',
         'util/defaultValue',
         'util/createValidator',
@@ -14,6 +15,7 @@ define([
         NumberProperty,
         BooleanProperty,
         ComponentViewModel,
+        HistoryMonitor,
         defined,
         defaultValue,
         createValidator,
@@ -171,7 +173,9 @@ define([
     };
 
     WidgetViewModel.prototype.bindData = function(dataSet) {
+        var self = this;
         var found = false;
+
         for(var index = 0; index < this._boundData.length; index++){
             if(dataSet.name === this._boundData[index].name){
                 found = true;
@@ -180,19 +184,51 @@ define([
         }
 
         if(!found){
-            this._boundData.push(dataSet);
-            dataSet.incrementReferenceCount();
+            var undoChange = function() {
+                self._boundData.pop();
+                dataSet.decrementReferenceCount();
+            };
+
+            var executeChange = function() {
+                self._boundData.push(dataSet);
+                dataSet.incrementReferenceCount();
+            };
+
+            var historyMonitor = HistoryMonitor.getInstance();
+            historyMonitor.addUndoChange(undoChange);
+            historyMonitor.addRedoChange(executeChange);
+
+            historyMonitor.pauseUndoRedoSubscription();
+            executeChange(index);
+            historyMonitor.resumeUndoRedoSubscription();
         }
     };
 
     WidgetViewModel.prototype.unbindData = function(dataSet) {
+        var self = this;
         var name = dataSet.name;
+
+        var undoChange = function(index) {
+            self._boundData.splice(index, 0, dataSet);
+            dataSet.incrementReferenceCount();
+        };
+
+        var executeChange = function(index) {
+            self._boundData.splice(index, 1);
+            dataSet.decrementReferenceCount();
+        };
 
         // Only unbind if the data is bound.
         for(var index = 0; index < this._boundData.length; index++){
             if(name === this._boundData[index].name){
-                this._boundData.splice(index, 1);
-                dataSet.decrementReferenceCount();
+                var historyMonitor = HistoryMonitor.getInstance();
+                historyMonitor.addUndoChange(undoChange.bind(this, index));
+                historyMonitor.addRedoChange(executeChange.bind(this, index));
+
+                historyMonitor.pauseUndoRedoSubscription();
+                executeChange(index);
+                historyMonitor.resumeUndoRedoSubscription();
+
                 break;
             }
         }

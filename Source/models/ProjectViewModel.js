@@ -459,31 +459,16 @@ define([
     };
 
     ProjectViewModel.prototype.subscribeChanges = function() {
-        function componentArrayChanged(changes) {
-            setDirty();
-
-            changes.forEach(function(change) {
-                if (change.status === 'added') {
-                    var subscriber = change.value.viewModel;
-
-                    // Subscribe to changes if not already subscribed.
-                    if (!subscriber.subscribed) {
-                        subscriber.subscribeChanges(propertyChangeSubscriber);
-                    }
-                }
-            });
-        }
-
         function arrayChanged(changes) {
             setDirty();
 
             changes.forEach(function(change) {
                 if (change.status === 'added') {
-                    var subscriber = change.value;
+                    var subscriber = change.value.viewModel || change.value;
 
                     // Subscribe to changes if not already subscribed.
                     if (!subscriber.subscribed) {
-                        subscriber.subscribeChanges(setDirty);
+                        subscriber.subscribeChanges(propertyChangeSubscriber);
                     }
                 }
             });
@@ -497,7 +482,7 @@ define([
 
         // Component is added or removed.
         subscribeObservable(this, '_components', function(changes) {
-            componentArrayChanged(changes);
+            arrayChanged(changes);
         }, null, 'arrayChange');
 
         // DataSet is added or removed.

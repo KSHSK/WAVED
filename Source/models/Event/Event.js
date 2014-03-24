@@ -130,7 +130,7 @@ define([
 
     Event.prototype.subscribed = false;
 
-    Event.prototype.subscribeChanges = function(setDirty) {
+    Event.prototype.subscribeChanges = function(propertyChangeSubscriber) {
         var self = this;
 
         var properties = [];
@@ -141,7 +141,11 @@ define([
         }
 
         properties.forEach(function(prop) {
-            subscribeObservable(self, prop, setDirty);
+            // Subscribe undo change.
+            propertyChangeSubscriber.subscribeBeforeChange(self, prop);
+
+            // Subscribe redo and dirty changes.
+            propertyChangeSubscriber.subscribeChange(self, prop);
         });
 
         this.subscribed = true;
