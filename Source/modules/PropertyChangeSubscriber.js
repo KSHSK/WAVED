@@ -1,17 +1,17 @@
 define(['knockout',
         'modules/HistoryMonitor',
+        'util/defined',
         'util/subscribeObservable'
     ], function(
         ko,
         HistoryMonitor,
+        defined,
         subscribeObservable) {
     'use strict';
 
     var instance;
-    var initialized = false;
     var PropertyChangeSubscriber = function(setDirtyFunction) {
-
-        if (initialized) {
+        if (defined(instance)) {
             return PropertyChangeSubscriber.getInstance();
         }
 
@@ -19,7 +19,6 @@ define(['knockout',
         this.historyMonitor = HistoryMonitor.getInstance();
 
         instance = this;
-        initialized = true;
     };
 
     PropertyChangeSubscriber.getInstance = function() {
