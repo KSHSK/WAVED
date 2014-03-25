@@ -12,12 +12,12 @@ define([
         $){
     'use strict';
 
-    var TextBlock = function(state) {
+    var TextBlock = function(state, getDataSet) {
         Widget.call(this, state);
 
         this._templateName = ComponentTemplateName.TEXTBLOCK;
 
-        var viewModel = new TextBlockViewModel(state);
+        var viewModel = new TextBlockViewModel(state, getDataSet);
 
         var textBlock = this.newWidgetContainer();
         textBlock.attr('data-bind', 'template: {name: \'' + this._templateName + '\'}');
