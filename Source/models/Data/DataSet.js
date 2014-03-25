@@ -1,14 +1,22 @@
 define(['knockout',
         'models/Property/StringProperty',
         'modules/ReadData',
+        'modules/UniqueTracker',
         'util/defined',
-        'util/createValidator'
+        'util/createValidator',
+        'util/subscribeObservable',
+        'd3',
+        'jquery'
     ],function(
         ko,
         StringProperty,
         ReadData,
+        UniqueTracker,
         defined,
-        createValidator
+        createValidator,
+        subscribeObservable,
+        d3,
+        $
     ){
     'use strict';
 
@@ -21,6 +29,7 @@ define(['knockout',
         this._name = '';
         this._filename = '';
         this._referenceCount = 0;
+        this._dataFields = [];
 
         this.setState(state);
 
@@ -34,6 +43,9 @@ define(['knockout',
         return 'DataSet';
     };
 
+    DataSet.getUniqueNameNamespace = function() {
+        return 'dataset-name';
+    };
 
     DataSet.prototype.incrementReferenceCount = function() {
         // Don't change if marked for deletion.
@@ -57,6 +69,10 @@ define(['knockout',
         return (this._referenceCount === MARKED_FOR_DELETION);
     };
 
+    DataSet.prototype.getNameAndFilename = function() {
+        return this._name + ' : ' + this._filename;
+    };
+
     DataSet.prototype.getState = function() {
         return {
             type: DataSet.getType(),
@@ -67,6 +83,7 @@ define(['knockout',
     };
 
     DataSet.prototype.setState = function(state) {
+        var self = this;
         if (defined(state.name)) {
             this._name = state.name;
         }
@@ -79,9 +96,38 @@ define(['knockout',
             this._filename = state.filename;
 
             if (!this.isMarkedForDeletion()) {
-                ReadData.readData(this);
+                // Populate the dataFields array once readData() is done
+                $.when(ReadData.readData(this)).done(function(){
+                    var values = d3.values(self._data)[0];
+                    if(defined(values)){
+                        self._dataFields = Object.keys(values);
+                    }
+                });
             }
         }
+    };
+
+    DataSet.prototype.subscriptions = [];
+
+    DataSet.prototype.subscribeChanges = function(setDirty) {
+        var self = this;
+
+        var properties = [];
+        for (var prop in this) {
+            if (this.hasOwnProperty(prop)) {
+                if(prop !== '_data' && prop !== '_dataFields'){
+                    properties.push(prop);
+                }
+            }
+        }
+
+        properties.forEach(function(prop) {
+            var subscription = subscribeObservable(self, prop, setDirty);
+
+            if(subscription !== null){
+                self.subscriptions.push(subscription);
+            }
+        });
     };
 
     Object.defineProperties(DataSet.prototype, {
@@ -90,7 +136,10 @@ define(['knockout',
                 return this._name;
             },
             set: function(value) {
-                this._name = value;
+                var success = UniqueTracker.addValueIfUnique(DataSet.getUniqueNameNamespace(), value, this);
+                if (success) {
+                    this._name = value;
+                }
             }
         },
         filename: {
@@ -114,6 +163,14 @@ define(['knockout',
         referenceCount: {
             get: function() {
                 return this._referenceCount;
+            }
+        },
+        dataFields: {
+            get: function() {
+                return this._dataFields;
+            },
+            set: function(fields){
+                this._dataFields = fields;
             }
         }
     });

@@ -1,43 +1,47 @@
 define([
+        'models/SuperComponentViewModel',
         'models/Event/Trigger',
         'models/Property/StringProperty',
         'models/Widget/WidgetViewModel',
+        'modules/UniqueTracker',
         'util/defined',
         'util/createValidator',
         'knockout'
     ],function(
+        SuperComponentViewModel,
         Trigger,
         StringProperty,
         WidgetViewModel,
+        UniqueTracker,
         defined,
         createValidator,
         ko){
     'use strict';
 
-    var ButtonViewModel = function(state) {
+    var ButtonViewModel = function(state, getDataSet) {
         state = (defined(state)) ? state : {};
-        WidgetViewModel.call(this, state);
+        WidgetViewModel.call(this, state, getDataSet);
+
+        if (!defined(state.name)) {
+            var namespace = SuperComponentViewModel.getUniqueNameNamespace();
+            this.name.value = UniqueTracker.getDefaultUniqueValue(namespace, ButtonViewModel.getType(), this);
+        }
 
         // Set label
         this.label = new StringProperty({
             displayName: 'Label',
             value: '',
             validValue: createValidator({
-                minLength: 1,
+                minLength: 0,
                 maxLength: 50
             }),
-            errorMessage: 'Must be between 1 and 50 characters'
+            errorMessage: 'Must be between 0 and 50 characters'
         });
 
         this.height.originalValue = 5;
         this.width.originalValue = 10;
 
         this.setState(state);
-
-        // TODO: Figure out how Triggers should actually work.
-        this._triggers.push(new Trigger({
-            name: 'Button'
-        }));
 
         ko.track(this);
     };

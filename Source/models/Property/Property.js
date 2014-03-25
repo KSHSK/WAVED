@@ -81,5 +81,12 @@ define(['knockout',
         // TODO: Abstract method
     };
 
+    /**
+     * Return any objects in a Property that are Properties or may contain Properties
+     */
+    Property.prototype.getSubscribableNestedProperties = function(){
+        // Abstract
+    };
+
     return Property;
 });

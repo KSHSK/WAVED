@@ -13,7 +13,6 @@ define([
     ){
     'use strict';
 
-
     var ArrayProperty = function(opts) {
         opts = defined(opts) ? opts : {};
         Property.call(this, opts);
@@ -30,6 +29,12 @@ define([
                     return (this._options.indexOf(value) !== -1);
                 }
                 return true;
+            };
+        }
+
+        if(!defined(opts.getOptionText)) {
+            this.getOptionText = function(value){
+                return value;
             };
         }
 
@@ -93,13 +98,13 @@ define([
 
     ArrayProperty.prototype.getState = function() {
         var state = Property.prototype.getState.call(this);
-        state._options = this.options;
 
         return state;
     };
 
     ArrayProperty.prototype.setState = function(state) {
         this._options = defaultValue(state.options, []);
+        this.getOptionText = state.getOptionText;
 
         // Need to call this after this._options is set, so the isValidValue function works.
         Property.prototype.setState.call(this, state);

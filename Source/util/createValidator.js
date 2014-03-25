@@ -1,4 +1,10 @@
-define(['./defined'], function(defined) {
+define([
+        './defined',
+        'modules/UniqueTracker'
+    ],
+    function(
+        defined,
+        UniqueTracker) {
     'use strict';
 
     //TODO: Make a validator class?
@@ -8,6 +14,7 @@ define(['./defined'], function(defined) {
         var maxLength = options.maxLength;
         var min = options.min;
         var max = options.max;
+        var unique = options.unique;
 
         // define a function to do validation
         return function(newValue) {
@@ -26,6 +33,9 @@ define(['./defined'], function(defined) {
             }
             if (defined(max)) {
                 hasError = hasError || max < newValue;
+            }
+            if (defined(unique) && defined(unique.namespace) && defined(unique.item)) {
+                hasError = hasError || !UniqueTracker.addValueIfUnique(unique.namespace, newValue, unique.item);
             }
             return !hasError;
         };
