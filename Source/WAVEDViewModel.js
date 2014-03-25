@@ -88,18 +88,20 @@ define(['jquery',
             this.eventTypes.push(eventType);
         }
 
-        this.newProjectName = getNamePropertyInstance('Project Name');
+        this.newProjectName = getNamePropertyInstance('Project Name:');
+
+        this.saveProjectAsName = getNamePropertyInstance('Project Name:');
 
         this.loadProjectName = new ArrayProperty({
-            displayName: 'Project Name',
+            displayName: 'Project Name:',
             value: '',
             options: this.projectList
         });
 
-        this.uploadDataName = getNamePropertyInstance('Name');
+        this.uploadDataName = getNamePropertyInstance('Name:');
 
         this.uploadDataFile = new StringProperty({
-            displayName: 'File',
+            displayName: 'File:',
             value: '',
             validValue: createValidator({
                 minLength: 1,
@@ -192,11 +194,11 @@ define(['jquery',
 
     WAVEDViewModel.prototype.saveProject = function() {
         var deferred = $.Deferred();
-        return SaveProject.saveProject(deferred, this.currentProject.name, self);
+        return SaveProject.saveProject(deferred, self);
     };
 
-    WAVEDViewModel.prototype.tryToSaveProject = function() {
-        return SaveProject.tryToSaveProject(self);
+    WAVEDViewModel.prototype.tryToSaveProjectAs = function() {
+        return SaveProject.tryToSaveProjectAs(self);
     };
 
     WAVEDViewModel.prototype.tryToDeleteProject = function() {
