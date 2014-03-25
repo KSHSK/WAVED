@@ -10,7 +10,7 @@ define(['WAVEDViewModel',
     var viewModel = new WAVEDViewModel();
 
     // To get view model for subscribing lower down in the chain
-    window.viewModel = viewModel;
+    window.WAVEDviewModel = viewModel;
 
     // Confirm if the user wants to leave when they have unsaved changes.
     $(window).on('beforeunload', function(event) {
