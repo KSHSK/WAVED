@@ -172,63 +172,36 @@ define([
         // TODO
     };
 
-    WidgetViewModel.prototype.bindData = function(dataSet) {
-        var self = this;
-        var found = false;
+    WidgetViewModel.prototype.boundDataIndex = function(dataSet) {
+        return this._boundData.indexOf(dataSet);
+    };
 
-        for(var index = 0; index < this._boundData.length; index++){
-            if(dataSet.name === this._boundData[index].name){
-                found = true;
-                break;
-            }
+    WidgetViewModel.prototype.bindData = function(dataSet, indexToInsert) {
+        var self = this;
+
+        if (this.boundDataIndex(dataSet) > -1) {
+            // DataSet already bound.
+            return;
         }
 
-        if(!found){
-            var undoChange = function() {
-                self._boundData.pop();
-                dataSet.decrementReferenceCount();
-            };
-
-            var executeChange = function() {
-                self._boundData.push(dataSet);
-                dataSet.incrementReferenceCount();
-            };
-
-            var historyMonitor = HistoryMonitor.getInstance();
-            historyMonitor.addUndoChange(undoChange);
-            historyMonitor.addRedoChange(executeChange);
-
-            historyMonitor.executeIgnoreHistory(executeChange);
+        dataSet.incrementReferenceCount();
+        if (defined(indexToInsert)) {
+            self._boundData.splice(indexToInsert, 0, dataSet);
+        }
+        else {
+            self._boundData.push(dataSet);
         }
     };
 
 
     WidgetViewModel.prototype.unbindData = function(dataSet) {
         var self = this;
-        var name = dataSet.name;
-
-        // Find index of dataSet by name.
-        var index = $.map(this._boundData, function(item) {
-            return item.name;
-        }).indexOf(name);
 
         // Only unbind if the data is bound.
-        if (index > -1) {
-            var undoChange = function() {
-                self._boundData.splice(index, 0, dataSet);
-                dataSet.incrementReferenceCount();
-            };
-
-            var executeChange = function() {
-                self._boundData.splice(index, 1);
-                dataSet.decrementReferenceCount();
-            };
-
-            var historyMonitor = HistoryMonitor.getInstance();
-            historyMonitor.addUndoChange(undoChange);
-            historyMonitor.addRedoChange(executeChange);
-
-            historyMonitor.executeIgnoreHistory(executeChange);
+        var index = this.boundDataIndex(dataSet);
+        if(index > -1){
+            self._boundData.splice(index, 1);
+            dataSet.decrementReferenceCount();
         }
     };
 
