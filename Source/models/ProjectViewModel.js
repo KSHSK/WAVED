@@ -247,7 +247,7 @@ define([
 
     // TODO: Update this to make it more generic to Components, temporarily just using this._components in the
     // methods
-    ProjectViewModel.prototype.addComponent = function(component, ignoreHistory, index) {
+    ProjectViewModel.prototype.addComponent = function(component, index) {
         if (defined(index)) {
             this._components.splice(index, 0, component);
         }
@@ -259,25 +259,25 @@ define([
         component.addToWorkspace();
 
         // Don't add history if called from undo/redo.
-        if (ignoreHistory !== true) {
+        if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
             // Undo by removing the item.
             historyMonitor.addUndoHistory(function() {
-                self.removeComponent(component, true);
+                self.removeComponent(component);
             });
 
             // Redo by readding the item.
             historyMonitor.addRedoHistory(function() {
-                self.addComponent(component, true);
+                self.addComponent(component);
             });
         }
     };
 
-    ProjectViewModel.prototype.addDataSet = function(data, ignoreHistory) {
+    ProjectViewModel.prototype.addDataSet = function(data) {
         if (data instanceof DataSet) {
             this._dataSets.push(data);
 
             // Don't add history if called from undo/redo.
-            if (ignoreHistory !== true) {
+            if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
                 // Undo by marking the DataSet for deletion.
                 historyMonitor.addUndoHistory(function() {
                     data.markForDeletion();
@@ -291,7 +291,7 @@ define([
         }
     };
 
-    ProjectViewModel.prototype.addAction = function(action, ignoreHistory, index) {
+    ProjectViewModel.prototype.addAction = function(action, index) {
         if (defined(index)) {
             this._actions.splice(index, 0, action);
         }
@@ -300,20 +300,20 @@ define([
         }
 
         // Don't add history if called from undo/redo.
-        if (ignoreHistory !== true) {
+        if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
             // Undo by removing the item.
             historyMonitor.addUndoHistory(function() {
-                self.removeAction(action, true);
+                self.removeAction(action);
             });
 
             // Redo by readding the item.
             historyMonitor.addRedoHistory(function() {
-                self.addAction(action, true);
+                self.addAction(action);
             });
         }
     };
 
-    ProjectViewModel.prototype.addEvent = function(event, ignoreHistory, index) {
+    ProjectViewModel.prototype.addEvent = function(event, index) {
         if (defined(index)) {
             this._events.splice(index, 0, event);
         }
@@ -322,15 +322,15 @@ define([
         }
 
         // Don't add history if called from undo/redo.
-        if (ignoreHistory !== true) {
+        if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
             // Undo by removing the item.
             historyMonitor.addUndoHistory(function() {
-                self.removeEvent(event, true);
+                self.removeEvent(event);
             });
 
             // Redo by readding the item.
             historyMonitor.addRedoHistory(function() {
-                self.addEvent(event, true);
+                self.addEvent(event);
             });
         }
     };
@@ -372,7 +372,7 @@ define([
         // TODO
     };
 
-    ProjectViewModel.prototype.removeComponent = function(component, ignoreHistory) {
+    ProjectViewModel.prototype.removeComponent = function(component) {
         if (component !== this._workspace) {
             var index = this._components.indexOf(component);
             if (index > -1) {
@@ -382,15 +382,15 @@ define([
                 component.removeFromWorkspace();
 
                 // Don't add history if called from undo/redo.
-                if (ignoreHistory !== true) {
+                if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
                     // Undo by removing the item.
                     historyMonitor.addUndoHistory(function() {
-                        self.addComponent(component, true, index);
+                        self.addComponent(component, index);
                     });
 
                     // Redo by readding the item.
                     historyMonitor.addRedoHistory(function() {
-                        self.removeComponent(component, true);
+                        self.removeComponent(component);
                     });
                 }
             }
@@ -399,7 +399,7 @@ define([
 
     // TODO: Do we want to allow removal using dataset instance and name?
     // The DD specifies this, but we should probably pick one.
-    ProjectViewModel.prototype.removeDataSet = function(dataSet, ignoreHistory) {
+    ProjectViewModel.prototype.removeDataSet = function(dataSet) {
         var index = this._dataSets.indexOf(dataSet);
         if (index > -1) {
             this._dataSets.splice(index, 1);
@@ -408,7 +408,7 @@ define([
         }
     };
 
-    ProjectViewModel.prototype.removeAction = function(action, ignoreHistory) {
+    ProjectViewModel.prototype.removeAction = function(action) {
         for (var i = 0; i < self._events.length; i++) {
             for (var j = 0; j < self._events[i].actions[0].length; j++) {
                 if (self._events[i]._actions[0][j].name.value === action.name.value) {
@@ -423,35 +423,35 @@ define([
             self._actions.splice(index, 1);
 
             // Don't add history if called from undo/redo.
-            if (ignoreHistory !== true) {
+            if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
                 // Undo by removing the item.
                 historyMonitor.addUndoHistory(function() {
-                    self.addAction(action, true, index);
+                    self.addAction(action, index);
                 });
 
                 // Redo by readding the item.
                 historyMonitor.addRedoHistory(function() {
-                    self.removeAction(action, true);
+                    self.removeAction(action);
                 });
             }
         }
     };
 
-    ProjectViewModel.prototype.removeEvent = function(event, ignoreHistory) {
+    ProjectViewModel.prototype.removeEvent = function(event) {
         var index = self._events.indexOf(event);
         if (index > -1) {
             self._events.splice(index, 1);
 
             // Don't add history if called from undo/redo.
-            if (ignoreHistory !== true) {
+            if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
                 // Undo by removing the item.
                 historyMonitor.addUndoHistory(function() {
-                    self.addEvent(event, true, index);
+                    self.addEvent(event, index);
                 });
 
                 // Redo by readding the item.
                 historyMonitor.addRedoHistory(function() {
-                    self.removeEvent(event, true);
+                    self.removeEvent(event);
                 });
             }
         }
