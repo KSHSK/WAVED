@@ -1,16 +1,16 @@
 define(['knockout',
+        'util/defined',
         'util/subscribeObservable'
     ], function(
         ko,
+        defined,
         subscribeObservable) {
     'use strict';
 
     var instance;
-    var initialized = false;
     var undoRedoSubscriptionPaused = false;
     var HistoryMonitor = function(addUndoHistoryFunction, addRedoHistoryFunction) {
-
-        if (initialized) {
+        if (defined(instance)) {
             return HistoryMonitor.getInstance();
         }
 
@@ -18,7 +18,6 @@ define(['knockout',
         this.addRedoHistory = addRedoHistoryFunction;
 
         instance = this;
-        initialized = true;
     };
 
     HistoryMonitor.getInstance = function() {
