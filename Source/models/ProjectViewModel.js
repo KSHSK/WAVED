@@ -6,6 +6,7 @@ define([
         'util/displayMessage',
         'util/updateQueryByName',
         'util/subscribeObservable',
+        'models/SuperComponentViewModel',
         'models/Action/Action',
         'models/Action/PropertyAction',
         'models/Action/QueryAction',
@@ -15,7 +16,8 @@ define([
         'models/Data/DataSet',
         'models/Data/DataSubset',
         'modules/PropertyChangeSubscriber',
-        'modules/HistoryMonitor'
+        'modules/HistoryMonitor',
+        'modules/UniqueTracker'
     ], function(
         $,
         ko,
@@ -24,6 +26,7 @@ define([
         displayMessage,
         updateQueryByName,
         subscribeObservable,
+        SuperComponentViewModel,
         Action,
         PropertyAction,
         QueryAction,
@@ -33,7 +36,8 @@ define([
         DataSet,
         DataSubset,
         PropertyChangeSubscriber,
-        HistoryMonitor) {
+        HistoryMonitor,
+        UniqueTracker) {
     'use strict';
 
     var self;
@@ -248,6 +252,14 @@ define([
     // TODO: Update this to make it more generic to Components, temporarily just using this._components in the
     // methods
     ProjectViewModel.prototype.addComponent = function(component, index) {
+        // Try to add unique name.
+        var success = UniqueTracker.addValueIfUnique(SuperComponentViewModel.getUniqueNameNamespace(),
+            component.viewModel.name.value, component.viewModel);
+
+        if (!success) {
+            return;
+        }
+
         if (defined(index)) {
             this._components.splice(index, 0, component);
         }
@@ -273,6 +285,15 @@ define([
     };
 
     ProjectViewModel.prototype.addDataSet = function(data) {
+        var namespace = DataSet.getUniqueNameNamespace();
+
+        // Try to add unique name.
+        var success = UniqueTracker.addValueIfUnique(namespace, data.name, data);
+
+        if (!success) {
+            return;
+        }
+
         if (data instanceof DataSet) {
             this._dataSets.push(data);
 
@@ -280,18 +301,32 @@ define([
             if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
                 // Undo by marking the DataSet for deletion.
                 historyMonitor.addUndoHistory(function() {
+                    // Remove unique name.
+                    UniqueTracker.removeItem(namespace, data);
                     data.markForDeletion();
                 });
 
                 // Redo by reseting the DataSet's reference count.
                 historyMonitor.addRedoHistory(function() {
-                    data.resetReferenceCount();
+                    // Add unique name again.
+                    var success = UniqueTracker.addValueIfUnique(namespace, data.name, data);
+
+                    if (success) {
+                        data.resetReferenceCount();
+                    }
                 });
             }
         }
     };
 
     ProjectViewModel.prototype.addAction = function(action, index) {
+        // Try to add unique name.
+        var success = UniqueTracker.addValueIfUnique(Action.getUniqueNameNamespace(), action.name, action);
+
+        if (!success) {
+            return;
+        }
+
         if (defined(index)) {
             this._actions.splice(index, 0, action);
         }
@@ -314,6 +349,13 @@ define([
     };
 
     ProjectViewModel.prototype.addEvent = function(event, index) {
+        // Try to add unique name.
+        var success = UniqueTracker.addValueIfUnique(Event.getUniqueNameNamespace(), event.name, event);
+
+        if (!success) {
+            return;
+        }
+
         if (defined(index)) {
             this._events.splice(index, 0, event);
         }
@@ -378,6 +420,9 @@ define([
             if (index > -1) {
                 this._components.splice(index, 1);
 
+                // Remove unique name.
+                UniqueTracker.removeItem(SuperComponentViewModel.getUniqueNameNamespace(), component.viewModel);
+
                 // Remove the DOM element.
                 component.removeFromWorkspace();
 
@@ -404,6 +449,9 @@ define([
         if (index > -1) {
             this._dataSets.splice(index, 1);
 
+            // Remove unique name.
+            UniqueTracker.removeItem(DataSet.getUniqueNameNamespace(), dataSet);
+
             // Cannot undo/redo removing a DataSet.
         }
     };
@@ -421,6 +469,9 @@ define([
         var index = self._actions.indexOf(action);
         if (index > -1) {
             self._actions.splice(index, 1);
+
+            // Remove unique name.
+            UniqueTracker.removeItem(Action.getUniqueNameNamespace(), action);
 
             // Don't add history if called from undo/redo.
             if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
@@ -441,6 +492,9 @@ define([
         var index = self._events.indexOf(event);
         if (index > -1) {
             self._events.splice(index, 1);
+
+            // Remove unique name.
+            UniqueTracker.removeItem(Event.getUniqueNameNamespace(), event);
 
             // Don't add history if called from undo/redo.
             if (!historyMonitor.isUndoRedoSubscriptionPaused()) {

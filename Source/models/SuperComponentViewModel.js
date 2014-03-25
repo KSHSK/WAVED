@@ -3,6 +3,7 @@ define([
         'knockout',
         'models/Property/StringProperty',
         'modules/PropertyChangeSubscriber',
+        'modules/UniqueTracker',
         'util/defined',
         'util/createValidator',
         'util/getNamePropertyInstance',
@@ -12,6 +13,7 @@ define([
         ko,
         StringProperty,
         PropertyChangeSubscriber,
+        UniqueTracker,
         defined,
         createValidator,
         getNamePropertyInstance,
@@ -19,6 +21,8 @@ define([
     'use strict';
 
     var SuperComponentViewModel = function(state) {
+        var self = this;
+
         // Set name
         this.name = getNamePropertyInstance('Name', {
             namespace: SuperComponentViewModel.getUniqueNameNamespace(),
@@ -26,6 +30,12 @@ define([
         });
 
         ko.track(this);
+
+        // Add the name to the unique tracker when changed.
+        var namespace = SuperComponentViewModel.getUniqueNameNamespace();
+        ko.getObservable(this.name, '_value').subscribe(function(newValue) {
+            UniqueTracker.addValueIfUnique(namespace, newValue, self);
+        });
     };
 
     SuperComponentViewModel.getUniqueNameNamespace = function() {
