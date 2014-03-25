@@ -41,7 +41,8 @@ define([
                 var h = $('#waved-workspace').height();
                 var h2 = h * self.height.value/100;
                 d3.select('#' + self.name.value).selectAll('svg').remove();
-                self._projection = d3.geo.albersUsa().scale(w*1.3*self.width.value/100).translate(([w2/2, h2/2]));
+                var scale = Math.min(w*1.3*self.width.value/100, h*1.62*self.height.value/100); //1.3 and 1.62 are magic numbers
+                self._projection = d3.geo.albersUsa().scale(scale).translate(([w2/2, h2/2]));
                 var path = d3.geo.path().projection(self._projection);
                 var svg = d3.select('#' + self.name.value)
                     .append('svg');
@@ -72,6 +73,10 @@ define([
                 });
             }
         };
+
+        //TODO: Make this less hacky
+        ko.getObservable(window.viewModel.currentProject.workspace.width, '_value').subscribe(this.render);
+        ko.getObservable(window.viewModel.currentProject.workspace.height, '_value').subscribe(this.render);
 
         //TODO: Use ColoringSelectionProperty
         this.coloring = new StringProperty({
