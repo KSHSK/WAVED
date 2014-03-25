@@ -35,7 +35,7 @@ define([
                 hasError = hasError || max < newValue;
             }
             if (defined(unique) && defined(unique.namespace) && defined(unique.item)) {
-                hasError = hasError || !UniqueTracker.addValueIfUnique(unique.namespace, newValue, unique.item);
+                hasError = hasError || !UniqueTracker.isValueUnique(unique.namespace, newValue, unique.item);
             }
             return !hasError;
         };
