@@ -39,9 +39,9 @@ define([
                 var w = $('#waved-workspace').width();
                 var w2 = w *self.width.value/100;
                 var h = $('#waved-workspace').height();
-                var h2 = h * self.height.value/100;
+                var h2 = h * self.width.value/100;
                 d3.select('#' + self.name.value).selectAll('svg').remove();
-                var scale = Math.min(w*1.3*self.width.value/100, h*1.62*self.height.value/100); //1.3 and 1.62 are magic numbers
+                var scale = w*1.3*self.width.value/100; //1.3 is a magic number
                 self._projection = d3.geo.albersUsa().scale(scale).translate(([w2/2, h2/2]));
                 var path = d3.geo.path().projection(self._projection);
                 var svg = d3.select('#' + self.name.value)
@@ -90,6 +90,7 @@ define([
         this.height.onchange = this.render;
         this.height.value = 100;
         this.width.value = 100;
+        this.width._displayName = 'Scale';
 
         this.setState(state);
 
@@ -133,7 +134,7 @@ define([
     Object.defineProperties(USMapViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.x, this.y, this.width, this.height, this.visible, this.logGoogleAnalytics,
+                return [this.name, this.x, this.y, this.width, this.visible, this.logGoogleAnalytics,
                 this.coloring];
             }
         }

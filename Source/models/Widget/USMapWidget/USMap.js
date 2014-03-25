@@ -10,10 +10,10 @@ define([
         $){
     'use strict';
 
-    var USMap = function(state) {
+    var USMap = function(state, getDataSet) {
         this._templateName = ComponentTemplateName.US_MAP;
 
-        var viewModel = new USMapViewModel(state);
+        var viewModel = new USMapViewModel(state, getDataSet);
 
         var $workspace = $('#waved-workspace');
         var usMap = document.createElement('div');
