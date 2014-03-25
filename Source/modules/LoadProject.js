@@ -8,8 +8,7 @@ define([
         './DeleteData',
         './SaveProject',
         './UniqueTracker',
-        'models/ProjectViewModel',
-        'util/updateQueryByName'
+        'models/ProjectViewModel'
     ], function(
         $,
         UnsavedChanges,
@@ -17,8 +16,7 @@ define([
         DeleteData,
         SaveProject,
         UniqueTracker,
-        ProjectViewModel,
-        updateQueryByName) {
+        ProjectViewModel) {
     'use strict';
 
     var LoadProject = {
@@ -139,16 +137,13 @@ define([
                         viewModel.loadProjectName._value = '';
                         viewModel.selectedComponent = viewModel.workspace;
 
-                        // Set the URL to include the current project name.
-                        updateQueryByName('project', data.projectName);
-
                         // Delete marked data.
                         var filesDeleted = DeleteData.deleteAllMarkedData(viewModel);
 
                         $.when(filesDeleted).done(function() {
                             // Save the project if some files were deleted.
                             var projectSaved = $.Deferred();
-                            SaveProject.saveProject(projectSaved, viewModel.currentProject.name, viewModel);
+                            SaveProject.saveProject(projectSaved, viewModel);
                         });
 
                         projectLoaded.resolve();

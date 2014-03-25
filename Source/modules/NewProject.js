@@ -7,7 +7,6 @@ define([
         './SaveProject',
         './UniqueTracker',
         'models/ProjectViewModel',
-        'util/updateQueryByName',
         'jquery',
         'knockout'
     ], function(
@@ -16,7 +15,6 @@ define([
         SaveProject,
         UniqueTracker,
         ProjectViewModel,
-        updateQueryByName,
         $,
         ko) {
     'use strict';
@@ -60,21 +58,17 @@ define([
                 width: 400,
                 modal: true,
                 buttons: {
-                    'Create Project': {
-                        text: 'Create Project',
-                        'class': 'submit-button',
-                        click: function() {
-                            var value = viewModel.newProjectName.value;
+                    'Create Project': function() {
+                        var value = viewModel.newProjectName.value;
 
-                            if (!viewModel.newProjectName.error) {
-                                self.createNewProject(projectCreated, viewModel);
-                                $.when(projectCreated).done(function() {
-                                    createNewProjectDialog.dialog('close');
-                                });
-                            }
-                            else {
-                                viewModel.newProjectName.message = viewModel.newProjectName.errorMessage;
-                            }
+                        if (!viewModel.newProjectName.error) {
+                            self.createNewProject(projectCreated, viewModel);
+                            $.when(projectCreated).done(function() {
+                                createNewProjectDialog.dialog('close');
+                            });
+                        }
+                        else {
+                            viewModel.newProjectName.message = viewModel.newProjectName.errorMessage;
                         }
                     },
                     'Cancel': function() {
@@ -115,14 +109,12 @@ define([
 
                         viewModel.newProjectName._value = '';
                         viewModel.dirty = false;
-                        viewModel.resetHistory();
 
-                        // Set the URL to include the current project name.
-                        updateQueryByName('project', data.projectName);
+                        viewModel.resetHistory();
 
                         // Save state of new project.
                         var projectSaved = $.Deferred();
-                        SaveProject.saveProject(projectSaved, viewModel.currentProject.name, viewModel);
+                        SaveProject.saveProject(projectSaved, viewModel);
 
                         projectCreated.resolve();
                     }

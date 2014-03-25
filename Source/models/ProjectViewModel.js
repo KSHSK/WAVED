@@ -4,6 +4,7 @@ define([
         'util/defined',
         'util/defaultValue',
         'util/displayMessage',
+        'util/updateQueryByName',
         'util/subscribeObservable',
         'models/Action/Action',
         'models/Action/PropertyAction',
@@ -21,6 +22,7 @@ define([
         defined,
         defaultValue,
         displayMessage,
+        updateQueryByName,
         subscribeObservable,
         Action,
         PropertyAction,
@@ -60,6 +62,8 @@ define([
         this.setState(state);
 
         ko.track(this);
+
+        this.subscribeNameChange();
     };
 
     Object.defineProperties(ProjectViewModel.prototype, {
@@ -498,6 +502,13 @@ define([
         subscribeObservable(this, '_events', function(changes) {
             arrayChanged(changes);
         }, null, 'arrayChange');
+    };
+
+    ProjectViewModel.prototype.subscribeNameChange = function() {
+        ko.getObservable(this, '_name').subscribe(function(newValue) {
+            // Set the URL to use the new project name.
+            updateQueryByName('project', newValue);
+        });
     };
 
     return ProjectViewModel;
