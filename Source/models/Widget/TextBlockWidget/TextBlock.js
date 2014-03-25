@@ -45,5 +45,9 @@ define([
         return TextBlockViewModel.getType();
     };
 
+    TextBlock.iconLocation = function() {
+        return 'Source/models/Widget/TextBlockWidget/textblock-icon.png';
+    };
+
     return TextBlock;
 });
