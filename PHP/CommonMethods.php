@@ -1,5 +1,7 @@
 <?php
 include_once("connect.php");
+include_once('Project.php');
+
 
 /**
  * Initializes the return array with default values.
@@ -90,8 +92,8 @@ function recursiveRmdir($baseDir) {
  * Returns the data folder for the given project.
  * @param String $projectName
  */
-function getDataFolder($projectName) {
-    return "projects/" . $projectName . "/data/";
+function getDataFolder($projectName, $offset = "") {
+    return $offset . "projects/" . $projectName . "/data/";
 }
 
 /**
@@ -107,4 +109,154 @@ function projectHasDataFile($projectName, $fileName) {
     
     return in_array($fileName, $files) && is_file($dataFolder . $fileName);
 }
+
+/**
+ * Checks to see if the project name is valid.
+ * @param string $projectName The name of the project.
+ * @param array $returnValue The initial return value.
+ * @return array $returnValue with updated values.
+ */
+function validProjectName($projectName, $returnValue) {
+    if ($projectName === null) {
+        setReturnValueError($returnValue, "The project name is required.");
+        return $returnValue;
+    }
+
+    $len = strlen($projectName);
+    if ($len < 1 || $len > 50) {
+        setReturnValueError($returnValue, "The project name must be between 1 and 50 characters.");
+        return $returnValue;
+    }
+
+    $pattern = "/^[a-zA-Z0-9_\- ]+$/";
+    if (preg_match($pattern, $projectName) !== 1) {
+        setReturnValueError($returnValue, "The project name can only include alphanumeric characters, hyphens (-), underscores (_), and spaces.");
+        return $returnValue;
+    }
+
+    return $returnValue;
+}
+
+/**
+ * Creates a new project with the name $projectName.
+ * @param array $returnValue The return value to set errors and information on.
+ * @param string $projectName The name of the new project.
+ * @return array $returnValue with updated values.
+ */
+function createProject($returnValue, $projectName) {
+    global $projectSerializer;
+    
+    // Make sure the project name is valid.
+    $returnValue = validProjectName($projectName, $returnValue);
+    if (!$returnValue["success"]) {
+        return $returnValue;
+    }
+
+    // Check if the project already exists.
+    if (projectExists($projectName)) {
+        setReturnValueError($returnValue, "This project already exists.");
+        return $returnValue;
+    }
+    
+    // Create the directory for the project.
+    $success = mkdir("../projects/" . $projectName, 0755);
+    
+    if ($success) {
+        $success = mkdir("../projects/" . $projectName . "/data", 0755);
+    }
+    
+    if (!$success) {
+        setReturnValueError($returnValue, "Unknown error creating new project directory.");
+        return $returnValue;
+    }
+    
+    $projectState = "{}";
+    $project = Project::create($projectName, $projectState);
+    $success = $projectSerializer->set($project);
+    
+    if(!$success) {
+        // Attempt to remove traces from the filesystem
+        rmdir("../projects/". $projectName . "/data");
+        rmdir("../projects/". $projectName);
+    
+        // Report error
+        setReturnValueError($returnValue, "Unknown error registering new project.");
+        return $returnValue;
+    }
+
+    // Set project variables.
+    $returnValue["projectName"] = $projectName;
+    $returnValue["projectState"] = $projectState;
+    $returnValue["dataFolder"] = getDataFolder($projectName);
+    
+    return $returnValue;
+}
+
+/**
+ * Saves the project $projectName with the state $projectState.
+ * @param array $returnValue The return value to set errors and information on.
+ * @param string $projectName The name of the new project.
+ * @param string $projectState The new state of the project.
+ * @return array $returnValue with updated values.
+ */
+function saveProject($returnValue, $projectName, $projectState) {
+    global $projectSerializer;
+
+    // Check if the project exists.
+    if (empty($projectName)) {
+        setReturnValueError($returnValue, "A project name must be given.");
+        return $returnValue;
+    }
+    else if (!projectExists($projectName)) {
+        setReturnValueError($returnValue, "This project does not exist.");
+        return $returnValue;
+    }
+    
+    // Check that a state was given
+    if (empty($projectState)) {
+        setReturnValueError($returnValue, "A project state must be given.");
+        return $returnValue;
+    }
+    
+    // Create and serialize Project object
+    $project = Project::create($projectName, $projectState);
+    $success = $projectSerializer->set($project);
+    
+    if(!$success) {
+        setReturnValueError($returnValue, "Unknown error updating project.");
+        return $returnValue;
+    }
+    
+    // Set the name of the project
+    $returnValue["projectName"] = $projectName;
+    return $returnValue;
+}
+
+/**
+ * Copies the data files from $fromProjectName's data folder to $toProjectName's data folder.
+ * @param array $returnValue The return value to set errors and information on.
+ * @param string $fromProjectName The name of the project currently with data files.
+ * @param string $toProjectName The name of the project to which the data files are copied.
+ * @return array $returnValue with updated values.
+ */
+function copyDataFiles($returnValue, $fromProjectName, $toProjectName) {
+    $offset = "../";
+    
+    $fromDataFolder = getDataFolder($fromProjectName, $offset);
+    $toDataFolder = getDataFolder($toProjectName, $offset);
+    
+    $contents = array_diff(scandir($fromDataFolder), array('.', '..'));
+    
+    $success = true;
+    foreach ($contents as $file) {
+        $success = copy($fromDataFolder . $file, $toDataFolder . $file) && $success;
+    }
+    
+    if (!$success) {
+        setReturnValueError($returnValue, "Could not copy data files to new project.");
+    }
+    
+    return $returnValue;
+}
+
 ?>
