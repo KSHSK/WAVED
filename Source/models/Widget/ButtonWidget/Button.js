@@ -12,10 +12,10 @@ define([
         $){
     'use strict';
 
-    var Button = function(state) {
+    var Button = function(state, getDataSet) {
         this._templateName = ComponentTemplateName.BUTTON;
 
-        var viewModel = new ButtonViewModel(state);
+        var viewModel = new ButtonViewModel(state, getDataSet);
 
         var $workspace = $('#waved-workspace');
 
@@ -44,6 +44,10 @@ define([
      */
     Button.getViewModelType = function() {
         return ButtonViewModel.getType();
+    };
+
+    Button.iconLocation = function() {
+        return 'Source/models/Widget/ButtonWidget/button-icon.png';
     };
 
     return Button;
