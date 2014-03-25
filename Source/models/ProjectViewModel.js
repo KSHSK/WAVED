@@ -4,6 +4,7 @@ define([
         'util/defined',
         'util/defaultValue',
         'util/displayMessage',
+        'util/updateQueryByName',
         'util/subscribeObservable',
         'models/Action/Action',
         'models/Action/PropertyAction',
@@ -19,6 +20,7 @@ define([
         defined,
         defaultValue,
         displayMessage,
+        updateQueryByName,
         subscribeObservable,
         Action,
         PropertyAction,
@@ -48,9 +50,10 @@ define([
         this._events = [];
 
         this.setState(state, availableWidgets);
-        // TODO: Update Project Tree if necessary.
 
         ko.track(this);
+
+        this.subscribeNameChange();
     };
 
     Object.defineProperties(ProjectViewModel.prototype, {
@@ -330,6 +333,10 @@ define([
         //TODO
     };
 
+    /**
+     * Calls the setDirty function when changes are made.
+     * @param setDirty The function which sets the project to dirty.
+     */
     ProjectViewModel.prototype.subscribeChanges = function(setDirty) {
         function arrayChanged(changes) {
             setDirty();
@@ -364,6 +371,13 @@ define([
 
         // Event is added or removed.
         subscribeObservable(this, '_events', arrayChanged, null, 'arrayChange');
+    };
+
+    ProjectViewModel.prototype.subscribeNameChange = function() {
+        ko.getObservable(this, '_name').subscribe(function(newValue) {
+            // Set the URL to use the new project name.
+            updateQueryByName('project', newValue);
+        });
     };
 
     return ProjectViewModel;

@@ -35,7 +35,7 @@
                     <button class="inline" id="redo-button">Redo</button>
                 
                     <button class="inline" id="save-button" data-bind="click: saveProject">Save</button>
-                    <button class="inline" id="save-as-button">Save As</button>
+                    <button class="inline" id="save-as-button" data-bind="click: tryToSaveProjectAs">Save As</button>
                     
                     <button class="inline" id="export-button">Export</button>
                 
@@ -250,8 +250,16 @@
     
     <div id="create-new-project-dialog" title="New Project" class="dialog">
         <p>Please create a new project</p>
-        <label class="required">Project Name: <input id="create-new-project-name" data-bind="value: newProjectName.value, valueUpdate: 'keyup'"/> </label>
+        <label class="required" for="create-new-project-name" data-bind="text: newProjectName.displayName"></label>
+        <input id="create-new-project-name" data-bind="value: newProjectName.value, valueUpdate: 'keyup'"/>
         <div class="error" data-bind="visible: newProjectName.error, html: newProjectName.message"></div>
+    </div>
+    
+    <div id="save-project-as-dialog" title="Save Project" class="dialog">
+        <p>Please save the project under a new name</p>
+        <label class="required" for="save-project-as-name" data-bind="text: saveProjectAsName.displayName"></label>
+        <input id="save-project-as-name" data-bind="value: saveProjectAsName.value, valueUpdate: 'keyup'"/>
+        <div class="error" data-bind="visible: saveProjectAsName.error, html: saveProjectAsName.message"></div>
     </div>
     
     <div id="delete-project-dialog" title="Delete Project" class="dialog">
@@ -262,23 +270,22 @@
 
     <div id="load-project-dialog" title="Load Project" class="dialog">
         <p>Please select an existing project to load.</p>
-        <label class="required">Project Name: 
-            <select id="load-project-select"
-                data-bind="options: projectList, value: loadProjectName.value">
-            </select>
-            <button class="button-small refresh-icon-button" data-bind="click: updateProjectList">Refresh List</button>
-        </label>
+        <label class="required" for="load-project-select" data-bind="text: loadProjectName.displayName"></label> 
+        <select id="load-project-select"
+            data-bind="options: projectList, value: loadProjectName.value">
+        </select>
+        <button class="button-small refresh-icon-button" data-bind="click: updateProjectList">Refresh List</button>
         <div class="error" data-bind="visible: loadProjectName.error, html: loadProjectName.message"></div>
     </div>
     
     <div id="upload-data-dialog" title="Upload Data" class="dialog">
         <div>
-            <label class="required" for="upload-data-name">Name: </label>
+            <label class="required" for="upload-data-name" data-bind="text: uploadDataName.displayName"></label>
             <input id="upload-data-name" type="text" data-bind="value: uploadDataName.value, valueUpdate: 'keyup'"/>
             <div class="error" data-bind="visible: uploadDataName.error, html: uploadDataName.message"></div>
         </div>
         <div>
-            <label class="required" for="upload-data-file">File: </label>
+            <label class="required" for="upload-data-file" data-bind="text: uploadDataFile.displayName"></label>
             <input id="upload-data-file" type="file" accept=".csv,.json" data-bind="value: uploadDataFile.value, valueUpdate: 'keyup'"/>
             <div class="error" data-bind="visible: uploadDataFile.error, html: uploadDataFile.message"></div>
         </div>
