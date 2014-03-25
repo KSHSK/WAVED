@@ -31,6 +31,8 @@ define(['knockout',
 
     /**
      * Executes the given function, ignoring changes that would normally be added to the history.
+     * This can be useful for bundling multiple changes together, so that the individual changes aren't added.
+     * This can be useful for undo/redo being called, so that undone changes aren't added as new changes.
      * @param func
      */
     HistoryMonitor.prototype.executeIgnoreHistory = function(func) {
