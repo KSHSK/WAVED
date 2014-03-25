@@ -24,10 +24,10 @@ define([
         $){
     'use strict';
 
-    var USMapViewModel = function(state) {
+    var USMapViewModel = function(state, getDataSet) {
         var self = this;
         state = (defined(state)) ? state : {};
-        WidgetViewModel.call(this, state);
+        WidgetViewModel.call(this, state, getDataSet);
 
         if (!defined(state.name)) {
             var namespace = SuperComponentViewModel.getUniqueNameNamespace();
@@ -75,8 +75,8 @@ define([
         };
 
         //TODO: Make this less hacky
-        ko.getObservable(window.viewModel.currentProject.workspace.width, '_value').subscribe(this.render);
-        ko.getObservable(window.viewModel.currentProject.workspace.height, '_value').subscribe(this.render);
+        ko.getObservable(window.WAVEDviewModel.currentProject.workspace.width, '_value').subscribe(this.render);
+        ko.getObservable(window.WAVEDviewModel.currentProject.workspace.height, '_value').subscribe(this.render);
 
         //TODO: Use ColoringSelectionProperty
         this.coloring = new StringProperty({
