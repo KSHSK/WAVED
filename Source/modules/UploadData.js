@@ -111,7 +111,7 @@ define([
                         var projectSaved = $.Deferred();
 
                         // Automatically save the project to avoid inconsistencies with state and the file system.
-                        SaveProject.saveProject(projectSaved, viewModel.currentProject.name, viewModel);
+                        SaveProject.saveProject(projectSaved, viewModel);
 
                         $.when(projectSaved).done(function() {
                             dataUploaded.resolve();
