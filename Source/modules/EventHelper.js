@@ -54,7 +54,7 @@ define([
                             name: viewModel.selectedEventName.value,
                             eventType: viewModel.selectedEventType,
                             triggeringComponent: viewModel.eventEditorTriggeringComponent,
-                            trigger: viewModel.eventEditorTrigger,
+                            trigger: $('#event-trigger-select').prop('selectedIndex'),
                             actions: viewModel.selectedEventActions
                         });
                         viewModel.currentProject.addEvent(event);
