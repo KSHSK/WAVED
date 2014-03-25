@@ -4,6 +4,7 @@
 define([
         'jquery',
         'WAVEDViewModel',
+        './HistoryMonitor',
         'models/Widget/WidgetViewModel',
         'models/Data/DataSet',
         'util/defined',
@@ -11,6 +12,7 @@ define([
     ], function(
         $,
         WAVEDViewModel,
+        HistoryMonitor,
         WidgetViewModel,
         DataSet,
         defined,
@@ -45,10 +47,10 @@ define([
                             return;
                         }
 
-                        checked.each(function(index, item) {
-                            var name = $(item).attr('data-name');
-                            self.bindData(viewModel, name);
+                        var dataSetNames = checked.map(function(index, item) {
+                            return $(item).attr('data-name');
                         });
+                        self.bindData(viewModel, dataSetNames);
 
                         self.bindDataDialog.dialog('close');
                     },
@@ -63,31 +65,64 @@ define([
             });
         },
 
-        bindData: function(viewModel, name) {
+        bindData: function(viewModel, dataSetNames) {
             if (!(viewModel.selectedComponent.viewModel instanceof WidgetViewModel)) {
                 return;
             }
 
-            var dataSet = viewModel.currentProject.getDataSet(name);
-            if (defined(dataSet)) {
-                viewModel.selectedComponent.viewModel.bindData(dataSet);
-            }
+            var component = viewModel.selectedComponent.viewModel;
+
+            var dataSets = $.map(dataSetNames, function(name, index) {
+                return viewModel.currentProject.getDataSet(name);
+            });
+
+            var undoChange = function() {
+                for (var i = 0; i < dataSets.length; i++) {
+                    component.unbindData(dataSets[i]);
+                }
+            };
+
+            var executeChange = function() {
+                for (var i = 0; i < dataSets.length; i++) {
+                    component.bindData(dataSets[i]);
+                }
+            };
+
+            var historyMonitor = HistoryMonitor.getInstance();
+            historyMonitor.addUndoChange(undoChange);
+            historyMonitor.addRedoChange(executeChange);
+
+            historyMonitor.executeIgnoreHistory(executeChange);
         },
 
         unbindData: function(viewModel) {
+            // TODO: Check if the data is in use before unbinding it.
             if (!(viewModel.selectedComponent.viewModel instanceof WidgetViewModel)) {
                 return;
             }
 
-            if(defined(viewModel.selectedBoundData)){
+            if (defined(viewModel.selectedBoundData)) {
                 var name = viewModel.selectedBoundData.name;
 
                 var dataSet = viewModel.currentProject.getDataSet(name);
                 if (defined(dataSet)) {
-                    viewModel.selectedComponent.viewModel.unbindData(dataSet);
-                }
+                    var component = viewModel.selectedComponent.viewModel;
+                    var index = component.boundDataIndex(dataSet);
 
-            //TODO: Check if the data is in use before unbinding it.
+                    var undoChange = function() {
+                        component.bindData(dataSet, index);
+                    };
+
+                    var executeChange = function() {
+                        component.unbindData(dataSet);
+                    };
+
+                    var historyMonitor = HistoryMonitor.getInstance();
+                    historyMonitor.addUndoChange(undoChange);
+                    historyMonitor.addRedoChange(executeChange);
+
+                    historyMonitor.executeIgnoreHistory(executeChange);
+                }
             }
         }
     };
