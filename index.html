@@ -23,7 +23,10 @@
                     </a>
                 </div>
                 <div class="inline bottom">
-                    <div class="menu-text" id="project-name" data-bind="text: currentProject.name"></div>
+                    <div>
+                        <span class="menu-text" id="project-name" data-bind="text: currentProject.name"></span>
+                        <span class="dirty" data-bind="visible: dirty"> (Unsaved Changes)</span>
+                    </div>
                     
                     <button class="inline" id="new-button" data-bind="click: tryToCreateNewProject">New</button>
                     <button class="inline" id="load-button" data-bind="click: tryToLoadProject">Load</button>
@@ -32,7 +35,7 @@
                     <button class="inline" id="redo-button">Redo</button>
                 
                     <button class="inline" id="save-button" data-bind="click: saveProject">Save</button>
-                    <button class="inline" id="save-as-button">Save As</button>
+                    <button class="inline" id="save-as-button" data-bind="click: tryToSaveProjectAs">Save As</button>
                     
                     <button class="inline" id="export-button">Export</button>
                 
@@ -42,7 +45,9 @@
                             data-bind="options: currentProject.components, 
                                 optionsText: function(item) {
                                    return item.viewModel.name.value;
-                                }, value: selectedWidget">
+                                },
+                                value: selectedComponent,
+                                event: {change: openPropertiesPanel}">
                     </select>
                     <button class="inline" id="refresh-button" data-bind="click: currentProject.refreshWorkspace">Refresh</button>
                 </div>                
@@ -51,12 +56,65 @@
         <div id="accordion-container" class="inline top">
             <div id="accordion">
                 <h3>Project Tree</h3>
-                <div id="project-tree">
-                    // Project Tree
+                <div>
+                    <button
+                        class="right button-small delete-icon-button"
+                        data-bind="click: tryToDeleteFromProjectTree">Delete</button>
+                    <ul id='project-tree'
+                        data-bind="visible: currentProject.name">
+                        <li class="tree-folder-icon"><a
+                            class="tree-row"
+                            data-bind="css: {'tree-row-selected': isSelectedInProjectTree(projectTree.SelectedTypeEnum.PROJECT, currentProject.name) },text: currentProject.name, click: function() { selectInProjectTree(projectTree.SelectedTypeEnum.PROJECT, currentProject.name) }"></a>
+                            <ul>
+                                <li class="tree-folder-icon">Components
+                                    <ul
+                                        data-bind="foreach: currentProject.components">
+                                        <li class="tree-gear-icon"
+                                            data-bind="css: {'tree-row-selected': $parent.isSelectedInProjectTree($parent.projectTree.SelectedTypeEnum.COMPONENT, $data) }">
+                                            <a class="tree-row"
+                                            data-bind="text: $data.viewModel.name.value, click: function(data) { $parent.selectInProjectTree($parent.projectTree.SelectedTypeEnum.COMPONENT, $data) }"></a>
+                                            <!-- TODO: Elements -->
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="tree-folder-icon">Data
+                                    <ul
+                                        data-bind="foreach: currentProject.unmarkedDataSets">
+                                        <li class="tree-gear-icon"
+                                            data-bind="css: {'tree-row-selected': $parent.isSelectedInProjectTree($parent.projectTree.SelectedTypeEnum.DATA, $data) }">
+                                            <a class="tree-row"
+                                            data-bind="text: $data.name, click: function(data) { $parent.selectInProjectTree($parent.projectTree.SelectedTypeEnum.DATA, $data) }"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="tree-folder-icon">Actions
+                                    <ul
+                                        data-bind="foreach: currentProject.actions">
+                                        <li class="tree-gear-icon"
+                                            data-bind="css: {'tree-row-selected': $parent.isSelectedInProjectTree($parent.projectTree.SelectedTypeEnum.ACTION, $data) }">
+                                            <a class="tree-row"
+                                            data-bind="text: $data.name, click: function(data) { $parent.selectInProjectTree($parent.projectTree.SelectedTypeEnum.ACTION, data) }"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="tree-folder-icon">Events
+                                    <ul
+                                        data-bind="foreach: currentProject.events">
+                                        <li class="tree-gear-icon"
+                                            data-bind="css: {'tree-row-selected': $parent.isSelectedInProjectTree($parent.projectTree.SelectedTypeEnum.EVENT, $data) }">
+                                            <a class="tree-row"
+                                            data-bind="text: $data.name, click: function(data) { $parent.selectInProjectTree($parent.projectTree.SelectedTypeEnum.EVENT, data) }"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul></li>
+                    </ul>
                 </div>
                 <h3>Widgets</h3>
                 <div id="widgets-panel" data-bind="foreach: availableWidgets">
-                    <button data-bind="text: $data.name, click: $parent.addNewWidget"></button><br>
+                    <div class="widget-selector">
+                        <img data-bind="attr: {src: $data.icon, alt: $data.name, title: $data.name} , click: $parent.addNewWidget" />
+                    </div>
                 </div>
                 <h3>Data</h3>
                 <div>
@@ -71,7 +129,7 @@
                         <select id="data-file-list" size="5" class="select-full-size"
                             data-bind="options: currentProject.unmarkedDataSets, 
                                 optionsText: function(item) {
-                                   return item.name + ' : ' + item.filename;
+                                   return item.getNameAndFilename();
                                 }, value: selectedDataSet"></select>
                     </div>
                     <br />
@@ -123,15 +181,15 @@
                                 }, value: selectedEvent"></select>
                     </div>
                 </div>
-                <h3>Properties</h3>
+                <h3>Properties - <span data-bind="text: selectedComponent.viewModel.name.value"></span></h3>
                 <div id="properties-panel">
                     <div id="properties-panel-properties" data-bind="foreach: currentProject.components">
-                        <div data-bind="foreach: $data.viewModel.properties, visible: $parent.selectedWidget == $data">
+                        <div data-bind="foreach: $data.viewModel.properties, visible: $parent.selectedComponent == $data">
                             <div data-bind="template: {name : $data.templateName, data: $data}"></div>
                         </div>
                     </div>
-                    <div id="properties-panel-bound-data" data-bind="visible: selectedWidget && selectedWidget.viewModel.boundData !== 'undefined'">                        
-                        <div data-bind="visible: selectedWidget && typeof selectedWidget.viewModel.boundData !== 'undefined'">
+                    <div id="properties-panel-bound-data" data-bind="visible: selectedComponent && selectedComponent.viewModel.boundData !== 'undefined'">                        
+                        <div data-bind="visible: selectedComponent && typeof selectedComponent.viewModel.boundData !== 'undefined'">
                             <hr/>
                             <div class="inline">Bound Data</div>
                             <div class="inline right">
@@ -139,11 +197,11 @@
                                 <button data-bind="click: unbindData" class="button-small delete-icon-button">Unbind Data</button>
                             </div>
                         
-                            <div data-bind="if: selectedWidget && typeof selectedWidget.viewModel.boundData !== 'undefined'">
+                            <div data-bind="if: selectedComponent && typeof selectedComponent.viewModel.boundData !== 'undefined'">
                                 <select id="bound-data-list" size="5" class="select-full-size"
-                                    data-bind="options: selectedWidget.viewModel.boundData, 
-                                        optionsText: function(name) {
-                                           return name + ' : ' + currentProject.getDataSet(name).filename;
+                                    data-bind="options: selectedComponent.viewModel.boundData, 
+                                        optionsText: function(data) {
+                                           return currentProject.getDataSet(data._name).getNameAndFilename();
                                         }, value: selectedBoundData">
                                 </select>
                             </div>
@@ -192,30 +250,43 @@
     
     <div id="create-new-project-dialog" title="New Project" class="dialog">
         <p>Please create a new project</p>
-        <label class="required">Project Name: <input id="create-new-project-name" data-bind="value: newProjectName.value, valueUpdate: 'keyup'"/> </label>
+        <label class="required" for="create-new-project-name" data-bind="text: newProjectName.displayName"></label>
+        <input id="create-new-project-name" data-bind="value: newProjectName.value, valueUpdate: 'keyup'"/>
         <div class="error" data-bind="visible: newProjectName.error, html: newProjectName.message"></div>
+    </div>
+    
+    <div id="save-project-as-dialog" title="Save Project" class="dialog">
+        <p>Please save the project under a new name</p>
+        <label class="required" for="save-project-as-name" data-bind="text: saveProjectAsName.displayName"></label>
+        <input id="save-project-as-name" data-bind="value: saveProjectAsName.value, valueUpdate: 'keyup'"/>
+        <div class="error" data-bind="visible: saveProjectAsName.error, html: saveProjectAsName.message"></div>
+    </div>
+    
+    <div id="delete-project-dialog" title="Delete Project" class="dialog">
+        <p>Are you sure you want to delete this project?</p>
+        <p>This action cannot be undone!</p>
+        <div class="error"></div>
     </div>
 
     <div id="load-project-dialog" title="Load Project" class="dialog">
         <p>Please select an existing project to load.</p>
-        <label class="required">Project Name: 
-            <select id="load-project-select"
-                data-bind="options: projectList, value: loadProjectName.value">
-            </select>
-            <button class="button-small refresh-icon-button" data-bind="click: updateProjectList">Refresh List</button>
-        </label>
+        <label class="required" for="load-project-select" data-bind="text: loadProjectName.displayName"></label> 
+        <select id="load-project-select"
+            data-bind="options: projectList, value: loadProjectName.value">
+        </select>
+        <button class="button-small refresh-icon-button" data-bind="click: updateProjectList">Refresh List</button>
         <div class="error" data-bind="visible: loadProjectName.error, html: loadProjectName.message"></div>
     </div>
     
     <div id="upload-data-dialog" title="Upload Data" class="dialog">
         <div>
-            <label class="required" for="upload-data-name">Name: </label>
+            <label class="required" for="upload-data-name" data-bind="text: uploadDataName.displayName"></label>
             <input id="upload-data-name" type="text" data-bind="value: uploadDataName.value, valueUpdate: 'keyup'"/>
             <div class="error" data-bind="visible: uploadDataName.error, html: uploadDataName.message"></div>
         </div>
         <div>
-            <label class="required" for="upload-data-file">File: </label>
-            <input id="upload-data-file" type="file" data-bind="value: uploadDataFile.value, valueUpdate: 'keyup'"/>
+            <label class="required" for="upload-data-file" data-bind="text: uploadDataFile.displayName"></label>
+            <input id="upload-data-file" type="file" accept=".csv,.json" data-bind="value: uploadDataFile.value, valueUpdate: 'keyup'"/>
             <div class="error" data-bind="visible: uploadDataFile.error, html: uploadDataFile.message"></div>
         </div>
     </div>
@@ -313,7 +384,7 @@
         </div>
         <div>
             <label class="inline">Trigger: </label>
-            <select data-bind="options: eventEditorTriggeringComponent.viewModel.triggers,
+            <select id="event-trigger-select" data-bind="options: eventEditorTriggeringComponent.viewModel.triggers,
                             optionsText: function(trigger) {
                                 return trigger.name;
                             }, value: eventEditorTrigger"></select>

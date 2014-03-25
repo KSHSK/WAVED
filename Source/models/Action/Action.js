@@ -1,14 +1,18 @@
 define(['jquery',
         'knockout',
         'models/Property/StringProperty',
+        'modules/UniqueTracker',
         'util/createValidator',
-        'util/defined'
+        'util/defined',
+        'util/subscribeObservable'
     ],function(
         $,
         ko,
         StringProperty,
+        UniqueTracker,
         createValidator,
-        defined
+        defined,
+        subscribeObservable
     ){
     'use strict';
 
@@ -22,13 +26,20 @@ define(['jquery',
         ko.track(this);
     };
 
+    Action.getUniqueNameNamespace = function() {
+        return 'action-name';
+    };
+
     Object.defineProperties(Action.prototype, {
         name: {
             get: function() {
                 return this._name;
             },
             set: function(value) {
-                this._name = value;
+                var success = UniqueTracker.addValueIfUnique(Action.getUniqueNameNamespace(), value, this);
+                if (success) {
+                    this._name = value;
+                }
             }
         },
         // TODO: These not in the DD, should be required
@@ -52,8 +63,7 @@ define(['jquery',
 
     Action.prototype.setState = function(state) {
         if (defined(state.name)) {
-            // TODO: Name Validation
-            this._name = state.name;
+            this.name = state.name;
         }
 
         // TODO: Does this need to be different for Property/Query Actions?
@@ -71,6 +81,27 @@ define(['jquery',
             'name': this._name,
             'applyAutomatically': this._applyAutomatically
         };
+    };
+
+    Action.prototype.subscriptions = [];
+
+    Action.prototype.subscribeChanges = function(setDirty) {
+        var self = this;
+
+        var properties = [];
+        for ( var prop in this) {
+            if (this.hasOwnProperty(prop)) {
+                properties.push(prop);
+            }
+        }
+
+        properties.forEach(function(prop) {
+            var subscription = subscribeObservable(self, prop, setDirty);
+
+            if(subscription !== null){
+                self.subscriptions.push(subscription);
+            }
+        });
     };
 
     return Action;

@@ -7,16 +7,16 @@ define([
         './ReadData',
         './DeleteData',
         './SaveProject',
-        'models/ProjectViewModel',
-        'util/updateQueryByName'
+        './UniqueTracker',
+        'models/ProjectViewModel'
     ], function(
         $,
         UnsavedChanges,
         ReadData,
         DeleteData,
         SaveProject,
-        ProjectViewModel,
-        updateQueryByName) {
+        UniqueTracker,
+        ProjectViewModel) {
     'use strict';
 
     var LoadProject = {
@@ -125,15 +125,15 @@ define([
                         // Update the data folder path.
                         ReadData.dataFolderPath = data.dataFolder;
 
+                        UniqueTracker.reset();
+
                         // Create the new project.
-                        viewModel.currentProject = new ProjectViewModel(JSON.parse(data.projectState),
+                        viewModel.currentProject.setState(JSON.parse(data.projectState),
                             viewModel.availableWidgets);
 
                         viewModel.dirty = false;
                         viewModel.loadProjectName._value = '';
-
-                        // Set the URL to include the current project name.
-                        updateQueryByName('project', data.projectName);
+                        viewModel.selectedComponent = viewModel.workspace;
 
                         // Delete marked data.
                         var filesDeleted = DeleteData.deleteAllMarkedData(viewModel);
@@ -141,7 +141,7 @@ define([
                         $.when(filesDeleted).done(function() {
                             // Save the project if some files were deleted.
                             var projectSaved = $.Deferred();
-                            SaveProject.saveProject(projectSaved, viewModel.currentProject.name, viewModel);
+                            SaveProject.saveProject(projectSaved, viewModel);
                         });
 
                         projectLoaded.resolve();

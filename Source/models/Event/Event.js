@@ -6,7 +6,9 @@ define([
         'models/Action/QueryAction',
         'models/Event/Trigger',
         'models/Property/StringProperty',
+        'modules/UniqueTracker',
         'util/defined',
+        'util/subscribeObservable',
         'knockout',
         'jquery'
     ],function(
@@ -17,13 +19,17 @@ define([
         QueryAction,
         Trigger,
         StringProperty,
+        UniqueTracker,
         defined,
+        subscribeObservable,
         ko,
         $
     ){
     'use strict';
 
+    var self;
     var Event = function(state) {
+        self = this;
         state = defined(state) ? state : {};
 
         // TODO: Validation, etc
@@ -35,7 +41,19 @@ define([
 
         this.setState(state);
 
+        this.applyActions = function() {
+            for (var i = 0; i < self.actions.length; i++) {
+                self.actions[i].apply();
+            }
+        };
+
+        this.register();
+
         ko.track(this);
+    };
+
+    Event.getUniqueNameNamespace = function() {
+        return 'event-name';
     };
 
     Object.defineProperties(Event.prototype, {
@@ -44,7 +62,10 @@ define([
                 return this._name;
             },
             set: function(value) {
-                this._name = value;
+                var success = UniqueTracker.addValueIfUnique(Event.getUniqueNameNamespace(), value, this);
+                if (success) {
+                    this._name = value;
+                }
             }
         },
         eventType: {
@@ -84,7 +105,7 @@ define([
     Event.prototype.setState = function(state) {
 
         if (defined(state.name)) {
-            this._name = state.name;
+            this.name = state.name;
         }
 
         if (defined(state.eventType)) {
@@ -96,8 +117,7 @@ define([
         }
 
         if (defined(state.trigger)){
-            // TODO: Make sure this is one of the triggers found on the triggeringComponent.
-            this._trigger = state.trigger;
+            this._trigger = this._triggeringComponent.viewModel.triggers[state.trigger];
         }
 
         if (defined(state.actions)){
@@ -110,12 +130,40 @@ define([
             'name': this._name,
             'eventType': this._eventType,
             'triggeringComponent': this._triggeringComponent.viewModel.name.value,
-            'trigger': this._trigger.name,
+            'trigger': this._triggeringComponent.viewModel.triggers.indexOf(this._trigger),
             'actions': $.map(this._actions, function(action) {
                 return action.name;
             })
         };
+    };
 
+    Event.prototype.subscriptions = [];
+
+    Event.prototype.subscribeChanges = function(setDirty) {
+        var self = this;
+
+        var properties = [];
+        for ( var prop in this) {
+            if (this.hasOwnProperty(prop)) {
+                properties.push(prop);
+            }
+        }
+
+        properties.forEach(function(prop) {
+            var subscription = subscribeObservable(self, prop, setDirty);
+
+            if(subscription !== null){
+                self.subscriptions.push(subscription);
+            }
+        });
+    };
+
+    Event.prototype.register = function() {
+        $(this._trigger.domElement).on(this._eventType.toLowerCase(), self.applyActions);
+    };
+
+    Event.prototype.unregister = function() {
+        $(this._trigger.domElement).off(this._eventType.toLowerCase(), self.applyActions);
     };
 
     return Event;

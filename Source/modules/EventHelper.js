@@ -1,6 +1,6 @@
-/*global define*/
 define([
         'WAVEDViewModel',
+        './UniqueTracker',
         'models/Event/Event',
         'util/defined',
         'util/displayMessage',
@@ -8,6 +8,7 @@ define([
         'jquery'
     ],function(
         WAVEDViewModel,
+        UniqueTracker,
         Event,
         defined,
         displayMessage,
@@ -17,7 +18,6 @@ define([
     'use strict';
 
     var EventHelper = {
-
         eventDialog: $('#event-editor-dialog'),
 
         resetEventEditor: function(viewModel) {
@@ -37,20 +37,28 @@ define([
                 modal: true,
                 buttons: {
                     'Save': function() {
-                        if (!viewModel.selectedEventName.error) {
-                            var event = new Event({
-                                name: viewModel.selectedEventName.value,
-                                eventType: viewModel.selectedEventType,
-                                triggeringComponent: viewModel.eventEditorTriggeringComponent,
-                                trigger: viewModel.eventEditorTrigger,
-                                actions: viewModel.selectedEventActions
-                            });
-                            viewModel.currentProject.addEvent(event);
-                            self.eventDialog.dialog('close');
-                        }
-                        else {
+
+                        if (viewModel.selectedEventName.error) {
                             viewModel.selectedEventName.message = viewModel.selectedEventName.errorMessage;
+                            return;
                         }
+
+                        if (!UniqueTracker.isValueUnique(Event.getUniqueNameNamespace(),
+                            viewModel.selectedEventName.value)) {
+
+                            displayMessage('The name "' + viewModel.selectedEventName.value + '" is already in use.');
+                            return;
+                        }
+
+                        var event = new Event({
+                            name: viewModel.selectedEventName.value,
+                            eventType: viewModel.selectedEventType,
+                            triggeringComponent: viewModel.eventEditorTriggeringComponent,
+                            trigger: $('#event-trigger-select').prop('selectedIndex'),
+                            actions: viewModel.selectedEventActions
+                        });
+                        viewModel.currentProject.addEvent(event);
+                        self.eventDialog.dialog('close');
                     },
                     'Cancel': function() {
                         self.eventDialog.dialog('close');
@@ -78,21 +86,28 @@ define([
                 resizable: false,
                 width: 500,
                 modal: true,
-                closeOnEscape: false,
                 buttons: {
                     'Save': function() {
-                        if (!viewModel.selectedEventName.error) {
-                            viewModel.selectedEvent.name = viewModel.selectedEventName.value;
-                            viewModel.selectedEvent.eventType =  viewModel.selectedEventType;
-                            viewModel.selectedEvent.triggeringComponent = viewModel.eventEditorTriggeringComponent;
-                            viewModel.selectedEvent.trigger = viewModel.eventEditorTrigger;
-                            viewModel.selectedEvent.actions = viewModel.selectedEventActions;
 
-                            self.eventDialog.dialog('close');
-                        }
-                        else {
+                        if (viewModel.selectedEventName.error) {
                             viewModel.selectedEventName.message = viewModel.selectedEventName.errorMessage;
+                            return;
                         }
+
+                        if (!UniqueTracker.isValueUnique(Event.getUniqueNameNamespace(),
+                            viewModel.selectedEventName.value, viewModel.selectedEvent)) {
+
+                            displayMessage('The name "' + viewModel.selectedEventName.value + '" is already in use.');
+                            return;
+                        }
+
+                        viewModel.selectedEvent.name = viewModel.selectedEventName.value;
+                        viewModel.selectedEvent.eventType =  viewModel.selectedEventType;
+                        viewModel.selectedEvent.triggeringComponent = viewModel.eventEditorTriggeringComponent;
+                        viewModel.selectedEvent.trigger = viewModel.eventEditorTrigger;
+                        viewModel.selectedEvent.actions = viewModel.selectedEventActions;
+
+                        self.eventDialog.dialog('close');
                     },
                     'Cancel': function() {
                         self.eventDialog.dialog('close');

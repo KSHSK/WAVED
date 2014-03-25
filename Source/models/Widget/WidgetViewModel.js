@@ -6,7 +6,8 @@ define([
         'models/ComponentViewModel',
         'util/defined',
         'util/defaultValue',
-        'util/createValidator'
+        'util/createValidator',
+        'd3'
     ], function(
         $,
         StringProperty,
@@ -15,11 +16,18 @@ define([
         ComponentViewModel,
         defined,
         defaultValue,
-        createValidator) {
+        createValidator,
+        d3) {
     'use strict';
 
-    var WidgetViewModel = function(state) {
+    var self;
+    var WidgetViewModel = function(state, getDataSet) {
         ComponentViewModel.call(this, state);
+        self = this;
+
+        this.getDataSetByName = function(dataSetName){
+            return getDataSet(dataSetName);
+        };
 
         // Set width
         this.width = new NumberProperty({
@@ -99,8 +107,13 @@ define([
         state.x = this.x.getState();
         state.y = this.y.getState();
         state.elementNames = this.elementNames;
-        state.boundData = this.boundData;
 
+        var boundDataSetStates = [];
+        for(var index=0; index < this.boundData.length; index++){
+            boundDataSetStates.push(this.boundData[index].getState());
+        }
+
+        state.boundData = boundDataSetStates;
         return state;
     };
 
@@ -128,7 +141,12 @@ define([
         }
 
         if (defined(state.boundData)) {
-            this._boundData = state.boundData;
+            for(var index=0; index < state.boundData.length; index++){
+                var dataSet = self.getDataSetByName(state.boundData[index].name);
+                if(dataSet !== null){
+                    this._boundData.push(dataSet);
+                }
+            }
         }
     };
 
@@ -153,11 +171,16 @@ define([
     };
 
     WidgetViewModel.prototype.bindData = function(dataSet) {
-        var name = dataSet.name;
+        var found = false;
+        for(var index = 0; index < this._boundData.length; index++){
+            if(dataSet.name === this._boundData[index].name){
+                found = true;
+                break;
+            }
+        }
 
-        // Don't bind the same data twice.
-        if (this._boundData.indexOf(name) === -1) {
-            this._boundData.push(name);
+        if(!found){
+            this._boundData.push(dataSet);
             dataSet.incrementReferenceCount();
         }
     };
@@ -166,10 +189,12 @@ define([
         var name = dataSet.name;
 
         // Only unbind if the data is bound.
-        var index = this._boundData.indexOf(name);
-        if (index > -1) {
-            this._boundData.splice(index, 1);
-            dataSet.decrementReferenceCount();
+        for(var index = 0; index < this._boundData.length; index++){
+            if(name === this._boundData[index].name){
+                this._boundData.splice(index, 1);
+                dataSet.decrementReferenceCount();
+                break;
+            }
         }
     };
 

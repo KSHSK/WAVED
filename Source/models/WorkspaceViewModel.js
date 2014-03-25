@@ -2,6 +2,7 @@ define([
         'models/SuperComponentViewModel',
         'models/Property/StringProperty',
         'models/Property/NumberProperty',
+        'modules/UniqueTracker',
         'util/createValidator',
         'util/defined',
         'util/defaultValue',
@@ -10,13 +11,13 @@ define([
         SuperComponentViewModel,
         StringProperty,
         NumberProperty,
+        UniqueTracker,
         createValidator,
         defined,
         defaultValue,
         ko){
     'use strict';
 
-    // TODO: The constructor takes in (Object state) in the DD
     var WorkspaceViewModel = function(state) {
         state = defined(state) ? state : {};
 
@@ -45,6 +46,8 @@ define([
             }),
             errorMessage: 'Value must be greater than 0'
         });
+
+        UniqueTracker.addValueIfUnique(SuperComponentViewModel.getUniqueNameNamespace(), this.name.value, this);
 
         this.setState(state);
 
