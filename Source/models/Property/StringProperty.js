@@ -34,7 +34,7 @@ define([
     StringProperty.prototype = Object.create(Property.prototype);
 
     StringProperty.prototype.reset = function() {
-        this._value = '';
+        this.originalValue = '';
         this.message = '';
         this.error = !this.isValidValue(this._value);
 
