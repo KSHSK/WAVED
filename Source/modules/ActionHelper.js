@@ -70,14 +70,13 @@ define([
                         for (var property in viewModel.actionEditorAffectedComponent.viewModel) {
                             var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedComponent.viewModel[property]);
                             if (propertyIndex > -1) {
-                                if (properties[propertyIndex].displayValue !== properties[propertyIndex].value) {
+                                if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
                                     actionValues[property] = properties[propertyIndex].displayValue;
                                 }
                             }
                         }
 
                         // TODO: Handle QueryAction
-                        // TODO: Ensure an action with the same name doesn't already exist. Display error message if so.
                         var action = new PropertyAction({
                             name: viewModel.selectedActionName.value,
                             target: viewModel.actionEditorAffectedComponent,
@@ -85,7 +84,6 @@ define([
                             applyAutomatically: $('#actionApplyAutomatically').is(':checked')
                         });
 
-                        // TODO: Validation to prevent two actions having same name?
                         viewModel.currentProject.addAction(action);
                         self.closeActionDialog(viewModel);
                     },
@@ -137,7 +135,7 @@ define([
                         for (var property in viewModel.actionEditorAffectedComponent.viewModel) {
                             var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedComponent.viewModel[property]);
                             if (propertyIndex > -1) {
-                                if (properties[propertyIndex].displayValue !== properties[propertyIndex].value) {
+                                if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
                                     actionValues[property] = properties[propertyIndex].displayValue;
                                 }
                             }

@@ -332,11 +332,12 @@ define([
 
     ProjectViewModel.prototype.refreshWorkspace = function() {
         var i;
-        var j;
         for (i = 0; i < self._components.length; i++) {
             var properties = self._components[i].viewModel.properties;
-            for (j = 0; j < properties.length; j++) {
+            for (var j = 0; j < properties.length; j++) {
+                var displayValue = properties[j].displayValue;
                 properties[j].value = properties[j].originalValue;
+                properties[j].displayValue = displayValue;
             }
         }
 

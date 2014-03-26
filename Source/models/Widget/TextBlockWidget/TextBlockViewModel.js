@@ -24,7 +24,7 @@ define([
 
         if (!defined(state.name)) {
             var namespace = SuperComponentViewModel.getUniqueNameNamespace();
-            this.name.value = UniqueTracker.getDefaultUniqueValue(namespace, TextBlockViewModel.getType(), this);
+            this.name.originalValue = UniqueTracker.getDefaultUniqueValue(namespace, TextBlockViewModel.getType(), this);
         }
 
         // Set label
