@@ -76,8 +76,8 @@ define([
         };
 
         //TODO: Make this less hacky
-        ko.getObservable(window.WAVEDviewModel.currentProject.workspace.width, '_value').subscribe(this.render);
-        ko.getObservable(window.WAVEDviewModel.currentProject.workspace.height, '_value').subscribe(this.render);
+        ko.getObservable(window.wavedWorkspace.width, '_value').subscribe(this.render);
+        ko.getObservable(window.wavedWorkspace.height, '_value').subscribe(this.render);
 
         //TODO: Use ColoringSelectionProperty
         this.coloring = new StringProperty({
