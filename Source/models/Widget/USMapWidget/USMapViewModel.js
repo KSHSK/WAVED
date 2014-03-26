@@ -24,14 +24,18 @@ define([
         $){
     'use strict';
 
+    function getElement(viewModel){
+        return d3.select('#' + viewModel.id);
+    }
+
     var USMapViewModel = function(state, getDataSet) {
         var self = this;
         state = (defined(state)) ? state : {};
         WidgetViewModel.call(this, state, getDataSet);
-
+        var namespace = SuperComponentViewModel.getUniqueNameNamespace();
+        this.id = UniqueTracker.getDefaultUniqueValue(namespace, USMapViewModel.getType(), this);
         if (!defined(state.name)) {
-            var namespace = SuperComponentViewModel.getUniqueNameNamespace();
-            this.name.value = UniqueTracker.getDefaultUniqueValue(namespace, USMapViewModel.getType(), this);
+            this.name.value = this.id;
         }
 
         this.render = function() {
@@ -40,15 +44,14 @@ define([
                 var w2 = w *self.width.value/100;
                 var h = $('#waved-workspace').height();
                 var h2 = h * self.width.value/100;
-                d3.select('#' + self.name.value).selectAll('svg').remove();
+                getElement(self).selectAll('svg').remove();
                 var scale = w*1.3*self.width.value/100; //1.3 is a magic number
                 self._projection = d3.geo.albersUsa().scale(scale).translate(([w2/2, h2/2]));
                 var path = d3.geo.path().projection(self._projection);
-                var svg = d3.select('#' + self.name.value)
+                var svg = getElement(self)
                     .append('svg');
                 self._svg = svg;
-                var states = svg.append('g')
-                    .attr('id', 'states');
+                var states = svg.append('g');
                 d3.json('data/states.json', function(json) {
                     states.selectAll('path')
                         .data(json.features)
@@ -56,7 +59,7 @@ define([
                         .append('path')
                         .attr('d', path)
                         .attr('stroke', 'white')
-                        .style('filll', function(d) {
+                        .style('fill', function(d) {
                             return self.coloring.value;
                         });
                     self._isRendered = true;
@@ -67,7 +70,7 @@ define([
 
         this.updateSvg = function() {
             if (self._isRendered) {
-                d3.select('#' + self.name.value).selectAll('svg').selectAll('path')
+                getElement(self).selectAll('svg').selectAll('path')
                 .style('fill', function(d) {
                     return self.coloring.value;
                 });
@@ -87,8 +90,6 @@ define([
         });
 
         this.width.onchange = this.render;
-        this.height.onchange = this.render;
-        this.height.value = 100;
         this.width.value = 100;
         this.width._displayName = 'Scale';
 
