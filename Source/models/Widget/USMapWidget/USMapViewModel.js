@@ -6,7 +6,6 @@ define([
         'models/Widget/WidgetViewModel',
         'modules/UniqueTracker',
         'util/defined',
-        'util/displayMessage',
         'knockout',
         'd3',
         'jquery'
@@ -18,7 +17,6 @@ define([
         WidgetViewModel,
         UniqueTracker,
         defined,
-        displayMessage,
         ko,
         d3,
         $){
