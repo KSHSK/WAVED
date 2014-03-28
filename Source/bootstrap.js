@@ -32,6 +32,12 @@
         $('#google-analytics-clear-button').button();
         $('#bind-data-add-data-file-button').button();
 
+        // Project Tree Animations
+        $('.tree-folder-icon').click( function () {
+            $(this).siblings('ul').slideToggle(300);
+            $(this).toggleClass('closed');
+        });
+
         // Add/Edit/Remove Buttons.
         $('.add-icon-button').button({
             text: false,
