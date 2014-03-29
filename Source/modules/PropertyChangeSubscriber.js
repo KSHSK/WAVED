@@ -33,7 +33,7 @@ define(['knockout',
 
         return subscribeObservable(container, observableName, function(oldValue) {
             if (!self.historyMonitor.isUndoRedoSubscriptionPaused()) {
-                self.historyMonitor.addUndoHistory(function() {
+                self.historyMonitor.addUndoChange(function() {
                     container[observableName] = oldValue;
                 });
             }
@@ -50,7 +50,7 @@ define(['knockout',
             self.setDirty();
 
             if (!self.historyMonitor.isUndoRedoSubscriptionPaused()) {
-                self.historyMonitor.addRedoHistory(function() {
+                self.historyMonitor.addRedoChange(function() {
                     container[observableName] = newValue;
                 });
             }
@@ -76,20 +76,20 @@ define(['knockout',
                 var index = change.index;
 
                 if (change.status === 'added') {
-                    self.historyMonitor.addUndoHistory(function() {
+                    self.historyMonitor.addUndoChange(function() {
                         list.splice(index, 1);
                     });
 
-                    self.historyMonitor.addRedoHistory(function() {
+                    self.historyMonitor.addRedoChange(function() {
                         list.splice(index, 0, item);
                     });
                 }
                 else if (change.status === 'deleted') {
-                    self.historyMonitor.addUndoHistory(function() {
+                    self.historyMonitor.addUndoChange(function() {
                         list.splice(index, 0, item);
                     });
 
-                    self.historyMonitor.addRedoHistory(function() {
+                    self.historyMonitor.addRedoChange(function() {
                         list.splice(index, 1);
                     });
                 }

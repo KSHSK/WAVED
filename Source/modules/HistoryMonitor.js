@@ -10,13 +10,15 @@ define(['knockout',
 
     var instance;
     var undoRedoSubscriptionPaused = false;
+    var addUndoHistory;
+    var addRedoHistory;
     var HistoryMonitor = function(addUndoHistoryFunction, addRedoHistoryFunction) {
         if (defined(instance)) {
             return HistoryMonitor.getInstance();
         }
 
-        this.addUndoHistory = addUndoHistoryFunction;
-        this.addRedoHistory = addRedoHistoryFunction;
+        addUndoHistory = addUndoHistoryFunction;
+        addRedoHistory = addRedoHistoryFunction;
 
         instance = this;
     };
@@ -47,11 +49,21 @@ define(['knockout',
     };
 
     HistoryMonitor.prototype.addUndoChange = function(undoFunction) {
-        this.addUndoHistory(undoFunction);
+        if (typeof undoFunction !== 'function') {
+            console.log('Must be a function.');
+            return;
+        }
+
+        addUndoHistory(undoFunction);
     };
 
     HistoryMonitor.prototype.addRedoChange = function(redoFunction) {
-        this.addRedoHistory(redoFunction);
+        if (typeof redoFunction !== 'function') {
+            console.log('Must be a function.');
+            return;
+        }
+
+        addRedoHistory(redoFunction);
     };
 
     return HistoryMonitor;
