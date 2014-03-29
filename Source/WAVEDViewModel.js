@@ -70,7 +70,8 @@ define(['jquery',
         this._selectedBoundData = '';
 
         // Create the HistoryMonitor singleton that everything else will use.
-        this.historyMonitor = new HistoryMonitor(this.setUndoNewChangeFunction, this.setRedoPreviousChangeFunction);
+        this.historyMonitor = new HistoryMonitor(this.setUndoNewChangeFunction, this.setRedoPreviousChangeFunction,
+            this.amendUndoNewChangeFunction, this.amendRedoPreviousChangeFunction);
 
         // Create the PropertyChangeSubscriber singleton that everything else will use.
         this.propertyChangeSubscriber = new PropertyChangeSubscriber(this.setDirty);
@@ -173,6 +174,34 @@ define(['jquery',
         }
 
         self._history[index].redoChange = changeFunction;
+    };
+
+    WAVEDViewModel.prototype.amendUndoNewChangeFunction = function(newChangeFunction) {
+        var currentChangeFunction = self._history[self._historyIndex].undoChange;
+
+        if (!defined(currentChangeFunction)) {
+            return;
+        }
+
+        self._history[self._historyIndex].undoChange = function() {
+            currentChangeFunction();
+            newChangeFunction();
+        };
+    };
+
+    WAVEDViewModel.prototype.amendRedoPreviousChangeFunction = function(newChangeFunction) {
+        var index = self._historyIndex - 1;
+
+        var currentChangeFunction = self._history[index].redoChange;
+
+        if (!defined(currentChangeFunction)) {
+            return;
+        }
+
+        self._history[index].redoChange = function() {
+            currentChangeFunction();
+            newChangeFunction();
+        };
     };
 
     WAVEDViewModel.prototype.undo = function() {
