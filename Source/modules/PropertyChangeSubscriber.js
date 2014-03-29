@@ -32,11 +32,9 @@ define(['knockout',
         var self = this;
 
         return subscribeObservable(container, observableName, function(oldValue) {
-            if (!self.historyMonitor.isUndoRedoSubscriptionPaused()) {
-                self.historyMonitor.addUndoChange(function() {
-                    container[observableName] = oldValue;
-                });
-            }
+            self.historyMonitor.addUndoChange(function() {
+                container[observableName] = oldValue;
+            });
         }, null, 'beforeChange');
     };
 
@@ -49,11 +47,9 @@ define(['knockout',
         return subscribeObservable(container, observableName, function(newValue) {
             self.setDirty();
 
-            if (!self.historyMonitor.isUndoRedoSubscriptionPaused()) {
-                self.historyMonitor.addRedoChange(function() {
-                    container[observableName] = newValue;
-                });
-            }
+            self.historyMonitor.addRedoChange(function() {
+                container[observableName] = newValue;
+            });
         });
     };
 
@@ -65,10 +61,6 @@ define(['knockout',
 
         return subscribeObservable(container, observableName, function(changes) {
             self.setDirty();
-
-            if (self.historyMonitor.isUndoRedoSubscriptionPaused()) {
-                return;
-            }
 
             changes.forEach(function(change) {
                 var list = container[observableName];

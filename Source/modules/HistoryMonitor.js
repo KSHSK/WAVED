@@ -34,10 +34,6 @@ define(['knockout',
         return instance;
     };
 
-    HistoryMonitor.prototype.isUndoRedoSubscriptionPaused = function() {
-        return undoRedoSubscriptionPaused;
-    };
-
     /**
      * Executes the given function, ignoring changes that would normally be added to the history.
      * This can be useful for bundling multiple changes together, so that the individual changes aren't added.
@@ -83,6 +79,11 @@ define(['knockout',
             return;
         }
 
+        // Don't change history.
+        if (undoRedoSubscriptionPaused) {
+            return;
+        }
+
         if (shouldAmendChanges) {
             amendUndoHistory(undoFunction);
         }
@@ -94,6 +95,11 @@ define(['knockout',
     HistoryMonitor.prototype.addRedoChange = function(redoFunction) {
         if (typeof redoFunction !== 'function') {
             console.log('Must be a function.');
+            return;
+        }
+
+        // Don't change history.
+        if (undoRedoSubscriptionPaused) {
             return;
         }
 
