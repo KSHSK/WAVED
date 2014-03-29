@@ -12,6 +12,14 @@ define([
         this.viewModel = undefined; // Defined by subclasses.
     };
 
+    Object.defineProperties(Widget.prototype, {
+        domElement: {
+            get: function() {
+                return this._domElement;
+            }
+        }
+    });
+
     Widget.prototype.newWidgetContainer = function() {
         return $('<div>').addClass('widget-container');
     };

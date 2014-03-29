@@ -1,3 +1,4 @@
+/* global console*/
 define(['knockout',
         'util/defined',
         'util/subscribeObservable'
@@ -32,11 +33,16 @@ define(['knockout',
      * Executes the given function, ignoring changes that would normally be added to the history.
      * This can be useful for bundling multiple changes together, so that the individual changes aren't added.
      * This can be useful for undo/redo being called, so that undone changes aren't added as new changes.
-     * @param func
+     * @param functionToExecute
      */
-    HistoryMonitor.prototype.executeIgnoreHistory = function(func) {
+    HistoryMonitor.prototype.executeIgnoreHistory = function(functionToExecute) {
+        if (typeof functionToExecute !== 'function') {
+            console.log('Must be a function.');
+            return;
+        }
+
         undoRedoSubscriptionPaused = true;
-        func();
+        functionToExecute();
         undoRedoSubscriptionPaused = false;
     };
 

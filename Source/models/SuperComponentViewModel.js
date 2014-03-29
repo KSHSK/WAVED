@@ -33,7 +33,7 @@ define([
 
         // Add the name to the unique tracker when changed.
         var namespace = SuperComponentViewModel.getUniqueNameNamespace();
-        ko.getObservable(this.name, '_value').subscribe(function(newValue) {
+        subscribeObservable(this.name, '_value', function(newValue) {
             UniqueTracker.addValueIfUnique(namespace, newValue, self);
         });
     };

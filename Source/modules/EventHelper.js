@@ -80,6 +80,8 @@ define([
             viewModel.selectedEventType = viewModel.selectedEvent.eventType;
             viewModel.eventEditorTriggeringComponent = viewModel.selectedEvent.triggeringComponent;
             viewModel.eventEditorTrigger = viewModel.selectedEvent.trigger;
+
+            // Make a shallow copy of the array so that it's not referencing the same object.
             viewModel.selectedEventActions = viewModel.selectedEvent.actions.slice(0);
 
             self.eventDialog.dialog({
