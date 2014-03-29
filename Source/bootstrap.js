@@ -34,8 +34,13 @@
 
         // Project Tree Animations
         $('.tree-folder-icon').click( function () {
-            $(this).siblings('ul').slideToggle(300);
-            $(this).toggleClass('closed');
+            // Shorten the animation with an empty folder to
+            // avoid 'wobbling' effect
+            var folder = $(this);
+            var duration = folder.siblings('ul').children().size() > 0 ? 300 : 0;
+
+            folder.siblings('ul').slideToggle(duration);
+            folder.toggleClass('closed');
         });
 
         // Add/Edit/Remove Buttons.
