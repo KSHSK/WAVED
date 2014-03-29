@@ -10,15 +10,22 @@ define(['knockout',
 
     var instance;
     var undoRedoSubscriptionPaused = false;
+    var shouldAmendChanges = false;
     var addUndoHistory;
     var addRedoHistory;
-    var HistoryMonitor = function(addUndoHistoryFunction, addRedoHistoryFunction) {
+    var amendUndoHistory;
+    var amendRedoHistory;
+    var HistoryMonitor = function(addUndoHistoryFunction, addRedoHistoryFunction, amendUndoHistoryFunction,
+        amendRedoHistoryFunction) {
+
         if (defined(instance)) {
             return HistoryMonitor.getInstance();
         }
 
         addUndoHistory = addUndoHistoryFunction;
         addRedoHistory = addRedoHistoryFunction;
+        amendUndoHistory = amendUndoHistoryFunction;
+        amendRedoHistory = amendRedoHistoryFunction;
 
         instance = this;
     };
@@ -43,9 +50,31 @@ define(['knockout',
             return;
         }
 
+        var previousState = undoRedoSubscriptionPaused;
+
         undoRedoSubscriptionPaused = true;
         functionToExecute();
-        undoRedoSubscriptionPaused = false;
+        undoRedoSubscriptionPaused = previousState;
+    };
+
+    /**
+     * Executes the given function, amending changes in history rather than adding changes to the history.
+     * This can be useful for bundling changes together when the first action triggers additional changes,
+     * preventing executeIgnoreHistory from being used.
+     *
+     * @param functionToExecute
+     */
+    HistoryMonitor.prototype.executeAmendHistory = function(functionToExecute) {
+        if (typeof functionToExecute !== 'function') {
+            console.log('Must be a function.');
+            return;
+        }
+
+        var previousState = shouldAmendChanges;
+
+        shouldAmendChanges = true;
+        functionToExecute();
+        shouldAmendChanges = previousState;
     };
 
     HistoryMonitor.prototype.addUndoChange = function(undoFunction) {
@@ -54,7 +83,12 @@ define(['knockout',
             return;
         }
 
-        addUndoHistory(undoFunction);
+        if (shouldAmendChanges) {
+            amendUndoHistory(undoFunction);
+        }
+        else {
+            addUndoHistory(undoFunction);
+        }
     };
 
     HistoryMonitor.prototype.addRedoChange = function(redoFunction) {
@@ -63,7 +97,12 @@ define(['knockout',
             return;
         }
 
-        addRedoHistory(redoFunction);
+        if (shouldAmendChanges) {
+            amendRedoHistory(redoFunction);
+        }
+        else {
+            addRedoHistory(redoFunction);
+        }
     };
 
     return HistoryMonitor;
