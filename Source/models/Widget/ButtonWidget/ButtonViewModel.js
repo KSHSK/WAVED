@@ -6,8 +6,6 @@ define([
         'modules/UniqueTracker',
         'util/defined',
         'util/createValidator',
-        'models/Property/GlyphSize/GlyphSizeSelectionProperty',
-        'models/Constants/GlyphSizeSchemeType',
         'knockout'
     ],function(
         SuperComponentViewModel,
@@ -17,8 +15,6 @@ define([
         UniqueTracker,
         defined,
         createValidator,
-        GlyphSizeSelectionProperty,
-        GlyphSizeSchemeType,
         ko){
     'use strict';
 
