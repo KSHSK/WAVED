@@ -103,7 +103,7 @@ define([
                     self.subscribeChange(nestedProp, '_value', propertyChangeSubscriber);
 
                     // Traverse down the tree
-                    self.recursiveSubscribeChanges(self, nestedProp, propertyChangeSubscriber);
+                    self.recursiveSubscribeChanges(nestedProp, propertyChangeSubscriber);
                 });
             }
         }
