@@ -272,18 +272,15 @@ define([
         // Add the DOM element.
         component.addToWorkspace();
 
-        // Don't add history if called from undo/redo.
-        if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
-            // Undo by removing the item.
-            historyMonitor.addUndoChange(function() {
-                self.removeComponent(component);
-            });
+        // Undo by removing the item.
+        historyMonitor.addUndoChange(function() {
+            self.removeComponent(component);
+        });
 
-            // Redo by readding the item.
-            historyMonitor.addRedoChange(function() {
-                self.addComponent(component);
-            });
-        }
+        // Redo by readding the item.
+        historyMonitor.addRedoChange(function() {
+            self.addComponent(component);
+        });
     };
 
     ProjectViewModel.prototype.addDataSet = function(data) {
@@ -300,25 +297,22 @@ define([
         if (data instanceof DataSet) {
             this._dataSets.push(data);
 
-            // Don't add history if called from undo/redo.
-            if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
-                // Undo by marking the DataSet for deletion.
-                historyMonitor.addUndoChange(function() {
-                    // Remove unique name.
-                    UniqueTracker.removeItem(namespace, data);
-                    data.markForDeletion();
-                });
+            // Undo by marking the DataSet for deletion.
+            historyMonitor.addUndoChange(function() {
+                // Remove unique name.
+                UniqueTracker.removeItem(namespace, data);
+                data.markForDeletion();
+            });
 
-                // Redo by reseting the DataSet's reference count.
-                historyMonitor.addRedoChange(function() {
-                    // Add unique name again.
-                    var success = UniqueTracker.addValueIfUnique(namespace, data.name, data);
+            // Redo by reseting the DataSet's reference count.
+            historyMonitor.addRedoChange(function() {
+                // Add unique name again.
+                var success = UniqueTracker.addValueIfUnique(namespace, data.name, data);
 
-                    if (success) {
-                        data.resetReferenceCount();
-                    }
-                });
-            }
+                if (success) {
+                    data.resetReferenceCount();
+                }
+            });
         }
     };
 
@@ -338,18 +332,15 @@ define([
             this._actions.push(action);
         }
 
-        // Don't add history if called from undo/redo.
-        if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
-            // Undo by removing the item.
-            historyMonitor.addUndoChange(function() {
-                self.removeAction(action);
-            });
+        // Undo by removing the item.
+        historyMonitor.addUndoChange(function() {
+            self.removeAction(action);
+        });
 
-            // Redo by readding the item.
-            historyMonitor.addRedoChange(function() {
-                self.addAction(action);
-            });
-        }
+        // Redo by readding the item.
+        historyMonitor.addRedoChange(function() {
+            self.addAction(action);
+        });
     };
 
     ProjectViewModel.prototype.addEvent = function(event, index) {
@@ -368,18 +359,15 @@ define([
             this._events.push(event);
         }
 
-        // Don't add history if called from undo/redo.
-        if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
-            // Undo by removing the item.
-            historyMonitor.addUndoChange(function() {
-                self.removeEvent(event);
-            });
+        // Undo by removing the item.
+        historyMonitor.addUndoChange(function() {
+            self.removeEvent(event);
+        });
 
-            // Redo by readding the item.
-            historyMonitor.addRedoChange(function() {
-                self.addEvent(event);
-            });
-        }
+        // Redo by readding the item.
+        historyMonitor.addRedoChange(function() {
+            self.addEvent(event);
+        });
     };
 
     ProjectViewModel.prototype.getComponent = function(name) {
@@ -431,18 +419,15 @@ define([
                 // Remove the DOM element.
                 component.removeFromWorkspace();
 
-                // Don't add history if called from undo/redo.
-                if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
-                    // Undo by adding the item.
-                    historyMonitor.addUndoChange(function() {
-                        self.addComponent(component, index);
-                    });
+                // Undo by adding the item.
+                historyMonitor.addUndoChange(function() {
+                    self.addComponent(component, index);
+                });
 
-                    // Redo by removing the item.
-                    historyMonitor.addRedoChange(function() {
-                        self.removeComponent(component);
-                    });
-                }
+                // Redo by removing the item.
+                historyMonitor.addRedoChange(function() {
+                    self.removeComponent(component);
+                });
             }
         }
     };
@@ -478,18 +463,15 @@ define([
             // Remove unique name.
             UniqueTracker.removeItem(Action.getUniqueNameNamespace(), action);
 
-            // Don't add history if called from undo/redo.
-            if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
-                // Undo by adding the item.
-                historyMonitor.addUndoChange(function() {
-                    self.addAction(action, index);
-                });
+            // Undo by adding the item.
+            historyMonitor.addUndoChange(function() {
+                self.addAction(action, index);
+            });
 
-                // Redo by removing the item.
-                historyMonitor.addRedoChange(function() {
-                    self.removeAction(action);
-                });
-            }
+            // Redo by removing the item.
+            historyMonitor.addRedoChange(function() {
+                self.removeAction(action);
+            });
         }
     };
 
@@ -501,18 +483,15 @@ define([
             // Remove unique name.
             UniqueTracker.removeItem(Event.getUniqueNameNamespace(), event);
 
-            // Don't add history if called from undo/redo.
-            if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
-                // Undo by adding the item.
-                historyMonitor.addUndoChange(function() {
-                    self.addEvent(event, index);
-                });
+            // Undo by adding the item.
+            historyMonitor.addUndoChange(function() {
+                self.addEvent(event, index);
+            });
 
-                // Redo by removing the item.
-                historyMonitor.addRedoChange(function() {
-                    self.removeEvent(event);
-                });
-            }
+            // Redo by removing the item.
+            historyMonitor.addRedoChange(function() {
+                self.removeEvent(event);
+            });
         }
     };
 
