@@ -275,12 +275,12 @@ define([
         // Don't add history if called from undo/redo.
         if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
             // Undo by removing the item.
-            historyMonitor.addUndoHistory(function() {
+            historyMonitor.addUndoChange(function() {
                 self.removeComponent(component);
             });
 
             // Redo by readding the item.
-            historyMonitor.addRedoHistory(function() {
+            historyMonitor.addRedoChange(function() {
                 self.addComponent(component);
             });
         }
@@ -303,14 +303,14 @@ define([
             // Don't add history if called from undo/redo.
             if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
                 // Undo by marking the DataSet for deletion.
-                historyMonitor.addUndoHistory(function() {
+                historyMonitor.addUndoChange(function() {
                     // Remove unique name.
                     UniqueTracker.removeItem(namespace, data);
                     data.markForDeletion();
                 });
 
                 // Redo by reseting the DataSet's reference count.
-                historyMonitor.addRedoHistory(function() {
+                historyMonitor.addRedoChange(function() {
                     // Add unique name again.
                     var success = UniqueTracker.addValueIfUnique(namespace, data.name, data);
 
@@ -341,12 +341,12 @@ define([
         // Don't add history if called from undo/redo.
         if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
             // Undo by removing the item.
-            historyMonitor.addUndoHistory(function() {
+            historyMonitor.addUndoChange(function() {
                 self.removeAction(action);
             });
 
             // Redo by readding the item.
-            historyMonitor.addRedoHistory(function() {
+            historyMonitor.addRedoChange(function() {
                 self.addAction(action);
             });
         }
@@ -371,12 +371,12 @@ define([
         // Don't add history if called from undo/redo.
         if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
             // Undo by removing the item.
-            historyMonitor.addUndoHistory(function() {
+            historyMonitor.addUndoChange(function() {
                 self.removeEvent(event);
             });
 
             // Redo by readding the item.
-            historyMonitor.addRedoHistory(function() {
+            historyMonitor.addRedoChange(function() {
                 self.addEvent(event);
             });
         }
@@ -434,12 +434,12 @@ define([
                 // Don't add history if called from undo/redo.
                 if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
                     // Undo by adding the item.
-                    historyMonitor.addUndoHistory(function() {
+                    historyMonitor.addUndoChange(function() {
                         self.addComponent(component, index);
                     });
 
                     // Redo by removing the item.
-                    historyMonitor.addRedoHistory(function() {
+                    historyMonitor.addRedoChange(function() {
                         self.removeComponent(component);
                     });
                 }
@@ -481,12 +481,12 @@ define([
             // Don't add history if called from undo/redo.
             if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
                 // Undo by adding the item.
-                historyMonitor.addUndoHistory(function() {
+                historyMonitor.addUndoChange(function() {
                     self.addAction(action, index);
                 });
 
                 // Redo by removing the item.
-                historyMonitor.addRedoHistory(function() {
+                historyMonitor.addRedoChange(function() {
                     self.removeAction(action);
                 });
             }
@@ -504,12 +504,12 @@ define([
             // Don't add history if called from undo/redo.
             if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
                 // Undo by adding the item.
-                historyMonitor.addUndoHistory(function() {
+                historyMonitor.addUndoChange(function() {
                     self.addEvent(event, index);
                 });
 
                 // Redo by removing the item.
-                historyMonitor.addRedoHistory(function() {
+                historyMonitor.addRedoChange(function() {
                     self.removeEvent(event);
                 });
             }

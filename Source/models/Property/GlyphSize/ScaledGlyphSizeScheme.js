@@ -92,14 +92,18 @@ define([
         // Subscribe to the value of dataSet in order to automatically update dataField's options
         subscribeObservable(self.dataSet, '_value', function(newValue){
             if(defined(newValue)){
-                // Keep trying until data is ready, as long as data is a defined object.
-                var interval = setInterval(function(){
-                    if(defined(newValue.data)){
-                        self.dataField.options = newValue.dataFields;
-                        clearInterval(interval);
-                    }
-                }, 100);
-
+                if(defined(newValue.data)){
+                    self.dataField.options = newValue.dataFields;
+                }
+                else {
+                    // Keep trying until data is ready, as long as data is a defined object.
+                    var interval = setInterval(function(){
+                        if(defined(newValue.data)){
+                            self.dataField.options = newValue.dataFields;
+                            clearInterval(interval);
+                        }
+                    }, 100);
+                }
             }
             else{
                 self.dataField.options = [];
