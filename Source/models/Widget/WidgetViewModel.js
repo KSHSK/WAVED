@@ -1,5 +1,6 @@
 define([
         'jquery',
+        'd3',
         'models/Property/StringProperty',
         'models/Property/NumberProperty',
         'models/Property/BooleanProperty',
@@ -8,9 +9,10 @@ define([
         'util/defined',
         'util/defaultValue',
         'util/createValidator',
-        'd3'
+        'util/displayMessage'
     ], function(
         $,
+        d3,
         StringProperty,
         NumberProperty,
         BooleanProperty,
@@ -19,7 +21,7 @@ define([
         defined,
         defaultValue,
         createValidator,
-        d3) {
+        displayMessage) {
     'use strict';
 
     var self;
@@ -180,7 +182,7 @@ define([
         var self = this;
 
         if (this.boundDataIndex(dataSet) > -1) {
-            // DataSet already bound.
+            displayMessage('DataSet "' + dataSet.name + '" is already bound.');
             return;
         }
 

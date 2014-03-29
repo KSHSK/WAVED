@@ -1,3 +1,4 @@
+/* global console*/
 define([
         'jquery',
         'knockout',
@@ -257,6 +258,7 @@ define([
             component.viewModel.name.value, component.viewModel);
 
         if (!success) {
+            console.log('New Component name was not unique.');
             return;
         }
 
@@ -291,6 +293,7 @@ define([
         var success = UniqueTracker.addValueIfUnique(namespace, data.name, data);
 
         if (!success) {
+            console.log('New DataSet name was not unique.');
             return;
         }
 
@@ -324,6 +327,7 @@ define([
         var success = UniqueTracker.addValueIfUnique(Action.getUniqueNameNamespace(), action.name, action);
 
         if (!success) {
+            console.log('New Action name was not unique.');
             return;
         }
 
@@ -353,6 +357,7 @@ define([
         var success = UniqueTracker.addValueIfUnique(Event.getUniqueNameNamespace(), event.name, event);
 
         if (!success) {
+            console.log('New Event name was not unique.');
             return;
         }
 
@@ -428,12 +433,12 @@ define([
 
                 // Don't add history if called from undo/redo.
                 if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
-                    // Undo by removing the item.
+                    // Undo by adding the item.
                     historyMonitor.addUndoHistory(function() {
                         self.addComponent(component, index);
                     });
 
-                    // Redo by readding the item.
+                    // Redo by removing the item.
                     historyMonitor.addRedoHistory(function() {
                         self.removeComponent(component);
                     });
@@ -475,12 +480,12 @@ define([
 
             // Don't add history if called from undo/redo.
             if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
-                // Undo by removing the item.
+                // Undo by adding the item.
                 historyMonitor.addUndoHistory(function() {
                     self.addAction(action, index);
                 });
 
-                // Redo by readding the item.
+                // Redo by removing the item.
                 historyMonitor.addRedoHistory(function() {
                     self.removeAction(action);
                 });
@@ -498,12 +503,12 @@ define([
 
             // Don't add history if called from undo/redo.
             if (!historyMonitor.isUndoRedoSubscriptionPaused()) {
-                // Undo by removing the item.
+                // Undo by adding the item.
                 historyMonitor.addUndoHistory(function() {
                     self.addEvent(event, index);
                 });
 
-                // Redo by readding the item.
+                // Redo by removing the item.
                 historyMonitor.addRedoHistory(function() {
                     self.removeEvent(event);
                 });
