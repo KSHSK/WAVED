@@ -25,6 +25,7 @@ define(['jquery',
         'util/defined',
         'util/defaultValue',
         'util/createValidator',
+        'util/subscribeObservable',
         'util/getNamePropertyInstance'
     ], function(
         $,
@@ -53,6 +54,7 @@ define(['jquery',
         defined,
         defaultValue,
         createValidator,
+        subscribeObservable,
         getNamePropertyInstance) {
     'use strict';
 
@@ -138,6 +140,17 @@ define(['jquery',
         ko.track(this);
 
         this.currentProject.subscribeChanges();
+
+        // Remove the hover/focus look when undo or redo is disabled.
+        subscribeObservable(this, '_historyIndex', function() {
+            if (!self.isUndoAllowed()) {
+                $('#undo-button').removeClass('ui-state-hover ui-state-focus');
+            }
+
+            if (!self.isRedoAllowed()) {
+                $('#redo-button').removeClass('ui-state-hover ui-state-focus');
+            }
+        });
     };
 
     WAVEDViewModel.prototype.setDirty = function() {
