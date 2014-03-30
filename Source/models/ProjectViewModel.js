@@ -309,9 +309,12 @@ define([
                 // Add unique name again.
                 var success = UniqueTracker.addValueIfUnique(namespace, data.name, data);
 
-                if (success) {
-                    data.resetReferenceCount();
+                if (!success) {
+                    console.log('DataSet name added through redo was not unique.');
+                    return;
                 }
+
+                data.resetReferenceCount();
             });
         }
     };
