@@ -22,6 +22,7 @@ define([
             'afterRender: render}');
         $workspace.append(usMap);
 
+        this.domElement = usMap;
         this.viewModel = viewModel;
         ko.applyBindings(viewModel, usMap);
     };

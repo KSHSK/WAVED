@@ -47,7 +47,9 @@ define([
                 self._projection = d3.geo.albersUsa().scale(scale).translate(([w2/2, h2/2]));
                 var path = d3.geo.path().projection(self._projection);
                 var svg = getElement(self)
-                    .append('svg');
+                    .append('svg')
+                    .attr('height', h2)
+                    .attr('width', w2);
                 self._svg = svg;
                 var states = svg.append('g');
                 d3.json('data/states.json', function(json) {
