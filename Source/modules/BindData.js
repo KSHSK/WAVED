@@ -89,8 +89,7 @@ define([
             };
 
             var historyMonitor = HistoryMonitor.getInstance();
-            historyMonitor.addUndoChange(undoChange);
-            historyMonitor.addRedoChange(executeChange);
+            historyMonitor.addChanges(undoChange, executeChange);
 
             historyMonitor.executeIgnoreHistory(executeChange);
         },
@@ -118,8 +117,7 @@ define([
                     };
 
                     var historyMonitor = HistoryMonitor.getInstance();
-                    historyMonitor.addUndoChange(undoChange);
-                    historyMonitor.addRedoChange(executeChange);
+                    historyMonitor.addChanges(undoChange, executeChange);
 
                     historyMonitor.executeIgnoreHistory(executeChange);
                 }
