@@ -1,3 +1,4 @@
+/* global console*/
 define(['jquery',
         'knockout',
         'models/Action/Action',
@@ -177,9 +178,15 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.amendUndoNewChangeFunction = function(newChangeFunction) {
+        if (self._historyIndex !== self.history.length - 1) {
+            console.log('Can only amend undo if in the last history position');
+            return;
+        }
+
         var currentChangeFunction = self._history[self._historyIndex].undoChange;
 
         if (!defined(currentChangeFunction)) {
+            console.log('Undo function was undefined. Perhaps amend was called erroneously');
             return;
         }
 
@@ -190,11 +197,17 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.amendRedoPreviousChangeFunction = function(newChangeFunction) {
+        if (self._historyIndex !== self.history.length - 1) {
+            console.log('Can only amend redo if in the last history position');
+            return;
+        }
+
         var index = self._historyIndex - 1;
 
         var currentChangeFunction = self._history[index].redoChange;
 
         if (!defined(currentChangeFunction)) {
+            console.log('Redo function was undefined. Perhaps amend was called erroneously');
             return;
         }
 
