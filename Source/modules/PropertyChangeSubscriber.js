@@ -67,23 +67,31 @@ define(['knockout',
                 var item = change.value;
                 var index = change.index;
 
-                if (change.status === 'added') {
-                    self.historyMonitor.addUndoChange(function() {
-                        list.splice(index, 1);
-                    });
+                var historyMonitor = HistoryMonitor.getInstance();
+                var undoChange;
+                var executeChange;
 
-                    self.historyMonitor.addRedoChange(function() {
+                if (change.status === 'added') {
+                    undoChange = function() {
+                        list.splice(index, 1);
+                    };
+
+                    executeChange = function() {
                         list.splice(index, 0, item);
-                    });
+                    };
+
+                    historyMonitor.addChanges(undoChange, executeChange);
                 }
                 else if (change.status === 'deleted') {
-                    self.historyMonitor.addUndoChange(function() {
+                    undoChange = function() {
                         list.splice(index, 0, item);
-                    });
+                    };
 
-                    self.historyMonitor.addRedoChange(function() {
+                    executeChange = function() {
                         list.splice(index, 1);
-                    });
+                    };
+
+                    historyMonitor.addChanges(undoChange, executeChange);
                 }
             });
         }, null, 'arrayChange');
