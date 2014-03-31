@@ -6,6 +6,7 @@ define([
         'models/Widget/WidgetViewModel',
         'modules/UniqueTracker',
         'util/defined',
+        'util/subscribeObservable',
         'knockout',
         'd3',
         'jquery'
@@ -17,6 +18,7 @@ define([
         WidgetViewModel,
         UniqueTracker,
         defined,
+        subscribeObservable,
         ko,
         d3,
         $){
@@ -78,8 +80,8 @@ define([
         };
 
         //TODO: Make this less hacky
-        ko.getObservable(window.wavedWorkspace.width, '_value').subscribe(this.render);
-        ko.getObservable(window.wavedWorkspace.height, '_value').subscribe(this.render);
+        subscribeObservable(window.wavedWorkspace.width, '_value', this.render);
+        subscribeObservable(window.wavedWorkspace.height, '_value', this.render);
 
         //TODO: Use ColoringSelectionProperty
         this.coloring = new StringProperty({
