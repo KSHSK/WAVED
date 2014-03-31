@@ -52,6 +52,8 @@ define([
         this.setState(state);
 
         ko.track(this);
+
+        window.wavedWorkspace = this;
     };
 
     WorkspaceViewModel.prototype = Object.create(SuperComponentViewModel.prototype);

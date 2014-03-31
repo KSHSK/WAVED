@@ -17,7 +17,6 @@ define([
         options = defined(options) ? options : {};
         Property.call(this, options);
         var textArea = defaultValue(options.textArea, false);
-
         if (textArea) {
             this._templateName = PropertyTemplateName.LONG_STRING;
             this._displayTemplateName = PropertyTemplateName.LONG_STRING_DISPLAY;
@@ -53,6 +52,9 @@ define([
                     this.message = '';
                     this._value = value;
                     this._displayValue = value;
+                    if (defined(this.onchange)) {
+                        this.onchange();
+                    }
                 }
                 else {
                     this.error = true;
