@@ -149,6 +149,15 @@ textarea:disabled {
     text-align: left;
 }
 
+#preview-data-table {
+    width: 100%;
+    text-align: left;
+    font-size: 0.9em;
+}
+#preview-data-table td, #preview-data-table th {
+    padding: 2px 5px
+}
+
 #project-tree {
 	padding-left: 0;
 }
