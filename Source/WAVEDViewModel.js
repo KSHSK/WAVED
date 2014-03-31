@@ -22,6 +22,7 @@ define(['jquery',
         'modules/PropertyChangeSubscriber',
         'modules/HistoryMonitor',
         'models/Widget/TextBlockWidget/TextBlock',
+        'models/Widget/USMapWidget/USMap',
         'util/defined',
         'util/defaultValue',
         'util/createValidator',
@@ -51,6 +52,7 @@ define(['jquery',
         PropertyChangeSubscriber,
         HistoryMonitor,
         TextBlock,
+        USMap,
         defined,
         defaultValue,
         createValidator,
@@ -94,6 +96,10 @@ define(['jquery',
             name: 'Text Block',
             icon: TextBlock.iconLocation(),
             o: TextBlock
+        }, {
+            name: 'US Map',
+            icon: USMap.iconLocation(),
+            o: USMap
         }];
 
         this.eventTypes = [];

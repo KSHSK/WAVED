@@ -10,17 +10,19 @@ define([
         $){
     'use strict';
 
-    var USMap = function(state) {
+    var USMap = function(state, getDataSet) {
         this._templateName = ComponentTemplateName.US_MAP;
 
-        var viewModel = new USMapViewModel(state);
+        var viewModel = new USMapViewModel(state, getDataSet);
 
         var $workspace = $('#waved-workspace');
         var usMap = document.createElement('div');
         usMap.className = 'widget-container';
-        $(usMap).attr('data-bind', 'template: {name: \'' + this._templateName + '\'}');
+        $(usMap).attr('data-bind', 'template: {name: \'' + this._templateName + '\', ' +
+            'afterRender: render}');
         $workspace.append(usMap);
 
+        this.domElement = usMap;
         this.viewModel = viewModel;
         ko.applyBindings(viewModel, usMap);
     };
@@ -30,6 +32,10 @@ define([
      */
     USMap.getViewModelType = function() {
         return USMapViewModel.getType();
+    };
+
+    USMap.iconLocation = function() {
+        return 'Source/models/Widget/USMapWidget/usmap-icon.png';
     };
 
     return USMap;

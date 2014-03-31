@@ -13,6 +13,7 @@ define(['knockout',
         this._templateName = undefined; // PropertyTemplateName, defined by subclasses.
         this._value = undefined; // Type determined by subclasses.
         this._displayValue = undefined;
+        this.onchange = options.onchange;
 
         this.message = '';
         this.error = false;
