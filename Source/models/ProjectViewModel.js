@@ -47,7 +47,9 @@ define([
     var ProjectViewModel = function(state, setDirtyLocal) {
         self = this;
 
-        setDirty = setDirtyLocal;
+        if (defined(setDirtyLocal)) {
+            setDirty = setDirtyLocal;
+        }
         historyMonitor = HistoryMonitor.getInstance();
 
         state = defined(state) ? state : {};
