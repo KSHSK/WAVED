@@ -11,6 +11,7 @@ html, body {
 #accordion-container {
     /* Account for header-container and padding*/
     height: calc(100% - 120px);
+    min-height: 400px;
 }
 
 textarea:disabled {
