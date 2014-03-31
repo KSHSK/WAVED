@@ -36,6 +36,9 @@ define([
                     this.message = '';
                     this._value = Number(value);
                     this._displayValue = this._value;
+                    if (defined(this.onchange)) {
+                        this.onchange();
+                    }
                 }
                 else {
                     this.error = true;

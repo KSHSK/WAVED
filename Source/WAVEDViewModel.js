@@ -19,6 +19,7 @@ define(['jquery',
         'modules/BindData',
         'modules/DeleteData',
         'models/Widget/TextBlockWidget/TextBlock',
+        'models/Widget/USMapWidget/USMap',
         'util/defined',
         'util/defaultValue',
         'util/createValidator',
@@ -45,6 +46,7 @@ define(['jquery',
         BindData,
         DeleteData,
         TextBlock,
+        USMap,
         defined,
         defaultValue,
         createValidator,
@@ -75,6 +77,10 @@ define(['jquery',
             name: 'Text Block',
             icon: TextBlock.iconLocation(),
             o: TextBlock
+        }, {
+            name: 'US Map',
+            icon: USMap.iconLocation(),
+            o: USMap
         }];
 
         this.eventTypes = [];

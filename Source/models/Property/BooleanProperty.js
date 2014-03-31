@@ -38,6 +38,9 @@ define([
                     this.message = '';
                     this._value = value;
                     this._displayValue = value;
+                    if (defined(this.onchange)) {
+                        this.onchange();
+                    }
                 }
                 else {
                     this.error = true;
