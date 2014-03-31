@@ -67,9 +67,6 @@ define([
                     this.error = false;
                     this.message = '';
                     this._value = value;
-                    if (defined(this.onchange)) {
-                        this.onchange();
-                    }
                 }
                 else {
                     this.error = true;
