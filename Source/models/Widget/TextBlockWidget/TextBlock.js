@@ -1,30 +1,34 @@
 define([
         'models/Widget/TextBlockWidget/TextBlockViewModel',
         'models/Constants/ComponentTemplateName',
+        '../Widget',
         'knockout',
         'jquery'
     ],function(
         TextBlockViewModel,
         ComponentTemplateName,
+        Widget,
         ko,
         $){
     'use strict';
 
-    var TextBlock = function(state) {
+    var TextBlock = function(state, getDataSet) {
+        Widget.call(this, state);
+
         this._templateName = ComponentTemplateName.TEXTBLOCK;
 
-        var viewModel = new TextBlockViewModel(state);
+        var viewModel = new TextBlockViewModel(state, getDataSet);
 
-        var $workspace = $('#waved-workspace');
-        var textBlock = document.createElement('div');
-        textBlock.className = 'widget-container';
-        $(textBlock).attr('data-bind', 'template: {name: \'' + this._templateName + '\'}');
-        $workspace.append(textBlock);
+        var textBlock = this.newWidgetContainer();
+        textBlock.attr('data-bind', 'template: {name: \'' + this._templateName + '\'}');
 
-        this.domElement = textBlock;
+        this._domElement = textBlock;
         this.viewModel = viewModel;
-        ko.applyBindings(viewModel, textBlock);
+
+        ko.applyBindings(viewModel, textBlock[0]);
     };
+
+    TextBlock.prototype = Object.create(Widget.prototype);
 
     /**
      * Static method that returns the type String for this class's ViewModel.
