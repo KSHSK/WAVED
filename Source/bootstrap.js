@@ -74,7 +74,8 @@
 
         // Setup accordion
         $('#accordion').accordion({
-            animate: false
+            animate: false,
+            heightStyle: "fill"
         });
 
         $('input').addClass('ui-corner-all');
@@ -88,5 +89,10 @@
 
         // Accordion must calculate size after it is visible to avoid sizing issues.
         $('#accordion').accordion('refresh');
+
+        // Accordion must also update on window resize.
+        $(window).resize(function() {
+            $('#accordion').accordion('refresh');
+        });
     }
 });
