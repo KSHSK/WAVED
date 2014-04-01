@@ -7,6 +7,7 @@ define([
         'models/Event/Trigger',
         'models/Property/StringProperty',
         'modules/UniqueTracker',
+        'modules/PropertyChangeSubscriber',
         'util/defined',
         'util/subscribeObservable',
         'knockout',
@@ -20,6 +21,7 @@ define([
         Trigger,
         StringProperty,
         UniqueTracker,
+        PropertyChangeSubscriber,
         defined,
         subscribeObservable,
         ko,
@@ -128,25 +130,28 @@ define([
         };
     };
 
-    Event.prototype.subscriptions = [];
+    Event.prototype.subscribed = false;
 
-    Event.prototype.subscribeChanges = function(setDirty) {
+    Event.prototype.subscribeChanges = function() {
         var self = this;
+        var propertyChangeSubscriber = PropertyChangeSubscriber.getInstance();
 
         var properties = [];
-        for ( var prop in this) {
+        for (var prop in this) {
             if (this.hasOwnProperty(prop)) {
                 properties.push(prop);
             }
         }
 
         properties.forEach(function(prop) {
-            var subscription = subscribeObservable(self, prop, setDirty);
+            // Subscribe undo change.
+            propertyChangeSubscriber.subscribeBeforeChange(self, prop);
 
-            if(subscription !== null){
-                self.subscriptions.push(subscription);
-            }
+            // Subscribe redo and dirty changes.
+            propertyChangeSubscriber.subscribeChange(self, prop);
         });
+
+        this.subscribed = true;
     };
 
     return Event;

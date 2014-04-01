@@ -1,6 +1,7 @@
 define([
         'WAVEDViewModel',
         './UniqueTracker',
+        './HistoryMonitor',
         'models/Action/Action',
         'models/Action/PropertyAction',
         'models/Action/QueryAction',
@@ -11,6 +12,7 @@ define([
     ],function(
         WAVEDViewModel,
         UniqueTracker,
+        HistoryMonitor,
         Action,
         PropertyAction,
         QueryAction,
@@ -108,10 +110,16 @@ define([
             viewModel.selectedActionName.value = viewModel.selectedAction.name;
             viewModel.actionEditorAffectedComponent = viewModel.selectedAction.target;
             $('#actionApplyAutomatically').prop('checked', viewModel.selectedAction.applyAutomatically ? true : false);
+
+            var component = viewModel.actionEditorAffectedComponent.viewModel;
+
             // Set the displayValues to match those saved in the Action
-            var properties = viewModel.actionEditorAffectedComponent.viewModel.properties;
+            for (var index in component.properties) {
+                component.properties[index].displayValue = component.properties[index].value;
+            }
+
             for (var key in viewModel.selectedAction.newValues) {
-                viewModel.actionEditorAffectedComponent.viewModel[key].displayValue = viewModel.selectedAction.newValues[key];
+                component[key].displayValue = viewModel.selectedAction.newValues[key];
             }
 
             self.actionDialog.dialog({
@@ -132,24 +140,7 @@ define([
                             return;
                         }
 
-                        var actionValues = {};
-
-                        for (var property in viewModel.actionEditorAffectedComponent.viewModel) {
-                            var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedComponent.viewModel[property]);
-                            if (propertyIndex > -1) {
-                                if (properties[propertyIndex].displayValue !== properties[propertyIndex].value) {
-                                    actionValues[property] = properties[propertyIndex].displayValue;
-                                }
-                            }
-                        }
-
-                        viewModel.selectedAction.name = viewModel.selectedActionName.value;
-                        viewModel.selectedAction.target = viewModel.actionEditorAffectedComponent;
-                        viewModel.selectedAction.newValues = actionValues;
-                        viewModel.selectedAction.applyAutomatically = $('#actionApplyAutomatically').is(':checked');
-                        if (viewModel.selectedAction.applyAutomatically) {
-                            viewModel.selectedAction.apply();
-                        }
+                        self.updateEditChanges(viewModel);
 
                         self.closeActionDialog(viewModel);
                     },
@@ -158,9 +149,60 @@ define([
                     }
                 }
             });
-        }
+        },
+        updateEditChanges: function(viewModel) {
+            var properties = viewModel.actionEditorAffectedComponent.viewModel.properties;
+            var action = viewModel.selectedAction;
 
+            var oldName = action.name;
+            var oldTarget = action.target;
+            var oldNewValues = $.extend({}, action.newValues);
+            var oldApplyAutomatically = action.applyAutomatically;
+
+            function undoChange() {
+                action.name = oldName;
+                action.target = oldTarget;
+                action.newValues = oldNewValues;
+                action.applyAutomatically = oldApplyAutomatically;
+
+                if (action.applyAutomatically) {
+                    action.apply();
+                }
+            }
+
+            var actionValues = {};
+
+            for (var property in viewModel.actionEditorAffectedComponent.viewModel) {
+                var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedComponent.viewModel[property]);
+                if (propertyIndex > -1) {
+                    if (properties[propertyIndex].displayValue !== properties[propertyIndex].value) {
+                        actionValues[property] = properties[propertyIndex].displayValue;
+                    }
+                }
+            }
+
+            var newName = viewModel.selectedActionName.value;
+            var newTarget = viewModel.actionEditorAffectedComponent;
+            var newApplyAutomatically = $('#actionApplyAutomatically').is(':checked');
+
+            function executeChange() {
+                action.name = newName;
+                action.target = newTarget;
+                action.newValues = actionValues;
+                action.applyAutomatically = newApplyAutomatically;
+
+                if (action.applyAutomatically) {
+                    action.apply();
+                }
+            }
+
+            var historyMonitor = HistoryMonitor.getInstance();
+            historyMonitor.addChanges(undoChange, executeChange);
+
+            historyMonitor.executeIgnoreHistory(executeChange);
+        }
     };
+
 
     return ActionHelper;
 });
