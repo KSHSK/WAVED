@@ -1,30 +1,34 @@
 define([
         'models/Widget/ButtonWidget/ButtonViewModel',
         'models/Constants/ComponentTemplateName',
+        '../Widget',
         'knockout',
         'jquery'
     ],function(
         ButtonViewModel,
         ComponentTemplateName,
+        Widget,
         ko,
         $){
     'use strict';
 
     var Button = function(state, getDataSet) {
+        Widget.call(this, state);
+
         this._templateName = ComponentTemplateName.BUTTON;
 
         var viewModel = new ButtonViewModel(state, getDataSet);
 
-        var $workspace = $('#waved-workspace');
-        var button = document.createElement('div');
-        button.className = 'widget-container';
-        $(button).attr('data-bind', 'template: {name: \'' + this._templateName + '\'}');
-        $workspace.append(button);
+        var button = this.newWidgetContainer();
+        button.attr('data-bind', 'template: {name: \'' + this._templateName + '\'}');
 
-        this.domElement = button;
+        this._domElement = button;
         this.viewModel = viewModel;
-        ko.applyBindings(viewModel, button);
+
+        ko.applyBindings(viewModel, button[0]);
     };
+
+    Button.prototype = Object.create(Widget.prototype);
 
     /**
      * Static method that returns the type String for this class's ViewModel.

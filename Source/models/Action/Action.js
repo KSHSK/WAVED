@@ -2,6 +2,7 @@ define(['jquery',
         'knockout',
         'models/Property/StringProperty',
         'modules/UniqueTracker',
+        'modules/PropertyChangeSubscriber',
         'util/createValidator',
         'util/defined',
         'util/subscribeObservable'
@@ -10,6 +11,7 @@ define(['jquery',
         ko,
         StringProperty,
         UniqueTracker,
+        PropertyChangeSubscriber,
         createValidator,
         defined,
         subscribeObservable
@@ -83,25 +85,28 @@ define(['jquery',
         };
     };
 
-    Action.prototype.subscriptions = [];
+    Action.prototype.subscribed = false;
 
-    Action.prototype.subscribeChanges = function(setDirty) {
+    Action.prototype.subscribeChanges = function() {
         var self = this;
+        var propertyChangeSubscriber = PropertyChangeSubscriber.getInstance();
 
         var properties = [];
-        for ( var prop in this) {
+        for (var prop in this) {
             if (this.hasOwnProperty(prop)) {
                 properties.push(prop);
             }
         }
 
         properties.forEach(function(prop) {
-            var subscription = subscribeObservable(self, prop, setDirty);
+            // Subscribe undo change.
+            propertyChangeSubscriber.subscribeBeforeChange(self, prop);
 
-            if(subscription !== null){
-                self.subscriptions.push(subscription);
-            }
+            // Subscribe redo and dirty changes.
+            propertyChangeSubscriber.subscribeChange(self, prop);
         });
+
+        this.subscribed = true;
     };
 
     return Action;
