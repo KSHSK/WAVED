@@ -30,8 +30,8 @@
                     <button class="inline" id="new-button" data-bind="click: tryToCreateNewProject">New</button>
                     <button class="inline" id="load-button" data-bind="click: tryToLoadProject">Load</button>
 
-                    <button class="inline" id="undo-button">Undo</button>
-                    <button class="inline" id="redo-button">Redo</button>
+                    <button class="inline" id="undo-button" data-bind="click: undo, disable: !isUndoAllowed(), css: {'ui-state-disabled': !isUndoAllowed()}">Undo</button>
+                    <button class="inline" id="redo-button" data-bind="click: redo, disable: !isRedoAllowed(), css: {'ui-state-disabled': !isRedoAllowed()}">Redo</button>
                 
                     <button class="inline" id="save-button" data-bind="click: saveProject">Save</button>
                     <button class="inline" id="save-as-button" data-bind="click: tryToSaveProjectAs">Save As</button>
@@ -208,10 +208,10 @@
                     <div>
                         <div class="inline" data-bind="visible: !currentProject.googleAnalytics.bound">
                             <label class="inline">Google Analytics UA Code</label>
-                            <input type="text" data-bind="value: currentProject.googleAnalytics.uaCode.value, valueUpdate: 'keyup'"/>
+                            <input type="text" data-bind="value: currentProject.googleAnalytics.uaCode.value"/>
                             <div class="error" data-bind="visible: currentProject.googleAnalytics.uaCode.error, html: currentProject.googleAnalytics.uaCode.message"></div>
                             <label class="inline">Google Analytics Event Category</label>
-                            <input type="text" data-bind="value: currentProject.googleAnalytics.eventCategory.value, valueUpdate: 'keyup'" />
+                            <input type="text" data-bind="value: currentProject.googleAnalytics.eventCategory.value" />
                             <div class="error" data-bind="visible: currentProject.googleAnalytics.eventCategory.error, html:currentProject.googleAnalytics.eventCategory.message"></div>
                             <div class="submit-button-panel">
                                <button id="google-analytics-add-button" class="button-small submit-button" data-bind="click: currentProject.googleAnalytics.set;">Add</button>
