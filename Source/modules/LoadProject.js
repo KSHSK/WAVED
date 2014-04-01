@@ -132,6 +132,8 @@ define([
                             viewModel.availableWidgets);
 
                         viewModel.dirty = false;
+                        viewModel.resetHistory();
+
                         viewModel.loadProjectName._value = '';
                         viewModel.selectedComponent = viewModel.workspace;
 

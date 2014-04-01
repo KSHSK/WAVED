@@ -18,9 +18,9 @@ define([
         createValidator){
     'use strict';
 
-    var TextBlockViewModel = function(state) {
+    var TextBlockViewModel = function(state, getDataSet) {
         state = (defined(state)) ? state : {};
-        WidgetViewModel.call(this, state);
+        WidgetViewModel.call(this, state, getDataSet);
 
         if (!defined(state.name)) {
             var namespace = SuperComponentViewModel.getUniqueNameNamespace();
