@@ -129,7 +129,6 @@ define(['jquery',
             errorMessage: 'Must select a file with extension CSV or JSON.'
         });
 
-
         this.selectedActionName = getNamePropertyInstance('Action Name');
         this.selectedAction = undefined;
         this.selectedActionType = '';

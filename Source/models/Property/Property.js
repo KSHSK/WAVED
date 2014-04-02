@@ -15,6 +15,7 @@ define(['knockout',
         this._value = undefined; // Type determined by subclasses.
         this._displayValue = undefined;
         this.onchange = options.onchange;
+        this.ondisplaychange = options.ondisplaychange;
 
         this.message = '';
         this.error = false;
@@ -37,11 +38,19 @@ define(['knockout',
 
         // When this._value changes, call onchange.
         var self = this;
-        subscribeObservable(this, '_value', function() {
+        subscribeObservable(this, '_value', function(newValue) {
             if (defined(self.onchange)) {
-                self.onchange();
+                self.onchange(newValue);
             }
         });
+
+        subscribeObservable(this, '_displayValue', function(newValue) {
+            if (defined(self.ondisplaychange)) {
+                self.ondisplaychange(newValue);
+            }
+        });
+
+        this.updateUI = function() {        };
     };
 
     Object.defineProperties(Property.prototype, {

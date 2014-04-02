@@ -117,6 +117,31 @@ define([
             var historyMonitor = HistoryMonitor.getInstance();
             historyMonitor.executeAmendHistory(changeFunction);
         });
+        subscribeObservable(self.dataSet, '_displayValue', function(newValue){
+            var changeFunction = function() {
+                if(defined(newValue)){
+                    if(defined(newValue.data)){
+                        self.dataField.options = newValue.dataFields;
+                    }
+                    else {
+                        // Keep trying until data is ready, as long as data is a defined object.
+                        var interval = setInterval(function(){
+                            if(defined(newValue.data)){
+                                self.dataField.options = newValue.dataFields;
+                                clearInterval(interval);
+                            }
+                        }, 100);
+                    }
+                }
+                else{
+                    self.dataField.options = [];
+                    self.dataField.displayValue = undefined; // Reset the dataField selection
+                }
+            };
+
+            var historyMonitor = HistoryMonitor.getInstance();
+            historyMonitor.executeAmendHistory(changeFunction);
+        });
 
         // Properly unset the dataSet value when the options disappear (when the bound data is unbound)
         subscribeObservable(self.dataSet, '_options', function(newValue){
