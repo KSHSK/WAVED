@@ -3,24 +3,30 @@ define([
         'util/defined',
         'util/defaultValue',
         'models/Constants/PropertyTemplateName',
-        'knockout'
+        'knockout',
+        'jqueryUI'
     ],function(
         Property,
         defined,
         defaultValue,
         PropertyTemplateName,
-        ko
+        ko,
+        $
     ){
     'use strict';
 
-    var ArrayProperty = function(opts) {
+    var ListProperty = function(opts) {
         opts = defined(opts) ? opts : {};
         Property.call(this, opts);
 
-        this._templateName = PropertyTemplateName.ARRAY;
-        this._displayTemplateName = PropertyTemplateName.ARRAY_DISPLAY;
+        this._templateName = PropertyTemplateName.LIST;
 
         this._options = [];
+        this._value = '';
+
+        this.add = opts.add;
+        this.edit = opts.edit;
+        this.remove = opts.remove;
 
         // Set a default isValidValue function if necessary.
         if (!defined(opts.validValue)) {
@@ -40,12 +46,35 @@ define([
 
         this.setState(opts);
 
+        this.updateUI = function() {
+            $('.add-icon-button').button({
+                text: false,
+                icons: {
+                    primary: 'ui-icon-plus'
+                }
+            });
+
+            $('.edit-icon-button').button({
+                text: false,
+                icons: {
+                    primary: 'ui-icon-pencil'
+                }
+            });
+
+            $('.delete-icon-button').button({
+                text: false,
+                icons: {
+                    primary: 'ui-icon-trash'
+                }
+            });
+        };
+
         ko.track(this);
     };
 
-    ArrayProperty.prototype = Object.create(Property.prototype);
+    ListProperty.prototype = Object.create(Property.prototype);
 
-    Object.defineProperties(ArrayProperty.prototype, {
+    Object.defineProperties(ListProperty.prototype, {
         options: {
             get: function() {
                 return this._options;
@@ -74,32 +103,16 @@ define([
                     this.message = this.errorMessage;
                 }
             }
-        },
-        displayValue: {
-            get: function() {
-                return this._displayValue;
-            },
-            set: function(value) {
-                if (this.isValidValue(value)) {
-                    this.error = false;
-                    this.message = '';
-                    this._displayValue = value;
-                }
-                else {
-                    this.error = true;
-                    this.message = this.errorMessage;
-                }
-            }
         }
     });
 
-    ArrayProperty.prototype.getState = function() {
+    ListProperty.prototype.getState = function() {
         var state = Property.prototype.getState.call(this);
 
         return state;
     };
 
-    ArrayProperty.prototype.setState = function(state) {
+    ListProperty.prototype.setState = function(state) {
         this._options = defaultValue(state.options, []);
         this.getOptionText = state.getOptionText;
 
@@ -107,5 +120,5 @@ define([
         Property.prototype.setState.call(this, state);
     };
 
-    return ArrayProperty;
+    return ListProperty;
 });

@@ -75,7 +75,7 @@
         // Setup accordion
         $('#accordion').accordion({
             animate: false,
-            heightStyle: "fill"
+            heightStyle: 'fill'
         });
 
         $('input').addClass('ui-corner-all');

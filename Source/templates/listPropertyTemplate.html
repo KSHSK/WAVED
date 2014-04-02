@@ -1,0 +1,18 @@
+<div>
+    <hr/>
+    <div class="inline" data-bind="text: displayName"></div>
+    <div class="inline right">
+        <button data-bind="click: add" class="button-small add-icon-button">Add</button>
+        <button data-bind="click: edit" class="button-small edit-icon-button">Edit</button>
+        <button data-bind="click: remove" class="button-small delete-icon-button">Remove</button>
+    </div>
+
+    <div>
+        <select size="5" class="select-full-size"
+            data-bind="options: options,
+                optionsText: function(data) {
+                   return (data === undefined) ? '' : data.name.value;
+                }, value: value">
+        </select>
+    </div>
+</div>

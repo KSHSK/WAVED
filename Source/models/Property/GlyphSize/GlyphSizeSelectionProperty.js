@@ -26,8 +26,8 @@ define([
         Property.call(this, options);
 
         this._templateName = PropertyTemplateName.GLYPH_SIZE;
+        this._displayTemplateName = PropertyTemplateName.GLYPH_SIZE_DISPLAY;
         this.error = '';
-        this._value = '';
 
         this.constantGlyphSize = new ConstantGlyphSizeScheme(options);
         this.scaledGlyphSize = new ScaledGlyphSizeScheme(options, viewModel);
@@ -69,6 +69,14 @@ define([
             },
             set: function(value) {
                 this._value = value;
+            }
+        },
+        displayValue: {
+            get: function() {
+                return this._displayValue;
+            },
+            set: function(value) {
+                this._displayValue = value;
             }
         }
     });

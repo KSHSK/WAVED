@@ -2,9 +2,12 @@ define([
         'models/Event/Trigger',
         'models/Property/Coloring/ColoringSelectionProperty',
         'models/Property/StringProperty',
+        'models/Property/ListProperty',
         'models/SuperComponentViewModel',
         'models/Widget/WidgetViewModel',
+        './GlyphViewModel',
         'modules/UniqueTracker',
+        'modules/GlyphHelper',
         'util/defined',
         'util/subscribeObservable',
         'knockout',
@@ -14,9 +17,12 @@ define([
         Trigger,
         ColoringSelectionProperty,
         StringProperty,
+        ListProperty,
         SuperComponentViewModel,
         WidgetViewModel,
+        GlyphViewModel,
         UniqueTracker,
+        GlyphHelper,
         defined,
         subscribeObservable,
         ko,
@@ -37,6 +43,8 @@ define([
         if (!defined(state.name)) {
             this.name.value = this.id;
         }
+        this.glyphs = [];
+        this._selectedGlyph = undefined;
 
         this.render = function() {
             if (self._ready) {
@@ -91,6 +99,37 @@ define([
             onchange: self.updateSvg
         });
 
+        this.glyphList = new ListProperty({
+            displayName: 'Glyphs',
+            options: this.glyphs,
+            add: function() {
+                var newGlyph = new GlyphViewModel({}, self._boundData);
+                self._selectedGlyph = newGlyph;
+                GlyphHelper.addEditGlyph().then(function(){
+                    for (var i = 0; i < newGlyph.properties.length; i++) {
+                        newGlyph.properties[i]._value = newGlyph.properties[i]._displayValue;
+                    }
+                    self.glyphs.push(newGlyph);
+                });
+            },
+            edit: function() {
+                self._selectedGlyph = this.value;
+                GlyphHelper.addEditGlyph().then(function() {
+                    for (var i = 0; i < self._selectedGlyph.properties.length; i++) {
+                        self._selectedGlyph.properties[i]._value = self._selectedGlyph.properties[i]._displayValue;
+                    }
+                }, function() {
+                    for (var i = 0; i < self._selectedGlyph.properties.length; i++) {
+                        self._selectedGlyph.properties[i]._displayValue = self._selectedGlyph.properties[i]._value;
+                    }
+                });
+            },
+            remove: function() {
+                UniqueTracker.removeItem(SuperComponentViewModel.getUniqueNameNamespace(), self.glyphList.value);
+                self.glyphs.splice(self.glyphs.indexOf(self.glyphList.value));
+            }
+        });
+
         this.width.onchange = this.render;
         this.width.value = 100;
         this.width._displayName = 'Scale';
@@ -121,6 +160,10 @@ define([
         var state = WidgetViewModel.prototype.getState.call(this);
         state.type = USMapViewModel.getType();
         state.coloring = this.coloring.getState();
+        state.glyphs = [];
+        for(var i = 0; i < this.glyphs.length; i++) {
+            state.glyphs.push(this.glyphs[i].getState());
+        }
 
         return state;
 
@@ -132,13 +175,19 @@ define([
         if (defined(state.coloring)) {
             this.coloring.value = state.coloring.value;
         }
+
+        if (defined(state.glyphs)){
+            for(var i = 0; i < state.glyphs.length; i++) {
+                this.glyphs.push(new GlyphViewModel(state.glyphs[i], this._boundData));
+            }
+        }
     };
 
     Object.defineProperties(USMapViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.x, this.y, this.width, this.visible, this.logGoogleAnalytics,
-                this.coloring];
+                return [this.name, this.x, this.y, this.width, this.visible, this.coloring,
+                this.logGoogleAnalytics, this.glyphList];
             }
         }
     });

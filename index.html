@@ -180,10 +180,10 @@
                 <div id="properties-panel">
                     <div id="properties-panel-properties" data-bind="foreach: currentProject.components">
                         <div data-bind="foreach: $data.viewModel.properties, visible: $parent.selectedComponent == $data">
-                            <div data-bind="template: {name : $data.templateName, data: $data}"></div>
+                            <div data-bind="template: {name : $data.templateName, data: $data, afterRender: $data.updateUI}"></div>
                         </div>
                     </div>
-                    <div id="properties-panel-bound-data" data-bind="visible: selectedComponent && selectedComponent.viewModel.boundData !== 'undefined'">                        
+                    <div id="properties-panel-bound-data" data-bind="visible: selectedComponent && selectedComponent.viewModel.boundData !== 'undefined'">
                         <div data-bind="visible: selectedComponent && typeof selectedComponent.viewModel.boundData !== 'undefined'">
                             <hr/>
                             <div class="inline">Bound Data</div>
@@ -309,12 +309,23 @@
         </table>
     </div>
     
+    <div id="glyph-editor-dialog" title="Glyph Editor" class="dialog">
+       <div class="inline top padding15">
+            <div>Options</div>
+            <!-- ko if: selectedComponent.viewModel._selectedGlyph !== undefined -->
+            <div data-bind="foreach: selectedComponent.viewModel._selectedGlyph.properties">
+                <div data-bind="template: {name : $data.displayTemplateName, data: $data}"></div>
+            </div>
+            <!-- /ko -->
+        </div>
+    </div>
+    
     <div id="action-editor-dialog" title="Action Editor" class="dialog">
         <div class="inline top padding15 dialogColumnMaxWidth">
             <div class="required">Action Name:</div>
             <div class="marginBottom10">
-                   <input data-bind="value: selectedActionName.value, valueUpdate: 'keyup'"/>
-                   <div class="error" data-bind="visible: selectedActionName.error, html: selectedActionName.message"></div>
+               <input data-bind="value: selectedActionName.value, valueUpdate: 'keyup'"/>
+               <div class="error" data-bind="visible: selectedActionName.error, html: selectedActionName.message"></div>
             </div>
             <div>Action Type:</div>
             <select class="marginBottom10 width100"
@@ -349,7 +360,7 @@
             <div>Options</div>
             <!-- ko if: selectedActionType === 'Property Action' -->
             <div data-bind="foreach: actionEditorAffectedComponent.viewModel.properties">
-                <!-- ko if:  $data.displayName !== 'Name' -->
+                <!-- ko if:  $data.displayName !== 'Name'  && $data.displayTemplateName !== undefined -->
                 <div data-bind="template: {name : $data.displayTemplateName, data: $data}"></div>
                 <!-- /ko -->
             </div>
