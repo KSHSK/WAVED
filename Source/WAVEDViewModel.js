@@ -1,3 +1,4 @@
+/* global console*/
 define(['jquery',
         'knockout',
         'models/Action/Action',
@@ -18,10 +19,14 @@ define(['jquery',
         'modules/UploadData',
         'modules/BindData',
         'modules/DeleteData',
+        'modules/PropertyChangeSubscriber',
+        'modules/HistoryMonitor',
         'models/Widget/TextBlockWidget/TextBlock',
+        'models/Widget/USMapWidget/USMap',
         'util/defined',
         'util/defaultValue',
         'util/createValidator',
+        'util/subscribeObservable',
         'util/getNamePropertyInstance'
     ], function(
         $,
@@ -44,10 +49,14 @@ define(['jquery',
         UploadData,
         BindData,
         DeleteData,
+        PropertyChangeSubscriber,
+        HistoryMonitor,
         TextBlock,
+        USMap,
         defined,
         defaultValue,
         createValidator,
+        subscribeObservable,
         getNamePropertyInstance) {
     'use strict';
 
@@ -56,14 +65,26 @@ define(['jquery',
         self = this;
         this._dirty = false;
 
+        this._history = undefined;
+        this._historyIndex = undefined;
+        this.resetHistory();
+
         this._projectList = [];
         this._selectedComponent = '';
         this._selectedDataSet = '';
         this._selectedBoundData = '';
 
+        // Create the HistoryMonitor singleton that everything else will use.
+        this.historyMonitor = new HistoryMonitor(this.setUndoNewChangeFunction, this.setRedoPreviousChangeFunction,
+            this.amendUndoNewChangeFunction, this.amendRedoPreviousChangeFunction);
+
+        // Create the PropertyChangeSubscriber singleton that everything else will use.
+        this.propertyChangeSubscriber = new PropertyChangeSubscriber(this.setDirty);
+
         this._currentProject = new ProjectViewModel({
             name: ''
-        });
+        },
+        this.setDirty);
 
         this._projectTree = new ProjectTree();
 
@@ -75,6 +96,10 @@ define(['jquery',
             name: 'Text Block',
             icon: TextBlock.iconLocation(),
             o: TextBlock
+        }, {
+            name: 'US Map',
+            icon: USMap.iconLocation(),
+            o: USMap
         }];
 
         this.eventTypes = [];
@@ -120,9 +145,123 @@ define(['jquery',
 
         ko.track(this);
 
-        this.currentProject.subscribeChanges(function() {
-            self.dirty = true;
+        this.currentProject.subscribeChanges();
+
+        // Remove the hover/focus look when undo or redo is disabled.
+        subscribeObservable(this, '_historyIndex', function() {
+            if (!self.isUndoAllowed()) {
+                $('#undo-button').removeClass('ui-state-hover ui-state-focus');
+            }
+
+            if (!self.isRedoAllowed()) {
+                $('#redo-button').removeClass('ui-state-hover ui-state-focus');
+            }
         });
+    };
+
+    WAVEDViewModel.prototype.setDirty = function() {
+        self.dirty = true;
+    };
+
+    WAVEDViewModel.prototype.resetHistory = function() {
+        self._history = [{}];
+        self._historyIndex = 0;
+    };
+
+    WAVEDViewModel.prototype.isUndoAllowed = function() {
+        return (self._historyIndex > 0);
+    };
+
+    WAVEDViewModel.prototype.isRedoAllowed = function() {
+        return (self._historyIndex < self._history.length - 1);
+    };
+
+    WAVEDViewModel.prototype.setUndoNewChangeFunction = function(changeFunction) {
+        // Remove history after historyIndex.
+        self._history.length = self._historyIndex + 1;
+
+        self._history.push({
+            undoChange: changeFunction
+        });
+
+        self._historyIndex++;
+    };
+
+    WAVEDViewModel.prototype.setRedoPreviousChangeFunction = function(changeFunction) {
+        var index = self._historyIndex - 1;
+        if (!defined(self._history[index])) {
+            self._history[index] = {};
+        }
+
+        self._history[index].redoChange = changeFunction;
+    };
+
+    WAVEDViewModel.prototype.amendUndoNewChangeFunction = function(newChangeFunction) {
+        if (self._historyIndex !== self.history.length - 1) {
+            console.log('Can only amend undo if in the last history position');
+            return;
+        }
+
+        var currentChangeFunction = self._history[self._historyIndex].undoChange;
+
+        if (!defined(currentChangeFunction)) {
+            console.log('Undo function was undefined. Perhaps amend was called erroneously');
+            return;
+        }
+
+        self._history[self._historyIndex].undoChange = function() {
+            currentChangeFunction();
+            newChangeFunction();
+        };
+    };
+
+    WAVEDViewModel.prototype.amendRedoPreviousChangeFunction = function(newChangeFunction) {
+        if (self._historyIndex !== self.history.length - 1) {
+            console.log('Can only amend redo if in the last history position');
+            return;
+        }
+
+        var index = self._historyIndex - 1;
+
+        var currentChangeFunction = self._history[index].redoChange;
+
+        if (!defined(currentChangeFunction)) {
+            console.log('Redo function was undefined. Perhaps amend was called erroneously');
+            return;
+        }
+
+        self._history[index].redoChange = function() {
+            currentChangeFunction();
+            newChangeFunction();
+        };
+    };
+
+    WAVEDViewModel.prototype.undo = function() {
+        if (!this.isUndoAllowed()) {
+            return;
+        }
+
+        var changeFunction = this._history[this._historyIndex].undoChange;
+
+        this._historyIndex--;
+
+        if (defined(changeFunction)) {
+            this.historyMonitor.executeIgnoreHistory(changeFunction);
+        }
+    };
+
+    WAVEDViewModel.prototype.redo = function() {
+        if (!this.isRedoAllowed()) {
+            return;
+        }
+
+        var changeFunction = this._history[this._historyIndex].redoChange;
+
+        this._historyIndex++;
+
+        if (defined(changeFunction)) {
+            this.historyMonitor.executeIgnoreHistory(changeFunction);
+        }
     };
 
     WAVEDViewModel.prototype.tryToCreateNewProject = function() {
@@ -181,9 +320,6 @@ define(['jquery',
         var component = self._selectedComponent;
         self._selectedComponent = self.currentProject.workspace;
         self._currentProject.removeComponent(component);
-
-        // Remove the DOM element.
-        component.domElement.remove();
     };
 
     WAVEDViewModel.prototype.saveProject = function() {
@@ -308,6 +444,16 @@ define(['jquery',
         projectTree: {
             get: function() {
                 return this._projectTree;
+            }
+        },
+        history: {
+            get: function() {
+                return this._history;
+            }
+        },
+        historyIndex: {
+            get: function() {
+                return this._historyIndex;
             }
         }
     });

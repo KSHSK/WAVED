@@ -1,12 +1,14 @@
 define([
         'models/Action/Action',
         'models/Data/DataSet',
+        'modules/HistoryMonitor',
         'util/defined',
         'knockout',
         'jquery'
     ],function(
         Action,
         DataSet,
+        HistoryMonitor,
         defined,
         ko,
         $
@@ -29,9 +31,16 @@ define([
         this.dataSet = state.dataSet;
 
         this.apply = function() {
-            for (var key in self._newValues) {
-                self._target.viewModel[key].value = self._newValues[key];
-            }
+            var historyMonitor = HistoryMonitor.getInstance();
+
+            var executeChange = function() {
+                for (var key in self._newValues) {
+                    self._target.viewModel[key].value = self._newValues[key];
+                }
+            };
+
+            // Don't add individual changes to the history.
+            historyMonitor.executeIgnoreHistory(executeChange);
         };
 
         ko.track(this);

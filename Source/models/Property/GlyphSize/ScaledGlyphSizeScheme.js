@@ -1,23 +1,25 @@
 define([
+        'knockout',
+        'jquery',
         'models/Property/GlyphSize/GlyphSizeScheme',
         'models/Constants/GlyphSizeSchemeType',
         'models/Property/ArrayProperty',
         'models/Widget/WidgetViewModel',
         'models/ProjectViewModel',
-        'knockout',
-        'jquery',
+        'modules/HistoryMonitor',
         'util/defined',
         'util/defaultValue',
         'util/subscribeObservable',
         'WAVED'
     ],function(
+        ko,
+        $,
         GlyphSizeScheme,
         GlyphSizeSchemeType,
         ArrayProperty,
         WidgetViewModel,
         ProjectViewModel,
-        ko,
-        $,
+        HistoryMonitor,
         defined,
         defaultValue,
         subscribeObservable,
@@ -91,20 +93,29 @@ define([
 
         // Subscribe to the value of dataSet in order to automatically update dataField's options
         subscribeObservable(self.dataSet, '_value', function(newValue){
-            if(defined(newValue)){
-                // Keep trying until data is ready, as long as data is a defined object.
-                var interval = setInterval(function(){
+            var changeFunction = function() {
+                if(defined(newValue)){
                     if(defined(newValue.data)){
                         self.dataField.options = newValue.dataFields;
-                        clearInterval(interval);
                     }
-                }, 100);
+                    else {
+                        // Keep trying until data is ready, as long as data is a defined object.
+                        var interval = setInterval(function(){
+                            if(defined(newValue.data)){
+                                self.dataField.options = newValue.dataFields;
+                                clearInterval(interval);
+                            }
+                        }, 100);
+                    }
+                }
+                else{
+                    self.dataField.options = [];
+                    self.dataField.value = undefined; // Reset the dataField selection
+                }
+            };
 
-            }
-            else{
-                self.dataField.options = [];
-                self.dataField.value = undefined; // Reset the dataField selection
-            }
+            var historyMonitor = HistoryMonitor.getInstance();
+            historyMonitor.executeAmendHistory(changeFunction);
         });
 
         // Properly unset the dataSet value when the options disappear (when the bound data is unbound)
