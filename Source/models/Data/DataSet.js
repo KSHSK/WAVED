@@ -2,6 +2,7 @@ define(['knockout',
         'models/Property/StringProperty',
         'modules/ReadData',
         'modules/UniqueTracker',
+        'modules/PropertyChangeSubscriber',
         'util/defined',
         'util/createValidator',
         'util/subscribeObservable',
@@ -12,6 +13,7 @@ define(['knockout',
         StringProperty,
         ReadData,
         UniqueTracker,
+        PropertyChangeSubscriber,
         defined,
         createValidator,
         subscribeObservable,
@@ -65,6 +67,13 @@ define(['knockout',
         this._referenceCount = MARKED_FOR_DELETION;
     };
 
+    DataSet.prototype.resetReferenceCount = function() {
+        // Can only be used when the DataSet is marked for deletion.
+        if (this._referenceCount === MARKED_FOR_DELETION) {
+            this._referenceCount = 0;
+        }
+    };
+
     DataSet.prototype.isMarkedForDeletion = function() {
         return (this._referenceCount === MARKED_FOR_DELETION);
     };
@@ -107,10 +116,11 @@ define(['knockout',
         }
     };
 
-    DataSet.prototype.subscriptions = [];
+    DataSet.prototype.subscribed = false;
 
-    DataSet.prototype.subscribeChanges = function(setDirty) {
+    DataSet.prototype.subscribeChanges = function() {
         var self = this;
+        var propertyChangeSubscriber = PropertyChangeSubscriber.getInstance();
 
         var properties = [];
         for (var prop in this) {
@@ -122,12 +132,14 @@ define(['knockout',
         }
 
         properties.forEach(function(prop) {
-            var subscription = subscribeObservable(self, prop, setDirty);
+            // Subscribe undo change.
+            propertyChangeSubscriber.subscribeBeforeChange(self, prop);
 
-            if(subscription !== null){
-                self.subscriptions.push(subscription);
-            }
+            // Subscribe redo and dirty changes.
+            propertyChangeSubscriber.subscribeChange(self, prop);
         });
+
+        this.subscribed = true;
     };
 
     Object.defineProperties(DataSet.prototype, {

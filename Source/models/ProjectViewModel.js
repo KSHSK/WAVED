@@ -1,3 +1,4 @@
+/* global console*/
 define([
         'jquery',
         'knockout',
@@ -6,6 +7,7 @@ define([
         'util/displayMessage',
         'util/updateQueryByName',
         'util/subscribeObservable',
+        'models/SuperComponentViewModel',
         'models/Action/Action',
         'models/Action/PropertyAction',
         'models/Action/QueryAction',
@@ -13,7 +15,10 @@ define([
         'models/WorkspaceViewModel',
         'models/GoogleAnalytics',
         'models/Data/DataSet',
-        'models/Data/DataSubset'
+        'models/Data/DataSubset',
+        'modules/PropertyChangeSubscriber',
+        'modules/HistoryMonitor',
+        'modules/UniqueTracker'
     ], function(
         $,
         ko,
@@ -22,6 +27,7 @@ define([
         displayMessage,
         updateQueryByName,
         subscribeObservable,
+        SuperComponentViewModel,
         Action,
         PropertyAction,
         QueryAction,
@@ -29,12 +35,23 @@ define([
         WorkspaceViewModel,
         GoogleAnalytics,
         DataSet,
-        DataSubset) {
+        DataSubset,
+        PropertyChangeSubscriber,
+        HistoryMonitor,
+        UniqueTracker) {
     'use strict';
 
     var self;
-    var ProjectViewModel = function(state, availableWidgets) {
+    var setDirty;
+    var historyMonitor;
+    var ProjectViewModel = function(state, setDirtyLocal) {
         self = this;
+
+        if (defined(setDirtyLocal)) {
+            setDirty = setDirtyLocal;
+        }
+        historyMonitor = HistoryMonitor.getInstance();
+
         state = defined(state) ? state : {};
 
         if (typeof state.name === 'undefined') {
@@ -49,7 +66,7 @@ define([
         this._actions = [];
         this._events = [];
 
-        this.setState(state, availableWidgets);
+        this.setState(state);
 
         ko.track(this);
 
@@ -109,21 +126,6 @@ define([
         }
     });
 
-    // TODO: Update this to make it more generic to Components, temporarily just using this._components in the
-    // methods
-    ProjectViewModel.prototype.addComponent = function(component) {
-        this._components.push(component);
-    };
-
-    ProjectViewModel.prototype.removeComponent = function(component) {
-        if (component !== this._workspace) {
-            var index = this._components.indexOf(component);
-            if (index > -1) {
-                this._components.splice(index, 1);
-            }
-        }
-    };
-
     ProjectViewModel.prototype.getState = function() {
         self = this;
 
@@ -152,6 +154,8 @@ define([
     };
 
     ProjectViewModel.prototype.setState = function(state, availableWidgets) {
+        var self = this;
+
         if (defined(state.name)) {
             this._name = state.name;
         }
@@ -172,96 +176,203 @@ define([
             // Clear array.
             this._dataSets.length = 0;
 
-            var newDataSets = $.map(state.dataSets, function(itemState) {
+            var newDataSets = $.each(state.dataSets, function(itemIndex, itemState) {
+                var dataSet;
+
                 if (itemState.type === DataSet.getType()) {
-                    return new DataSet(itemState);
+                    dataSet = new DataSet(itemState);
+                }
+                else if (itemState.type === DataSubset.getType()) {
+                    dataSet = new DataSubset(itemState);
+                }
+                else {
+                    // Invalid state.
+                    return;
                 }
 
-                if (itemState.type === DataSubset.getType()) {
-                    return new DataSubset(itemState);
-                }
-
-                // Invalid state.
-                return null;
+                self.addDataSet(dataSet);
             });
-
-            this._dataSets.push.apply(this._dataSets, newDataSets);
         }
 
         if (defined(state.components)) {
-            var self = this;
-            // Clear array.
+            // Clear array except for Workspace.
             this._components.length = 1;
 
-            var newComponents = $.map(state.components, function(itemState) {
-                for (var index in availableWidgets) {
+            var newComponents = $.each(state.components, function(itemIndex, itemState) {
+                for (var index = 0; index < availableWidgets.length; index++) {
                     var widget = availableWidgets[index];
                     if (itemState.type === widget.o.getViewModelType()) {
-                        return new widget.o(itemState, self.getDataSet);
+                        var component =  new widget.o(itemState, self.getDataSet);
+                        self.addComponent(component);
                     }
                 }
-
-                // Invalid state.
-                return null;
             });
-
-            this._components.push.apply(this._components, newComponents);
         }
 
         if (defined(state.actions)) {
             // Clear array.
             this._actions.length = 0;
 
-            var newActions = $.map(state.actions, function(itemState) {
-                itemState.target = self.getComponent(itemState.target);
+            var newActions = $.each(state.actions, function(itemIndex, itemState) {
+                var action;
 
                 if (itemState.type === PropertyAction.getType()) {
-                    return new PropertyAction(itemState);
+                    itemState.target = self.getComponent(itemState.target);
+                    action = new PropertyAction(itemState);
+                }
+                else if (itemState.type === QueryAction.getType()) {
+                    action = new QueryAction(itemState);
+                }
+                else {
+                    // Invalid state.
+                    return;
                 }
 
-                if (itemState.type === QueryAction.getType()) {
-                    return new QueryAction(itemState);
-                }
-
-                // Invalid state.
-                return null;
+                self.addAction(action);
             });
-
-            this._actions.push.apply(this._actions, newActions);
         }
 
         if (defined(state.events)) {
             // Clear array.
             this._events.length = 0;
 
-            var newEvents = $.map(state.events, function(itemState) {
+            var newEvents = $.each(state.events, function(itemIndex, itemState) {
                 itemState.triggeringComponent = self.getComponent(itemState.triggeringComponent);
                 // TODO: Trigger?
                 var actions = [];
                 for (var i = 0; i < itemState.actions.length; i++) {
                     actions.push(self.getAction(itemState.actions[i]));
                 }
-                itemState.actions = actions;
-                return new Event(itemState);
-            });
 
-            this._events.push.apply(this._events, newEvents);
+                itemState.actions = actions;
+
+                var event = new Event(itemState);
+                self.addEvent(event);
+            });
         }
+    };
+
+    // TODO: Update this to make it more generic to Components, temporarily just using this._components in the
+    // methods
+    ProjectViewModel.prototype.addComponent = function(component, index) {
+        // Try to add unique name.
+        var success = UniqueTracker.addValueIfUnique(SuperComponentViewModel.getUniqueNameNamespace(),
+            component.viewModel.name.value, component.viewModel);
+
+        if (!success) {
+            console.log('New Component name was not unique.');
+            return;
+        }
+
+        if (defined(index)) {
+            this._components.splice(index, 0, component);
+        }
+        else {
+            this._components.push(component);
+        }
+
+        // Add the DOM element.
+        component.addToWorkspace();
+
+        // Undo by removing the item.
+        historyMonitor.addUndoChange(function() {
+            self.removeComponent(component);
+        });
+
+        // Redo by readding the item.
+        historyMonitor.addRedoChange(function() {
+            self.addComponent(component);
+        });
     };
 
     ProjectViewModel.prototype.addDataSet = function(data) {
+        var namespace = DataSet.getUniqueNameNamespace();
+
+        // Try to add unique name.
+        var success = UniqueTracker.addValueIfUnique(namespace, data.name, data);
+
+        if (!success) {
+            console.log('New DataSet name was not unique.');
+            return;
+        }
+
         if (data instanceof DataSet) {
             this._dataSets.push(data);
+
+            // Undo by marking the DataSet for deletion.
+            historyMonitor.addUndoChange(function() {
+                // Remove unique name.
+                UniqueTracker.removeItem(namespace, data);
+                data.markForDeletion();
+            });
+
+            // Redo by reseting the DataSet's reference count.
+            historyMonitor.addRedoChange(function() {
+                // Add unique name again.
+                var success = UniqueTracker.addValueIfUnique(namespace, data.name, data);
+
+                if (!success) {
+                    console.log('DataSet name added through redo was not unique.');
+                    return;
+                }
+
+                data.resetReferenceCount();
+            });
         }
     };
 
-    ProjectViewModel.prototype.addEvent = function(event) {
-        this._events.push(event);
+    ProjectViewModel.prototype.addAction = function(action, index) {
+        // Try to add unique name.
+        var success = UniqueTracker.addValueIfUnique(Action.getUniqueNameNamespace(), action.name, action);
+
+        if (!success) {
+            console.log('New Action name was not unique.');
+            return;
+        }
+
+        if (defined(index)) {
+            this._actions.splice(index, 0, action);
+        }
+        else {
+            this._actions.push(action);
+        }
+
+        // Undo by removing the item.
+        historyMonitor.addUndoChange(function() {
+            self.removeAction(action);
+        });
+
+        // Redo by readding the item.
+        historyMonitor.addRedoChange(function() {
+            self.addAction(action);
+        });
     };
 
-    ProjectViewModel.prototype.addAction = function(action) {
-        // TODO: Check that action doesn't already exist.
-        this._actions.push(action);
+    ProjectViewModel.prototype.addEvent = function(event, index) {
+        // Try to add unique name.
+        var success = UniqueTracker.addValueIfUnique(Event.getUniqueNameNamespace(), event.name, event);
+
+        if (!success) {
+            console.log('New Event name was not unique.');
+            return;
+        }
+
+        if (defined(index)) {
+            this._events.splice(index, 0, event);
+        }
+        else {
+            this._events.push(event);
+        }
+
+        // Undo by removing the item.
+        historyMonitor.addUndoChange(function() {
+            self.removeEvent(event);
+        });
+
+        // Redo by readding the item.
+        historyMonitor.addRedoChange(function() {
+            self.addEvent(event);
+        });
     };
 
     ProjectViewModel.prototype.getComponent = function(name) {
@@ -269,17 +380,6 @@ define([
             var component = this._components[index];
             if (component.viewModel.name.value === name) {
                 return component;
-            }
-        }
-
-        return null;
-    };
-
-    ProjectViewModel.prototype.getAction = function(name) {
-        for (var index = 0; index < this._actions.length; index++) {
-            var action = this._actions[index];
-            if (action.name === name) {
-                return action;
             }
         }
 
@@ -297,20 +397,69 @@ define([
         return null;
     };
 
+    ProjectViewModel.prototype.getAction = function(name) {
+        for (var index = 0; index < this._actions.length; index++) {
+            var action = this._actions[index];
+            if (action.name === name) {
+                return action;
+            }
+        }
+
+        return null;
+    };
+
+    ProjectViewModel.prototype.getEvent = function(name) {
+        // TODO
+    };
+
+    ProjectViewModel.prototype.removeComponent = function(component) {
+        if (component !== this._workspace) {
+            var index = this._components.indexOf(component);
+            if (index > -1) {
+                this._components.splice(index, 1);
+
+                // Remove unique name.
+                UniqueTracker.removeItem(SuperComponentViewModel.getUniqueNameNamespace(), component.viewModel);
+
+                // Remove the DOM element.
+                component.removeFromWorkspace();
+
+                // Undo by adding the item.
+                historyMonitor.addUndoChange(function() {
+                    self.addComponent(component, index);
+                });
+
+                // Redo by removing the item.
+                historyMonitor.addRedoChange(function() {
+                    self.removeComponent(component);
+                });
+            }
+        }
+    };
+
     // TODO: Do we want to allow removal using dataset instance and name?
     // The DD specifies this, but we should probably pick one.
     ProjectViewModel.prototype.removeDataSet = function(dataSet) {
         var index = this._dataSets.indexOf(dataSet);
         if (index > -1) {
             this._dataSets.splice(index, 1);
+            
+            // Remove unique name.
+            UniqueTracker.removeItem(DataSet.getUniqueNameNamespace(), dataSet);
+
+            // Cannot undo/redo removing a DataSet.
         }
     };
 
+
     ProjectViewModel.prototype.removeEvent = function(event) {
-        var index = self._events.indexOf(event);
+        var index = this._events.indexOf(event);
         if (index > -1) {
             event.unregister();
-            self._events.splice(index, 1);
+            this._events.splice(index, 1);
+            
+             // Remove unique name.
+            UniqueTracker.removeItem(Event.getUniqueNameNamespace(), event);
         }
     };
 
@@ -327,6 +476,39 @@ define([
         var index = self._actions.indexOf(action);
         if (index > -1) {
             self._actions.splice(index, 1);
+
+            // Remove unique name.
+            UniqueTracker.removeItem(Action.getUniqueNameNamespace(), action);
+
+            // Undo by adding the item.
+            historyMonitor.addUndoChange(function() {
+                self.addAction(action, index);
+            });
+
+            // Redo by removing the item.
+            historyMonitor.addRedoChange(function() {
+                self.removeAction(action);
+            });
+        }
+    };
+
+    ProjectViewModel.prototype.removeEvent = function(event) {
+        var index = self._events.indexOf(event);
+        if (index > -1) {
+            self._events.splice(index, 1);
+
+            // Remove unique name.
+            UniqueTracker.removeItem(Event.getUniqueNameNamespace(), event);
+
+            // Undo by adding the item.
+            historyMonitor.addUndoChange(function() {
+                self.addEvent(event, index);
+            });
+
+            // Redo by removing the item.
+            historyMonitor.addRedoChange(function() {
+                self.removeEvent(event);
+            });
         }
     };
 
@@ -334,44 +516,47 @@ define([
         //TODO
     };
 
-    /**
-     * Calls the setDirty function when changes are made.
-     * @param setDirty The function which sets the project to dirty.
-     */
-    ProjectViewModel.prototype.subscribeChanges = function(setDirty) {
+    ProjectViewModel.prototype.subscribeChanges = function() {
         function arrayChanged(changes) {
             setDirty();
 
             changes.forEach(function(change) {
-                var subscriber = change.value.viewModel || change.value;
                 if (change.status === 'added') {
-                    subscriber.subscribeChanges(setDirty);
-                }
-                else if (change.status === 'deleted') {
-                    subscriber.subscriptions.forEach(function(subscription) {
-                        subscription.dispose();
-                    });
+                    var subscriber = change.value.viewModel || change.value;
+
+                    // Subscribe to changes if not already subscribed.
+                    if (!subscriber.subscribed) {
+                        subscriber.subscribeChanges();
+                    }
                 }
             });
         }
 
         // Workspace changed.
-        this.workspace.subscribeChanges(setDirty);
+        this.workspace.subscribeChanges();
 
         // Google Analytics changed.
-        this.googleAnalytics.subscribeChanges(setDirty);
+        this.googleAnalytics.subscribeChanges();
 
         // Component is added or removed.
-        subscribeObservable(this, '_components', arrayChanged, null, 'arrayChange');
+        subscribeObservable(this, '_components', function(changes) {
+            arrayChanged(changes);
+        }, null, 'arrayChange');
 
         // DataSet is added or removed.
-        subscribeObservable(this, '_dataSets', arrayChanged, null, 'arrayChange');
+        subscribeObservable(this, '_dataSets', function(changes) {
+            arrayChanged(changes);
+        }, null, 'arrayChange');
 
         // Action is added or removed.
-        subscribeObservable(this, '_actions', arrayChanged, null, 'arrayChange');
+        subscribeObservable(this, '_actions', function(changes) {
+            arrayChanged(changes);
+        }, null, 'arrayChange');
 
         // Event is added or removed.
-        subscribeObservable(this, '_events', arrayChanged, null, 'arrayChange');
+        subscribeObservable(this, '_events', function(changes) {
+            arrayChanged(changes);
+        }, null, 'arrayChange');
     };
 
     ProjectViewModel.prototype.subscribeNameChange = function() {

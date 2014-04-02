@@ -3,6 +3,7 @@
  */
 define([
         'models/Property/StringProperty',
+        'modules/PropertyChangeSubscriber',
         'util/createValidator',
         'util/defined',
         'util/defaultValue',
@@ -11,6 +12,7 @@ define([
         'jquery'
     ], function(
         StringProperty,
+        PropertyChangeSubscriber,
         createValidator,
         defined,
         defaultValue,
@@ -117,12 +119,17 @@ define([
         self.eventCategory.message = '';
     };
 
-    GoogleAnalytics.prototype.subscribeChanges = function(setDirty) {
-        subscribeObservable(this.uaCode, '_value', setDirty);
+    GoogleAnalytics.prototype.subscribeChanges = function() {
+        var propertyChangeSubscriber = PropertyChangeSubscriber.getInstance();
 
-        subscribeObservable(this.eventCategory, '_value', setDirty);
+        propertyChangeSubscriber.subscribeBeforeChange(this.uaCode, '_value');
+        propertyChangeSubscriber.subscribeChange(this.uaCode, '_value');
 
-        subscribeObservable(this, '_bound', setDirty);
+        propertyChangeSubscriber.subscribeBeforeChange(this.eventCategory, '_value');
+        propertyChangeSubscriber.subscribeChange(this.eventCategory, '_value');
+
+        propertyChangeSubscriber.subscribeBeforeChange(this, '_bound');
+        propertyChangeSubscriber.subscribeChange(this, '_bound');
     };
 
     return GoogleAnalytics;
