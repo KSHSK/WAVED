@@ -27,9 +27,8 @@ define([
     ){
     'use strict';
 
-    var self;
     var Event = function(state) {
-        self = this;
+        var self = this;
         state = defined(state) ? state : {};
 
         // TODO: Validation, etc
@@ -45,6 +44,14 @@ define([
             for (var i = 0; i < self.actions.length; i++) {
                 self.actions[i].apply();
             }
+        };
+
+        this.register = function() {
+            $(self._trigger.domElement).on(self._eventType.toLowerCase(), self.applyActions);
+        };
+
+        this.unregister = function() {
+            $(self._trigger.domElement).off(self._eventType.toLowerCase(), self.applyActions);
         };
 
         this.register();
@@ -103,7 +110,6 @@ define([
     });
 
     Event.prototype.setState = function(state) {
-
         if (defined(state.name)) {
             this.name = state.name;
         }
@@ -143,7 +149,7 @@ define([
         var self = this;
 
         var properties = [];
-        for ( var prop in this) {
+        for (var prop in this) {
             if (this.hasOwnProperty(prop)) {
                 properties.push(prop);
             }
@@ -156,14 +162,6 @@ define([
                 self.subscriptions.push(subscription);
             }
         });
-    };
-
-    Event.prototype.register = function() {
-        $(this._trigger.domElement).on(this._eventType.toLowerCase(), self.applyActions);
-    };
-
-    Event.prototype.unregister = function() {
-        $(this._trigger.domElement).off(this._eventType.toLowerCase(), self.applyActions);
     };
 
     return Event;
