@@ -318,7 +318,7 @@
                         <th data-bind="text: $data"></th>
                     </tr>
                 </thead>
-                <!-- Need to limit to 10 rows or this could lock of the browser if there are too many rows. -->
+                <!-- Need to limit to 10 rows or this could lock up the browser if there are too many rows. -->
                 <tbody data-bind="foreach: {data: selectedDataSet.data.slice(0,10), as: 'dataRow'}">
                     <tr data-bind="foreach: {data: $parent.selectedDataSet.dataFields, as: 'key'}">
                         <td data-bind="text: dataRow[key]">
