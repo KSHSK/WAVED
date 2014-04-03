@@ -1,9 +1,10 @@
 define(['knockout',
-        'util/defined'
+        'util/defined',
+        'util/subscribeObservable'
     ],function(
         ko,
-        defined
-    ){
+        defined,
+        subscribeObservable){
     'use strict';
 
     var Property = function(options) {
@@ -14,6 +15,7 @@ define(['knockout',
         this._originalValue = undefined;
         this._value = undefined; // Type determined by subclasses.
         this._displayValue = undefined;
+        this.onchange = options.onchange;
 
         this.message = '';
         this.error = false;
@@ -33,6 +35,14 @@ define(['knockout',
         this.setState(options);
 
         ko.track(this);
+
+        // When this._value changes, call onchange.
+        var self = this;
+        subscribeObservable(this, '_value', function() {
+            if (defined(self.onchange)) {
+                self.onchange();
+            }
+        });
     };
 
     Object.defineProperties(Property.prototype, {

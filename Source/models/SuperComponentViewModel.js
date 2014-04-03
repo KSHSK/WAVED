@@ -2,6 +2,8 @@ define([
         'jquery',
         'knockout',
         'models/Property/StringProperty',
+        'modules/PropertyChangeSubscriber',
+        'modules/UniqueTracker',
         'util/defined',
         'util/createValidator',
         'util/getNamePropertyInstance',
@@ -10,6 +12,8 @@ define([
         $,
         ko,
         StringProperty,
+        PropertyChangeSubscriber,
+        UniqueTracker,
         defined,
         createValidator,
         getNamePropertyInstance,
@@ -17,6 +21,8 @@ define([
     'use strict';
 
     var SuperComponentViewModel = function(state) {
+        var self = this;
+
         // Set name
         this.name = getNamePropertyInstance('Name', {
             namespace: SuperComponentViewModel.getUniqueNameNamespace(),
@@ -24,6 +30,12 @@ define([
         });
 
         ko.track(this);
+
+        // Add the name to the unique tracker when changed.
+        var namespace = SuperComponentViewModel.getUniqueNameNamespace();
+        subscribeObservable(this.name, '_value', function(newValue) {
+            UniqueTracker.addValueIfUnique(namespace, newValue, self);
+        });
     };
 
     SuperComponentViewModel.getUniqueNameNamespace = function() {
@@ -50,19 +62,33 @@ define([
         }
     };
 
-    SuperComponentViewModel.prototype.subscriptions = [];
+    SuperComponentViewModel.prototype.subscribed = false;
 
-    SuperComponentViewModel.prototype.subscribeChanges = function(setDirty) {
+    SuperComponentViewModel.prototype.subscribeChanges = function() {
         var self = this;
-        self.properties.forEach(function(prop) {
-            var subscription = subscribeObservable(prop, '_value', setDirty);
-            self.subscriptions.push(subscription);
+        var propertyChangeSubscriber = PropertyChangeSubscriber.getInstance();
 
-            self.recursiveSubscribeChanges(self, prop, setDirty);
+        self.properties.forEach(function(prop) {
+            self.subscribeChange(prop, '_value', propertyChangeSubscriber);
+            self.recursiveSubscribeChanges(prop, propertyChangeSubscriber);
         });
+
+        self.subscribed = true;
     };
 
-    SuperComponentViewModel.prototype.recursiveSubscribeChanges = function(self, prop, setDirty){
+    SuperComponentViewModel.prototype.subscribeChange = function(prop, name, propertyChangeSubscriber) {
+        var self = this;
+
+        // Subscribe undo change.
+        propertyChangeSubscriber.subscribeBeforeChange(prop, name);
+
+        // Subscribe redo and dirty changes.
+        propertyChangeSubscriber.subscribeChange(prop, name);
+    };
+
+    SuperComponentViewModel.prototype.recursiveSubscribeChanges = function(prop, propertyChangeSubscriber) {
+        var self = this;
+
         if(prop === undefined){
             return;
         }
@@ -74,23 +100,17 @@ define([
 
                 nestedProperties.forEach(function(nestedProp){
                     // Subscribe to the nestedProperty itself
-                    var nestedSubscription = subscribeObservable(nestedProp, '_value', setDirty);
-
-                    if(nestedSubscription !== null){
-                        self.subscriptions.push(nestedSubscription);
-                    }
+                    self.subscribeChange(nestedProp, '_value', propertyChangeSubscriber);
 
                     // Traverse down the tree
-                    self.recursiveSubscribeChanges(self, nestedProp, setDirty);
+                    self.recursiveSubscribeChanges(nestedProp, propertyChangeSubscriber);
                 });
             }
         }
         else{
             // The nesting stops here, look for properties like normal (we've reached the bottom of the tree)
             prop.properties.forEach(function(value){
-                var subscription = subscribeObservable(value, '_value', setDirty);
-
-                self.subscriptions.push(subscription);
+                self.subscribeChange(value, '_value', propertyChangeSubscriber);
             });
         }
     };

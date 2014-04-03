@@ -71,7 +71,6 @@ define([
                     else {
                         // Display error to user.
                         displayMessage(data.errorMessage);
-                        projectSaved.reject();
                     }
                 }
             });
@@ -107,7 +106,6 @@ define([
                     else {
                         // Display error to user.
                         displayMessage(data.errorMessage);
-                        projectSaved.reject();
                     }
                 }
             });
