@@ -7,6 +7,7 @@ define([
         'models/Event/Trigger',
         'models/Property/StringProperty',
         'modules/UniqueTracker',
+        'modules/PropertyChangeSubscriber',
         'util/defined',
         'util/subscribeObservable',
         'knockout',
@@ -20,6 +21,7 @@ define([
         Trigger,
         StringProperty,
         UniqueTracker,
+        PropertyChangeSubscriber,
         defined,
         subscribeObservable,
         ko,
@@ -27,9 +29,8 @@ define([
     ){
     'use strict';
 
-    var self;
     var Event = function(state) {
-        self = this;
+        var self = this;
         state = defined(state) ? state : {};
 
         // TODO: Validation, etc
@@ -47,7 +48,13 @@ define([
             }
         };
 
-        this.register();
+        this.register = function() {
+            $(self._trigger.domElement).on(EventType[self._eventType], self.applyActions);
+        };
+
+        this.unregister = function() {
+            $(self._trigger.domElement).off(EventType[self._eventType], self.applyActions);
+        };
 
         ko.track(this);
     };
@@ -103,7 +110,6 @@ define([
     });
 
     Event.prototype.setState = function(state) {
-
         if (defined(state.name)) {
             this.name = state.name;
         }
@@ -137,33 +143,28 @@ define([
         };
     };
 
-    Event.prototype.subscriptions = [];
+    Event.prototype.subscribed = false;
 
-    Event.prototype.subscribeChanges = function(setDirty) {
+    Event.prototype.subscribeChanges = function() {
         var self = this;
+        var propertyChangeSubscriber = PropertyChangeSubscriber.getInstance();
 
         var properties = [];
-        for ( var prop in this) {
+        for (var prop in this) {
             if (this.hasOwnProperty(prop)) {
                 properties.push(prop);
             }
         }
 
         properties.forEach(function(prop) {
-            var subscription = subscribeObservable(self, prop, setDirty);
+            // Subscribe undo change.
+            propertyChangeSubscriber.subscribeBeforeChange(self, prop);
 
-            if(subscription !== null){
-                self.subscriptions.push(subscription);
-            }
+            // Subscribe redo and dirty changes.
+            propertyChangeSubscriber.subscribeChange(self, prop);
         });
-    };
 
-    Event.prototype.register = function() {
-        $(this._trigger.domElement).on(this._eventType.toLowerCase(), self.applyActions);
-    };
-
-    Event.prototype.unregister = function() {
-        $(this._trigger.domElement).off(this._eventType.toLowerCase(), self.applyActions);
+        this.subscribed = true;
     };
 
     return Event;

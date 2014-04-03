@@ -1,23 +1,27 @@
 define([
         'jquery',
+        'd3',
         'models/Property/StringProperty',
         'models/Property/NumberProperty',
         'models/Property/BooleanProperty',
         'models/ComponentViewModel',
+        'modules/HistoryMonitor',
         'util/defined',
         'util/defaultValue',
         'util/createValidator',
-        'd3'
+        'util/displayMessage'
     ], function(
         $,
+        d3,
         StringProperty,
         NumberProperty,
         BooleanProperty,
         ComponentViewModel,
+        HistoryMonitor,
         defined,
         defaultValue,
         createValidator,
-        d3) {
+        displayMessage) {
     'use strict';
 
     var self;
@@ -170,31 +174,36 @@ define([
         // TODO
     };
 
-    WidgetViewModel.prototype.bindData = function(dataSet) {
-        var found = false;
-        for(var index = 0; index < this._boundData.length; index++){
-            if(dataSet.name === this._boundData[index].name){
-                found = true;
-                break;
-            }
+    WidgetViewModel.prototype.boundDataIndex = function(dataSet) {
+        return this._boundData.indexOf(dataSet);
+    };
+
+    WidgetViewModel.prototype.bindData = function(dataSet, indexToInsert) {
+        var self = this;
+
+        if (this.boundDataIndex(dataSet) > -1) {
+            displayMessage('DataSet "' + dataSet.name + '" is already bound.');
+            return;
         }
 
-        if(!found){
-            this._boundData.push(dataSet);
-            dataSet.incrementReferenceCount();
+        dataSet.incrementReferenceCount();
+        if (defined(indexToInsert)) {
+            self._boundData.splice(indexToInsert, 0, dataSet);
+        }
+        else {
+            self._boundData.push(dataSet);
         }
     };
 
+
     WidgetViewModel.prototype.unbindData = function(dataSet) {
-        var name = dataSet.name;
+        var self = this;
 
         // Only unbind if the data is bound.
-        for(var index = 0; index < this._boundData.length; index++){
-            if(name === this._boundData[index].name){
-                this._boundData.splice(index, 1);
-                dataSet.decrementReferenceCount();
-                break;
-            }
+        var index = this.boundDataIndex(dataSet);
+        if(index > -1){
+            self._boundData.splice(index, 1);
+            dataSet.decrementReferenceCount();
         }
     };
 
