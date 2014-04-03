@@ -23,7 +23,9 @@ define([
         button.attr('data-bind', 'template: {name: \'' + this._templateName + '\'}');
 
         var viewModel = new ButtonViewModel(state, getDataSet);
-        viewModel.triggers.push(new Trigger('Button', button));
+        viewModel.addTrigger(new Trigger('Button', function() {
+            return button;
+        }));
 
         this._domElement = button;
         this.viewModel = viewModel;
