@@ -357,6 +357,8 @@ define([
             return;
         }
 
+        event.register();
+
         if (defined(index)) {
             this._events.splice(index, 0, event);
         }
@@ -443,23 +445,11 @@ define([
         var index = this._dataSets.indexOf(dataSet);
         if (index > -1) {
             this._dataSets.splice(index, 1);
-            
+
             // Remove unique name.
             UniqueTracker.removeItem(DataSet.getUniqueNameNamespace(), dataSet);
 
             // Cannot undo/redo removing a DataSet.
-        }
-    };
-
-
-    ProjectViewModel.prototype.removeEvent = function(event) {
-        var index = this._events.indexOf(event);
-        if (index > -1) {
-            event.unregister();
-            this._events.splice(index, 1);
-            
-             // Remove unique name.
-            UniqueTracker.removeItem(Event.getUniqueNameNamespace(), event);
         }
     };
 
@@ -495,6 +485,7 @@ define([
     ProjectViewModel.prototype.removeEvent = function(event) {
         var index = self._events.indexOf(event);
         if (index > -1) {
+            event.unregister();
             self._events.splice(index, 1);
 
             // Remove unique name.
