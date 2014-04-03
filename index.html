@@ -368,7 +368,10 @@
         </div>
         <div>
             <label class="inline">Event: </label>
-            <select data-bind="options: eventTypes, value: selectedEventType"></select>
+            <select data-bind="options: eventTypes, 
+                               optionsText: function(eventType) {
+                                   return eventType.toLowerCase();
+                               }, value: selectedEventType"></select>
         </div>
         <div>
             <label class="inline">Triggering Component: </label>

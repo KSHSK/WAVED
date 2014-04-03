@@ -49,11 +49,11 @@ define([
         };
 
         this.register = function() {
-            $(self._trigger.domElement).on(self._eventType.toLowerCase(), self.applyActions);
+            $(self._trigger.domElement).on(EventType[self._eventType], self.applyActions);
         };
 
         this.unregister = function() {
-            $(self._trigger.domElement).off(self._eventType.toLowerCase(), self.applyActions);
+            $(self._trigger.domElement).off(EventType[self._eventType], self.applyActions);
         };
 
         ko.track(this);
