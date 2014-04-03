@@ -6,14 +6,16 @@ define(['knockout',
     ){
     'use strict';
 
-    var Trigger = function(state) {
-        state = defined(state) ? state : {};
+    /**
+     * @param {String} name
+     * @param {function} getDomElement
+     */
+    var Trigger = function(name, getDomElement) {
 
-        // TODO: Validation, etc
-        this._name = ''; // String
+        this._name = name;
+        this._getDomElement = getDomElement;
 
-        this.setState(state);
-
+        // TODO: Do we still need this?
         ko.track(this);
     };
 
@@ -21,24 +23,14 @@ define(['knockout',
         name: {
             get: function() {
                 return this._name;
-            },
-            set: function(value) {
-                this._name = value;
+            }
+        },
+        domElement: {
+            get: function() {
+                return this._getDomElement();
             }
         }
     });
-
-    Trigger.prototype.setState = function(state) {
-        if (defined(state.name)) {
-            this._name = state.name;
-        }
-    };
-
-    Trigger.prototype.getState = function() {
-        return {
-            'name': name
-        };
-    };
 
     return Trigger;
 });
