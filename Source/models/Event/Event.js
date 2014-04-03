@@ -56,8 +56,6 @@ define([
             $(self._trigger.domElement).off(self._eventType.toLowerCase(), self.applyActions);
         };
 
-        this.register();
-
         ko.track(this);
     };
 
