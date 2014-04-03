@@ -6,10 +6,14 @@ define(['knockout',
     ){
     'use strict';
 
-    var Trigger = function(name, domElement) {
+    /**
+     * @param {String} name
+     * @param {function} getDomElement
+     */
+    var Trigger = function(name, getDomElement) {
 
-        this._name = name; // String
-        this._domElement = domElement;
+        this._name = name;
+        this._getDomElement = getDomElement;
 
         // TODO: Do we still need this?
         ko.track(this);
@@ -23,7 +27,7 @@ define(['knockout',
         },
         domElement: {
             get: function() {
-                return this._domElement;
+                return this._getDomElement();
             }
         }
     });

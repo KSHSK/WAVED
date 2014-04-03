@@ -60,7 +60,11 @@ define([
     };
 
     ComponentViewModel.prototype.getTriggers = function() {
-        // TODO
+        return this._triggers;
+    };
+
+    ComponentViewModel.prototype.addTrigger = function(trigger) {
+        this._triggers.push(trigger);
     };
 
     Object.defineProperties(ComponentViewModel.prototype, {
