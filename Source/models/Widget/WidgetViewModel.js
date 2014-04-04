@@ -77,11 +77,7 @@ define([
             errorMessage: 'Value must be between 0 and 100'
         });
 
-        this._elementNames = []; // String[]
         this._boundData = []; // String[]
-
-        // TODO: Set this.
-        this._availableElements = []; // ComponentRecord[]
     };
 
     WidgetViewModel.prototype = Object.create(ComponentViewModel.prototype);
@@ -96,11 +92,6 @@ define([
             get: function() {
                 return this._boundData;
             }
-        },
-        elementNames: {
-            get: function() {
-                return this._elementNames;
-            }
         }
     });
 
@@ -110,7 +101,6 @@ define([
         state.height = this.height.getState();
         state.x = this.x.getState();
         state.y = this.y.getState();
-        state.elementNames = this.elementNames;
 
         var boundDataSetStates = [];
         for(var index=0; index < this.boundData.length; index++){
@@ -140,10 +130,6 @@ define([
             this.y.value = state.y.value;
         }
 
-        if (defined(state.elements)) {
-            this._elementNames = state.elements;
-        }
-
         if (defined(state.boundData)) {
             for(var index=0; index < state.boundData.length; index++){
                 var dataSet = self.getDataSetByName(state.boundData[index].name);
@@ -152,26 +138,6 @@ define([
                 }
             }
         }
-    };
-
-    WidgetViewModel.prototype.addElement = function(elementName) {
-        // TODO
-    };
-
-    WidgetViewModel.prototype.removeElement = function(element) {
-        // TODO
-    };
-
-    WidgetViewModel.prototype.addSubwidget = function(name) {
-        // TODO
-    };
-
-    WidgetViewModel.prototype.removeSubwidget = function(name) {
-        // TODO
-    };
-
-    WidgetViewModel.prototype.getAvailableElements = function() {
-        // TODO
     };
 
     WidgetViewModel.prototype.boundDataIndex = function(dataSet) {
@@ -194,7 +160,6 @@ define([
             self._boundData.push(dataSet);
         }
     };
-
 
     WidgetViewModel.prototype.unbindData = function(dataSet) {
         var self = this;

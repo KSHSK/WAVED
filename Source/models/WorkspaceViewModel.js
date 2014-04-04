@@ -47,6 +47,11 @@ define([
             errorMessage: 'Value must be greater than 0'
         });
 
+        this.color = new StringProperty({
+            displayName: 'Color',
+            value: 'White'
+        });
+
         UniqueTracker.addValueIfUnique(SuperComponentViewModel.getUniqueNameNamespace(), this.name.value, this);
 
         this.setState(state);
@@ -85,7 +90,7 @@ define([
         },
         properties: {
             get: function() {
-                return [this.width, this.height];
+                return [this.width, this.height, this.color];
             }
         }
     });
