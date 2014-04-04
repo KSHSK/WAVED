@@ -76,14 +76,15 @@ define([
 
     ScaledGlyphSizeScheme.prototype = Object.create(GlyphSizeScheme.prototype);
 
-    ScaledGlyphSizeScheme.prototype.getType = function() {
-        return GlyphSizeSchemeType.SCALED_SIZE;
-    };
-
     Object.defineProperties(ScaledGlyphSizeScheme.prototype, {
         properties: {
             get: function() {
                 return [this.dataSet, this.dataField];
+            }
+        },
+        type : {
+            get : function() {
+                return GlyphSizeSchemeType.SCALED_SIZE;
             }
         }
     });
@@ -173,7 +174,7 @@ define([
         var state = {
             dataSet: set,
             dataField: this.dataField.getState().value,
-            type: this.getType()
+            type: this.type
         };
 
         return state;
