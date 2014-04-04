@@ -41,14 +41,15 @@ define([
 
     ConstantGlyphSizeScheme.prototype = Object.create(GlyphSizeScheme.prototype);
 
-    ConstantGlyphSizeScheme.prototype.getType = function() {
-        return GlyphSizeSchemeType.CONSTANT_SIZE;
-    };
-
     Object.defineProperties(ConstantGlyphSizeScheme.prototype, {
         properties: {
             get: function() {
                 return [this.size];
+            }
+        },
+        type: {
+            get : function() {
+                return GlyphSizeSchemeType.CONSTANT_SIZE;
             }
         }
     });

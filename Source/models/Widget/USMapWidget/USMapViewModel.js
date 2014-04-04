@@ -1,10 +1,12 @@
 define([
         'models/Event/Trigger',
         'models/Property/Coloring/ColoringSelectionProperty',
+        'models/Property/GlyphSize/GlyphSizeSelectionProperty',
         'models/Property/StringProperty',
         'models/Property/ListProperty',
         'models/SuperComponentViewModel',
         'models/Widget/WidgetViewModel',
+        'models/Constants/GlyphSizeSchemeType',
         './GlyphViewModel',
         'modules/UniqueTracker',
         'modules/GlyphHelper',
@@ -16,10 +18,12 @@ define([
     ],function(
         Trigger,
         ColoringSelectionProperty,
+        GlyphSizeSelectionProperty,
         StringProperty,
         ListProperty,
         SuperComponentViewModel,
         WidgetViewModel,
+        GlyphSizeSchemeType,
         GlyphViewModel,
         UniqueTracker,
         GlyphHelper,
@@ -29,6 +33,11 @@ define([
         d3,
         $){
     'use strict';
+
+    var radiusScale = d3.scale.linear()
+        .domain([1000,500000])
+        .range([2,10])
+        .clamp(true);
 
     function getElement(viewModel){
         return d3.select('#' + viewModel.id);
@@ -63,6 +72,7 @@ define([
         .style('fill', glyph.color.value)
         .style('opacity', glyph.opacity.value/100);
     }
+
     var id = 0;
     function addGlyph(glyph, viewModel) {
         var w2 = $('#waved-workspace').width() * viewModel.width.value/100;
@@ -95,7 +105,11 @@ define([
             }
         })
         .attr('r', function(d, i) {
-            return glyph.size.value.size.value;
+            if (glyph.size.value.type === GlyphSizeSchemeType.SCALED_SIZE) {
+                return radiusScale(d[glyph.size.value.dataField.value]);
+            } else {
+                return glyph.size.value.size.value;
+            }
         })
         .style('fill', glyph.color.value)
         .style('opacity', glyph.opacity.value/100);
@@ -179,7 +193,14 @@ define([
                 self._selectedGlyph = newGlyph;
                 GlyphHelper.addEditGlyph().then(function(){
                     for (var i = 0; i < newGlyph.properties.length; i++) {
-                        newGlyph.properties[i]._value = newGlyph.properties[i]._displayValue;
+                        var property = newGlyph.properties[i];
+                        property._value = newGlyph.properties[i]._displayValue;
+                        if (property instanceof GlyphSizeSelectionProperty){
+                            var p = property.value.properties;
+                            for (var j = 0; j < p.length; j++) {
+                                p[j]._value = p[j]._displayValue;
+                            }
+                        }
                     }
                     self.glyphs.push(newGlyph);
                     addGlyph(newGlyph, self);
@@ -189,12 +210,26 @@ define([
                 self._selectedGlyph = this.value;
                 GlyphHelper.addEditGlyph().then(function() {
                     for (var i = 0; i < self._selectedGlyph.properties.length; i++) {
-                        self._selectedGlyph.properties[i]._value = self._selectedGlyph.properties[i]._displayValue;
+                        var property = self._selectedGlyph.properties[i];
+                        property._value = self._selectedGlyph.properties[i]._displayValue;
+                        if (property instanceof GlyphSizeSelectionProperty){
+                            var p = property.value.properties;
+                            for (var j = 0; j < p.length; j++) {
+                                p[j]._value = p[j]._displayValue;
+                            }
+                        }
                     }
                     editGlyph(self._selectedGlyph, self);
                 }, function() {
                     for (var i = 0; i < self._selectedGlyph.properties.length; i++) {
-                        self._selectedGlyph.properties[i]._displayValue = self._selectedGlyph.properties[i]._value;
+                        var property = self._selectedGlyph.properties[i];
+                        property._displayValue = self._selectedGlyph.properties[i]._value;
+                        if (property instanceof GlyphSizeSelectionProperty){
+                            var p = property.value.properties;
+                            for (var j = 0; j < p.length; j++) {
+                                p[j]._displayValue = p[j]._value;
+                            }
+                        }
                     }
                 });
             },
