@@ -34,6 +34,106 @@ define([
         return d3.select('#' + viewModel.id);
     }
 
+    function removeGlyph(glyph) {
+        var child = document.getElementById(glyph._id);
+        child.parentNode.removeChild(child);
+        glyph._dom = undefined;
+        glyph._id = undefined;
+    }
+
+    function editGlyph(glyph, viewModel) {
+        var data = glyph.dataSet.value.data;
+
+        glyph._dom.selectAll('circle').data(data)
+        .attr('cx', function(d, i) {
+            var coords = viewModel._projection([d[glyph.longitude.value], d[glyph.latitude.value]]);
+            if (coords !== null) {
+                return coords[0];
+            }
+        })
+        .attr('cy', function(d, i) {
+            var coords = viewModel._projection([d[glyph.longitude.value], d[glyph.latitude.value]]);
+            if (coords !== null) {
+                return coords[1];
+            }
+        })
+        .attr('r', function(d, i) {
+            return glyph.size.value.size.value;
+        })
+        .style('fill', glyph.color.value)
+        .style('opacity', glyph.opacity.value/100);
+    }
+    var id = 0;
+    function addGlyph(glyph, viewModel) {
+        var w2 = $('#waved-workspace').width() * viewModel.width.value/100;
+        var h2 = $('#waved-workspace').height() * viewModel.width.value/100;
+        var svg = getElement(viewModel)
+            .append('svg')
+            .attr('height', h2)
+            .attr('width', w2)
+            .attr('class', 'widget-container')
+            .attr('id', id);
+
+
+        var data = glyph.dataSet.value.data;
+        glyph._dom = svg.append('g');
+        glyph._id = id;
+        id++;
+
+        glyph._dom.selectAll('circle').data(data)
+        .enter().append('circle')
+        .attr('cx', function(d, i) {
+            var coords = viewModel._projection([d[glyph.longitude.value], d[glyph.latitude.value]]);
+            if (coords !== null) {
+                return coords[0];
+            }
+        })
+        .attr('cy', function(d, i) {
+            var coords = viewModel._projection([d[glyph.longitude.value], d[glyph.latitude.value]]);
+            if (coords !== null) {
+                return coords[1];
+            }
+        })
+        .attr('r', function(d, i) {
+            return glyph.size.value.size.value;
+        })
+        .style('fill', glyph.color.value)
+        .style('opacity', glyph.opacity.value/100);
+    }
+
+    function renderMap (viewModel) {
+        if (viewModel._ready) {
+            var w = $('#waved-workspace').width();
+            var w2 = w *viewModel.width.value/100;
+            var h = $('#waved-workspace').height();
+            var h2 = h * viewModel.width.value/100;
+            getElement(viewModel).selectAll('svg').remove();
+            var scale = w*1.3*viewModel.width.value/100; //1.3 is a magic number
+            viewModel._projection = d3.geo.albersUsa().scale(scale).translate(([w2/2, h2/2]));
+            var path = d3.geo.path().projection(viewModel._projection);
+            var svg = getElement(viewModel)
+                .append('svg')
+                .attr('height', h2)
+                .attr('width', w2)
+                .attr('class', 'widget-container');
+            viewModel._svg = svg;
+            viewModel._states = svg.append('g');
+            d3.json('data/states.json', function(json) {
+                viewModel._states.selectAll('path')
+                    .data(json.features)
+                    .enter()
+                    .append('path')
+                    .attr('d', path)
+                    .attr('stroke', 'white')
+                    .style('fill', function(d) {
+                        return viewModel.coloring.value;
+                    });
+                viewModel._isRendered = true;
+                viewModel.updateSvg();
+            });
+        }
+    }
+
     var USMapViewModel = function(state, getDataSet) {
         var self = this;
         state = (defined(state)) ? state : {};
@@ -47,35 +147,7 @@ define([
         this._selectedGlyph = undefined;
 
         this.render = function() {
-            if (self._ready) {
-                var w = $('#waved-workspace').width();
-                var w2 = w *self.width.value/100;
-                var h = $('#waved-workspace').height();
-                var h2 = h * self.width.value/100;
-                getElement(self).selectAll('svg').remove();
-                var scale = w*1.3*self.width.value/100; //1.3 is a magic number
-                self._projection = d3.geo.albersUsa().scale(scale).translate(([w2/2, h2/2]));
-                var path = d3.geo.path().projection(self._projection);
-                var svg = getElement(self)
-                    .append('svg')
-                    .attr('height', h2)
-                    .attr('width', w2);
-                self._svg = svg;
-                var states = svg.append('g');
-                d3.json('data/states.json', function(json) {
-                    states.selectAll('path')
-                        .data(json.features)
-                        .enter()
-                        .append('path')
-                        .attr('d', path)
-                        .attr('stroke', 'white')
-                        .style('fill', function(d) {
-                            return self.coloring.value;
-                        });
-                    self._isRendered = true;
-                    self.updateSvg();
-                });
-            }
+            renderMap(self);
         };
 
         this.updateSvg = function() {
@@ -110,6 +182,7 @@ define([
                         newGlyph.properties[i]._value = newGlyph.properties[i]._displayValue;
                     }
                     self.glyphs.push(newGlyph);
+                    addGlyph(newGlyph, self);
                 });
             },
             edit: function() {
@@ -118,6 +191,7 @@ define([
                     for (var i = 0; i < self._selectedGlyph.properties.length; i++) {
                         self._selectedGlyph.properties[i]._value = self._selectedGlyph.properties[i]._displayValue;
                     }
+                    editGlyph(self._selectedGlyph, self);
                 }, function() {
                     for (var i = 0; i < self._selectedGlyph.properties.length; i++) {
                         self._selectedGlyph.properties[i]._displayValue = self._selectedGlyph.properties[i]._value;
@@ -125,8 +199,9 @@ define([
                 });
             },
             remove: function() {
+                removeGlyph(this.value);
                 UniqueTracker.removeItem(SuperComponentViewModel.getUniqueNameNamespace(), self.glyphList.value);
-                self.glyphs.splice(self.glyphs.indexOf(self.glyphList.value));
+                self.glyphs.splice(self.glyphs.indexOf(self.glyphList.value), 1);
             }
         });
 

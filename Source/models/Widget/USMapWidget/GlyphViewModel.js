@@ -3,6 +3,7 @@ define([
         'models/SuperComponentViewModel',
         'models/Property/ArrayProperty',
         'models/Property/StringProperty',
+        'models/Property/NumberProperty',
         'models/Property/GlyphSize/GlyphSizeSelectionProperty',
         'modules/UniqueTracker',
         'util/defined',
@@ -12,6 +13,7 @@ define([
         SuperComponentViewModel,
         ArrayProperty,
         StringProperty,
+        NumberProperty,
         GlyphSizeSelectionProperty,
         UniqueTracker,
         defined,
@@ -45,6 +47,10 @@ define([
             displayName: 'Color',
             value: 'Red'
         });
+        this.opacity = new NumberProperty({
+            displayName: 'Opacity',
+            value: 80
+        });
         this.size = new GlyphSizeSelectionProperty({
             displayName: 'Size',
             value: ''
@@ -58,6 +64,8 @@ define([
 
         this.setState(state);
 
+        this._dom = undefined;
+
         ko.track(this);
     };
 
@@ -68,6 +76,7 @@ define([
         state.type = GlyphViewModel.getType();
         state.dataSet = this.dataSet.getState();
         state.color = this.color.getState();
+        state.opacity = this.opacity.getState();
         state.size = this.size.getState();
         state.latitude = this.latitude.getState();
         state.longitude = this.longitude.getState();
@@ -83,6 +92,9 @@ define([
         }
         if (defined(state.color)) {
             this.color.setState(state.color);
+        }
+        if (defined(state.opacity)) {
+            this.opacity.setState(state.opacity);
         }
         if (defined(state.size)) {
             this.size.setState(state.size);
@@ -109,7 +121,7 @@ define([
     Object.defineProperties(GlyphViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.dataSet, this.color, this.size, this.latitude, this.longitude, this.visible,
+                return [this.name, this.dataSet, this.color, this.opacity, this.size, this.latitude, this.longitude, this.visible,
                 this.logGoogleAnalytics];
             }
         }
