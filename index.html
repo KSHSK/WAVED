@@ -118,6 +118,7 @@
                             <div class="inline">Source Files</div>
                             <div class="inline right">
                                 <button class="button-small add-icon-button" data-bind="click: tryToUploadData">Add Data File</button>
+                                <button class="button-small preview-icon-button" data-bind="click: previewDataSet">Preview Data File</button>
                                 <button class="button-small delete-icon-button" data-bind="click: markDataForDeletion">Delete Data File</button>
                             </div>
                         </div>
@@ -309,6 +310,24 @@
         </table>
     </div>
     
+    <div id="preview-data-dialog" class="dialog">
+        <div data-bind="if: selectedDataSet">
+            <table id="preview-data-table">
+                <thead>
+                    <tr data-bind="foreach: selectedDataSet.dataFields">
+                        <th data-bind="text: $data"></th>
+                    </tr>
+                </thead>
+                <!-- Need to limit to 10 rows or this could lock up the browser if there are too many rows. -->
+                <tbody data-bind="foreach: {data: selectedDataSet.data.slice(0,10), as: 'dataRow'}">
+                    <tr data-bind="foreach: {data: $parent.selectedDataSet.dataFields, as: 'key'}">
+                        <td data-bind="text: dataRow[key]">
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <div id="action-editor-dialog" title="Action Editor" class="dialog">
         <div class="inline top padding15 dialogColumnMaxWidth">
             <div class="required">Action Name:</div>
