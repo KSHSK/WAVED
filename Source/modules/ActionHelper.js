@@ -113,7 +113,7 @@ define([
 
             // Set the displayValues to match those saved in the Action
             for (var index in component.properties) {
-                component.properties[index].displayValue = component.properties[index].value;
+                component.properties[index].displayValue = component.properties[index].originalValue;
             }
 
             for (var key in viewModel.selectedAction.newValues) {
@@ -172,7 +172,7 @@ define([
             for (var property in viewModel.actionEditorAffectedComponent.viewModel) {
                 var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedComponent.viewModel[property]);
                 if (propertyIndex > -1) {
-                    if (properties[propertyIndex].displayValue !== properties[propertyIndex].value) {
+                    if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
                         actionValues[property] = properties[propertyIndex].displayValue;
                     }
                 }

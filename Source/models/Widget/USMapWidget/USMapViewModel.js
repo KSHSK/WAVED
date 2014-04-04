@@ -35,7 +35,7 @@ define([
         var namespace = SuperComponentViewModel.getUniqueNameNamespace();
         this.id = UniqueTracker.getDefaultUniqueValue(namespace, USMapViewModel.getType(), this);
         if (!defined(state.name)) {
-            this.name.value = this.id;
+            this.name.originalValue = this.id;
         }
 
         this.render = function() {
