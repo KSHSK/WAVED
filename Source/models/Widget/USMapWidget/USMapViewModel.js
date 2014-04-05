@@ -67,7 +67,7 @@ define([
             }
         })
         .attr('r', function(d, i) {
-            return glyph.size.value.size.value;
+            return glyph.size.value.size.value*viewModel.width.value/100;
         })
         .style('fill', glyph.color.value)
         .style('opacity', glyph.opacity.value/100);
@@ -108,11 +108,18 @@ define([
             if (glyph.size.value.type === GlyphSizeSchemeType.SCALED_SIZE) {
                 return radiusScale(d[glyph.size.value.dataField.value]);
             } else {
-                return glyph.size.value.size.value;
+                return glyph.size.value.size.value*viewModel.width.value/100;
             }
         })
         .style('fill', glyph.color.value)
         .style('opacity', glyph.opacity.value/100);
+    }
+
+    function renderGlyphs (viewModel) {
+        var glyphs = viewModel.glyphs;
+        for (var i = 0; i < glyphs.length; i++) {
+            addGlyph(glyphs[i], viewModel);
+        }
     }
 
     function renderMap (viewModel) {
@@ -145,6 +152,7 @@ define([
                 viewModel._isRendered = true;
                 viewModel.updateSvg();
             });
+            renderGlyphs(viewModel);
         }
     }
 
