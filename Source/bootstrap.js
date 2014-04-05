@@ -72,6 +72,13 @@
             }
         });
 
+        $('.preview-icon-button').button({
+            text: false,
+            icons: {
+                primary: 'ui-icon-search'
+            }
+        });
+
         // Setup accordion
         $('#accordion').accordion({
             animate: false,

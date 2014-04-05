@@ -16,6 +16,7 @@ define([
     'use strict';
 
     var PropertyAction = function(state) {
+        var self = this;
         Action.call(this, state);
 
         this._newValues = {};
@@ -28,6 +29,19 @@ define([
 
         // TODO: Should this be private _dataSet? Update DD if changed.
         this.dataSet = state.dataSet;
+
+        this.apply = function() {
+            var historyMonitor = HistoryMonitor.getInstance();
+
+            var executeChange = function() {
+                for (var key in self._newValues) {
+                    self._target.viewModel[key].value = self._newValues[key];
+                }
+            };
+
+            // Don't add individual changes to the history.
+            historyMonitor.executeIgnoreHistory(executeChange);
+        };
 
         ko.track(this);
     };
@@ -74,20 +88,6 @@ define([
 
     PropertyAction.getType = function() {
         return 'PropertyAction';
-    };
-
-    PropertyAction.prototype.apply = function() {
-        var self = this;
-        var historyMonitor = HistoryMonitor.getInstance();
-
-        var executeChange = function() {
-            for (var key in self._newValues) {
-                self._target.viewModel[key].value = self._newValues[key];
-            }
-        };
-
-        // Don't add individual changes to the history.
-        historyMonitor.executeIgnoreHistory(executeChange);
     };
 
     return PropertyAction;

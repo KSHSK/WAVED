@@ -357,6 +357,8 @@ define([
             return;
         }
 
+        event.register();
+
         if (defined(index)) {
             this._events.splice(index, 0, event);
         }
@@ -483,6 +485,7 @@ define([
     ProjectViewModel.prototype.removeEvent = function(event) {
         var index = self._events.indexOf(event);
         if (index > -1) {
+            event.unregister();
             self._events.splice(index, 1);
 
             // Remove unique name.
