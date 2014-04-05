@@ -1,12 +1,14 @@
 define([
         'models/Widget/ButtonWidget/ButtonViewModel',
         'models/Constants/ComponentTemplateName',
+        'models/Event/Trigger',
         '../Widget',
         'knockout',
         'jquery'
     ],function(
         ButtonViewModel,
         ComponentTemplateName,
+        Trigger,
         Widget,
         ko,
         $){
@@ -17,10 +19,13 @@ define([
 
         this._templateName = ComponentTemplateName.BUTTON;
 
-        var viewModel = new ButtonViewModel(state, getDataSet);
-
         var button = this.newWidgetContainer();
         button.attr('data-bind', 'template: {name: \'' + this._templateName + '\'}');
+
+        var viewModel = new ButtonViewModel(state, getDataSet);
+        viewModel.addTrigger(new Trigger('Button', function() {
+            return button;
+        }));
 
         this._domElement = button;
         this.viewModel = viewModel;

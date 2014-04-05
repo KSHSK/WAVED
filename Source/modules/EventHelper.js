@@ -39,6 +39,7 @@ define([
                 modal: true,
                 buttons: {
                     'Save': function() {
+
                         if (viewModel.selectedEventName.error) {
                             viewModel.selectedEventName.message = viewModel.selectedEventName.errorMessage;
                             return;
@@ -55,7 +56,7 @@ define([
                             name: viewModel.selectedEventName.value,
                             eventType: viewModel.selectedEventType,
                             triggeringComponent: viewModel.eventEditorTriggeringComponent,
-                            trigger: viewModel.eventEditorTrigger,
+                            trigger: $('#event-trigger-select').prop('selectedIndex'),
                             actions: viewModel.selectedEventActions
                         });
                         viewModel.currentProject.addEvent(event);
@@ -90,6 +91,7 @@ define([
                 modal: true,
                 buttons: {
                     'Save': function() {
+
                         if (viewModel.selectedEventName.error) {
                             viewModel.selectedEventName.message = viewModel.selectedEventName.errorMessage;
                             return;
@@ -102,7 +104,9 @@ define([
                             return;
                         }
 
+                        viewModel.selectedEvent.unregister();
                         self.updateEditChanges(viewModel);
+                        viewModel.selectedEvent.register();
 
                         self.eventDialog.dialog('close');
                     },

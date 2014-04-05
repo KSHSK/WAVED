@@ -1,12 +1,14 @@
 define([
         'models/Widget/TextBlockWidget/TextBlockViewModel',
         'models/Constants/ComponentTemplateName',
+        'models/Event/Trigger',
         '../Widget',
         'knockout',
         'jquery'
     ],function(
         TextBlockViewModel,
         ComponentTemplateName,
+        Trigger,
         Widget,
         ko,
         $){
@@ -21,6 +23,10 @@ define([
 
         var textBlock = this.newWidgetContainer();
         textBlock.attr('data-bind', 'template: {name: \'' + this._templateName + '\'}');
+
+        viewModel.addTrigger(new Trigger('TextBlock', function() {
+            return textBlock;
+        }));
 
         this._domElement = textBlock;
         this.viewModel = viewModel;

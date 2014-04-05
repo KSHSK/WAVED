@@ -291,6 +291,19 @@ define(['jquery',
         return DeleteData.markDataForDeletion(self);
     };
 
+    WAVEDViewModel.prototype.previewDataSet = function() {
+        if (!defined(this.selectedDataSet)) {
+            return;
+        }
+
+        $('#preview-data-dialog').dialog({
+            height: 'auto',
+            width: 'auto',
+            modal: true,
+            title: 'Preview Data for "' + this.selectedDataSet.getNameAndFilename() + '"'
+        });
+    };
+
     WAVEDViewModel.prototype.addAction = function() {
         return ActionHelper.addAction(self);
     };
