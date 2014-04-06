@@ -83,8 +83,7 @@ define(['jquery',
 
         this._currentProject = new ProjectViewModel({
             name: ''
-        },
-        this.setDirty);
+        });
 
         this._projectTree = new ProjectTree();
 
@@ -145,7 +144,7 @@ define(['jquery',
 
         ko.track(this);
 
-        this.currentProject.subscribeChanges();
+        this.currentProject.subscribeChanges(this.setDirty);
 
         // Remove the hover/focus look when undo or redo is disabled.
         subscribeObservable(this, '_historyIndex', function() {

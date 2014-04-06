@@ -41,17 +41,7 @@ define([
         UniqueTracker) {
     'use strict';
 
-    var self;
-    var setDirty;
-    var historyMonitor;
-    var ProjectViewModel = function(state, setDirtyLocal) {
-        self = this;
-
-        if (defined(setDirtyLocal)) {
-            setDirty = setDirtyLocal;
-        }
-        historyMonitor = HistoryMonitor.getInstance();
-
+    var ProjectViewModel = function(state) {
         state = defined(state) ? state : {};
 
         if (typeof state.name === 'undefined') {
@@ -103,10 +93,10 @@ define([
         },
         googleAnalytics: {
             get: function() {
-                return self._googleAnalytics;
+                return this._googleAnalytics;
             },
             set: function(value) {
-                self._googleAnalytics = value;
+                this._googleAnalytics = value;
             }
         },
         events: {
@@ -127,7 +117,7 @@ define([
     });
 
     ProjectViewModel.prototype.getState = function() {
-        self = this;
+        var self = this;
 
         return {
             'name': this._name,
@@ -229,7 +219,7 @@ define([
                 for (var index = 0; index < availableWidgets.length; index++) {
                     var widget = availableWidgets[index];
                     if (itemState.type === widget.o.getViewModelType()) {
-                        var component =  new widget.o(itemState, self.getDataSet);
+                        var component =  new widget.o(itemState, self.getDataSet.bind(self));
                         self.addComponent(component);
                     }
                 }
@@ -282,6 +272,8 @@ define([
     // TODO: Update this to make it more generic to Components, temporarily just using this._components in the
     // methods
     ProjectViewModel.prototype.addComponent = function(component, index) {
+        var self = this;
+
         // Try to add unique name.
         var success = UniqueTracker.addValueIfUnique(SuperComponentViewModel.getUniqueNameNamespace(),
             component.viewModel.name.value, component.viewModel);
@@ -300,6 +292,8 @@ define([
 
         // Add the DOM element.
         component.addToWorkspace();
+
+        var historyMonitor = HistoryMonitor.getInstance();
 
         // Undo by removing the item.
         historyMonitor.addUndoChange(function() {
@@ -322,6 +316,8 @@ define([
             console.log('New DataSet name was not unique.');
             return;
         }
+
+        var historyMonitor = HistoryMonitor.getInstance();
 
         if (data instanceof DataSet) {
             this._dataSets.push(data);
@@ -349,6 +345,8 @@ define([
     };
 
     ProjectViewModel.prototype.addAction = function(action, index) {
+        var self = this;
+
         // Try to add unique name.
         var success = UniqueTracker.addValueIfUnique(Action.getUniqueNameNamespace(), action.name, action);
 
@@ -364,6 +362,8 @@ define([
             this._actions.push(action);
         }
 
+        var historyMonitor = HistoryMonitor.getInstance();
+
         // Undo by removing the item.
         historyMonitor.addUndoChange(function() {
             self.removeAction(action);
@@ -376,6 +376,8 @@ define([
     };
 
     ProjectViewModel.prototype.addEvent = function(event, index) {
+        var self = this;
+
         // Try to add unique name.
         var success = UniqueTracker.addValueIfUnique(Event.getUniqueNameNamespace(), event.name, event);
 
@@ -392,6 +394,8 @@ define([
         else {
             this._events.push(event);
         }
+
+        var historyMonitor = HistoryMonitor.getInstance();
 
         // Undo by removing the item.
         historyMonitor.addUndoChange(function() {
@@ -416,6 +420,8 @@ define([
     };
 
     ProjectViewModel.prototype.getDataSet = function(name) {
+        var self = this;
+
         for (var index = 0; index < self._dataSets.length; index++) {
             var dataSet = self._dataSets[index];
             if (dataSet.name === name) {
@@ -442,6 +448,8 @@ define([
     };
 
     ProjectViewModel.prototype.removeComponent = function(component) {
+        var self = this;
+
         if (component !== this._workspace) {
             var index = this._components.indexOf(component);
             if (index > -1) {
@@ -452,6 +460,8 @@ define([
 
                 // Remove the DOM element.
                 component.removeFromWorkspace();
+
+                var historyMonitor = HistoryMonitor.getInstance();
 
                 // Undo by adding the item.
                 historyMonitor.addUndoChange(function() {
@@ -481,6 +491,8 @@ define([
     };
 
     ProjectViewModel.prototype.removeAction = function(action) {
+        var self = this;
+
         for (var i = 0; i < self._events.length; i++) {
             for (var j = 0; j < self._events[i].actions[0].length; j++) {
                 if (self._events[i]._actions[0][j].name.value === action.name.value) {
@@ -497,6 +509,8 @@ define([
             // Remove unique name.
             UniqueTracker.removeItem(Action.getUniqueNameNamespace(), action);
 
+            var historyMonitor = HistoryMonitor.getInstance();
+
             // Undo by adding the item.
             historyMonitor.addUndoChange(function() {
                 self.addAction(action, index);
@@ -510,6 +524,8 @@ define([
     };
 
     ProjectViewModel.prototype.removeEvent = function(event) {
+        var self = this;
+
         var index = self._events.indexOf(event);
         if (index > -1) {
             event.unregister();
@@ -517,6 +533,8 @@ define([
 
             // Remove unique name.
             UniqueTracker.removeItem(Event.getUniqueNameNamespace(), event);
+
+            var historyMonitor = HistoryMonitor.getInstance();
 
             // Undo by adding the item.
             historyMonitor.addUndoChange(function() {
@@ -534,7 +552,9 @@ define([
         //TODO
     };
 
-    ProjectViewModel.prototype.subscribeChanges = function() {
+    ProjectViewModel.prototype.subscribeChanges = function(setDirty) {
+        var self = this;
+
         function arrayChanged(changes) {
             setDirty();
 
