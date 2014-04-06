@@ -76,7 +76,8 @@ define([
                     // Clear the workspace.
                     $('#waved-workspace').empty();
 
-                    // TODO : Clean up leftovers from deleted project
+                    viewModel.currentProject.resetProject();
+                    viewModel.dirty = false;
 
                     // Remove project name from URL
                     updateQueryByName('project', '');
