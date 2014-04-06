@@ -112,6 +112,17 @@ define([
                         'class': 'submit-button',
                         click: function() {
                             var projectName = viewModel.loadProjectName.value;
+
+                            /* Soft fail on empty project before calling loadProject,
+                                since a rejected deferred remains rejected even
+                                if resolve is called
+                            */
+                            if (!projectName.trim()) {
+                                viewModel.loadProjectName.error = true;
+                                viewModel.loadProjectName.message = 'A project must be selected!';
+                                return;
+                            }
+
                             self.loadProject(projectLoaded, projectName, viewModel);
                             $.when(projectLoaded).done(function() {
                                 loadProjectDialog.dialog('close');
@@ -134,12 +145,6 @@ define([
          */
         loadProject: function(projectLoaded, projectName, viewModel) {
             var self = this;
-
-            if (!projectName.trim()) {
-                viewModel.loadProjectName.error = true;
-                viewModel.loadProjectName.message = 'A project must be selected!';
-                return;
-            }
 
             $.ajax({
                 type: 'POST',
@@ -182,6 +187,7 @@ define([
                     else {
                         viewModel.loadProjectName.error = true;
                         viewModel.loadProjectName.message = data.errorMessage;
+                        projectLoaded.reject();
                     }
                 }
             });
