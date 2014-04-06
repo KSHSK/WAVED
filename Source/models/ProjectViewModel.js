@@ -505,21 +505,17 @@ define([
 
     ProjectViewModel.prototype.refreshWorkspace = function() {
 
-        var executeChange = function() {
-            for (var i = 0; i < self._components.length; i++) {
-                var properties = self._components[i].viewModel.properties;
-                for (var j = 0; j < properties.length; j++) {
-                    var displayValue = properties[j].displayValue;
-                    properties[j].value = properties[j].originalValue;
-                    properties[j].displayValue = displayValue;
-                }
+        for (var i = 0; i < self._components.length; i++) {
+            var properties = self._components[i].viewModel.properties;
+            for (var j = 0; j < properties.length; j++) {
+                var displayValue = properties[j].displayValue;
+                properties[j].value = properties[j].originalValue;
+                properties[j].displayValue = displayValue;
             }
-        };
-
-        historyMonitor.executeIgnoreHistory(executeChange);
+        }
 
         // Reapply automatically applied actions.
-        for (var i = 0; i < self._actions.length; i++) {
+        for (i = 0; i < self._actions.length; i++) {
             if (self._actions[i].applyAutomatically) {
                 self._actions[i].apply();
             }
