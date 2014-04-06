@@ -127,7 +127,8 @@ define([
 
                         UniqueTracker.reset();
 
-                        // Create the new project.
+                        // Set the state of the project.
+                        viewModel.currentProject.resetProject();
                         viewModel.currentProject.setState(JSON.parse(data.projectState),
                             viewModel.availableWidgets);
 

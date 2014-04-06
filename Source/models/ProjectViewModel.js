@@ -153,6 +153,33 @@ define([
         };
     };
 
+    ProjectViewModel.prototype.resetProject = function() {
+        this._name = '';
+        this._workspace.resetWorkspace();
+        this._googleAnalytics.resetGoogleAnalytics();
+
+        if (this._dataSets.length > 0) {
+            this._dataSets.length = 0;
+            ko.getObservable(this, '_dataSets').valueHasMutated();
+        }
+
+        if (this._components.length > 1) {
+            this._components.length = 1;
+            ko.getObservable(this, '_components').valueHasMutated();
+        }
+
+        if (this._actions.length > 0) {
+            this._actions.length = 0;
+            ko.getObservable(this, '_actions').valueHasMutated();
+        }
+
+        if (this._events.length > 0) {
+            this._events.length = 0;
+            ko.getObservable(this, '_events').valueHasMutated();
+        }
+    };
+
+
     ProjectViewModel.prototype.setState = function(state, availableWidgets) {
         var self = this;
 
