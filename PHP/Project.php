@@ -95,5 +95,17 @@ class Project
     {
         return $this->lastModifiedBy;
     }
+
+    public function toDetailsArray()
+    {
+        return array(
+            "id" => $this->getId(),
+            "name" => $this->getName(),
+            "created" => $this->getCreated(),
+            "createdBy" => $this->getCreatedBy(),
+            "lastModified" => $this->getLastModified(),
+            "lastModifiedBy" => $this->getLastModifiedBy()
+        );
+    }
 }
 ?>

@@ -3,6 +3,7 @@
  */
 define([
         'jquery',
+        'DataTables',
         './UnsavedChanges',
         './ReadData',
         './DeleteData',
@@ -11,6 +12,7 @@ define([
         'models/ProjectViewModel'
     ], function(
         $,
+        DataTables,
         UnsavedChanges,
         ReadData,
         DeleteData,
@@ -57,11 +59,29 @@ define([
 
             return $.ajax({
                 type: 'POST',
-                url: 'PHP/getExistingProjectNames.php',
+                url: 'PHP/getExistingProjectDetails.php',
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
                     if (data.success) {
+                        var table = $('#project-list').dataTable();
                         viewModel.projectList = data.projects;
+
+                        // Reset the data of the table
+                        table.fnClearTable();
+                        table.fnAddData(data.projects, true);
+
+                        // Click events for selecting a project
+                        $('#project-list tbody tr').click(function() {
+                            if ($(this).hasClass('row_selected')) {
+                                $(this).removeClass('row_selected');
+                                viewModel.loadProjectName._value = '';
+                            }
+                            else {
+                                table.$('tr.row_selected').removeClass('row_selected');
+                                $(this).addClass('row_selected');
+                                viewModel.loadProjectName._value = table._(this)[0].name;
+                            }
+                        });
                     }
                     else {
                         viewModel.loadProjectName.error = true;
@@ -82,8 +102,8 @@ define([
 
             loadProjectDialog.dialog({
                 resizable: false,
-                height: 250,
-                width: 400,
+                height: 450,
+                width: 750,
                 modal: true,
                 buttons: {
                     'Load Project': {
@@ -102,6 +122,10 @@ define([
                     }
                 }
             });
+
+            // Update column sizes now that the dialog is open
+            var table = $('#project-list').dataTable();
+            table.fnAdjustColumnSizing();
         },
 
         /**
