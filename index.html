@@ -8,6 +8,7 @@
     
     <!-- CSS -->
     <link rel="stylesheet" href="ThirdParty/jquery/css/waved-theme/jquery-ui-1.10.4.custom.min.css">
+    <link rel="stylesheet" href="ThirdParty/DataTables/css/jquery.dataTables.css">
     <link rel="stylesheet" type="text/css" href="CSS/WAVED.css">
     
     <!-- JavaScript-->
@@ -265,12 +266,19 @@
     </div>
 
     <div id="load-project-dialog" title="Load Project" class="dialog">
-        <p>Please select an existing project to load.</p>
-        <label class="required" for="load-project-select" data-bind="text: loadProjectName.displayName"></label> 
-        <select id="load-project-select"
-            data-bind="options: projectList, value: loadProjectName.value">
-        </select>
-        <button class="button-small refresh-icon-button" data-bind="click: updateProjectList">Refresh List</button>
+        <span class="required">Please select an existing project to load.</span>
+        <button class="button-small refresh-icon-button right" data-bind="click: updateProjectList">Refresh List</button>
+        <table id="project-list">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Created Time</th>
+                    <th>Modified Time</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
         <div class="error" data-bind="visible: loadProjectName.error, html: loadProjectName.message"></div>
     </div>
     

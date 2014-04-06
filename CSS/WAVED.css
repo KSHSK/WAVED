@@ -228,3 +228,7 @@ textarea:disabled {
 .widget-selector img {
     cursor: pointer;
 }
+
+#project-list .row_selected * {
+    background-color: #B0BED9;
+}

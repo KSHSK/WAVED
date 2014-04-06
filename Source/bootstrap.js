@@ -3,13 +3,15 @@
         'WAVED',
         'modules/Welcome',
         'knockout',
-        'jqueryUI'
+        'jqueryUI',
+        'DataTables'
     ], function (
         require,
         WAVED,
         WelcomeModule,
         ko,
-        $) {
+        $,
+        DataTables) {
     'use strict';
 
     require(['../ThirdParty/domReady!', 'koExternalTemplateEngine'], function(document) {
@@ -41,6 +43,23 @@
 
             folder.siblings('ul').slideToggle(duration);
             folder.toggleClass('closed');
+        });
+
+        // Project List Table
+        var dateRender = function(data) {
+            var date = new Date(data * 1000);
+            return date.toLocaleString();
+        };
+
+        $('#project-list').dataTable({
+            'sScrollY': '200px',
+            'bPaginate': false,
+            'bScrollCollapse': false,
+            'aoColumns' : [
+                { 'mData': 'name' },
+                { 'mData': 'created', 'mRender': dateRender },
+                { 'mData': 'lastModified', 'mRender': dateRender },
+            ],
         });
 
         // Add/Edit/Remove Buttons.
