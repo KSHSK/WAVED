@@ -12,6 +12,8 @@ html, body {
     /* Account for header-container and padding*/
     height: calc(100% - 120px);
     min-height: 400px;
+    width: 300px;
+    padding: 10px 5px 10px 10px;
 }
 
 textarea:disabled {
@@ -82,13 +84,13 @@ textarea:disabled {
     margin-right: 8px;
 }
 
-#accordion-container {
-    padding: 10px 5px 10px 10px;
-    width: 300px;
-}
-
 #workspace-container {
     padding: 10px 10px 10px 5px;
+    height: calc(100% - 120px);
+    min-height: 400px;
+    width: calc(100% - 400px);
+    position: relative;
+    overflow: auto;
 }
 
 #waved-workspace {
