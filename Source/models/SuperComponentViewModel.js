@@ -100,7 +100,7 @@ define([
 
                 nestedProperties.forEach(function(nestedProp){
                     // Subscribe to the nestedProperty itself
-                    self.subscribeChange(nestedProp, '_value', propertyChangeSubscriber);
+                    self.subscribeChange(nestedProp, '_originalValue', propertyChangeSubscriber);
 
                     // Traverse down the tree
                     self.recursiveSubscribeChanges(nestedProp, propertyChangeSubscriber);
@@ -110,7 +110,7 @@ define([
         else{
             // The nesting stops here, look for properties like normal (we've reached the bottom of the tree)
             prop.properties.forEach(function(value){
-                self.subscribeChange(value, '_value', propertyChangeSubscriber);
+                self.subscribeChange(value, '_originalValue', propertyChangeSubscriber);
             });
         }
     };
