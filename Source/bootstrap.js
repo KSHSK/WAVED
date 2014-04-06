@@ -51,6 +51,20 @@
             return date.toLocaleString();
         };
 
+        var deleteRender = function(td, cellData, fullData) {
+            var button = $('<button>');
+            button.append("Delete Project " + fullData.name);
+            button.button({
+                text: false,
+                icons: {
+                    primary: 'ui-icon-trash'
+                }
+            });
+            button.click(function() { console.log('Delete Project ' + fullData.name); });
+
+            $(td).css('text-align', 'center').append(button);
+        };
+
         $('#project-list').dataTable({
             'sScrollY': '200px',
             'bPaginate': false,
@@ -59,6 +73,7 @@
                 { 'mData': 'name' },
                 { 'mData': 'created', 'mRender': dateRender },
                 { 'mData': 'lastModified', 'mRender': dateRender },
+                { 'mData': null, 'bSortable': false, 'fnCreatedCell': deleteRender },
             ],
         });
 
