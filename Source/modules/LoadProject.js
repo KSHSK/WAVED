@@ -80,6 +80,7 @@ define([
                                 table.$('tr.row_selected').removeClass('row_selected');
                                 $(this).addClass('row_selected');
                                 viewModel.loadProjectName._value = table._(this)[0].name;
+                                viewModel.loadProjectName.error = false;
                             }
                         });
                     }
@@ -134,6 +135,12 @@ define([
         loadProject: function(projectLoaded, projectName, viewModel) {
             var self = this;
 
+            if (!projectName.trim()) {
+                viewModel.loadProjectName.error = true;
+                viewModel.loadProjectName.message = 'A project must be selected!';
+                return;
+            }
+
             $.ajax({
                 type: 'POST',
                 url: 'PHP/loadProject.php',
@@ -175,7 +182,6 @@ define([
                     else {
                         viewModel.loadProjectName.error = true;
                         viewModel.loadProjectName.message = data.errorMessage;
-                        projectLoaded.reject();
                     }
                 }
             });
