@@ -69,7 +69,7 @@ define([
         var propertyChangeSubscriber = PropertyChangeSubscriber.getInstance();
 
         self.properties.forEach(function(prop) {
-            self.subscribeChange(prop, '_value', propertyChangeSubscriber);
+            self.subscribeChange(prop, '_originalValue', propertyChangeSubscriber);
             self.recursiveSubscribeChanges(prop, propertyChangeSubscriber);
         });
 

@@ -506,7 +506,6 @@ define([
     ProjectViewModel.prototype.refreshWorkspace = function() {
 
         var executeChange = function() {
-            var i;
             for (var i = 0; i < self._components.length; i++) {
                 var properties = self._components[i].viewModel.properties;
                 for (var j = 0; j < properties.length; j++) {
