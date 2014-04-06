@@ -4,14 +4,18 @@
         'modules/Welcome',
         'knockout',
         'jqueryUI',
-        'DataTables'
+        'DataTables',
+        'modules/DeleteProject',
+        'modules/LoadProject',
     ], function (
         require,
         WAVED,
         WelcomeModule,
         ko,
         $,
-        DataTables) {
+        DataTables,
+        DeleteProject,
+        LoadProject) {
     'use strict';
 
     require(['../ThirdParty/domReady!', 'koExternalTemplateEngine'], function(document) {
@@ -52,15 +56,37 @@
         };
 
         var deleteRender = function(td, cellData, fullData) {
+            // Create button
             var button = $('<button>');
-            button.append("Delete Project " + fullData.name);
+
+            // Button text
+            if (WAVED.viewModel.currentProject.name == fullData.name) {
+                // Can't delete open project
+                button.attr('disabled', 'disabled');
+                button.append("Cannot delete open project " + fullData.name);
+            }
+            else {
+                button.append("Delete Project " + fullData.name);
+            }
+
+            // Button style
             button.button({
                 text: false,
                 icons: {
                     primary: 'ui-icon-trash'
                 }
             });
-            button.click(function() { console.log('Delete Project ' + fullData.name); });
+
+            // Click event to delete project
+            button.click(function() {
+                // Delete selected project without going through Welcome Dialog
+                var projectDeleted = DeleteProject.tryToDeleteProject(WAVED.viewModel, fullData.name, false);
+
+                // Update project list to show deletion
+                $.when(projectDeleted).done(function() {
+                    LoadProject.updateProjectList(viewModel);
+                });
+            });
 
             $(td).css('text-align', 'center').append(button);
         };
