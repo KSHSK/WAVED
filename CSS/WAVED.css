@@ -229,6 +229,6 @@ textarea:disabled {
     cursor: pointer;
 }
 
-#project-list .row_selected * {
+#project-list .row_selected td {
     background-color: #B0BED9;
 }
