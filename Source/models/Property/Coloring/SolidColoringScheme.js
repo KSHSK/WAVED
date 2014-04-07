@@ -1,18 +1,68 @@
 define([
         'models/Property/Coloring/ColoringScheme',
-        'knockout',
-        'jquery'
+        'models/Property/StringProperty',
+        'models/Constants/ColoringSchemeType',
+        'util/createValidator',
+        'util/defined',
+        'knockout'
     ],function(
         ColoringScheme,
-        ko,
-        $){
+        StringProperty,
+        ColoringSchemeType,
+        createValidator,
+        defined,
+        ko){
     'use strict';
 
     var SolidColoringScheme = function(state) {
+        state = defined(state) ? state : {};
+
         ColoringScheme.call(this, state);
 
-        // TODO: Validation, etc
-        this.color = state.color; // StringProperty
+        // Default to black
+        var stateColor = {
+            displayName: 'Color',
+            value: '#000000',
+            validValue: createValidator({
+                regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
+            }),
+            errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE
+        };
+        this.color = new StringProperty(stateColor);
+
+        this.setState(state);
+
+        ko.track(this);
+    };
+
+    SolidColoringScheme.prototype = Object.create(ColoringScheme.prototype);
+
+    SolidColoringScheme.prototype.getType = function() {
+        return ColoringSchemeType.SOLID_COLORING;
+    };
+
+    Object.defineProperties(SolidColoringScheme.prototype, {
+        properties: {
+            get: function() {
+                return [this.color];
+            }
+        }
+    });
+
+    SolidColoringScheme.prototype.getState = function() {
+        var state = {
+            color: this.color.getState(),
+            type: this.getType()
+        };
+
+        return state;
+    };
+
+    SolidColoringScheme.prototype.setState = function(state) {
+        if(defined(state.value.color)){
+            // state.value.color.value -> SolidColoringScheme.color.value
+            this.color.value = state.value.color.value;
+        }
     };
 
     return SolidColoringScheme;

@@ -70,11 +70,12 @@ define([
             }
         };
 
+        // TODO: Update this for the new ColoringSelectionProperty
         this.updateSvg = function() {
             if (self._isRendered) {
                 getElement(self).selectAll('svg').selectAll('path')
                 .style('fill', function(d) {
-                    return self.coloring.value;
+                    return defined(self.coloring.value) ? self.coloring.value : '#000000';
                 });
             }
         };
@@ -84,11 +85,17 @@ define([
         subscribeObservable(window.wavedWorkspace.height, '_value', this.render);
 
         //TODO: Use ColoringSelectionProperty
-        this.coloring = new StringProperty({
-            displayName: 'Color',
-            value: 'grey',
-            errorMessage: 'Must be a color name, hexidecimal number, or rgb color',
-            onchange: self.updateSvg
+//        this.coloring = new StringProperty({
+//            displayName: 'Color',
+//            value: 'grey',
+//            errorMessage: 'Must be a color name, hexidecimal number, or rgb color',
+//            onchange: self.updateSvg
+//        });
+
+        this.coloring = new ColoringSelectionProperty({
+            displayName: 'Color Scheme',
+            value: undefined,
+            onchange: self.updateSvg // TODO: This onchange MIGHT need changing
         });
 
         this.width.onchange = this.render;
