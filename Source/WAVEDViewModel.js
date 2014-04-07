@@ -67,6 +67,7 @@ define(['jquery',
 
         this._history = undefined;
         this._historyIndex = undefined;
+        this._lastSaveIndex = undefined;
         this.resetHistory();
 
         this._projectList = [];
@@ -166,6 +167,11 @@ define(['jquery',
     WAVEDViewModel.prototype.resetHistory = function() {
         self._history = [{}];
         self._historyIndex = 0;
+        self._lastSaveIndex = 0;
+    };
+
+    WAVEDViewModel.prototype.setSaveIndex = function() {
+        self._lastSaveIndex = self._historyIndex;
     };
 
     WAVEDViewModel.prototype.isUndoAllowed = function() {
@@ -248,6 +254,10 @@ define(['jquery',
         if (defined(changeFunction)) {
             this.historyMonitor.executeIgnoreHistory(changeFunction);
         }
+
+        if (this._historyIndex === this._lastSaveIndex) {
+            this._dirty = false;
+        }
     };
 
     WAVEDViewModel.prototype.redo = function() {
@@ -261,6 +271,10 @@ define(['jquery',
 
         if (defined(changeFunction)) {
             this.historyMonitor.executeIgnoreHistory(changeFunction);
+        }
+
+        if (this._historyIndex === this._lastSaveIndex) {
+            this._dirty = false;
         }
     };
 
@@ -336,7 +350,10 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.saveProject = function() {
+        var self = this;
+
         var deferred = $.Deferred();
+
         return SaveProject.saveProject(deferred, self);
     };
 
