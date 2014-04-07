@@ -63,8 +63,6 @@ define([
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
                     if (data.success) {
-                        viewModel.dirty = false;
-
                         displayMessage('The project was successfully saved');
                         projectSaved.resolve();
                         viewModel.setSaveIndex();
@@ -97,8 +95,6 @@ define([
                     if (data.success) {
                         // Set the project name since the name has changed.
                         viewModel.currentProject.name = data.projectName;
-
-                        viewModel.dirty = false;
 
                         displayMessage('The project was successfully saved');
                         projectSaved.resolve();

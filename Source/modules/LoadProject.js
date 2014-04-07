@@ -131,7 +131,6 @@ define([
                         viewModel.currentProject.setState(JSON.parse(data.projectState),
                             viewModel.availableWidgets);
 
-                        viewModel.dirty = false;
                         viewModel.resetHistory();
 
                         viewModel.loadProjectName._value = '';

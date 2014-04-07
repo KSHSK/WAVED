@@ -108,13 +108,12 @@ define([
                         viewModel.currentProject.setState(defaultProject.getState(), viewModel.availableWidgets);
 
                         viewModel.newProjectName._value = '';
-                        viewModel.dirty = false;
-
-                        viewModel.resetHistory();
 
                         // Save state of new project.
                         var projectSaved = $.Deferred();
                         SaveProject.saveProject(projectSaved, viewModel);
+
+                        viewModel.resetHistory();
 
                         projectCreated.resolve();
                     }

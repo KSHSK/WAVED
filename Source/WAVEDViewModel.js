@@ -63,7 +63,6 @@ define(['jquery',
     var self;
     var WAVEDViewModel = function() {
         self = this;
-        this._dirty = false;
 
         this._history = undefined;
         this._historyIndex = undefined;
@@ -80,12 +79,11 @@ define(['jquery',
             this.amendUndoNewChangeFunction, this.amendRedoPreviousChangeFunction);
 
         // Create the PropertyChangeSubscriber singleton that everything else will use.
-        this.propertyChangeSubscriber = new PropertyChangeSubscriber(this.setDirty);
+        this.propertyChangeSubscriber = new PropertyChangeSubscriber();
 
         this._currentProject = new ProjectViewModel({
             name: ''
-        },
-        this.setDirty);
+        });
 
         this._projectTree = new ProjectTree();
 
@@ -158,10 +156,6 @@ define(['jquery',
                 $('#redo-button').removeClass('ui-state-hover ui-state-focus');
             }
         });
-    };
-
-    WAVEDViewModel.prototype.setDirty = function() {
-        self.dirty = true;
     };
 
     WAVEDViewModel.prototype.resetHistory = function() {
@@ -259,10 +253,6 @@ define(['jquery',
         if (defined(changeFunction)) {
             this.historyMonitor.executeIgnoreHistory(changeFunction);
         }
-
-        if (this._historyIndex === this._lastSaveIndex) {
-            this._dirty = false;
-        }
     };
 
     WAVEDViewModel.prototype.redo = function() {
@@ -276,10 +266,6 @@ define(['jquery',
 
         if (defined(changeFunction)) {
             this.historyMonitor.executeIgnoreHistory(changeFunction);
-        }
-
-        if (this._historyIndex === this._lastSaveIndex) {
-            this._dirty = false;
         }
     };
 
@@ -398,12 +384,7 @@ define(['jquery',
     Object.defineProperties(WAVEDViewModel.prototype, {
         dirty: {
             get: function() {
-                return this._dirty;
-            },
-            set: function(value) {
-                if (typeof value === 'boolean') {
-                    this._dirty = value;
-                }
+                return this._historyIndex !== this._lastSaveIndex;
             }
         },
         projectList: {

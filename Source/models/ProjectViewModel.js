@@ -42,14 +42,10 @@ define([
     'use strict';
 
     var self;
-    var setDirty;
     var historyMonitor;
-    var ProjectViewModel = function(state, setDirtyLocal) {
+    var ProjectViewModel = function(state) {
         self = this;
 
-        if (defined(setDirtyLocal)) {
-            setDirty = setDirtyLocal;
-        }
         historyMonitor = HistoryMonitor.getInstance();
 
         state = defined(state) ? state : {};
@@ -509,8 +505,6 @@ define([
 
     ProjectViewModel.prototype.subscribeChanges = function() {
         function arrayChanged(changes) {
-            setDirty();
-
             changes.forEach(function(change) {
                 if (change.status === 'added') {
                     var subscriber = change.value.viewModel || change.value;
