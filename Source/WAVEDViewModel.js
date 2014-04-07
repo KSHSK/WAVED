@@ -186,6 +186,11 @@ define(['jquery',
         // Remove history after historyIndex.
         self._history.length = self._historyIndex + 1;
 
+        // If the last save index is ahead of the current history index, then make the last save index invalid.
+        if (self._lastSaveIndex > self._historyIndex) {
+            self._lastSaveIndex = -1;
+        }
+
         self._history.push({
             undoChange: changeFunction
         });
