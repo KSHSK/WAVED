@@ -355,10 +355,7 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.saveProject = function() {
-        var self = this;
-
         var deferred = $.Deferred();
-
         return SaveProject.saveProject(deferred, self);
     };
 
