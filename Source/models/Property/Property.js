@@ -75,14 +75,27 @@ define(['knockout',
     });
 
     Property.prototype.getState = function() {
+        if (typeof this._value === 'object' && typeof this._value.getState === 'function') {
+            return {
+                'value': this._value.getState()
+            };
+        }
         return {
             'value': this._value
         };
     };
 
     Property.prototype.setState = function(state) {
-        this._value = state.value;
-        this._displayValue = state.value;
+        var value = state.value;
+        if (defined(state.value) && defined(state.value.type)) {
+            var O = window.wavedTypes[state.value.type];
+            if (defined(O)) {
+                value = new O(state.value);
+            }
+        }
+
+        this._value = value;
+        this._displayValue = value;
         this.error = !this.isValidValue(this._value);
     };
 

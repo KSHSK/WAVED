@@ -1,8 +1,10 @@
 define(['WAVEDViewModel',
+        'models/Data/DataSet',
         'knockout',
         'jquery'
     ], function(
         WAVEDViewModel,
+        DataSet,
         ko,
         $) {
     'use strict';
@@ -21,6 +23,10 @@ define(['WAVEDViewModel',
             return message;
         }
     });
+
+    var wavedTypes = {};
+    wavedTypes[DataSet.getType()] = DataSet;
+    window.wavedTypes = wavedTypes;
 
     /* ### WAVED Definition ### */
     var WAVED = {

@@ -57,7 +57,7 @@ define([
     ConstantGlyphSizeScheme.prototype.getState = function() {
         var state = {
             size: this.size.getState(),
-            type: this.getType()
+            type: this.type
         };
 
         return state;
