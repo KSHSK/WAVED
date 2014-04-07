@@ -44,6 +44,7 @@ define([
 
         this.applyActions = function() {
             for (var i = 0; i < self.actions.length; i++) {
+                // TODO: pass in information from trigger as a param?
                 self.actions[i].apply();
             }
         };
