@@ -110,6 +110,7 @@ define([
                 this._value = undefined;
                 break;
         }
+        this._displayValue = this._value;
     };
 
     GlyphSizeSelectionProperty.prototype.getSubscribableNestedProperties = function(){

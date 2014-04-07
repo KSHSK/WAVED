@@ -67,7 +67,11 @@ define([
             }
         })
         .attr('r', function(d, i) {
-            return glyph.size.value.size.value*viewModel.width.value/100;
+            if (glyph.size.value.type === GlyphSizeSchemeType.SCALED_SIZE) {
+                return radiusScale(d[glyph.size.value.dataField.value]);
+            } else {
+                return glyph.size.value.size.value*viewModel.width.value/100;
+            }
         })
         .style('fill', glyph.color.value)
         .style('opacity', glyph.opacity.value/100);
@@ -216,30 +220,32 @@ define([
             },
             edit: function() {
                 self._selectedGlyph = this.value;
-                GlyphHelper.addEditGlyph().then(function() {
-                    for (var i = 0; i < self._selectedGlyph.properties.length; i++) {
-                        var property = self._selectedGlyph.properties[i];
-                        property._value = self._selectedGlyph.properties[i]._displayValue;
-                        if (property instanceof GlyphSizeSelectionProperty){
-                            var p = property.value.properties;
-                            for (var j = 0; j < p.length; j++) {
-                                p[j]._value = p[j]._displayValue;
+                if (defined(self._selectedGlyph)) {
+                    GlyphHelper.addEditGlyph().then(function() {
+                        for (var i = 0; i < self._selectedGlyph.properties.length; i++) {
+                            var property = self._selectedGlyph.properties[i];
+                            property._value = self._selectedGlyph.properties[i]._displayValue;
+                            if (property instanceof GlyphSizeSelectionProperty){
+                                var p = property.value.properties;
+                                for (var j = 0; j < p.length; j++) {
+                                    p[j]._value = p[j]._displayValue;
+                                }
                             }
                         }
-                    }
-                    editGlyph(self._selectedGlyph, self);
-                }, function() {
-                    for (var i = 0; i < self._selectedGlyph.properties.length; i++) {
-                        var property = self._selectedGlyph.properties[i];
-                        property._displayValue = self._selectedGlyph.properties[i]._value;
-                        if (property instanceof GlyphSizeSelectionProperty){
-                            var p = property.value.properties;
-                            for (var j = 0; j < p.length; j++) {
-                                p[j]._displayValue = p[j]._value;
+                        editGlyph(self._selectedGlyph, self);
+                    }, function() {
+                        for (var i = 0; i < self._selectedGlyph.properties.length; i++) {
+                            var property = self._selectedGlyph.properties[i];
+                            property._displayValue = self._selectedGlyph.properties[i]._value;
+                            if (property instanceof GlyphSizeSelectionProperty){
+                                var p = property.value.properties;
+                                for (var j = 0; j < p.length; j++) {
+                                    p[j]._displayValue = p[j]._value;
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                }
             },
             remove: function() {
                 removeGlyph(this.value);

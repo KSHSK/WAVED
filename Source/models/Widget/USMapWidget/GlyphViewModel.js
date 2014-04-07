@@ -97,7 +97,7 @@ define([
             this.opacity.setState(state.opacity);
         }
         if (defined(state.size)) {
-            this.size.setState(state.size);
+            this.size.setState(state.size, this);
         }
         if (defined(state.latitude)) {
             this.latitude.setState(state.latitude);
