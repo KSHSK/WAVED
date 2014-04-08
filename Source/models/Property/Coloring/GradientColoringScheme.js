@@ -1,5 +1,6 @@
 define([
         'models/Property/Coloring/ColoringScheme',
+        'models/Property/ArrayProperty',
         'models/Property/StringProperty',
         'models/Constants/ColoringSchemeType',
         'modules/HistoryMonitor',
@@ -9,6 +10,7 @@ define([
         'knockout'
     ],function(
         ColoringScheme,
+        ArrayProperty,
         StringProperty,
         ColoringSchemeType,
         HistoryMonitor,
@@ -43,8 +45,27 @@ define([
         });
 
         // TODO: Look to ScaledGlyphSizeScheme for how to do this
-        this.dataSet = state.dataSet; // ArrayProperty
-        this.dataField = state.dataField; // ArrayProperty
+        this.dataSet = new ArrayProperty({
+            displayName: 'Data Set',
+            value: undefined,
+            options: [],
+            getOptionText: function(value) {
+                return value.getNameAndFilename();
+            }
+        });
+
+        this.dataField = new ArrayProperty({
+            displayName: 'Data Field',
+            value: undefined,
+            options: [],
+            getOptionText: function(value) {
+                return value;
+            }
+        });
+
+        ko.track(this);
+
+        this.setState(state, viewModel);
     };
 
     GradientColoringScheme.prototype = Object.create(ColoringScheme.prototype);
@@ -71,7 +92,7 @@ define([
             startColor: this.startColor.getState(),
             endColor: this.endColor.getState(),
             dataSet: set,
-            dataField: this.dataField.getState.value,
+            dataField: this.dataField.getState().value,
             type: this.getType()
         };
 
@@ -80,14 +101,13 @@ define([
 
     GradientColoringScheme.prototype.setState = function(state, viewModel) {
         var self = this;
-        var scheme = state.value;
 
-        if(defined(scheme.startColor)) {
-            this.startColor.value = scheme.startColor.value;
+        if(defined(state.startColor)) {
+            this.startColor.value = state.startColor.value;
         }
 
-        if(defined(scheme.endColor)) {
-            this.endColor.value = scheme.endColor.value;
+        if(defined(state.endColor)) {
+            this.endColor.value = state.endColor.value;
         }
 
         // Subscribe to the value of dataSet in order to automatically update dataField's options
@@ -124,7 +144,6 @@ define([
                     self.dataSet.value = undefined;
             }
         });
-
 
         self.dataSet.options = viewModel.boundData;
 

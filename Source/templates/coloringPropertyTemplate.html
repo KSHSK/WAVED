@@ -1,6 +1,6 @@
 <div>
     <span data-bind="text:displayName"></span>
-    <select data-bind="options: sizeType, optionsText: function(item) { return item.getType(); },
+    <select data-bind="options: coloringType, optionsText: function(item) { return item.getType(); },
          optionsCaption: 'Choose an option...', value: value, valueAllowUnset: true"></select>
     <div class="error" data-bind="visible: error, html: message"></div>
     <!-- ko if: value !== undefined -->
