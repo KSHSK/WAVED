@@ -38,8 +38,6 @@ define([
             this.name.originalValue = this.id;
         }
 
-        this.selectedState = undefined;
-
         this.render = function() {
             if (self._ready) {
                 var w = $('#waved-workspace').width();
@@ -65,15 +63,6 @@ define([
                         .attr('stroke', 'white')
                         .style('fill', function(d) {
                             return self.coloring.value;
-                        })
-                        .on('mouseover', function(d, i) {
-                            self.selectedState = states[0][0].getElementsByTagName('path')[i];
-                        })
-                        .on('click', function(d, i) {
-                            console.log('Clicked ' + d.properties.name);
-                            console.log(i);
-                            self.selectedState = states[0][0].getElementsByTagName('path')[i];
-                            //console.log(self.selectedState);
                         });
                     self._isRendered = true;
                     self.updateSvg();
@@ -109,6 +98,11 @@ define([
         this.setState(state);
 
         this._isRendered = false;
+
+        // TODO: triggers?
+        this._triggers.push(new Trigger({
+            name: 'US Map'
+        }));
 
         this._ready = true;
 
