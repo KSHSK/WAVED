@@ -11,6 +11,7 @@ define([
         'modules/UniqueTracker',
         'modules/GlyphHelper',
         'util/defined',
+        'util/displayMessage',
         'util/subscribeObservable',
         'knockout',
         'd3',
@@ -28,101 +29,22 @@ define([
         UniqueTracker,
         GlyphHelper,
         defined,
+        displayMessage,
         subscribeObservable,
         ko,
         d3,
         $){
     'use strict';
-
-    var radiusScale = d3.scale.linear()
-        .domain([1000,500000])
-        .range([2,10])
-        .clamp(true);
+    var glyphId = 0;
 
     function getElement(viewModel){
         return d3.select('#' + viewModel.id);
     }
 
-    function removeGlyph(glyph) {
-        var child = document.getElementById(glyph._id);
-        child.parentNode.removeChild(child);
-        glyph._dom = undefined;
-        glyph._id = undefined;
-    }
-
-    function editGlyph(glyph, viewModel) {
-        var data = glyph.dataSet.value.data;
-
-        glyph._dom.selectAll('circle').data(data)
-        .attr('cx', function(d, i) {
-            var coords = viewModel._projection([d[glyph.longitude.value], d[glyph.latitude.value]]);
-            if (coords !== null) {
-                return coords[0];
-            }
-        })
-        .attr('cy', function(d, i) {
-            var coords = viewModel._projection([d[glyph.longitude.value], d[glyph.latitude.value]]);
-            if (coords !== null) {
-                return coords[1];
-            }
-        })
-        .attr('r', function(d, i) {
-            if (glyph.size.value.type === GlyphSizeSchemeType.SCALED_SIZE) {
-                return radiusScale(d[glyph.size.value.dataField.value]);
-            } else {
-                return glyph.size.value.size.value*viewModel.width.value/100;
-            }
-        })
-        .style('fill', glyph.color.value)
-        .style('opacity', glyph.opacity.value/100);
-    }
-
-    var id = 0;
-    function addGlyph(glyph, viewModel) {
-        var w2 = $('#waved-workspace').width() * viewModel.width.value/100;
-        var h2 = $('#waved-workspace').height() * viewModel.width.value/100;
-        var svg = getElement(viewModel)
-            .append('svg')
-            .attr('height', h2)
-            .attr('width', w2)
-            .attr('class', 'widget-container')
-            .attr('id', id);
-
-
-        var data = glyph.dataSet.value.data;
-        glyph._dom = svg.append('g');
-        glyph._id = id;
-        id++;
-
-        glyph._dom.selectAll('circle').data(data)
-        .enter().append('circle')
-        .attr('cx', function(d, i) {
-            var coords = viewModel._projection([d[glyph.longitude.value], d[glyph.latitude.value]]);
-            if (coords !== null) {
-                return coords[0];
-            }
-        })
-        .attr('cy', function(d, i) {
-            var coords = viewModel._projection([d[glyph.longitude.value], d[glyph.latitude.value]]);
-            if (coords !== null) {
-                return coords[1];
-            }
-        })
-        .attr('r', function(d, i) {
-            if (glyph.size.value.type === GlyphSizeSchemeType.SCALED_SIZE) {
-                return radiusScale(d[glyph.size.value.dataField.value]);
-            } else {
-                return glyph.size.value.size.value*viewModel.width.value/100;
-            }
-        })
-        .style('fill', glyph.color.value)
-        .style('opacity', glyph.opacity.value/100);
-    }
-
     function renderGlyphs (viewModel) {
         var glyphs = viewModel.glyphs;
         for (var i = 0; i < glyphs.length; i++) {
-            addGlyph(glyphs[i], viewModel);
+            glyphs[i].add();
         }
     }
 
@@ -170,7 +92,6 @@ define([
             this.name.value = this.id;
         }
         this.glyphs = [];
-        this._selectedGlyph = undefined;
 
         this.render = function() {
             renderMap(self);
@@ -201,30 +122,16 @@ define([
             displayName: 'Glyphs',
             options: this.glyphs,
             add: function() {
-                var newGlyph = new GlyphViewModel({}, self._boundData);
-                self._selectedGlyph = newGlyph;
-                GlyphHelper.addEditGlyph().then(function(){
-                    for (var i = 0; i < newGlyph.properties.length; i++) {
-                        var property = newGlyph.properties[i];
-                        property._value = newGlyph.properties[i]._displayValue;
-                        if (property instanceof GlyphSizeSelectionProperty){
-                            var p = property.value.properties;
-                            for (var j = 0; j < p.length; j++) {
-                                p[j]._value = p[j]._displayValue;
-                            }
-                        }
-                    }
-                    self.glyphs.push(newGlyph);
-                    addGlyph(newGlyph, self);
-                });
-            },
-            edit: function() {
-                self._selectedGlyph = this.value;
-                if (defined(self._selectedGlyph)) {
-                    GlyphHelper.addEditGlyph().then(function() {
-                        for (var i = 0; i < self._selectedGlyph.properties.length; i++) {
-                            var property = self._selectedGlyph.properties[i];
-                            property._value = self._selectedGlyph.properties[i]._displayValue;
+                if (!defined(self.boundData) || self.boundData.length === 0) {
+                    displayMessage('Must bind data to map before adding glyph');
+                } else {
+                    var newGlyph = new GlyphViewModel({}, self);
+                    this.options.push(newGlyph);
+                    this.value = newGlyph;
+                    GlyphHelper.addEditGlyph().then(function(){
+                        for (var i = 0; i < newGlyph.properties.length; i++) {
+                            var property = newGlyph.properties[i];
+                            property._value = newGlyph.properties[i]._displayValue;
                             if (property instanceof GlyphSizeSelectionProperty){
                                 var p = property.value.properties;
                                 for (var j = 0; j < p.length; j++) {
@@ -232,11 +139,31 @@ define([
                                 }
                             }
                         }
-                        editGlyph(self._selectedGlyph, self);
+                        newGlyph.add();
                     }, function() {
-                        for (var i = 0; i < self._selectedGlyph.properties.length; i++) {
-                            var property = self._selectedGlyph.properties[i];
-                            property._displayValue = self._selectedGlyph.properties[i]._value;
+                        self.glyphs.splice(self.glyphs.indexOf(self.glyphList.value), 1);
+                    });
+                }
+            },
+            edit: function() {
+                if (defined(this.value)) {
+                    var selectedGlyph = this.value;
+                    GlyphHelper.addEditGlyph().then(function() {
+                        for (var i = 0; i < selectedGlyph.properties.length; i++) {
+                            var property = selectedGlyph.properties[i];
+                            property._value = selectedGlyph.properties[i]._displayValue;
+                            if (property instanceof GlyphSizeSelectionProperty){
+                                var p = property.value.properties;
+                                for (var j = 0; j < p.length; j++) {
+                                    p[j]._value = p[j]._displayValue;
+                                }
+                            }
+                        }
+                       selectedGlyph.edit();
+                    }, function() {
+                        for (var i = 0; i < selectedGlyph.properties.length; i++) {
+                            var property = selectedGlyph.properties[i];
+                            property._displayValue = selectedGlyph.properties[i]._value;
                             if (property instanceof GlyphSizeSelectionProperty){
                                 var p = property.value.properties;
                                 for (var j = 0; j < p.length; j++) {
@@ -248,7 +175,7 @@ define([
                 }
             },
             remove: function() {
-                removeGlyph(this.value);
+                this.value.remove();
                 UniqueTracker.removeItem(SuperComponentViewModel.getUniqueNameNamespace(), self.glyphList.value);
                 self.glyphs.splice(self.glyphs.indexOf(self.glyphList.value), 1);
             }
@@ -302,7 +229,7 @@ define([
 
         if (defined(state.glyphs)){
             for(var i = 0; i < state.glyphs.length; i++) {
-                this.glyphs.push(new GlyphViewModel(state.glyphs[i], this._boundData));
+                this.glyphs.push(new GlyphViewModel(state.glyphs[i], this));
             }
         }
     };
