@@ -2,8 +2,8 @@ define([
         'models/Property/Coloring/ColoringScheme',
         'models/Property/StringProperty',
         'models/Constants/ColoringSchemeType',
-        'utils/createValidator',
-        'utils/defined',
+        'util/createValidator',
+        'util/defined',
         'knockout'
     ],function(
         ColoringScheme,
