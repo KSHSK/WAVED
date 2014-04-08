@@ -3,8 +3,8 @@ define([], function(){
 
     var EventType = {
         CLICK: 'click',
-        MOUSEOVER: 'mouseover',
-        HOVER: 'mousemove'
+        HOVER: 'mouseover',
+        MOUSEOVER: 'mousemove'
     };
 
     return EventType;
