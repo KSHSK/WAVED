@@ -1,6 +1,7 @@
 define([
         'models/Event/Trigger',
         'models/Property/Coloring/ColoringSelectionProperty',
+        'models/Constants/ColoringSchemeType',
         'models/Property/StringProperty',
         'models/SuperComponentViewModel',
         'models/Widget/WidgetViewModel',
@@ -9,10 +10,12 @@ define([
         'util/subscribeObservable',
         'knockout',
         'd3',
+        'topojson',
         'jquery'
     ],function(
         Trigger,
         ColoringSelectionProperty,
+        ColoringSchemeType,
         StringProperty,
         SuperComponentViewModel,
         WidgetViewModel,
@@ -21,6 +24,7 @@ define([
         subscribeObservable,
         ko,
         d3,
+        topojson,
         $){
     'use strict';
 
@@ -55,6 +59,7 @@ define([
                 self._svg = svg;
                 var states = svg.append('g');
                 d3.json('data/states.json', function(json) {
+
                     states.selectAll('path')
                         .data(json.features)
                         .enter()
@@ -62,21 +67,46 @@ define([
                         .attr('d', path)
                         .attr('stroke', 'white')
                         .style('fill', function(d) {
+                            // TODO: Load the coloring from state
                             return self.coloring.value;
                         });
                     self._isRendered = true;
-                    self.updateSvg();
+                    // TODO: Test this, changed from updateSvg
+                    self.updateColoring();
                 });
             }
         };
 
-        // TODO: Update this for the new ColoringSelectionProperty
         this.updateSvg = function() {
-            if (self._isRendered) {
-                getElement(self).selectAll('svg').selectAll('path')
-                .style('fill', function(d) {
-                    return defined(self.coloring.value) ? self.coloring.value : '#000000';
-                });
+            // TODO: Keeping this around since it might be useful for general svg updates
+        };
+
+        this.updateColoring = function() {
+            if(!self._isRendered){
+                return;
+            }
+
+            var path = getElement(self).selectAll('svg').selectAll('path');
+            switch(self.coloring.value.getType()){
+                case ColoringSchemeType.SOLID_COLORING:
+                    path.style('fill', function(d) {
+                        return defined(self.coloring.value.color.value) ? self.coloring.value.color.value : '#000000';
+                    });
+                    break;
+                case ColoringSchemeType.FOUR_COLORING:
+                    path.style('fill', function(d) {
+                        var stateName = d.properties.name;
+                        for(var i=0; i<self.fourColorStateGroupings.length; i++){
+                            if(self.fourColorStateGroupings[i].indexOf(stateName) !== -1){
+                                return self.coloring.value.getColorArray()[i];
+                            }
+                        }
+                    });
+                    break;
+                case ColoringSchemeType.GRADIENT_COLORING:
+                    break;
+                default:
+                    break;
             }
         };
 
@@ -84,18 +114,10 @@ define([
         subscribeObservable(window.wavedWorkspace.width, '_value', this.render);
         subscribeObservable(window.wavedWorkspace.height, '_value', this.render);
 
-        //TODO: Use ColoringSelectionProperty
-//        this.coloring = new StringProperty({
-//            displayName: 'Color',
-//            value: 'grey',
-//            errorMessage: 'Must be a color name, hexidecimal number, or rgb color',
-//            onchange: self.updateSvg
-//        });
-
         this.coloring = new ColoringSelectionProperty({
             displayName: 'Color Scheme',
-            value: ''
-            //onchange: self.updateSvg // TODO: This onchange MIGHT need changing
+            value: '',
+            onchange: self.updateColoring
         }, this);
 
         this.width.onchange = this.render;
@@ -149,6 +171,14 @@ define([
             }
         }
     });
+
+    // Groupings of states so that
+    USMapViewModel.prototype.fourColorStateGroupings = [
+        ['Alaska', 'Alabama', 'Arkansas', 'Connecticut', 'Delware', 'Hawaii', 'Illinois', 'Maine', 'Michigan', 'Montana', 'Nebraska', 'New Mexico', 'Nevada', 'South Carolina', 'Virginia', 'Washington'],
+        ['Arizona', 'District of Columbia', 'Florida', 'Kansas', 'Mississippi', 'North Carolina', 'North Dakota', 'Oregon', 'Pennsylvania', 'Rhode Island', 'Texas', 'Vermont', 'Wisconsin', 'Wyoming'],
+        ['California', 'Colorado', 'Georgia', 'Idaho', 'Indiana', 'Louisiana', 'Massachusetts', 'Missouri', 'New Jersey', 'South Dakota', 'West Virginia'],
+        ['Iowa', 'Maryland', 'New Hampshire', 'New York', 'Ohio', 'Oklahoma', 'Tennessee', 'Utah']
+    ];
 
     return USMapViewModel;
 });
