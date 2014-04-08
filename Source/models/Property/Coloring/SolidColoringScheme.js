@@ -14,7 +14,7 @@ define([
         ko){
     'use strict';
 
-    var SolidColoringScheme = function(state) {
+    var SolidColoringScheme = function(state, viewModel) {
         state = defined(state) ? state : {};
 
         ColoringScheme.call(this, state);
@@ -26,7 +26,8 @@ define([
             validValue: createValidator({
                 regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
             }),
-            errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE
+            errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE,
+            onchange: viewModel.updateColoring
         };
         this.color = new StringProperty(stateColor);
 

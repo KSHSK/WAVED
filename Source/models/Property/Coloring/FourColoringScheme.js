@@ -14,7 +14,7 @@ define([
         ko){
     'use strict';
 
-    var FourColoringScheme = function(state) {
+    var FourColoringScheme = function(state, viewModel) {
         state = defined(state) ? state : {};
 
         ColoringScheme.call(this, state);
@@ -26,7 +26,8 @@ define([
             validValue: createValidator({
                 regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
             }),
-            errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE
+            errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE,
+            onchange: viewModel.updateColoring
         });
 
         this.color2 = new StringProperty({
@@ -35,7 +36,8 @@ define([
             validValue: createValidator({
                 regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
             }),
-            errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE
+            errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE,
+            onchange: viewModel.updateColoring
         });
 
         this.color3 = new StringProperty({
@@ -44,7 +46,8 @@ define([
             validValue: createValidator({
                 regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
             }),
-            errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE
+            errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE,
+            onchange: viewModel.updateColoring
         });
 
         this.color4 = new StringProperty({
@@ -53,7 +56,8 @@ define([
             validValue: createValidator({
                 regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
             }),
-            errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE
+            errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE,
+            onchange: viewModel.updateColoring
         });
 
         this.setState(state);
@@ -75,6 +79,10 @@ define([
         }
     });
 
+    FourColoringScheme.prototype.getColorArray = function() {
+        return [this.color1.value, this.color2.value, this.color3.value, this.color4.value];
+    };
+
     FourColoringScheme.prototype.getState = function() {
         var state = {
             color1: this.color1.getState(),
@@ -88,17 +96,17 @@ define([
     };
 
     FourColoringScheme.prototype.setState = function(state) {
-        if(defined(state.value.color1)){
-            this.color1.value = state.value.color1.value;
+        if(defined(state.color1)){
+            this.color1.value = state.color1.value;
         }
-        if(defined(state.value.color2)){
-            this.color2.value = state.value.color2.value;
+        if(defined(state.color2)){
+            this.color2.value = state.color2.value;
         }
-        if(defined(state.value.color3)){
-            this.color3.value = state.value.color3.value;
+        if(defined(state.color3)){
+            this.color3.value = state.color3.value;
         }
-        if(defined(state.value.color4)){
-            this.color4.value = state.value.color4.value;
+        if(defined(state.color4)){
+            this.color4.value = state.color4.value;
         }
     };
 

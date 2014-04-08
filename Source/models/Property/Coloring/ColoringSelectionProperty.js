@@ -28,8 +28,8 @@ define([
        this.error = '';
        this._value = '';
 
-       this.solidColoring = new SolidColoringScheme(state);
-       this.fourColoring = new FourColoringScheme(state);
+       this.solidColoring = new SolidColoringScheme(state, viewModel);
+       this.fourColoring = new FourColoringScheme(state, viewModel);
        this.gradientColoring = new GradientColoringScheme(state, viewModel);
 
        var stateValueType;
