@@ -94,9 +94,9 @@ define([
 
         this.coloring = new ColoringSelectionProperty({
             displayName: 'Color Scheme',
-            value: undefined,
-            onchange: self.updateSvg // TODO: This onchange MIGHT need changing
-        });
+            value: ''
+            //onchange: self.updateSvg // TODO: This onchange MIGHT need changing
+        }, this);
 
         this.width.onchange = this.render;
         this.width.value = 100;
@@ -137,7 +137,7 @@ define([
         WidgetViewModel.prototype.setState.call(this, state);
 
         if (defined(state.coloring)) {
-            this.coloring.value = state.coloring.value;
+            this.coloring.setState(state.coloring, this);
         }
     };
 

@@ -96,12 +96,15 @@ define([
         switch(scheme.type) {
             case ColoringSchemeType.SOLID_COLORING:
                 this.solidColoring.color.value = scheme.color.value;
+                this._value = this.solidColoring;
                 break;
             case ColoringSchemeType.FOUR_COLORING:
                 this.fourColoring.setState(scheme);
+                this._value = this.fourColoring;
                 break;
             case ColoringSchemeType.GRADIENT_COLORING:
                 this.gradientColoring.setState(scheme, viewModel);
+                this._value = this.gradientColoring;
                 break;
             default:
                 this._value = undefined;
