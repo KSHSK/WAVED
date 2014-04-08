@@ -92,18 +92,12 @@ define([
         });
 
         this.width.onchange = this.render;
-        this.width.value = 100;
+        this.width.originalValue = 100;
         this.width._displayName = 'Scale';
 
         this.setState(state);
 
         this._isRendered = false;
-
-        // TODO: triggers?
-        this._triggers.push(new Trigger({
-            name: 'US Map'
-        }));
-
         this._ready = true;
 
         ko.track(this);
@@ -131,7 +125,7 @@ define([
         WidgetViewModel.prototype.setState.call(this, state);
 
         if (defined(state.coloring)) {
-            this.coloring.value = state.coloring.value;
+            this.coloring.originalValue = state.coloring.value;
         }
     };
 

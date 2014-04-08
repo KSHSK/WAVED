@@ -27,9 +27,6 @@ define([
         viewModel.addTrigger(new Trigger('US Map', function() {
             return usMap;
         }));
-        viewModel.addTrigger(new Trigger('State', function() {
-            return viewModel.selectedState;
-        }));
 
         this._domElement = usMap;
         this.viewModel = viewModel;
