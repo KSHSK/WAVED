@@ -30,7 +30,7 @@ define([
         // Default size
         var stateSize = {
             displayName: 'Size (%)',
-            value: 10
+            value: 3
         };
         this.size = new NumberProperty(stateSize);
 
