@@ -141,7 +141,7 @@ define([
                         }
                         newGlyph.add();
                     }, function() {
-                        self.glyphs.splice(self.glyphs.indexOf(self.glyphList.value), 1);
+                        this.options.splice(this.options.indexOf(this.value), 1);
                     });
                 }
             },
@@ -177,7 +177,7 @@ define([
             remove: function() {
                 this.value.remove();
                 UniqueTracker.removeItem(SuperComponentViewModel.getUniqueNameNamespace(), self.glyphList.value);
-                self.glyphs.splice(self.glyphs.indexOf(self.glyphList.value), 1);
+                this.options.splice(this.options.indexOf(this.value), 1);
             }
         });
 

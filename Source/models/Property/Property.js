@@ -50,7 +50,9 @@ define(['knockout',
             }
         });
 
-        this.updateUI = function() {        };
+        this.updateUI = function() {
+            //abstract
+        };
     };
 
     Object.defineProperties(Property.prototype, {

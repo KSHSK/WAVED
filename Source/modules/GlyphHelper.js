@@ -29,14 +29,12 @@ define([
     GlyphHelper.addEditGlyph = function() {
         var self = this;
         var glyphAdded = $.Deferred();
-        var added = false;
         self.glyphDialog.dialog({
             resizable: false,
             width: 500,
             modal: true,
             buttons: {
                 'Save': function() {
-                    added = true;
                     self.closeActionDialog();
                     glyphAdded.resolve();
                 },
