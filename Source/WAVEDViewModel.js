@@ -21,6 +21,7 @@ define(['jquery',
         'modules/DeleteData',
         'modules/PropertyChangeSubscriber',
         'modules/HistoryMonitor',
+        'modules/UniqueTracker',
         'models/Widget/TextBlockWidget/TextBlock',
         'models/Widget/USMapWidget/USMap',
         'util/defined',
@@ -51,6 +52,7 @@ define(['jquery',
         DeleteData,
         PropertyChangeSubscriber,
         HistoryMonitor,
+        UniqueTracker,
         TextBlock,
         USMap,
         defined,
@@ -83,8 +85,7 @@ define(['jquery',
 
         this._currentProject = new ProjectViewModel({
             name: ''
-        },
-        this.setDirty);
+        });
 
         this._projectTree = new ProjectTree();
 
@@ -144,7 +145,7 @@ define(['jquery',
 
         ko.track(this);
 
-        this.currentProject.subscribeChanges();
+        this.currentProject.subscribeChanges(this.setDirty);
 
         // Remove the hover/focus look when undo or redo is disabled.
         subscribeObservable(this, '_historyIndex', function() {
@@ -160,6 +161,29 @@ define(['jquery',
 
     WAVEDViewModel.prototype.setDirty = function() {
         self.dirty = true;
+    };
+
+    WAVEDViewModel.prototype.reset = function(projectState) {
+        // Clear the workspace.
+        $('#waved-workspace').empty();
+
+        // Reset the unique names.
+        UniqueTracker.reset();
+
+        // Reset the current project.
+        self.currentProject.resetProject();
+
+        // Set the new project state if defined.
+        if (defined(projectState)) {
+            self.currentProject.setState(projectState, self.availableWidgets);
+        }
+
+        // Set clean.
+        self.dirty = false;
+
+        // Remove history.
+        self.resetHistory();
+
     };
 
     WAVEDViewModel.prototype.resetHistory = function() {
