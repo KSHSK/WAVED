@@ -44,9 +44,17 @@ define([
                             deleteProjectDialog.dialog('close');
                         });
                     },
-                    'Cancel': function() {
-                        deleteProjectDialog.dialog('close');
+                    'Cancel': {
+                        text: 'Cancel',
+                        'class': 'cancel-button',
+                        click: function() {
+                            deleteProjectDialog.dialog('close');
+                        }
                     }
+                },
+                open: function() {
+                    // Select 'Cancel' by default.
+                    $('.cancel-button', $(this).parent()).focus();
                 }
             });
         },
