@@ -125,7 +125,7 @@ define([
             displayName: 'Data Set',
             options: this.parent.boundData,
             getOptionText: function(value) {
-                return value.name;
+                return value.getNameAndFilename();
             },
             ondisplaychange: function(newValue){
                 self.latitude.options = newValue.dataFields;
@@ -206,10 +206,6 @@ define([
         if (defined(state.longitude)) {
             this.longitude.setState(state.longitude);
         }
-    };
-
-    GlyphViewModel.prototype.clone = function() {
-        return new GlyphViewModel(this.getState(), this.parent.boundData);
     };
 
     /**
