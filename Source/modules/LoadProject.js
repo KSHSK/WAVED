@@ -119,22 +119,14 @@ define([
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
                     if (data.success) {
-                        // Clear the workspace.
-                        $('#waved-workspace').empty();
-
                         // Update the data folder path.
                         ReadData.dataFolderPath = data.dataFolder;
 
-                        UniqueTracker.reset();
-
-                        // Create the new project.
-                        viewModel.currentProject.setState(JSON.parse(data.projectState),
-                            viewModel.availableWidgets);
-
-                        viewModel.resetHistory();
-
                         viewModel.loadProjectName._value = '';
                         viewModel.selectedComponent = viewModel.workspace;
+
+                        // Reset everything using the updated state.
+                        viewModel.reset(JSON.parse(data.projectState));
 
                         // Delete marked data.
                         var filesDeleted = DeleteData.deleteAllMarkedData(viewModel);
