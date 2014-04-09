@@ -21,6 +21,7 @@ define(['jquery',
         'modules/DeleteData',
         'modules/PropertyChangeSubscriber',
         'modules/HistoryMonitor',
+        'modules/UniqueTracker',
         'models/Widget/TextBlockWidget/TextBlock',
         'models/Widget/USMapWidget/USMap',
         'util/defined',
@@ -51,6 +52,7 @@ define(['jquery',
         DeleteData,
         PropertyChangeSubscriber,
         HistoryMonitor,
+        UniqueTracker,
         TextBlock,
         USMap,
         defined,
@@ -156,6 +158,26 @@ define(['jquery',
                 $('#redo-button').removeClass('ui-state-hover ui-state-focus');
             }
         });
+    };
+
+    WAVEDViewModel.prototype.reset = function(projectState) {
+        // Clear the workspace.
+        $('#waved-workspace').empty();
+
+        // Reset the unique names.
+        UniqueTracker.reset();
+
+        // Reset the current project.
+        self.currentProject.resetProject();
+
+        // Set the new project state if defined.
+        if (defined(projectState)) {
+            self.currentProject.setState(projectState, self.availableWidgets);
+        }
+
+        // Remove history.
+        self.resetHistory();
+
     };
 
     WAVEDViewModel.prototype.resetHistory = function() {
