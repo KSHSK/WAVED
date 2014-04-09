@@ -21,14 +21,18 @@ define(['jquery'], function($) {
                         deferred.resolve();
                         $(this).dialog('close');
                     },
-                    'Cancel': function() {
-                        deferred.reject();
-                        $(this).dialog('close');
+                    'Cancel': {
+                        text: 'Cancel',
+                        'class': 'cancel-button',
+                        click: function() {
+                            deferred.reject();
+                            $(this).dialog('close');
+                        }
                     }
                 },
                 open: function() {
-                    // Don't auto-select the 'Discard Changes' option.
-                    $('button', $(this).parent()).blur();
+                    // Select 'Cancel' by default.
+                    $('.cancel-button', $(this).parent()).focus();
                 }
             });
 
