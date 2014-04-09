@@ -560,12 +560,10 @@ define([
         //TODO
     };
 
-    ProjectViewModel.prototype.subscribeChanges = function(setDirty) {
+    ProjectViewModel.prototype.subscribeChanges = function() {
         var self = this;
 
         function arrayChanged(changes) {
-            setDirty();
-
             changes.forEach(function(change) {
                 if (change.status === 'added') {
                     var subscriber = change.value.viewModel || change.value;

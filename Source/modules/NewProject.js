@@ -108,6 +108,8 @@ define([
                         var projectSaved = $.Deferred();
                         SaveProject.saveProject(projectSaved, viewModel);
 
+                        viewModel.resetHistory();
+
                         projectCreated.resolve();
                     }
                     else {

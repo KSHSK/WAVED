@@ -135,7 +135,7 @@ define(['knockout',
             // Subscribe undo change.
             propertyChangeSubscriber.subscribeBeforeChange(self, prop);
 
-            // Subscribe redo and dirty changes.
+            // Subscribe redo change.
             propertyChangeSubscriber.subscribeChange(self, prop);
         });
 
