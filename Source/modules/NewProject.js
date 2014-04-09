@@ -95,22 +95,14 @@ define([
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
                     if (data.success) {
-                        // Clear the workspace.
-                        $('#waved-workspace').empty();
-
                         // Update the data folder path.
                         ReadData.dataFolderPath = data.dataFolder;
 
-                        UniqueTracker.reset();
-
                         viewModel.selectedComponent = viewModel.workspace;
-                        viewModel.currentProject.resetProject();
-                        viewModel.currentProject.setState({name: data.projectName}, viewModel.availableWidgets);
-
-                        viewModel.dirty = false;
-                        viewModel.resetHistory();
-
                         viewModel.newProjectName._value = '';
+
+                        // Reset everything using the updated state.
+                        viewModel.reset({name: data.projectName});
 
                         // Save state of new project.
                         var projectSaved = $.Deferred();

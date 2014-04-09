@@ -73,11 +73,7 @@ define([
                         return;
                     }
 
-                    // Clear the workspace.
-                    $('#waved-workspace').empty();
-
-                    viewModel.currentProject.resetProject();
-                    viewModel.dirty = false;
+                    viewModel.reset();
 
                     // Remove project name from URL
                     updateQueryByName('project', '');

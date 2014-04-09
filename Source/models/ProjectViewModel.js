@@ -150,21 +150,29 @@ define([
 
         if (this._dataSets.length > 0) {
             this._dataSets.length = 0;
+
+            // Setting length doesn't trigger knockout, so we must call valueHasMutated explicitly.
             ko.getObservable(this, '_dataSets').valueHasMutated();
         }
 
         if (this._components.length > 1) {
             this._components.length = 1;
+
+            // Setting length doesn't trigger knockout, so we must call valueHasMutated explicitly.
             ko.getObservable(this, '_components').valueHasMutated();
         }
 
         if (this._actions.length > 0) {
             this._actions.length = 0;
+
+            // Setting length doesn't trigger knockout, so we must call valueHasMutated explicitly.
             ko.getObservable(this, '_actions').valueHasMutated();
         }
 
         if (this._events.length > 0) {
             this._events.length = 0;
+
+            // Setting length doesn't trigger knockout, so we must call valueHasMutated explicitly.
             ko.getObservable(this, '_events').valueHasMutated();
         }
     };
