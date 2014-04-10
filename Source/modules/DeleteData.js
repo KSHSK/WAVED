@@ -2,11 +2,11 @@
  * A module for deleting data sets from a project
  */
 define([
-        '../WAVEDViewModel',
+        './DependencyChecker',
         'util/displayMessage',
         'jquery'
     ], function(
-        WAVEDViewModel,
+        DependencyChecker,
         displayMessage,
         $) {
     'use strict';
@@ -19,12 +19,12 @@ define([
                 return;
             }
 
-            if (dataSet.referenceCount > 0) {
+            if (!DependencyChecker.allowedToDeleteDataSet(dataSet)) {
                 displayMessage('Cannot delete data that is bound to a widget');
+                return;
             }
-            else {
-                dataSet.markForDeletion();
-            }
+
+            dataSet.markForDeletion();
         },
         deleteAllMarkedData: function(viewModel) {
             var self = this;
