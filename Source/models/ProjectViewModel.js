@@ -18,7 +18,8 @@ define([
         'models/Data/DataSubset',
         'modules/PropertyChangeSubscriber',
         'modules/HistoryMonitor',
-        'modules/UniqueTracker'
+        'modules/UniqueTracker',
+        'modules/DependencyChecker'
     ], function(
         $,
         ko,
@@ -38,7 +39,8 @@ define([
         DataSubset,
         PropertyChangeSubscriber,
         HistoryMonitor,
-        UniqueTracker) {
+        UniqueTracker,
+        DependencyChecker) {
     'use strict';
 
     var ProjectViewModel = function(state) {
@@ -458,6 +460,11 @@ define([
     ProjectViewModel.prototype.removeComponent = function(component) {
         var self = this;
 
+        if (!DependencyChecker.allowedToDeleteComponent(component, self)) {
+            displayMessage('Cannot delete a component that is used by an action or event');
+            return false;
+        }
+
         if (component !== this._workspace) {
             var index = this._components.indexOf(component);
             if (index > -1) {
@@ -482,6 +489,8 @@ define([
                 });
             }
         }
+
+        return true;
     };
 
     // TODO: Do we want to allow removal using dataset instance and name?
@@ -501,13 +510,9 @@ define([
     ProjectViewModel.prototype.removeAction = function(action) {
         var self = this;
 
-        for (var i = 0; i < self._events.length; i++) {
-            for (var j = 0; j < self._events[i].actions[0].length; j++) {
-                if (self._events[i]._actions[0][j].name.value === action.name.value) {
-                    displayMessage('Action is in use by Event: ' + self._events[i].name.value);
-                    return;
-                }
-            }
+        if (!DependencyChecker.allowedToDeleteAction(action, self)) {
+            displayMessage('Cannot delete an action that is used by an event');
+            return;
         }
 
         var index = self._actions.indexOf(action);

@@ -134,6 +134,11 @@ define([
         }
     };
 
+    USMapViewModel.prototype.usesDataSet = function(dataSet) {
+        // TODO: Once Coloring and Glyphs are implemented, this will need to be implemented.
+        return false;
+    };
+
     Object.defineProperties(USMapViewModel.prototype, {
         properties: {
             get: function() {

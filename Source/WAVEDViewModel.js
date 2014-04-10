@@ -22,6 +22,7 @@ define(['jquery',
         'modules/PropertyChangeSubscriber',
         'modules/HistoryMonitor',
         'modules/UniqueTracker',
+        'modules/DependencyChecker',
         'models/Widget/TextBlockWidget/TextBlock',
         'models/Widget/USMapWidget/USMap',
         'util/defined',
@@ -53,6 +54,7 @@ define(['jquery',
         PropertyChangeSubscriber,
         HistoryMonitor,
         UniqueTracker,
+        DependencyChecker,
         TextBlock,
         USMap,
         defined,
@@ -70,6 +72,8 @@ define(['jquery',
         this._historyIndex = undefined;
         this._lastSaveIndex = undefined;
         this.resetHistory();
+
+        this.disableOpeningPropertiesPanel = false;
 
         this._projectList = [];
         this._selectedComponent = '';
@@ -357,9 +361,15 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.removeSelectedComponent = function() {
-        var component = self._selectedComponent;
-        self._selectedComponent = self.currentProject.workspace;
-        self._currentProject.removeComponent(component);
+        self.disableOpeningPropertiesPanel = true;
+
+        var success = self.currentProject.removeComponent(self.selectedComponent);
+
+        if (success) {
+            self.selectedComponent = self.currentProject.workspace;
+        }
+
+        self.disableOpeningPropertiesPanel = false;
     };
 
     WAVEDViewModel.prototype.saveProject = function() {
@@ -399,6 +409,10 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.openPropertiesPanel = function() {
+        if (self.disableOpeningPropertiesPanel === true) {
+            return;
+        }
+
         // TODO: Really shouldn't do any jQuery stuff in here.
         $('#accordion').accordion('option', 'active', self.propertiesPanelPosition);
     };
