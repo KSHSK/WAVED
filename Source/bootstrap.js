@@ -62,22 +62,24 @@
 
             // Button click
             var fnDeleteDone;
+            var cleanUp = false;
 
             if (WAVED.viewModel.currentProject.name == fullData.name) {
                 fnDeleteDone = function() {
                     WelcomeModule.openWelcomeDialog(WAVED.viewModel);
                     WelcomeModule.openLoadDialog(WAVED.viewModel);
                 };
+                cleanUp = true;
             }
             else {
                 fnDeleteDone = function() {
-                    LoadProject.updateProjectList(viewModel);
+                    LoadProject.updateProjectList(WAVED.viewModel);
                 };
             }
 
             button.click(function() {
                 // Delete selected project without going through Welcome Dialog
-                var projectDeleted = DeleteProject.tryToDeleteProject(WAVED.viewModel, fullData.name, false);
+                var projectDeleted = DeleteProject.tryToDeleteProject(WAVED.viewModel, fullData.name, cleanUp);
 
                 // Update project list to show deletion
                 $.when(projectDeleted).done(fnDeleteDone);
