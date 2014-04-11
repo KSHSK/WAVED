@@ -35,8 +35,6 @@ define([
                     this.error = false;
                     this.message = '';
                     this._originalValue = value;
-                    this._value = value;
-                    this._displayValue = value;
                 }
                 else {
                     this.error = true;
@@ -53,7 +51,6 @@ define([
                     this.error = false;
                     this.message = '';
                     this._value = value;
-                    this._displayValue = value;
                 }
                 else {
                     this.error = true;
