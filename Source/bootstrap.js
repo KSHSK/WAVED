@@ -58,16 +58,30 @@
         var deleteRender = function(td, cellData, fullData) {
             // Create button
             var button = $('<button>');
+            button.append("Delete Project " + fullData.name);
 
-            // Button text
+            // Button click
+            var fnDeleteDone;
+
             if (WAVED.viewModel.currentProject.name == fullData.name) {
-                // Can't delete open project
-                button.attr('disabled', 'disabled');
-                button.append("Cannot delete open project " + fullData.name);
+                fnDeleteDone = function() {
+                    WelcomeModule.openWelcomeDialog(WAVED.viewModel);
+                    WelcomeModule.openLoadDialog(WAVED.viewModel);
+                };
             }
             else {
-                button.append("Delete Project " + fullData.name);
+                fnDeleteDone = function() {
+                    LoadProject.updateProjectList(viewModel);
+                };
             }
+
+            button.click(function() {
+                // Delete selected project without going through Welcome Dialog
+                var projectDeleted = DeleteProject.tryToDeleteProject(WAVED.viewModel, fullData.name, false);
+
+                // Update project list to show deletion
+                $.when(projectDeleted).done(fnDeleteDone);
+            });
 
             // Button style
             button.button({
@@ -75,17 +89,6 @@
                 icons: {
                     primary: 'ui-icon-trash'
                 }
-            });
-
-            // Click event to delete project
-            button.click(function() {
-                // Delete selected project without going through Welcome Dialog
-                var projectDeleted = DeleteProject.tryToDeleteProject(WAVED.viewModel, fullData.name, false);
-
-                // Update project list to show deletion
-                $.when(projectDeleted).done(function() {
-                    LoadProject.updateProjectList(viewModel);
-                });
             });
 
             $(td).css('text-align', 'center').append(button);
