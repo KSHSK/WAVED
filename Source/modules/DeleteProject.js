@@ -5,12 +5,14 @@ define([
         '../WAVEDViewModel',
         './Welcome',
         'models/ProjectViewModel',
+        'util/defined',
         'util/updateQueryByName',
         'jquery'
     ], function(
         WAVEDViewModel,
         Welcome,
         ProjectViewModel,
+        defined,
         updateQueryByName,
         $) {
     'use strict';
@@ -19,14 +21,12 @@ define([
 
         tryToDeleteProject: function(viewModel, projectName, doCleanUp) {
             /* Try to delete current project by default */
-            if (projectName === undefined)
-            {
+            if (!defined(projectName)) {
                 projectName = viewModel.currentProject.name.trim();
             }
 
             /* Do clean up of open project and Open Welcome Dialog by default */
-            if (doCleanUp === undefined)
-            {
+            if (!defined(doCleanUp)) {
                 doCleanUp = true;
             }
 
