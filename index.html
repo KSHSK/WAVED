@@ -48,7 +48,7 @@
                                 value: selectedComponent,
                                 event: {change: openPropertiesPanel}">
                     </select>
-                    <button class="inline" id="refresh-button">Refresh</button>
+                    <button class="inline" id="refresh-button" data-bind="click: refreshWorkspace">Refresh</button>
                 </div>                
         </div>
         
@@ -209,10 +209,10 @@
                     <div>
                         <div class="inline" data-bind="visible: !currentProject.googleAnalytics.bound">
                             <label class="inline">Google Analytics UA Code</label>
-                            <input type="text" data-bind="value: currentProject.googleAnalytics.uaCode.value"/>
+                            <input type="text" data-bind="value: currentProject.googleAnalytics.uaCode.originalValue"/>
                             <div class="error" data-bind="visible: currentProject.googleAnalytics.uaCode.error, html: currentProject.googleAnalytics.uaCode.message"></div>
                             <label class="inline">Google Analytics Event Category</label>
-                            <input type="text" data-bind="value: currentProject.googleAnalytics.eventCategory.value" />
+                            <input type="text" data-bind="value: currentProject.googleAnalytics.eventCategory.originalValue" />
                             <div class="error" data-bind="visible: currentProject.googleAnalytics.eventCategory.error, html:currentProject.googleAnalytics.eventCategory.message"></div>
                             <div class="submit-button-panel">
                                <button id="google-analytics-add-button" class="button-small submit-button" data-bind="click: currentProject.googleAnalytics.set;">Add</button>
