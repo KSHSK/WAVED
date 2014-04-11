@@ -10,12 +10,11 @@ define(['knockout',
     'use strict';
 
     var instance;
-    var PropertyChangeSubscriber = function(setDirtyFunction) {
+    var PropertyChangeSubscriber = function() {
         if (defined(instance)) {
             return PropertyChangeSubscriber.getInstance();
         }
 
-        this.setDirty = setDirtyFunction;
         this.historyMonitor = HistoryMonitor.getInstance();
 
         instance = this;
@@ -39,14 +38,12 @@ define(['knockout',
     };
 
     /**
-     * Subscribes to the change event, adding the redo change to the history and setting the dirty flag.
+     * Subscribes to the change event, adding the redo change to the history.
      */
     PropertyChangeSubscriber.prototype.subscribeChange = function(container, observableName) {
         var self = this;
 
         return subscribeObservable(container, observableName, function(newValue) {
-            self.setDirty();
-
             self.historyMonitor.addRedoChange(function() {
                 container[observableName] = newValue;
             });
@@ -54,14 +51,12 @@ define(['knockout',
     };
 
     /**
-     * Subscribes to the arrayChange event, adding the undo/redo change to the history and setting the dirty flag.
+     * Subscribes to the arrayChange event, adding the undo/redo change to the history.
      */
     PropertyChangeSubscriber.prototype.subscribeArrayChange = function(container, observableName) {
         var self = this;
 
         return subscribeObservable(container, observableName, function(changes) {
-            self.setDirty();
-
             changes.forEach(function(change) {
                 var list = container[observableName];
                 var item = change.value;

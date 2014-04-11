@@ -51,27 +51,22 @@ define([
                 modal: true,
                 buttons: {
                     'Delete Project': function() {
-                        self.deleteProject(projectDeleted, projectName, viewModel);
+                        self.deleteProject(projectDeleted, projectName, viewModel, doCleanUp);
                         $.when(projectDeleted).done(function() {
-                            if (doCleanUp) {
-                                // Clear the workspace.
-                                $('#waved-workspace').empty();
-
-                                // TODO : Clean up leftovers from deleted project
-
-                                // Remove project name from URL
-                                updateQueryByName('project', '');
-
-                                // Open welcome dialog
-                                Welcome.openWelcomeDialog(viewModel);
-                            }
-
                             deleteProjectDialog.dialog('close');
                         });
                     },
-                    'Cancel': function() {
-                        deleteProjectDialog.dialog('close');
+                    'Cancel': {
+                        text: 'Cancel',
+                        'class': 'cancel-button',
+                        click: function() {
+                            deleteProjectDialog.dialog('close');
+                        }
                     }
+                },
+                open: function() {
+                    // Select 'Cancel' by default.
+                    $('.cancel-button', $(this).parent()).focus();
                 }
             });
         },
@@ -79,7 +74,7 @@ define([
         /**
          * Actually submit the deleteProject request.
          */
-        deleteProject: function(projectDeleted, projectName, viewModel) {
+        deleteProject: function(projectDeleted, projectName, viewModel, doCleanUp) {
             var self = this;
 
             $.ajax({
@@ -95,6 +90,16 @@ define([
                         // Display error to user.
                         $('#delete-project-dialog .error').html(data.errorMessage);
                         return;
+                    }
+
+                    if (doCleanUp) {
+                        viewModel.reset();
+
+                        // Remove project name from URL
+                        updateQueryByName('project', '');
+
+                        // Open welcome dialog
+                        Welcome.openWelcomeDialog(viewModel);
                     }
 
                     projectDeleted.resolve();
