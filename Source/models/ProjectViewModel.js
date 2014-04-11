@@ -109,6 +109,13 @@ define([
                 return this._actions;
             }
         },
+        nonAutoActions: {
+            get: function() {
+                return this._actions.filter(function(action) {
+                    return !action.applyAutomatically;
+                });
+            }
+        },
         workspace: {
             get: function() {
                 return this._workspace;
