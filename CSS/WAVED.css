@@ -231,6 +231,15 @@ textarea:disabled {
     cursor: pointer;
 }
 
-#project-list .row_selected td {
-    background-color: #B0BED9;
-}
+table.dataTable#project-list tr.row_selected td { background-color: #B0BED9; }
+
+table.dataTable tr.odd { background-color: #D7F0F2; }
+table.dataTable tr.even { background-color: white; }
+
+table.dataTable tr.odd td.sorting_1 { background-color: #B0E1E5 ; }
+table.dataTable tr.odd td.sorting_2 { background-color: #C4E8EB ; }
+table.dataTable tr.odd td.sorting_3 { background-color: #D7F0F2 ; }
+
+table.dataTable tr.even td.sorting_1 { background-color: #D0EDEF; }
+table.dataTable tr.even td.sorting_2 { background-color: #E4F5F6; }
+table.dataTable tr.even td.sorting_3 { background-color: #F1FAFA; }
