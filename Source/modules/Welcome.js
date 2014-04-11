@@ -54,18 +54,8 @@ define([
                 modal: true,
                 closeOnEscape: false,
                 buttons: {
-                    'New Project': function() {
-                        var projectCreated = NewProject.tryToCreateNewProject(viewModel);
-                        $.when(projectCreated).done(function() {
-                            self.welcomeDialog.dialog('close');
-                        });
-                    },
-                    'Load Project': function() {
-                        var projectLoaded = LoadProject.tryToLoadProject(viewModel);
-                        $.when(projectLoaded).done(function() {
-                            self.welcomeDialog.dialog('close');
-                        });
-                    }
+                    'New Project': self.openNewDialog.bind(self, viewModel),
+                    'Load Project': self.openLoadDialog.bind(self, viewModel)
                 },
                 open: function(event, ui) {
                     // Hide the close button so that the user must select a button.
@@ -75,7 +65,23 @@ define([
                     $('button', $(this).parent()).blur();
                 }
             });
-        }
+        },
+
+        openLoadDialog: function(viewModel) {
+            var self = this;
+            var projectLoaded = LoadProject.tryToLoadProject(viewModel);
+            $.when(projectLoaded).done(function() {
+                self.welcomeDialog.dialog('close');
+            });
+        },
+
+        openNewDialog: function(viewModel) {
+            var self = this;
+            var projectCreated = NewProject.tryToCreateNewProject(viewModel);
+            $.when(projectCreated).done(function() {
+                self.welcomeDialog.dialog('close');
+            });
+        },
     };
 
     return Welcome;
