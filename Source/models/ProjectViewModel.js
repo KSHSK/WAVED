@@ -557,9 +557,8 @@ define([
     };
 
     ProjectViewModel.prototype.refreshWorkspace = function() {
-
-        for (var i = 0; i < self._components.length; i++) {
-            var properties = self._components[i].viewModel.properties;
+        for (var i = 0; i < this._components.length; i++) {
+            var properties = this._components[i].viewModel.properties;
             for (var j = 0; j < properties.length; j++) {
                 var displayValue = properties[j].displayValue;
                 properties[j].value = properties[j].originalValue;
@@ -568,9 +567,9 @@ define([
         }
 
         // Reapply automatically applied actions.
-        for (i = 0; i < self._actions.length; i++) {
-            if (self._actions[i].applyAutomatically) {
-                self._actions[i].apply();
+        for (i = 0; i < this._actions.length; i++) {
+            if (this._actions[i].applyAutomatically) {
+                this._actions[i].apply();
             }
         }
     };
