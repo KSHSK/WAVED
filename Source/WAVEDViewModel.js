@@ -291,6 +291,10 @@ define(['jquery',
         }
     };
 
+    WAVEDViewModel.prototype.refreshWorkspace = function() {
+       self._currentProject.refreshWorkspace();
+    };
+
     WAVEDViewModel.prototype.tryToCreateNewProject = function() {
         return NewProject.tryToCreateNewProject(self);
     };
