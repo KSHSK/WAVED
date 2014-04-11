@@ -18,6 +18,7 @@ define([
         Property.call(this, opts);
 
         this._templateName = PropertyTemplateName.ARRAY;
+        this._displayTemplateName = PropertyTemplateName.ARRAY_DISPLAY;
 
         this._options = [];
 
@@ -55,6 +56,22 @@ define([
                     if (options.indexOf(this._value) === -1) {
                         this._value = undefined;
                     }
+                }
+            }
+        },
+        originalValue: {
+            get: function() {
+                return this._originalValue;
+            },
+            set: function(value) {
+                if (this.isValidValue(value)) {
+                    this.error = false;
+                    this.message = '';
+                    this._originalValue = value;
+                }
+                else {
+                    this.error = true;
+                    this.message = this.errorMessage;
                 }
             }
         },
