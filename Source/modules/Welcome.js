@@ -30,8 +30,8 @@ define([
             else {
                 var projectLoaded = $.Deferred();
 
-                // Try to load the project.
-                LoadProject.loadProject(projectLoaded, projectName, viewModel);
+                // Try to load the project, rejecting deferred on failure
+                LoadProject.loadProject(projectLoaded, projectName, viewModel, true);
 
                 // If this project failed to load...
                 $.when(projectLoaded).fail(function() {

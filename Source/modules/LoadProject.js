@@ -113,17 +113,8 @@ define([
                         click: function() {
                             var projectName = viewModel.loadProjectName.value;
 
-                            /* Soft fail on empty project before calling loadProject,
-                                since a rejected deferred remains rejected even
-                                if resolve is called
-                            */
-                            if (!projectName.trim()) {
-                                viewModel.loadProjectName.error = true;
-                                viewModel.loadProjectName.message = 'A project must be selected!';
-                                return;
-                            }
-
-                            self.loadProject(projectLoaded, projectName, viewModel);
+                            // Load with soft fail to avoid being stuck in rejected state
+                            self.loadProject(projectLoaded, projectName, viewModel, true);
                             $.when(projectLoaded).done(function() {
                                 loadProjectDialog.dialog('close');
                             });
@@ -143,7 +134,7 @@ define([
         /**
          * Actually submit the load project request.
          */
-        loadProject: function(projectLoaded, projectName, viewModel) {
+        loadProject: function(projectLoaded, projectName, viewModel, softFail) {
             var self = this;
 
             $.ajax({
@@ -187,7 +178,14 @@ define([
                     else {
                         viewModel.loadProjectName.error = true;
                         viewModel.loadProjectName.message = data.errorMessage;
-                        projectLoaded.reject();
+
+                        /* Reject the deferred only if we're not expecting
+                           to fail 'softly', allowing for another attempt
+                           with the same deferred
+                        */
+                        if (!softFail) {
+                            projectLoaded.reject();
+                        }
                     }
                 }
             });
