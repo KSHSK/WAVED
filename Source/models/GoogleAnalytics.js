@@ -59,6 +59,12 @@ define([
         }
     });
 
+    GoogleAnalytics.prototype.resetGoogleAnalytics = function() {
+        this.uaCode.value = '';
+        this.eventCategory.value = '';
+        this._bound = false;
+    };
+
     // TODO: Add to DD.
     GoogleAnalytics.prototype.getState = function() {
         return {

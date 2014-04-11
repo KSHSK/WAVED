@@ -82,7 +82,7 @@ define([
         // Subscribe undo change.
         propertyChangeSubscriber.subscribeBeforeChange(prop, name);
 
-        // Subscribe redo and dirty changes.
+        // Subscribe redo change.
         propertyChangeSubscriber.subscribeChange(prop, name);
     };
 
