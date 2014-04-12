@@ -35,7 +35,7 @@ define([
             self.resetEventEditor(viewModel);
             self.eventDialog.dialog({
                 resizable: false,
-                width: 500,
+                width: 'auto',
                 modal: true,
                 buttons: {
                     'Save': function() {
@@ -87,7 +87,7 @@ define([
 
             self.eventDialog.dialog({
                 resizable: false,
-                width: 500,
+                width: 'auto',
                 modal: true,
                 buttons: {
                     'Save': function() {
