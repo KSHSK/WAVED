@@ -51,11 +51,11 @@ define([
         SuperComponentViewModel.prototype.setState.call(this, state);
 
         if (defined(state.visible)) {
-            this.visible.value = state.visible.value;
+            this.visible.originalValue = state.visible.value;
         }
 
         if (defined(state.logGoogleAnalytics)) {
-            this.logGoogleAnalytics.value = state.logGoogleAnalytics.value;
+            this.logGoogleAnalytics.originalValue = state.logGoogleAnalytics.value;
         }
     };
 

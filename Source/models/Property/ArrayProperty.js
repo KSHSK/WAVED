@@ -63,6 +63,22 @@ define([
                 }
             }
         },
+        originalValue: {
+            get: function() {
+                return this._originalValue;
+            },
+            set: function(value) {
+                if (this.isValidValue(value)) {
+                    this.error = false;
+                    this.message = '';
+                    this._originalValue = value;
+                }
+                else {
+                    this.error = true;
+                    this.message = this.errorMessage;
+                }
+            }
+        },
         value: {
             get: function() {
                 return this._value;

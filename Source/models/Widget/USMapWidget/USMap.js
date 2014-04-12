@@ -1,12 +1,14 @@
 define([
         'models/Widget/USMapWidget/USMapViewModel',
         'models/Constants/ComponentTemplateName',
+        'models/Event/Trigger',
         '../Widget',
         'knockout',
         'jquery'
     ],function(
         USMapViewModel,
         ComponentTemplateName,
+        Trigger,
         Widget,
         ko,
         $){
@@ -17,11 +19,14 @@ define([
 
         this._templateName = ComponentTemplateName.US_MAP;
 
-        var viewModel = new USMapViewModel(state, getDataSet);
-
         var $workspace = $('#waved-workspace');
         var usMap = this.newWidgetContainer();
         usMap.attr('data-bind', 'template: {name: \'' + this._templateName + '\', afterRender: render}');
+
+        var viewModel = new USMapViewModel(state, getDataSet);
+        viewModel.addTrigger(new Trigger('US Map', function() {
+            return usMap;
+        }));
 
         this._domElement = usMap;
         this.viewModel = viewModel;
