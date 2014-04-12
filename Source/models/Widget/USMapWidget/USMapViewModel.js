@@ -1,3 +1,4 @@
+/*global console*/
 define([
         'models/Event/Trigger',
         'models/Property/Coloring/ColoringSelectionProperty',
@@ -10,6 +11,7 @@ define([
         './GlyphViewModel',
         'modules/UniqueTracker',
         'modules/GlyphHelper',
+        'modules/HistoryMonitor',
         'util/defined',
         'util/displayMessage',
         'util/subscribeObservable',
@@ -28,6 +30,7 @@ define([
         GlyphViewModel,
         UniqueTracker,
         GlyphHelper,
+        HistoryMonitor,
         defined,
         displayMessage,
         subscribeObservable,
@@ -134,20 +137,44 @@ define([
                     displayMessage('Must bind data to map before adding glyph');
                 } else {
                     var newGlyph = new GlyphViewModel({}, self);
-                    this.options.push(newGlyph);
-                    this.value = newGlyph;
+                    var options = this.options;
+                    options.push(newGlyph);
+                    this.originalValue = newGlyph;
                     GlyphHelper.addEditGlyph().then(function(){
                         for (var i = 0; i < newGlyph.properties.length; i++) {
                             var property = newGlyph.properties[i];
-                            property._value = newGlyph.properties[i]._displayValue;
+                            property._originalValue = newGlyph.properties[i]._displayValue;
                             if (property instanceof GlyphSizeSelectionProperty){
                                 var p = property.value.properties;
                                 for (var j = 0; j < p.length; j++) {
-                                    p[j]._value = p[j]._displayValue;
+                                    p[j]._originalValue = p[j]._displayValue;
                                 }
                             }
                         }
                         newGlyph.add();
+
+                        var historyMonitor = HistoryMonitor.getInstance();
+
+                        // Undo by removing the item.
+                        historyMonitor.addUndoChange(function() {
+                            UniqueTracker.removeItem(SuperComponentViewModel.getUniqueNameNamespace(), self.glyphList.value);
+                            options.splice(options.indexOf(newGlyph), 1);
+                            newGlyph.remove();
+                        });
+
+                        // Redo by readding the item.
+                        historyMonitor.addRedoChange(function() {
+                            var success = UniqueTracker.addValueIfUnique(SuperComponentViewModel.getUniqueNameNamespace(),
+                                newGlyph.name.value, newGlyph);
+
+                            if (!success) {
+                                console.log('New Component name was not unique.');
+                                return;
+                            }
+                            newGlyph.add();
+                            options.push(newGlyph);
+                        });
+
                     }, function() {
                         this.options.splice(this.options.indexOf(this.value), 1);
                     });
@@ -156,26 +183,43 @@ define([
             edit: function() {
                 if (defined(this.value)) {
                     var selectedGlyph = this.value;
+                    var originalState;
+                    var newState;
                     GlyphHelper.addEditGlyph().then(function() {
+                        originalState = selectedGlyph.getState();
                         for (var i = 0; i < selectedGlyph.properties.length; i++) {
                             var property = selectedGlyph.properties[i];
-                            property._value = selectedGlyph.properties[i]._displayValue;
+                            property._originalValue = selectedGlyph.properties[i]._displayValue;
                             if (property instanceof GlyphSizeSelectionProperty){
                                 var p = property.value.properties;
                                 for (var j = 0; j < p.length; j++) {
-                                    p[j]._value = p[j]._displayValue;
+                                    p[j]._originalValue = p[j]._displayValue;
                                 }
                             }
                         }
                        selectedGlyph.edit();
+                       newState = selectedGlyph.getState();
+
+                       var historyMonitor = HistoryMonitor.getInstance();
+
+                       historyMonitor.addUndoChange(function() {
+                           selectedGlyph.setState(originalState);
+                           selectedGlyph.edit();
+                       });
+
+                       historyMonitor.addRedoChange(function() {
+                           selectedGlyph.setState(newState);
+                           selectedGlyph.edit();
+                       });
+
                     }, function() {
                         for (var i = 0; i < selectedGlyph.properties.length; i++) {
                             var property = selectedGlyph.properties[i];
-                            property._displayValue = selectedGlyph.properties[i]._value;
+                            property._displayValue = selectedGlyph.properties[i]._originalValue;
                             if (property instanceof GlyphSizeSelectionProperty){
                                 var p = property.value.properties;
                                 for (var j = 0; j < p.length; j++) {
-                                    p[j]._displayValue = p[j]._value;
+                                    p[j]._displayValue = p[j]._originalValue;
                                 }
                             }
                         }
@@ -183,9 +227,31 @@ define([
                 }
             },
             remove: function() {
-                this.value.remove();
+                var options = this.options;
+                var value = this.value;
+                value.remove();
                 UniqueTracker.removeItem(SuperComponentViewModel.getUniqueNameNamespace(), self.glyphList.value);
-                this.options.splice(this.options.indexOf(this.value), 1);
+                options.splice(this.options.indexOf(value), 1);
+
+                var historyMonitor = HistoryMonitor.getInstance();
+
+                historyMonitor.addUndoChange(function() {
+                    var success = UniqueTracker.addValueIfUnique(SuperComponentViewModel.getUniqueNameNamespace(),
+                        value.name.value, value);
+
+                    if (!success) {
+                        console.log('New Component name was not unique.');
+                        return;
+                    }
+                    options.push(value);
+                    value.add();
+                });
+
+                historyMonitor.addRedoChange(function() {
+                    value.remove();
+                    UniqueTracker.removeItem(SuperComponentViewModel.getUniqueNameNamespace(), self.glyphList.value);
+                    options.splice(options.indexOf(value), 1);
+                });
             }
         });
 

@@ -50,6 +50,7 @@ define([
 
         // Initially bind this to the sizeType specified by stateValueType
         // Will be set by the setter onwards
+        this._originalValue = stateValueType;
         this._value = stateValueType;
 
         ko.track(this);
@@ -61,6 +62,14 @@ define([
         properties: {
             get: function() {
                 return [this.constantGlyphSize, this.scaledGlyphSize];
+            }
+        },
+        originalValue: {
+            get: function() {
+                return this._originalValue;
+            },
+            set: function(value) {
+                this._originalValue = value;
             }
         },
         value: {
@@ -86,8 +95,8 @@ define([
         var state = Property.prototype.getState.call(this);
 
         // Overwrite state.value with our own value
-        if(defined(this._value)){
-            state.value = this._value.getState();
+        if(defined(this._originalValue)){
+            state.value = this._originalValue.getState();
         }
 
         return state;
@@ -100,17 +109,18 @@ define([
         switch(state.value.type) {
             case GlyphSizeSchemeType.CONSTANT_SIZE:
                 this.constantGlyphSize.size.value = state.value.size.value;
-                this._value = this.constantGlyphSize;
+                this._originalValue = this.constantGlyphSize;
                 break;
             case GlyphSizeSchemeType.SCALED_SIZE:
                 this.scaledGlyphSize.setState(state.value, viewModel);
-                this._value = this.scaledGlyphSize;
+                this._originalValue = this.scaledGlyphSize;
                 break;
             default:
-                this._value = undefined;
+                this._originalValue = undefined;
                 break;
         }
-        this._displayValue = this._value;
+        this._value = this._originalValue;
+        this._displayValue = this._originalValue;
     };
 
     GlyphSizeSelectionProperty.prototype.getSubscribableNestedProperties = function(){

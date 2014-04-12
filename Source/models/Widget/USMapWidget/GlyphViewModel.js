@@ -7,6 +7,7 @@ define([
         'models/Constants/GlyphSizeSchemeType',
         'models/Property/GlyphSize/GlyphSizeSelectionProperty',
         'modules/UniqueTracker',
+        'modules/HistoryMonitor',
         'util/defined',
         'knockout',
         'd3',
@@ -20,6 +21,7 @@ define([
         GlyphSizeSchemeType,
         GlyphSizeSelectionProperty,
         UniqueTracker,
+        HistoryMonitor,
         defined,
         ko,
         d3,
@@ -178,7 +180,20 @@ define([
         };
 
         this.edit = function() {
-            editGlyph(self);
+            if(defined(self.dataSet.value.data)){
+                editGlyph(self);
+            }
+            else {
+                // Keep trying until data is ready, as long as data is a defined object.
+                // Needed for on load
+                var interval = setInterval(function(){
+                    if(defined(self.dataSet.value.data)){
+                        editGlyph(self);
+                        clearInterval(interval);
+                    }
+                }, 100);
+            }
+
         };
 
         this.remove = function() {
