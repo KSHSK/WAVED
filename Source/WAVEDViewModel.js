@@ -65,10 +65,10 @@ define(['jquery',
     var self;
     var WAVEDViewModel = function() {
         self = this;
-        this._dirty = false;
 
         this._history = undefined;
         this._historyIndex = undefined;
+        this._lastSaveIndex = undefined;
         this.resetHistory();
 
         this._projectList = [];
@@ -81,7 +81,7 @@ define(['jquery',
             this.amendUndoNewChangeFunction, this.amendRedoPreviousChangeFunction);
 
         // Create the PropertyChangeSubscriber singleton that everything else will use.
-        this.propertyChangeSubscriber = new PropertyChangeSubscriber(this.setDirty);
+        this.propertyChangeSubscriber = new PropertyChangeSubscriber();
 
         this._currentProject = new ProjectViewModel({
             name: ''
@@ -145,7 +145,7 @@ define(['jquery',
 
         ko.track(this);
 
-        this.currentProject.subscribeChanges(this.setDirty);
+        this.currentProject.subscribeChanges();
 
         // Remove the hover/focus look when undo or redo is disabled.
         subscribeObservable(this, '_historyIndex', function() {
@@ -157,10 +157,6 @@ define(['jquery',
                 $('#redo-button').removeClass('ui-state-hover ui-state-focus');
             }
         });
-    };
-
-    WAVEDViewModel.prototype.setDirty = function() {
-        self.dirty = true;
     };
 
     WAVEDViewModel.prototype.reset = function(projectState) {
@@ -178,9 +174,6 @@ define(['jquery',
             self.currentProject.setState(projectState, self.availableWidgets);
         }
 
-        // Set clean.
-        self.dirty = false;
-
         // Remove history.
         self.resetHistory();
 
@@ -189,6 +182,11 @@ define(['jquery',
     WAVEDViewModel.prototype.resetHistory = function() {
         self._history = [{}];
         self._historyIndex = 0;
+        self._lastSaveIndex = 0;
+    };
+
+    WAVEDViewModel.prototype.setSaveIndex = function() {
+        self._lastSaveIndex = self._historyIndex;
     };
 
     WAVEDViewModel.prototype.isUndoAllowed = function() {
@@ -202,6 +200,11 @@ define(['jquery',
     WAVEDViewModel.prototype.setUndoNewChangeFunction = function(changeFunction) {
         // Remove history after historyIndex.
         self._history.length = self._historyIndex + 1;
+
+        // If the last save index is ahead of the current history index, then make the last save index invalid.
+        if (self._lastSaveIndex > self._historyIndex) {
+            self._lastSaveIndex = -1;
+        }
 
         self._history.push({
             undoChange: changeFunction
@@ -285,6 +288,10 @@ define(['jquery',
         if (defined(changeFunction)) {
             this.historyMonitor.executeIgnoreHistory(changeFunction);
         }
+    };
+
+    WAVEDViewModel.prototype.refreshWorkspace = function() {
+       self._currentProject.refreshWorkspace();
     };
 
     WAVEDViewModel.prototype.tryToCreateNewProject = function() {
@@ -402,12 +409,7 @@ define(['jquery',
     Object.defineProperties(WAVEDViewModel.prototype, {
         dirty: {
             get: function() {
-                return this._dirty;
-            },
-            set: function(value) {
-                if (typeof value === 'boolean') {
-                    this._dirty = value;
-                }
+                return this._historyIndex !== this._lastSaveIndex;
             }
         },
         projectList: {

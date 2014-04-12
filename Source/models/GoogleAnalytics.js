@@ -77,11 +77,11 @@ define([
     // TODO: Add to DD.
     GoogleAnalytics.prototype.setState = function(state) {
         if (defined(state.uaCode)) {
-            this.uaCode.value = state.uaCode.value;
+            this.uaCode.originalValue = state.uaCode.value;
         }
 
         if (defined(state.eventCategory)) {
-            this.eventCategory.value = state.eventCategory.value;
+            this.eventCategory.originalValue = state.eventCategory.value;
         }
 
         if (defined(state.bound)) {
@@ -90,7 +90,7 @@ define([
     };
 
     GoogleAnalytics.prototype.set = function() {
-        if (!self.uaCode.error && !self.eventCategory.error && self.uaCode.value.length > 0 && self.eventCategory.value.length > 0) {
+        if (!self.uaCode.error && !self.eventCategory.error && self.uaCode.originalValue.length > 0 && self.eventCategory.originalValue.length > 0) {
             self._bound = true;
         }
         else {
@@ -108,19 +108,19 @@ define([
     };
 
     GoogleAnalytics.prototype.clear = function() {
-        if (self.uaCode._value === '') {
+        if (self.uaCode._originalValue === '') {
             // needed to force knockout to update UI input
-            self.uaCode._value = ' ';
+            self.uaCode._originalValue = ' ';
         }
-        self.uaCode._value = '';
+        self.uaCode._originalValue = '';
         self.uaCode.error = true;
         self.uaCode.message = '';
 
-        if (self.eventCategory._value === '') {
+        if (self.eventCategory._originalValue === '') {
             // needed to force knockout to update UI input
-            self.eventCategory._value = ' ';
+            self.eventCategory._originalValue = ' ';
         }
-        self.eventCategory._value = '';
+        self.eventCategory._originalValue = '';
         self.eventCategory.error = true;
         self.eventCategory.message = '';
     };
@@ -128,11 +128,11 @@ define([
     GoogleAnalytics.prototype.subscribeChanges = function() {
         var propertyChangeSubscriber = PropertyChangeSubscriber.getInstance();
 
-        propertyChangeSubscriber.subscribeBeforeChange(this.uaCode, '_value');
-        propertyChangeSubscriber.subscribeChange(this.uaCode, '_value');
+        propertyChangeSubscriber.subscribeBeforeChange(this.uaCode, '_originalValue');
+        propertyChangeSubscriber.subscribeChange(this.uaCode, '_originalValue');
 
-        propertyChangeSubscriber.subscribeBeforeChange(this.eventCategory, '_value');
-        propertyChangeSubscriber.subscribeChange(this.eventCategory, '_value');
+        propertyChangeSubscriber.subscribeBeforeChange(this.eventCategory, '_originalValue');
+        propertyChangeSubscriber.subscribeChange(this.eventCategory, '_originalValue');
 
         propertyChangeSubscriber.subscribeBeforeChange(this, '_bound');
         propertyChangeSubscriber.subscribeChange(this, '_bound');

@@ -81,11 +81,11 @@ define([
 
     WorkspaceViewModel.prototype.setState = function(state) {
         if (defined(state.width)) {
-            this.width.value = state.width.value;
+            this.width.originalValue = state.width.value;
         }
 
         if (defined(state.height)) {
-            this.height.value = state.height.value;
+            this.height.originalValue = state.height.value;
         }
     };
 

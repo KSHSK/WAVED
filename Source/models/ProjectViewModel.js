@@ -557,15 +557,27 @@ define([
     };
 
     ProjectViewModel.prototype.refreshWorkspace = function() {
-        //TODO
+        for (var i = 0; i < this._components.length; i++) {
+            var properties = this._components[i].viewModel.properties;
+            for (var j = 0; j < properties.length; j++) {
+                var displayValue = properties[j].displayValue;
+                properties[j].value = properties[j].originalValue;
+                properties[j].displayValue = displayValue;
+            }
+        }
+
+        // Reapply automatically applied actions.
+        for (i = 0; i < this._actions.length; i++) {
+            if (this._actions[i].applyAutomatically) {
+                this._actions[i].apply();
+            }
+        }
     };
 
-    ProjectViewModel.prototype.subscribeChanges = function(setDirty) {
+    ProjectViewModel.prototype.subscribeChanges = function() {
         var self = this;
 
         function arrayChanged(changes) {
-            setDirty();
-
             changes.forEach(function(change) {
                 if (change.status === 'added') {
                     var subscriber = change.value.viewModel || change.value;
