@@ -4,7 +4,7 @@ define([
         'models/Property/StringProperty',
         'models/Property/NumberProperty',
         'models/Property/BooleanProperty',
-        'models/SuperComponentViewModel',
+        'models/ComponentViewModel',
         'modules/HistoryMonitor',
         'util/defined',
         'util/defaultValue',
@@ -16,7 +16,7 @@ define([
         StringProperty,
         NumberProperty,
         BooleanProperty,
-        SuperComponentViewModel,
+        ComponentViewModel,
         HistoryMonitor,
         defined,
         defaultValue,
@@ -26,7 +26,7 @@ define([
 
     var self;
     var WidgetViewModel = function(state, getDataSet) {
-        SuperComponentViewModel.call(this, state);
+        ComponentViewModel.call(this, state);
         self = this;
 
         this.getDataSetByName = function(dataSetName){
@@ -93,7 +93,7 @@ define([
         this._triggers = []; // Trigger[]
     };
 
-    WidgetViewModel.prototype = Object.create(SuperComponentViewModel.prototype);
+    WidgetViewModel.prototype = Object.create(ComponentViewModel.prototype);
 
     Object.defineProperties(WidgetViewModel.prototype, {
         properties: {
@@ -114,7 +114,7 @@ define([
     });
 
     WidgetViewModel.prototype.getState = function() {
-        var state = SuperComponentViewModel.prototype.getState.call(this);
+        var state = ComponentViewModel.prototype.getState.call(this);
         state.visible = this.visible.getState();
         state.logGoogleAnalytics = this.logGoogleAnalytics.getState();
         state.width = this.width.getState();
@@ -132,7 +132,7 @@ define([
     };
 
     WidgetViewModel.prototype.setState = function(state) {
-        SuperComponentViewModel.prototype.setState.call(this, state);
+        ComponentViewModel.prototype.setState.call(this, state);
 
         if (defined(state.visible)) {
             this.visible.originalValue = state.visible.value;
