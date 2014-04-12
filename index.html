@@ -340,7 +340,7 @@
             </select>
             <div>Affected Widget:</div>
             <select class="marginBottom10 width100"
-                    data-bind="options: currentProject.components, 
+                    data-bind="options: currentProject.widgets, 
                       optionsText: function(widget) {
                          return widget.viewModel.name.value;
                       },
@@ -364,7 +364,7 @@
         </div>
         <div class="inline top padding15">
             <div>Options</div>
-            <!-- ko if: selectedActionType === 'Property Action' -->
+            <!-- ko if: selectedActionType === 'Property Action' && actionEditorAffectedWidget-->
             <div data-bind="foreach: actionEditorAffectedWidget.viewModel.properties">
                 <!-- ko if:  $data.displayName !== 'Name' -->
                 <div data-bind="template: {name : $data.displayTemplateName, data: $data}"></div>
@@ -392,14 +392,14 @@
         </div>
         <div>
             <label class="inline">Triggering Widget: </label>
-            <select data-bind="options: currentProject.components,
+            <select data-bind="options: currentProject.widgets,
                             optionsText: function(widget) {
                                 return widget.viewModel.name.value;
                             }, value: eventEditorTriggeringWidget"></select>
         </div>
         <div>
             <label class="inline">Trigger: </label>
-            <select id="event-trigger-select" data-bind="options: eventEditorTriggeringWidget.viewModel.triggers,
+            <select id="event-trigger-select" data-bind="options: (eventEditorTriggeringWidget) ? eventEditorTriggeringWidget.viewModel.triggers : [],
                             optionsText: function(trigger) {
                                 return trigger.name;
                             }, value: eventEditorTrigger"></select>
