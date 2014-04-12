@@ -58,7 +58,7 @@ define([
 
     SuperComponentViewModel.prototype.setState = function(state) {
         if (defined(state.name)) {
-            this.name.value = state.name.value;
+            this.name.originalValue = state.name.value;
         }
     };
 
@@ -69,7 +69,7 @@ define([
         var propertyChangeSubscriber = PropertyChangeSubscriber.getInstance();
 
         self.properties.forEach(function(prop) {
-            self.subscribeChange(prop, '_value', propertyChangeSubscriber);
+            self.subscribeChange(prop, '_originalValue', propertyChangeSubscriber);
             self.recursiveSubscribeChanges(prop, propertyChangeSubscriber);
         });
 
@@ -82,7 +82,7 @@ define([
         // Subscribe undo change.
         propertyChangeSubscriber.subscribeBeforeChange(prop, name);
 
-        // Subscribe redo and dirty changes.
+        // Subscribe redo change.
         propertyChangeSubscriber.subscribeChange(prop, name);
     };
 
@@ -100,7 +100,7 @@ define([
 
                 nestedProperties.forEach(function(nestedProp){
                     // Subscribe to the nestedProperty itself
-                    self.subscribeChange(nestedProp, '_value', propertyChangeSubscriber);
+                    self.subscribeChange(nestedProp, '_originalValue', propertyChangeSubscriber);
 
                     // Traverse down the tree
                     self.recursiveSubscribeChanges(nestedProp, propertyChangeSubscriber);
@@ -110,7 +110,7 @@ define([
         else{
             // The nesting stops here, look for properties like normal (we've reached the bottom of the tree)
             prop.properties.forEach(function(value){
-                self.subscribeChange(value, '_value', propertyChangeSubscriber);
+                self.subscribeChange(value, '_originalValue', propertyChangeSubscriber);
             });
         }
     };

@@ -33,7 +33,7 @@ define([
     StringProperty.prototype = Object.create(Property.prototype);
 
     StringProperty.prototype.reset = function() {
-        this._value = '';
+        this.originalValue = '';
         this.message = '';
         this.error = !this.isValidValue(this._value);
 
@@ -42,6 +42,22 @@ define([
     };
 
     Object.defineProperties(StringProperty.prototype, {
+        originalValue: {
+            get: function() {
+                return this._originalValue;
+            },
+            set: function(value) {
+                if (typeof value === 'string' && this.isValidValue(value)) {
+                    this.error = false;
+                    this.message = '';
+                    this._originalValue = value;
+                }
+                else {
+                    this.error = true;
+                    this.message = this.errorMessage;
+                }
+            }
+        },
         value: {
             get: function() {
                 return this._value;
@@ -51,7 +67,6 @@ define([
                     this.error = false;
                     this.message = '';
                     this._value = value;
-                    this._displayValue = value;
                 }
                 else {
                     this.error = true;

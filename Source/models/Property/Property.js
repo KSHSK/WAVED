@@ -12,6 +12,7 @@ define(['knockout',
 
         // TODO: Validation, etc
         this._templateName = undefined; // PropertyTemplateName, defined by subclasses.
+        this._originalValue = undefined;
         this._value = undefined; // Type determined by subclasses.
         this._displayValue = undefined;
         this.onchange = options.onchange;
@@ -35,8 +36,17 @@ define(['knockout',
 
         ko.track(this);
 
-        // When this._value changes, call onchange.
         var self = this;
+        subscribeObservable(this, '_originalValue', function() {
+            self._value = self._originalValue;
+            self._displayValue = self._originalValue;
+        });
+
+        subscribeObservable(this, '_value', function() {
+            self._displayValue = self._value;
+        });
+
+        // When this._value changes, call onchange.
         subscribeObservable(this, '_value', function() {
             if (defined(self.onchange)) {
                 self.onchange();
@@ -67,11 +77,12 @@ define(['knockout',
 
     Property.prototype.getState = function() {
         return {
-            'value': this._value
+            'value': this._originalValue
         };
     };
 
     Property.prototype.setState = function(state) {
+        this._originalValue = state.value;
         this._value = state.value;
         this._displayValue = state.value;
         this.error = !this.isValidValue(this._value);

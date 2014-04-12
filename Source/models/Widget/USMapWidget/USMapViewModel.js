@@ -39,7 +39,7 @@ define([
         var namespace = SuperComponentViewModel.getUniqueNameNamespace();
         this.id = UniqueTracker.getDefaultUniqueValue(namespace, USMapViewModel.getType(), this);
         if (!defined(state.name)) {
-            this.name.value = this.id;
+            this.name.originalValue = this.id;
         }
 
         this.render = function() {
@@ -121,17 +121,12 @@ define([
         }, this);
 
         this.width.onchange = this.render;
-        this.width.value = 100;
+        this.width.originalValue = 100;
         this.width._displayName = 'Scale';
 
         this.setState(state);
 
         this._isRendered = false;
-
-        // TODO: triggers?
-        this._triggers.push(new Trigger({
-            name: 'US Map'
-        }));
         this._ready = true;
 
         ko.track(this);
@@ -159,6 +154,7 @@ define([
         WidgetViewModel.prototype.setState.call(this, state);
 
         if (defined(state.coloring)) {
+            // TODO: originalValue? Probably deeper down
             this.coloring.setState(state.coloring, this);
         }
     };

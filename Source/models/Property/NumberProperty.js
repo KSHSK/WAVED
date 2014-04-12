@@ -26,6 +26,22 @@ define([
     NumberProperty.prototype = Object.create(Property.prototype);
 
     Object.defineProperties(NumberProperty.prototype, {
+        originalValue: {
+            get: function() {
+                return this._originalValue;
+            },
+            set: function(value) {
+                if (!isNaN(Number(value)) && this.isValidValue(value)) {
+                    this.error = false;
+                    this.message = '';
+                    this._originalValue = Number(value);
+                }
+                else {
+                    this.error = true;
+                    this.message = this.errorMessage;
+                }
+            }
+        },
         value: {
             get: function() {
                 return this._value;
@@ -35,7 +51,6 @@ define([
                     this.error = false;
                     this.message = '';
                     this._value = Number(value);
-                    this._displayValue = this._value;
                 }
                 else {
                     this.error = true;
