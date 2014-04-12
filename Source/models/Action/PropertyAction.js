@@ -21,15 +21,6 @@ define([
 
         this._newValues = {};
 
-        this.setState(state);
-        // TODO: Validation, etc
-        // TODO: target visibility conflicts with Action _target visibility, issue?
-        // TODO: Make private in order to do type checking, validation, etc? Update DD with decision
-        this.target = state.target;
-
-        // TODO: Should this be private _dataSet? Update DD if changed.
-        this.dataSet = state.dataSet;
-
         this.apply = function() {
             var historyMonitor = HistoryMonitor.getInstance();
 
@@ -42,6 +33,15 @@ define([
             // Don't add individual changes to the history.
             historyMonitor.executeIgnoreHistory(executeChange);
         };
+
+        this.setState(state);
+        // TODO: Validation, etc
+        // TODO: target visibility conflicts with Action _target visibility, issue?
+        // TODO: Make private in order to do type checking, validation, etc? Update DD with decision
+        this.target = state.target;
+
+        // TODO: Should this be private _dataSet? Update DD if changed.
+        this.dataSet = state.dataSet;
 
         ko.track(this);
     };

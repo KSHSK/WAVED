@@ -18,6 +18,9 @@ define([
         ko){
     'use strict';
 
+    var DEFAULT_WIDTH = 750;
+    var DEFAULT_HEIGHT = 600;
+
     var WorkspaceViewModel = function(state) {
         state = defined(state) ? state : {};
 
@@ -30,7 +33,7 @@ define([
         // Set width
         this.width = new NumberProperty({
             displayName: 'Width',
-            value: 750,
+            value: DEFAULT_WIDTH,
             validValue: createValidator({
                 min: 1
             }),
@@ -40,7 +43,7 @@ define([
         // Set height
         this.height = new NumberProperty({
             displayName: 'Height',
-            value: 600,
+            value: DEFAULT_HEIGHT,
             validValue: createValidator({
                 min: 1
             }),
@@ -58,6 +61,11 @@ define([
 
     WorkspaceViewModel.prototype = Object.create(SuperComponentViewModel.prototype);
 
+    WorkspaceViewModel.prototype.resetWorkspace = function() {
+        this.width.value = DEFAULT_WIDTH;
+        this.height.value = DEFAULT_HEIGHT;
+    };
+
     WorkspaceViewModel.prototype.getState = function() {
         var state = SuperComponentViewModel.prototype.getState.call(this);
         state.width = this.width.getState();
@@ -68,11 +76,11 @@ define([
 
     WorkspaceViewModel.prototype.setState = function(state) {
         if (defined(state.width)) {
-            this.width.value = state.width.value;
+            this.width.originalValue = state.width.value;
         }
 
         if (defined(state.height)) {
-            this.height.value = state.height.value;
+            this.height.originalValue = state.height.value;
         }
     };
 
