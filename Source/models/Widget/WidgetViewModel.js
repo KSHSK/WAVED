@@ -4,7 +4,7 @@ define([
         'models/Property/StringProperty',
         'models/Property/NumberProperty',
         'models/Property/BooleanProperty',
-        'models/ComponentViewModel',
+        'models/SuperComponentViewModel',
         'modules/HistoryMonitor',
         'util/defined',
         'util/defaultValue',
@@ -16,7 +16,7 @@ define([
         StringProperty,
         NumberProperty,
         BooleanProperty,
-        ComponentViewModel,
+        SuperComponentViewModel,
         HistoryMonitor,
         defined,
         defaultValue,
@@ -26,12 +26,24 @@ define([
 
     var self;
     var WidgetViewModel = function(state, getDataSet) {
-        ComponentViewModel.call(this, state);
+        SuperComponentViewModel.call(this, state);
         self = this;
 
         this.getDataSetByName = function(dataSetName){
             return getDataSet(dataSetName);
         };
+
+        // Set visible
+        this.visible = new BooleanProperty({
+            displayName: 'Visible',
+            value: true
+        });
+
+        // Set logGoogleAnalytics
+        this.logGoogleAnalytics = new BooleanProperty({
+            displayName: 'Log Google Analytics',
+            value: false
+        });
 
         // Set width
         this.width = new NumberProperty({
@@ -77,14 +89,11 @@ define([
             errorMessage: 'Value must be between 0 and 100'
         });
 
-        this._elementNames = []; // String[]
         this._boundData = []; // String[]
-
-        // TODO: Set this.
-        this._availableElements = []; // ComponentRecord[]
+        this._triggers = []; // Trigger[]
     };
 
-    WidgetViewModel.prototype = Object.create(ComponentViewModel.prototype);
+    WidgetViewModel.prototype = Object.create(SuperComponentViewModel.prototype);
 
     Object.defineProperties(WidgetViewModel.prototype, {
         properties: {
@@ -97,20 +106,21 @@ define([
                 return this._boundData;
             }
         },
-        elementNames: {
+        triggers: {
             get: function() {
-                return this._elementNames;
+                return this._triggers;
             }
         }
     });
 
     WidgetViewModel.prototype.getState = function() {
-        var state = ComponentViewModel.prototype.getState.call(this);
+        var state = SuperComponentViewModel.prototype.getState.call(this);
+        state.visible = this.visible.getState();
+        state.logGoogleAnalytics = this.logGoogleAnalytics.getState();
         state.width = this.width.getState();
         state.height = this.height.getState();
         state.x = this.x.getState();
         state.y = this.y.getState();
-        state.elementNames = this.elementNames;
 
         var boundDataSetStates = [];
         for(var index=0; index < this.boundData.length; index++){
@@ -122,7 +132,15 @@ define([
     };
 
     WidgetViewModel.prototype.setState = function(state) {
-        ComponentViewModel.prototype.setState.call(this, state);
+        SuperComponentViewModel.prototype.setState.call(this, state);
+
+        if (defined(state.visible)) {
+            this.visible.originalValue = state.visible.value;
+        }
+
+        if (defined(state.logGoogleAnalytics)) {
+            this.logGoogleAnalytics.originalValue = state.logGoogleAnalytics.value;
+        }
 
         if (defined(state.width)) {
             this.width.originalValue = state.width.value;
@@ -154,24 +172,12 @@ define([
         }
     };
 
-    WidgetViewModel.prototype.addElement = function(elementName) {
-        // TODO
+    WidgetViewModel.prototype.getTriggers = function() {
+        return this._triggers;
     };
 
-    WidgetViewModel.prototype.removeElement = function(element) {
-        // TODO
-    };
-
-    WidgetViewModel.prototype.addSubwidget = function(name) {
-        // TODO
-    };
-
-    WidgetViewModel.prototype.removeSubwidget = function(name) {
-        // TODO
-    };
-
-    WidgetViewModel.prototype.getAvailableElements = function() {
-        // TODO
+    WidgetViewModel.prototype.addTrigger = function(trigger) {
+        this._triggers.push(trigger);
     };
 
     WidgetViewModel.prototype.boundDataIndex = function(dataSet) {
