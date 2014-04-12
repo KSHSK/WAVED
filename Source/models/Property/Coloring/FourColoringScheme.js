@@ -97,16 +97,16 @@ define([
 
     FourColoringScheme.prototype.setState = function(state) {
         if(defined(state.color1)){
-            this.color1.value = state.color1.value;
+            this.color1._originalValue = state.color1.value;
         }
         if(defined(state.color2)){
-            this.color2.value = state.color2.value;
+            this.color2._originalValue = state.color2.value;
         }
         if(defined(state.color3)){
-            this.color3.value = state.color3.value;
+            this.color3._originalValue = state.color3.value;
         }
         if(defined(state.color4)){
-            this.color4.value = state.color4.value;
+            this.color4._originalValue = state.color4.value;
         }
     };
 

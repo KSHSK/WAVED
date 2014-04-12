@@ -12,6 +12,7 @@ define([], function(){
         BOOLEAN_DISPLAY: 'booleanDisplayPropertyTemplate',
         ARRAY: 'arrayPropertyTemplate',
         COLORING: 'coloringPropertyTemplate',
+        COLORING_DISPLAY: 'coloringDisplayPropertyTemplate',
         GLYPH_SIZE: 'glyphSizePropertyTemplate'
     };
 

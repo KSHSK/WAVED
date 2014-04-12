@@ -70,6 +70,22 @@ define([
             set: function(value) {
                 this._value = value;
             }
+        },
+        displayValue: {
+            get: function() {
+                return this._displayValue;
+            },
+            set: function(displayValue) {
+                this._displayValue = displayValue;
+            }
+        },
+        originalValue: {
+            get: function() {
+                return this._originalValue;
+            },
+            set: function(originalValue) {
+                this._originalValue = originalValue;
+            }
         }
     });
 

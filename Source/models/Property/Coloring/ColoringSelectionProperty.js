@@ -25,8 +25,10 @@ define([
         Property.call(this, state);
 
        this._templateName = PropertyTemplateName.COLORING;
+       this._displayTemplateName = PropertyTemplateName.COLORING_DISPLAY;
        this.error = '';
        this._value = '';
+       this._originalValue = '';
 
        this.solidColoring = new SolidColoringScheme(state, viewModel);
        this.fourColoring = new FourColoringScheme(state, viewModel);
@@ -50,9 +52,9 @@ define([
 
        this.coloringType = [this.solidColoring, this.fourColoring, this.gradientColoring];
 
-       // Initially bind htis to the coloringType specified by stateValueType
+       // Initially bind this to the coloringType specified by stateValueType
        // Will be set by the setter onwards
-       this._value = stateValueType;
+       this._originalValue = stateValueType;
 
         ko.track(this);
     };
@@ -72,6 +74,22 @@ define([
             set: function(value) {
                 this._value = value;
             }
+        },
+        originalValue: {
+            get: function() {
+                return this._originalValue;
+            },
+            set: function(originalValue) {
+                this._orignalValue = originalValue;
+            }
+        },
+        displayValue: {
+            get: function() {
+                return this._displayValue;
+            },
+            set: function(displayValue) {
+                this._displayValue = displayValue;
+            }
         }
     });
 
@@ -81,7 +99,7 @@ define([
 
         // Overwrite state.value with our own value
         if(defined(this._value)){
-            state.value = this._value.getState();
+            state.value = this._originalValue.getState();
         }
 
         return state;
@@ -96,18 +114,18 @@ define([
         switch(scheme.type) {
             case ColoringSchemeType.SOLID_COLORING:
                 this.solidColoring.color.value = scheme.color.value;
-                this._value = this.solidColoring;
+                this._originalValue = this.solidColoring;
                 break;
             case ColoringSchemeType.FOUR_COLORING:
                 this.fourColoring.setState(scheme);
-                this._value = this.fourColoring;
+                this._originalValue = this.fourColoring;
                 break;
             case ColoringSchemeType.GRADIENT_COLORING:
                 this.gradientColoring.setState(scheme, viewModel);
-                this._value = this.gradientColoring;
+                this._originalValue = this.gradientColoring;
                 break;
             default:
-                this._value = undefined;
+                this._originalValue = undefined;
                 break;
         }
     };
