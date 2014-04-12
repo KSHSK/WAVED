@@ -73,9 +73,10 @@ define([
                 .append('svg')
                 .attr('height', h2)
                 .attr('width', w2)
-                .attr('class', 'widget-container widget');
+                .attr('class', 'widget-container');
             viewModel._svg = svg;
-            viewModel._states = svg.append('g');
+            viewModel._states = svg.append('g')
+                .attr('pointer-events', 'none');
             d3.json('data/states.json', function(json) {
                 viewModel._states.selectAll('path')
                     .data(json.features)
@@ -139,7 +140,7 @@ define([
                     var newGlyph = new GlyphViewModel({}, self);
                     var options = this.options;
                     options.push(newGlyph);
-                    this.originalValue = newGlyph;
+                    this.value = newGlyph;
                     GlyphHelper.addEditGlyph().then(function(){
                         for (var i = 0; i < newGlyph.properties.length; i++) {
                             var property = newGlyph.properties[i];
