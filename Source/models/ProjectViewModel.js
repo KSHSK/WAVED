@@ -51,7 +51,7 @@ define([
         this._name = state.name;
         this._googleAnalytics = new GoogleAnalytics();
         this._workspace = new WorkspaceViewModel();
-        this._components = [this._workspace];
+        this._widgets = [];
         this._dataSets = [];
         this._actions = [];
         this._events = [];
@@ -72,9 +72,14 @@ define([
                 this._name = value;
             }
         },
+        widgets: {
+            get: function() {
+                return this._widgets;
+            }
+        },
         components: {
             get: function() {
-                return this._components;
+                return [this.workspace].concat(this.widgets);
             }
         },
         dataSets: {
@@ -130,7 +135,7 @@ define([
             'name': this._name,
             'workspace': this._workspace.getState(),
             'analytics': this._googleAnalytics.getState(),
-            'components': $.map(this._components, function(item) {
+            'widgets': $.map(this._widgets, function(item) {
                 // Skip workspace.
                 if (item === self._workspace) {
                     return null;
@@ -162,11 +167,11 @@ define([
             ko.getObservable(this, '_dataSets').valueHasMutated();
         }
 
-        if (this._components.length > 1) {
-            this._components.length = 1;
+        if (this._widgets.length > 0) {
+            this._widgets.length = 0;
 
             // Setting length doesn't trigger knockout, so we must call valueHasMutated explicitly.
-            ko.getObservable(this, '_components').valueHasMutated();
+            ko.getObservable(this, '_widgets').valueHasMutated();
         }
 
         if (this._actions.length > 0) {
@@ -201,7 +206,7 @@ define([
         }
 
         /*
-         * Must go before components because any components that depend on DataSets
+         * Must go before widgets because any widgets that depend on DataSets
          * will need them to be available.
          */
         if (defined(state.dataSets)) {
@@ -226,16 +231,16 @@ define([
             });
         }
 
-        if (defined(state.components)) {
+        if (defined(state.widgets)) {
             // Clear array except for Workspace.
-            this._components.length = 1;
+            this._widgets.length = 0;
 
-            var newComponents = $.each(state.components, function(itemIndex, itemState) {
+            var newWidgets = $.each(state.widgets, function(itemIndex, itemState) {
                 for (var index = 0; index < availableWidgets.length; index++) {
-                    var widget = availableWidgets[index];
-                    if (itemState.type === widget.o.getViewModelType()) {
-                        var component =  new widget.o(itemState, self.getDataSet.bind(self));
-                        self.addComponent(component);
+                    var widgetType = availableWidgets[index];
+                    if (itemState.type === widgetType.o.getViewModelType()) {
+                        var widget =  new widgetType.o(itemState, self.getDataSet.bind(self));
+                        self.addWidget(widget);
                     }
                 }
             });
@@ -249,7 +254,7 @@ define([
                 var action;
 
                 if (itemState.type === PropertyAction.getType()) {
-                    itemState.target = self.getComponent(itemState.target);
+                    itemState.target = self.getWidget(itemState.target);
                     action = new PropertyAction(itemState);
                 }
                 else if (itemState.type === QueryAction.getType()) {
@@ -269,7 +274,7 @@ define([
             this._events.length = 0;
 
             var newEvents = $.each(state.events, function(itemIndex, itemState) {
-                itemState.triggeringComponent = self.getComponent(itemState.triggeringComponent);
+                itemState.triggeringWidget = self.getWidget(itemState.triggeringWidget);
                 // TODO: Trigger?
                 var actions = [];
                 for (var i = 0; i < itemState.actions.length; i++) {
@@ -284,40 +289,38 @@ define([
         }
     };
 
-    // TODO: Update this to make it more generic to Components, temporarily just using this._components in the
-    // methods
-    ProjectViewModel.prototype.addComponent = function(component, index) {
+    ProjectViewModel.prototype.addWidget = function(widget, index) {
         var self = this;
 
         // Try to add unique name.
         var success = UniqueTracker.addValueIfUnique(ComponentViewModel.getUniqueNameNamespace(),
-            component.viewModel.name.value, component.viewModel);
+            widget.viewModel.name.value, widget.viewModel);
 
         if (!success) {
-            console.log('New Component name was not unique.');
+            console.log('New Widget name was not unique.');
             return;
         }
 
         if (defined(index)) {
-            this._components.splice(index, 0, component);
+            this._widgets.splice(index, 0, widget);
         }
         else {
-            this._components.push(component);
+            this._widgets.push(widget);
         }
 
         // Add the DOM element.
-        component.addToWorkspace();
+        widget.addToWorkspace();
 
         var historyMonitor = HistoryMonitor.getInstance();
 
         // Undo by removing the item.
         historyMonitor.addUndoChange(function() {
-            self.removeComponent(component);
+            self.removeWidget(widget);
         });
 
         // Redo by readding the item.
         historyMonitor.addRedoChange(function() {
-            self.addComponent(component);
+            self.addWidget(widget);
         });
     };
 
@@ -423,11 +426,11 @@ define([
         });
     };
 
-    ProjectViewModel.prototype.getComponent = function(name) {
-        for (var index = 0; index < this._components.length; index++) {
-            var component = this._components[index];
-            if (component.viewModel.name.value === name) {
-                return component;
+    ProjectViewModel.prototype.getWidget = function(name) {
+        for (var index = 0; index < this._widgets.length; index++) {
+            var widget = this._widgets[index];
+            if (widget.viewModel.name.value === name) {
+                return widget;
             }
         }
 
@@ -462,32 +465,30 @@ define([
         // TODO
     };
 
-    ProjectViewModel.prototype.removeComponent = function(component) {
+    ProjectViewModel.prototype.removeWidget = function(widget) {
         var self = this;
 
-        if (component !== this._workspace) {
-            var index = this._components.indexOf(component);
-            if (index > -1) {
-                this._components.splice(index, 1);
+        var index = this._widgets.indexOf(widget);
+        if (index > -1) {
+            this._widgets.splice(index, 1);
 
-                // Remove unique name.
-                UniqueTracker.removeItem(ComponentViewModel.getUniqueNameNamespace(), component.viewModel);
+            // Remove unique name.
+            UniqueTracker.removeItem(ComponentViewModel.getUniqueNameNamespace(), widget.viewModel);
 
-                // Remove the DOM element.
-                component.removeFromWorkspace();
+            // Remove the DOM element.
+            widget.removeFromWorkspace();
 
-                var historyMonitor = HistoryMonitor.getInstance();
+            var historyMonitor = HistoryMonitor.getInstance();
 
-                // Undo by adding the item.
-                historyMonitor.addUndoChange(function() {
-                    self.addComponent(component, index);
-                });
+            // Undo by adding the item.
+            historyMonitor.addUndoChange(function() {
+                self.addWidget(widget, index);
+            });
 
-                // Redo by removing the item.
-                historyMonitor.addRedoChange(function() {
-                    self.removeComponent(component);
-                });
-            }
+            // Redo by removing the item.
+            historyMonitor.addRedoChange(function() {
+                self.removeWidget(widget);
+            });
         }
     };
 
@@ -564,8 +565,8 @@ define([
     };
 
     ProjectViewModel.prototype.refreshWorkspace = function() {
-        for (var i = 0; i < this._components.length; i++) {
-            var properties = this._components[i].viewModel.properties;
+        for (var i = 0; i < this._widgets.length; i++) {
+            var properties = this._widgets[i].viewModel.properties;
             for (var j = 0; j < properties.length; j++) {
                 var displayValue = properties[j].displayValue;
                 properties[j].value = properties[j].originalValue;
@@ -603,8 +604,8 @@ define([
         // Google Analytics changed.
         this.googleAnalytics.subscribeChanges();
 
-        // Component is added or removed.
-        subscribeObservable(this, '_components', function(changes) {
+        // Widget is added or removed.
+        subscribeObservable(this, '_widgets', function(changes) {
             arrayChanged(changes);
         }, null, 'arrayChange');
 

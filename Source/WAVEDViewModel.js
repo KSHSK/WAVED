@@ -134,12 +134,12 @@ define(['jquery',
         this.selectedActionName = getNamePropertyInstance('Action Name');
         this.selectedAction = undefined;
         this.selectedActionType = '';
-        this.actionEditorAffectedComponent = undefined;
+        this.actionEditorAffectedWidget = undefined;
         this.actionEditorDataSet = undefined;
 
         this.selectedEventName = getNamePropertyInstance('Event Name');
         this.selectedEvent = undefined;
-        this.eventEditorTriggeringComponent = undefined;
+        this.eventEditorTriggeringWidget = undefined;
         this.eventEditorTrigger = undefined;
         this.selectedEventType = undefined;
         this.selectedEventActions = [];
@@ -363,7 +363,7 @@ define(['jquery',
     WAVEDViewModel.prototype.removeSelectedComponent = function() {
         var component = self._selectedComponent;
         self._selectedComponent = self.currentProject.workspace;
-        self._currentProject.removeComponent(component);
+        self._currentProject.removeWidget(component);
     };
 
     WAVEDViewModel.prototype.saveProject = function() {
@@ -393,10 +393,9 @@ define(['jquery',
 
     WAVEDViewModel.prototype.propertiesPanelPosition = $('#accordion').children('div').index($('#properties-panel'));
 
-    // TODO: Component
     WAVEDViewModel.prototype.addNewWidget = function(w) {
         var widget = new w.o();
-        self._currentProject.addComponent(widget);
+        self._currentProject.addWidget(widget);
         self._selectedComponent = widget;
 
         self.openPropertiesPanel();
