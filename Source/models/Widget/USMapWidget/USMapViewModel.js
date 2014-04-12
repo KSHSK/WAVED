@@ -48,12 +48,20 @@ define([
         }
     }
 
+    function removeGlyphs (viewModel) {
+        var glyphs = viewModel.glyphs;
+        for (var i = 0; i < glyphs.length; i++) {
+            glyphs[i].remove();
+        }
+    }
+
     function renderMap (viewModel) {
         if (viewModel._ready) {
             var w = $('#waved-workspace').width();
             var w2 = w *viewModel.width.value/100;
             var h = $('#waved-workspace').height();
             var h2 = h * viewModel.width.value/100;
+            removeGlyphs(viewModel);
             getElement(viewModel).selectAll('svg').remove();
             var scale = w*1.3*viewModel.width.value/100; //1.3 is a magic number
             viewModel._projection = d3.geo.albersUsa().scale(scale).translate(([w2/2, h2/2]));

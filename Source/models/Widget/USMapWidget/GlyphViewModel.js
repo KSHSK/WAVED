@@ -37,7 +37,9 @@ define([
 
     function removeGlyph(glyph) {
         var child = document.getElementById(glyph.id);
-        child.parentNode.removeChild(child);
+        if (child !== null) {
+            child.parentNode.removeChild(child);
+        }
         glyph._dom = undefined;
     }
 
@@ -120,7 +122,6 @@ define([
             var namespace = SuperComponentViewModel.getUniqueNameNamespace();
             this.name.value = UniqueTracker.getDefaultUniqueValue(namespace, GlyphViewModel.getType(), this);
         }
-        this.id = this.name.value;
 
         this.parent = parent;
 
@@ -157,7 +158,7 @@ define([
         });
 
         this.setState(state);
-
+        this.id = this.name.value;
         this._dom = undefined;
 
         this.add = function() {
