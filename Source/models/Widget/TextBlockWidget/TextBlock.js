@@ -1,13 +1,13 @@
 define([
         'models/Widget/TextBlockWidget/TextBlockViewModel',
-        'models/Constants/ComponentTemplateName',
+        'models/Constants/WidgetTemplateName',
         'models/Event/Trigger',
         '../Widget',
         'knockout',
         'jquery'
     ],function(
         TextBlockViewModel,
-        ComponentTemplateName,
+        WidgetTemplateName,
         Trigger,
         Widget,
         ko,
@@ -17,7 +17,7 @@ define([
     var TextBlock = function(state, getDataSet) {
         Widget.call(this, state);
 
-        this._templateName = ComponentTemplateName.TEXTBLOCK;
+        this._templateName = WidgetTemplateName.TEXTBLOCK;
 
         var viewModel = new TextBlockViewModel(state, getDataSet);
 
