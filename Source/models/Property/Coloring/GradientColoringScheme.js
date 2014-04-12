@@ -85,14 +85,14 @@ define([
     GradientColoringScheme.prototype.getState = function() {
         var set;
         if(defined(this.dataSet.getState().value)) {
-            set = this.dataSet.getState().value.name;
+            set = this.dataSet.getState().originalValue.name;
         }
 
         var state = {
             startColor: this.startColor.getState(),
             endColor: this.endColor.getState(),
             dataSet: set,
-            dataField: this.dataField.getState().value,
+            dataField: this.dataField.getState().originalValue,
             type: this.getType()
         };
 
@@ -103,15 +103,15 @@ define([
         var self = this;
 
         if(defined(state.startColor)) {
-            this.startColor.value = state.startColor.value;
+            this.startColor.originalValue = state.startColor.value;
         }
 
         if(defined(state.endColor)) {
-            this.endColor.value = state.endColor.value;
+            this.endColor.originalValue = state.endColor.value;
         }
 
         // Subscribe to the value of dataSet in order to automatically update dataField's options
-        subscribeObservable(self.dataSet, '_value', function(newValue){
+        subscribeObservable(self.dataSet, '_originalValue', function(newValue){
             var changeFunction = function() {
                 if(defined(newValue)){
                     if(defined(newValue.data)){
@@ -129,7 +129,7 @@ define([
                 }
                 else{
                     self.dataField.options = [];
-                    self.dataField.value = undefined; // Reset the dataField selection
+                    self.dataField.originalValue = undefined; // Reset the dataField selection
                 }
             };
 
@@ -140,8 +140,8 @@ define([
 
         // Properly unset the dataSet value when the options disappear (when the bound data is unbound)
         subscribeObservable(self.dataSet, '_options', function(newValue){
-            if(defined(self.dataSet.value) && (newValue.indexOf(self.dataSet.value) === -1)){
-                    self.dataSet.value = undefined;
+            if(defined(self.dataSet.originalValue) && (newValue.indexOf(self.dataSet.originalValue) === -1)){
+                    self.dataSet.orignalValue = undefined;
             }
         });
 
@@ -150,8 +150,8 @@ define([
         // Set default selection. This MUST go after the subscribe in order to trigger dataField to update
         viewModel.boundData.forEach(function(entry){
             if(defined(state.dataSet) && (state.dataSet === entry.name)){
-                self.dataSet.value = entry;
-                self.dataField.value = state.dataField;
+                self.dataSet.originalValue = entry;
+                self.dataField.originalValue = state.dataField;
 
                 return;
             }

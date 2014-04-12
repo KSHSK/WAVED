@@ -170,8 +170,8 @@ define([
 
     // Groupings of states so that
     USMapViewModel.prototype.fourColorStateGroupings = [
-        ['Alaska', 'Alabama', 'Arkansas', 'Connecticut', 'Delware', 'Hawaii', 'Illinois', 'Maine', 'Michigan', 'Montana', 'Nebraska', 'New Mexico', 'Nevada', 'South Carolina', 'Virginia', 'Washington'],
-        ['Arizona', 'District of Columbia', 'Florida', 'Kansas', 'Mississippi', 'North Carolina', 'North Dakota', 'Oregon', 'Pennsylvania', 'Rhode Island', 'Texas', 'Vermont', 'Wisconsin', 'Wyoming'],
+        ['Alaska', 'Alabama', 'Arkansas', 'Connecticut', 'Delaware', 'Hawaii', 'Illinois', 'Maine', 'Michigan', 'Minnesota', 'Montana', 'Nebraska', 'New Mexico', 'Nevada', 'South Carolina', 'Virginia', 'Washington'],
+        ['Arizona', 'District of Columbia', 'Florida', 'Kansas', 'Kentucky', 'Mississippi', 'North Carolina', 'North Dakota', 'Oregon', 'Pennsylvania', 'Rhode Island', 'Texas', 'Vermont', 'Wisconsin', 'Wyoming'],
         ['California', 'Colorado', 'Georgia', 'Idaho', 'Indiana', 'Louisiana', 'Massachusetts', 'Missouri', 'New Jersey', 'South Dakota', 'West Virginia'],
         ['Iowa', 'Maryland', 'New Hampshire', 'New York', 'Ohio', 'Oklahoma', 'Tennessee', 'Utah']
     ];

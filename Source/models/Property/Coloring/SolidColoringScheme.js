@@ -62,7 +62,7 @@ define([
     SolidColoringScheme.prototype.setState = function(state) {
         if(defined(state.value.color)){
             // state.value.color.value -> SolidColoringScheme.color.value
-            this.color.value = state.value.color.value;
+            this.color.originalValue = state.value.color.value;
         }
     };
 
