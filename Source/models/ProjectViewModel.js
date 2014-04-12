@@ -7,7 +7,7 @@ define([
         'util/displayMessage',
         'util/updateQueryByName',
         'util/subscribeObservable',
-        'models/SuperComponentViewModel',
+        'models/ComponentViewModel',
         'models/Action/Action',
         'models/Action/PropertyAction',
         'models/Action/QueryAction',
@@ -27,7 +27,7 @@ define([
         displayMessage,
         updateQueryByName,
         subscribeObservable,
-        SuperComponentViewModel,
+        ComponentViewModel,
         Action,
         PropertyAction,
         QueryAction,
@@ -290,7 +290,7 @@ define([
         var self = this;
 
         // Try to add unique name.
-        var success = UniqueTracker.addValueIfUnique(SuperComponentViewModel.getUniqueNameNamespace(),
+        var success = UniqueTracker.addValueIfUnique(ComponentViewModel.getUniqueNameNamespace(),
             component.viewModel.name.value, component.viewModel);
 
         if (!success) {
@@ -471,7 +471,7 @@ define([
                 this._components.splice(index, 1);
 
                 // Remove unique name.
-                UniqueTracker.removeItem(SuperComponentViewModel.getUniqueNameNamespace(), component.viewModel);
+                UniqueTracker.removeItem(ComponentViewModel.getUniqueNameNamespace(), component.viewModel);
 
                 // Remove the DOM element.
                 component.removeFromWorkspace();
