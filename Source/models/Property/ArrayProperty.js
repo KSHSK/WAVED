@@ -150,12 +150,13 @@ define([
 
         if (replaceWithObject) {
             for (var j = 0; j < this._options.length; j++) {
-                if (defined(this._value) && this._options[j].name === this._value.name) {
-                    this._value = this._options[j];
+                if (defined(this._originalValue) && this._options[j].name === this._originalValue.name) {
+                    this._originalValue = this._options[j];
                 }
             }
         }
 
+        this._value = this._originalValue;
         this._displayValue = this._value;
     };
 

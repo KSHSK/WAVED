@@ -157,8 +157,8 @@ define([
         // Set default selection. This MUST go after the subscribe in order to trigger dataField to update
         viewModel.boundData.forEach(function(entry){
             if(defined(state.dataSet) && (state.dataSet === entry.name)){
-                self.dataSet.value = entry;
-                self.dataField.value = state.dataField;
+                self.dataSet.originalValue = entry;
+                self.dataField.originalValue = state.dataField;
 
                 return;
             }
@@ -167,8 +167,8 @@ define([
 
     ScaledGlyphSizeScheme.prototype.getState = function(){
         var set;
-        if(defined(this.dataSet.getState().value)){
-            set = this.dataSet.getState().value.name;
+        if(defined(this.dataSet.getState().originalValue)){
+            set = this.dataSet.getState().originalValue.name;
         }
 
         var state = {
