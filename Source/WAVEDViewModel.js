@@ -8,6 +8,7 @@ define(['jquery',
         'models/ProjectViewModel',
         'models/Property/ArrayProperty',
         'models/Property/StringProperty',
+        'models/Widget/Widget',
         'models/Widget/ButtonWidget/Button',
         'models/ProjectTree',
         'modules/ActionHelper',
@@ -39,6 +40,7 @@ define(['jquery',
         ProjectViewModel,
         ArrayProperty,
         StringProperty,
+        Widget,
         Button,
         ProjectTree,
         ActionHelper,
@@ -363,7 +365,10 @@ define(['jquery',
     WAVEDViewModel.prototype.removeSelectedComponent = function() {
         var component = self._selectedComponent;
         self._selectedComponent = self.currentProject.workspace;
-        self._currentProject.removeWidget(component);
+
+        if (component instanceof Widget) {
+            self._currentProject.removeWidget(component);
+        }
     };
 
     WAVEDViewModel.prototype.saveProject = function() {
