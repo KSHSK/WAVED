@@ -1,5 +1,5 @@
 /**
- * A module that keeps track of properties that must have a unique value, such as name.
+ * A module that checks if items can safely be deleted from the project.
  */
 define([
         'models/Action/PropertyAction',

@@ -476,16 +476,23 @@ define([
                 // Remove the DOM element.
                 component.removeFromWorkspace();
 
+                var boundData = component.viewModel.unbindAllData();
+
                 var historyMonitor = HistoryMonitor.getInstance();
 
                 // Undo by adding the item.
                 historyMonitor.addUndoChange(function() {
                     self.addComponent(component, index);
+
+                    boundData.forEach(function(dataSet) {
+                        component.viewModel.bindData(dataSet);
+                    });
                 });
 
                 // Redo by removing the item.
                 historyMonitor.addRedoChange(function() {
                     self.removeComponent(component);
+                    component.viewModel.unbindAllData();
                 });
             }
         }

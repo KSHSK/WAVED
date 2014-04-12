@@ -207,6 +207,17 @@ define([
         }
     };
 
+    WidgetViewModel.prototype.unbindAllData = function() {
+        var self = this;
+
+        var data = this.boundData.slice(0);
+        data.forEach(function(dataSet) {
+            self.unbindData(dataSet);
+        });
+
+        return data;
+    };
+
     /**
      * Checks if this widget use the dataSet.
      * @param dataSet
