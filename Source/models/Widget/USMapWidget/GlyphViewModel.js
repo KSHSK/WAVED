@@ -83,7 +83,7 @@ define([
             .append('svg')
             .attr('height', h2)
             .attr('width', w2)
-            .attr('class', 'widget-container widget')
+            .attr('class', 'widget-container')
             .attr('id', glyph.id);
 
 
