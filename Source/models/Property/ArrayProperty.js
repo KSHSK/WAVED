@@ -17,6 +17,8 @@ define([
         opts = defined(opts) ? opts : {};
         Property.call(this, opts);
 
+        //type
+
         this._templateName = PropertyTemplateName.ARRAY;
         this._displayTemplateName = PropertyTemplateName.ARRAY_DISPLAY;
 

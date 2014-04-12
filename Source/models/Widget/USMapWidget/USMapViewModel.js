@@ -62,7 +62,7 @@ define([
                 .append('svg')
                 .attr('height', h2)
                 .attr('width', w2)
-                .attr('class', 'widget-container');
+                .attr('class', 'widget-container widget');
             viewModel._svg = svg;
             viewModel._states = svg.append('g');
             d3.json('data/states.json', function(json) {

@@ -39,7 +39,6 @@ define([
         var child = document.getElementById(glyph.id);
         child.parentNode.removeChild(child);
         glyph._dom = undefined;
-        glyph.id = undefined;
     }
 
     function editGlyph(glyph) {
@@ -70,13 +69,17 @@ define([
     }
 
     function addGlyph(glyph, id) {
+        if (defined(glyph._dom)) {
+            return;
+        }
+
         var w2 = $('#waved-workspace').width() * glyph.parent.width.value/100;
         var h2 = $('#waved-workspace').height() * glyph.parent.width.value/100;
         var svg = getElement(glyph.parent)
             .append('svg')
             .attr('height', h2)
             .attr('width', w2)
-            .attr('class', 'widget-container')
+            .attr('class', 'widget-container widget')
             .attr('id', glyph.id);
 
 
@@ -138,7 +141,7 @@ define([
         });
         this.opacity = new NumberProperty({
             displayName: 'Opacity',
-            value: 80
+            value: 50
         });
         this.size = new GlyphSizeSelectionProperty({
             displayName: 'Size',
@@ -158,11 +161,25 @@ define([
         this._dom = undefined;
 
         this.add = function() {
-            addGlyph(self);
+            if(defined(self.dataSet.value.data)){
+                addGlyph(self);
+            }
+            else {
+                // Keep trying until data is ready, as long as data is a defined object.
+                // Needed for on load
+                var interval = setInterval(function(){
+                    if(defined(self.dataSet.value.data)){
+                        addGlyph(self);
+                        clearInterval(interval);
+                    }
+                }, 100);
+            }
         };
+
         this.edit = function() {
             editGlyph(self);
         };
+
         this.remove = function() {
             removeGlyph(self);
         };

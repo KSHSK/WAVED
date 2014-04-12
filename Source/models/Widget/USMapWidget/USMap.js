@@ -42,10 +42,5 @@ define([
         return 'Source/models/Widget/USMapWidget/usmap-icon.png';
     };
 
-    USMap.prototype.addToWorkspace = function() {
-        Widget.prototype.addToWorkspace.call(this);
-        this.viewModel.render();
-    };
-
     return USMap;
 });
