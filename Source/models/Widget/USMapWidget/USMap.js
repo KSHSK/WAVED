@@ -31,6 +31,12 @@ define([
 
     USMap.prototype = Object.create(Widget.prototype);
 
+    USMap.prototype.addToWorkspace = function() {
+        Widget.prototype.addToWorkspace.call(this);
+
+        this.viewModel.render();
+    };
+
     /**
      * Static method that returns the type String for this class's ViewModel.
      */
