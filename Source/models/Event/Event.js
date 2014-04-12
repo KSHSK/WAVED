@@ -1,5 +1,4 @@
 define([
-        'models/ComponentViewModel',
         'models/Constants/EventType',
         'models/Action/Action',
         'models/Action/PropertyAction',
@@ -13,7 +12,6 @@ define([
         'knockout',
         'jquery'
     ],function(
-        ComponentViewModel,
         EventType,
         Action,
         PropertyAction,
