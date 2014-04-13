@@ -66,6 +66,19 @@ define([
             onchange: viewModel.updateColoring
         });
 
+        var isValidValue = function(value) {
+            var undef = (value === undefined);
+            var validSelection = true;
+            if (defined(this._options) && this._options.length > 0) {
+                validSelection = (this.options.indexOf(value) !== -1);
+            }
+
+            return undef || validSelection;
+        };
+
+        this.dataSet.isValidValue = isValidValue;
+        this.dataField.isValidValue = isValidValue;
+
         ko.track(this);
 
         this.setState(state, viewModel);
