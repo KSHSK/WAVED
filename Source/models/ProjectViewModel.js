@@ -460,8 +460,9 @@ define([
     ProjectViewModel.prototype.removeComponent = function(component) {
         var self = this;
 
-        if (!DependencyChecker.allowedToDeleteComponent(component, self)) {
-            displayMessage('Cannot delete a component that is used by an action or event');
+        var response = DependencyChecker.allowedToDeleteWidget(component, self);
+        if (!response.allowed) {
+            displayMessage(response.message);
             return false;
         }
 
@@ -517,8 +518,9 @@ define([
     ProjectViewModel.prototype.removeAction = function(action) {
         var self = this;
 
-        if (!DependencyChecker.allowedToDeleteAction(action, self)) {
-            displayMessage('Cannot delete an action that is used by an event');
+        var response = DependencyChecker.allowedToDeleteAction(action, self);
+        if (!response.allowed) {
+            displayMessage(response.message);
             return;
         }
 

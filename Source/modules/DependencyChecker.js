@@ -11,20 +11,25 @@ define([
 
     var DependencyChecker = {
         /**
-         * Returns true if the component is not in use; otherwise, returns false.
-         * @param component The component to be deleted.
+         * Returns true if the widget is not in use; otherwise, returns false.
+         * @param widget The widget to be deleted.
          * @param project The current project.
          */
-        allowedToDeleteComponent: function(component, project) {
+        allowedToDeleteWidget: function(widget, project) {
             var i;
+            var message = '';
 
             // Check PropertyActions.
             for (i = 0; i < project.actions.length; i++) {
                 var action = project.actions[i];
 
                 if (action instanceof PropertyAction) {
-                    if (action.target === component) {
-                        return false;
+                    if (action.target === widget) {
+                        message = 'Cannot delete this widget since it is used by action "' + action.name + '"';
+                        return {
+                            allowed: false,
+                            message: message
+                        };
                     }
                 }
             }
@@ -33,12 +38,19 @@ define([
             for (i = 0; i < project.events.length; i++) {
                 var event = project.events[i];
 
-                if (event.triggeringComponent === component) {
-                    return false;
+                if (event.triggeringComponent === widget) {
+                    message = 'Cannot delete this widget since it is used by event "' + event.name + '"';
+                    return {
+                        allowed: false,
+                        message: message
+                    };
                 }
             }
 
-            return true;
+            return {
+                allowed: true,
+                message: message
+            };
         },
 
         /**
@@ -54,12 +66,19 @@ define([
                     var actionToCheck = event.actions[j];
 
                     if (action.name === actionToCheck.name) {
-                        return false;
+                        var message = 'Cannot delete this action since it is used by event "' + event.name + '"';
+                        return {
+                            allowed: false,
+                            message: message
+                        };
                     }
                 }
             }
 
-            return true;
+            return {
+                allowed: true,
+                message: ''
+            };
         },
 
         /**
@@ -68,9 +87,19 @@ define([
          * @param dataSet The dataSet to be deleted.
          */
         allowedToDeleteDataSet: function(dataSet) {
+            var allowed = (dataSet.referenceCount <= 0);
+            var message = '';
+
+            if (!allowed) {
+                message = 'Cannot delete data that is bound to a widget';
+            }
+
             // TODO Check if the DataSet is used by a QueryAction.
 
-            return (dataSet.referenceCount <= 0);
+            return {
+                allowed: allowed,
+                message: message
+            };
         },
 
         /**
@@ -80,7 +109,17 @@ define([
          * @param widget The widget that dataSet is bound to.
          */
         allowedToUnbindDataSet: function(dataSet, widget) {
-            return (!widget.usesDataSet(dataSet));
+            var allowed = (!widget.usesDataSet(dataSet));
+            var message = '';
+
+            if (!allowed) {
+                message = 'Cannot unbind data that is used by a widget';
+            }
+
+            return {
+                allowed: allowed,
+                message: message
+            };
         }
     };
 

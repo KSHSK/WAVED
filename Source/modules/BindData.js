@@ -109,8 +109,9 @@ define([
                 if (defined(dataSet)) {
                     var component = viewModel.selectedComponent.viewModel;
 
-                    if (!DependencyChecker.allowedToUnbindDataSet(dataSet, component)) {
-                        displayMessage('Cannot unbind data that is used by a widget');
+                    var response = DependencyChecker.allowedToUnbindDataSet(dataSet, component);
+                    if (!response.allowed) {
+                        displayMessage(response.message);
                         return;
                     }
 

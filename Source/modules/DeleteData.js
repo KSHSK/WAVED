@@ -19,8 +19,9 @@ define([
                 return;
             }
 
-            if (!DependencyChecker.allowedToDeleteDataSet(dataSet)) {
-                displayMessage('Cannot delete data that is bound to a widget');
+            var response = DependencyChecker.allowedToDeleteDataSet(dataSet);
+            if (!response.allowed) {
+                displayMessage(response.message);
                 return;
             }
 
