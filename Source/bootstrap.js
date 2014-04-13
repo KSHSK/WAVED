@@ -64,13 +64,21 @@
             var fnDeleteDone;
             var cleanUp = false;
 
+            // Deleting the current project requires the Welcome Dialog
             if (WAVED.viewModel.currentProject.name == fullData.name) {
                 fnDeleteDone = function() {
+                    /*
+                        Open the welcome dialog while hidden to bring
+                        up the load dialog again without flashing.
+                    */
+                    WelcomeModule.welcomeDialog.parent().hide();
                     WelcomeModule.openWelcomeDialog(WAVED.viewModel);
                     WelcomeModule.openLoadDialog(WAVED.viewModel);
+                    WelcomeModule.welcomeDialog.parent().show();
                 };
                 cleanUp = true;
             }
+            // Otherwise just refresh the project list
             else {
                 fnDeleteDone = function() {
                     LoadProject.updateProjectList(WAVED.viewModel);
