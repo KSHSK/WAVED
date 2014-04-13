@@ -1,5 +1,4 @@
 <?php
-include_once('connect.php');
 include_once("CommonMethods.php");
 include_once('Project.php');
 

@@ -1,5 +1,5 @@
 <?php
-include_once('connect.php');
+include_once('Serializer.php');
 include_once("CommonMethods.php");
 include_once('Project.php');
 /* Main Code. */
@@ -31,7 +31,7 @@ if (!$success) {
 }
 
 // Remove the database entry for the project.
-$success = $projectSerializer->delete($projectName);
+$success = Serializer::projectSerializer->delete($projectName);
 
 if(!$success) {
     setReturnValueError($returnValue, "Unknown error deregistering project.");
