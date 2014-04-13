@@ -65,13 +65,8 @@ define([
                         .enter()
                         .append('path')
                         .attr('d', path)
-                        .attr('stroke', 'white')
-                        .style('fill', function(d) {
-                            // TODO: Load the coloring from state
-                            return self.coloring.value;
-                        });
+                        .attr('stroke', 'white');
                     self._isRendered = true;
-                    // TODO: Test this, changed from updateSvg
                     self.updateColoring();
                 });
             }
@@ -87,10 +82,11 @@ define([
             }
 
             var path = getElement(self).selectAll('svg').selectAll('path');
-            switch(self.coloring.value.getType()){
+            var coloringScheme = self.coloring.value;
+            switch(coloringScheme.getType()){
                 case ColoringSchemeType.SOLID_COLORING:
                     path.style('fill', function(d) {
-                        return defined(self.coloring.value.color.value) ? self.coloring.value.color.value : '#000000';
+                        return defined(coloringScheme.color.value) ? coloringScheme.color.value : '#000000';
                     });
                     break;
                 case ColoringSchemeType.FOUR_COLORING:
@@ -98,12 +94,57 @@ define([
                         var stateName = d.properties.name;
                         for(var i=0; i<self.fourColorStateGroupings.length; i++){
                             if(self.fourColorStateGroupings[i].indexOf(stateName) !== -1){
-                                return self.coloring.value.getColorArray()[i];
+                                return coloringScheme.getColorArray()[i];
                             }
                         }
                     });
                     break;
                 case ColoringSchemeType.GRADIENT_COLORING:
+                    /*
+                     * This makes some very broad assumptions:
+                     * 1. All the data is in 1 file
+                     * 2. The path data's key and the key in the data used to scale have the same key.
+                     * 2.1. For example, both files must have a key of 'New York' for things to match up. No abbreviations.
+                     */
+
+                    // If either a dataSet or dataField isn't selected, break
+                    if(!defined(coloringScheme.dataField.value) || !defined(coloringScheme.dataSet.value)){
+                        break;
+                    }
+
+                    // Wait until data is available
+                    if(!defined(coloringScheme.dataSet.value.data)){
+                        var interval = setInterval(function(){
+                            if(defined(coloringScheme.dataSet.value.data)){
+                                clearInterval(interval);
+                            }
+                        }, 100);
+                    }
+
+                    // Find the min and max values for the dataField we're using to scale the gradient
+                    var dataField = coloringScheme.dataField.value;
+                    var min = d3.min(coloringScheme.dataSet.value.data, function(d) { return +d[dataField]; });
+                    var max = d3.max(coloringScheme.dataSet.value.data, function(d) { return +d[dataField]; });
+
+                    // Default the map to black when we can't extract an actual min or max (the field is not numeric)
+                    if(!defined(min) || !defined(max)){
+                        path.style('fill', function(d){
+                            return '#000000'; // Default to black
+                        });
+                    }
+
+                    // Set up the gradient function
+                    var gradient = d3.scale.linear().domain([min, max]).range([coloringScheme.startColor.value, coloringScheme.endColor.value]);
+                    path.style('fill', function(d) {
+                        var stateName = d.properties.name;
+
+                        for(var i=0; i<coloringScheme.dataSet.value.data.length; i++){
+                            if(coloringScheme.dataSet.value.data[i].Name === stateName){
+                                return gradient(coloringScheme.dataSet.value.data[i][dataField]);
+                            }
+                        }
+                    });
+
                     break;
                 default:
                     break;
@@ -154,7 +195,6 @@ define([
         WidgetViewModel.prototype.setState.call(this, state);
 
         if (defined(state.coloring)) {
-            // TODO: originalValue? Probably deeper down
             this.coloring.setState(state.coloring, this);
         }
     };

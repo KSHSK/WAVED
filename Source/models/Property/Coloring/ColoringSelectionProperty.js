@@ -55,8 +55,9 @@ define([
        // Initially bind this to the coloringType specified by stateValueType
        // Will be set by the setter onwards
        this._originalValue = stateValueType;
+       this._value = stateValueType;
 
-        ko.track(this);
+       ko.track(this);
     };
 
     ColoringSelectionProperty.prototype = Object.create(Property.prototype);
@@ -98,7 +99,7 @@ define([
         var state = Property.prototype.getState.call(this);
 
         // Overwrite state.value with our own value
-        if(defined(this._value)){
+        if(defined(this._originalValue)){
             state.value = this._originalValue.getState();
         }
 
@@ -113,7 +114,8 @@ define([
         var scheme = state.value;
         switch(scheme.type) {
             case ColoringSchemeType.SOLID_COLORING:
-                this.solidColoring.color.value = scheme.color.value;
+                // TODO: Use setState()?
+                this.solidColoring.color._originalValue = scheme.color.value;
                 this._originalValue = this.solidColoring;
                 break;
             case ColoringSchemeType.FOUR_COLORING:
