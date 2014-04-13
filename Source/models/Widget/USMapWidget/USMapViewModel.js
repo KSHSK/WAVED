@@ -109,6 +109,9 @@ define([
 
                     // If either a dataSet or dataField isn't selected, break
                     if(!defined(coloringScheme.dataField.value) || !defined(coloringScheme.dataSet.value)){
+                        path.style('fill', function(d){
+                            return '#000000'; // Default to black
+                        });
                         break;
                     }
 
