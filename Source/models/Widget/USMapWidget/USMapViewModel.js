@@ -142,7 +142,7 @@ define([
                         var stateName = d.properties.name;
 
                         for(var i=0; i<coloringScheme.dataSet.value.data.length; i++){
-                            if(coloringScheme.dataSet.value.data[i].Name === stateName){
+                            if(coloringScheme.dataSet.value.data[i].name === stateName){
                                 return gradient(coloringScheme.dataSet.value.data[i][dataField]);
                             }
                         }
