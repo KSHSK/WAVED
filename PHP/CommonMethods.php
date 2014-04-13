@@ -69,6 +69,11 @@ function getProjectState($projectName) {
  * @param string $baseDir
  */
 function recursiveRmdir($baseDir) {
+    // Don't fail if the directory has already been removed
+    if (!file_exists($baseDir)) {
+        return TRUE;
+    }
+
     // Find directory contents, ignoring current directory
     // and parent directory
     $contents = array_diff(scandir($baseDir), array('.', '..'));
