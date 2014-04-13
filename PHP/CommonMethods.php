@@ -1,5 +1,5 @@
 <?php
-include_once("connect.php");
+include_once("Serializer.php");
 include_once('Project.php');
 
 
@@ -38,16 +38,14 @@ function reportReturnValue($returnValue) {
  * @param string $projectName
  */
 function projectExists($projectName) {
-    global $projectSerializer;
-    return $projectSerializer->exists($projectName);
+    return Serializer::projectSerializer()->exists($projectName);
 }
 
 /**
  * Returns all existing projects.
  */
 function getExistingsProjects() {
-    global $projectSerializer;
-    $projects = $projectSerializer->getAll();
+    $projects = Serializer::projectSerializer()->getAll();
     $getName = function($project) { return $project->getName(); };
 
     // Map through the array, returning only the name
@@ -60,8 +58,7 @@ function getExistingsProjects() {
  * @param string $projectName
  */
 function getProjectState($projectName) {
-    global $projectSerializer;
-    return $projectSerializer->get($projectName)->getState();
+    return Serializer::projectSerializer()->get($projectName)->getState();
 }
 
 /**
@@ -149,8 +146,6 @@ function validProjectName($projectName, $returnValue) {
  * @return array $returnValue with updated values.
  */
 function createProject($returnValue, $projectName) {
-    global $projectSerializer;
-    
     // Make sure the project name is valid.
     $returnValue = validProjectName($projectName, $returnValue);
     if (!$returnValue["success"]) {
@@ -176,7 +171,7 @@ function createProject($returnValue, $projectName) {
     }
     
     $project = Project::create($projectName);
-    $success = $projectSerializer->set($project);
+    $success = Serializer::projectSerializer()->set($project);
     
     if(!$success) {
         // Attempt to remove traces from the filesystem
@@ -204,8 +199,6 @@ function createProject($returnValue, $projectName) {
  * @return array $returnValue with updated values.
  */
 function saveProject($returnValue, $projectName, $projectState) {
-    global $projectSerializer;
-
     // Check if the project exists.
     if (empty($projectName)) {
         setReturnValueError($returnValue, "A project name must be given.");
@@ -224,7 +217,7 @@ function saveProject($returnValue, $projectName, $projectState) {
     
     // Create and serialize Project object
     $project = Project::create($projectName, $projectState);
-    $success = $projectSerializer->set($project);
+    $success = Serializer::projectSerializer()->set($project);
     
     if(!$success) {
         setReturnValueError($returnValue, "Unknown error updating project.");
