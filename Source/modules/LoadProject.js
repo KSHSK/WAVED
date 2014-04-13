@@ -137,6 +137,21 @@ define([
         loadProject: function(projectLoaded, projectName, viewModel, softFail) {
             var self = this;
 
+            // Client side check for name before sending server request
+            if (projectName.length === 0) {
+                viewModel.loadProjectName.error = true;
+                viewModel.loadProjectName.message = "A project name needs to be given!";
+
+                /* Reject the deferred only if we're not expecting
+                   to fail 'softly', allowing for another attempt
+                   with the same deferred
+                */
+                if (!softFail) {
+                    projectLoaded.reject();
+                }
+                return;
+            }
+
             $.ajax({
                 type: 'POST',
                 url: 'PHP/loadProject.php',

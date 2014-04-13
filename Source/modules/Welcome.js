@@ -22,23 +22,17 @@ define([
         start: function(viewModel) {
             var self = this;
 
-            var projectName = getQueryParamByName('project');
-            if (projectName.length === 0) {
-                // Open welcome dialog.
+            var projectName = getQueryParamByName('project').trim();
+            var projectLoaded = $.Deferred();
+
+            // Try to load the project, rejecting deferred on failure
+            LoadProject.loadProject(projectLoaded, projectName, viewModel, false);
+
+            // If this project failed to load...
+            $.when(projectLoaded).fail(function() {
+                // Open welcome window.
                 self.openWelcomeDialog(viewModel);
-            }
-            else {
-                var projectLoaded = $.Deferred();
-
-                // Try to load the project, rejecting deferred on failure
-                LoadProject.loadProject(projectLoaded, projectName, viewModel, false);
-
-                // If this project failed to load...
-                $.when(projectLoaded).fail(function() {
-                    // Open welcome window.
-                    self.openWelcomeDialog(viewModel);
-                });
-            }
+            });
         },
 
         /**
