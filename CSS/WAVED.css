@@ -231,7 +231,11 @@ textarea:disabled {
     cursor: pointer;
 }
 
-table.dataTable#project-list tr.row_selected td { background-color: #B0BED9; }
+td.button-cell {
+    text-align: center
+}
+
+table.dataTable#project-list tr.row_selected td { background-color: #3BB4BF; }
 
 table.dataTable tr.odd { background-color: #D7F0F2; }
 table.dataTable tr.even { background-color: white; }

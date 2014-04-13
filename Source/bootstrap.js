@@ -58,7 +58,7 @@
         var deleteRender = function(td, cellData, fullData) {
             // Create button
             var button = $('<button>');
-            button.append("Delete Project " + fullData.name);
+            button.append('Delete Project "' + fullData.name + '"');
 
             // Button click
             var fnDeleteDone;
@@ -101,7 +101,7 @@
                 }
             });
 
-            $(td).css('text-align', 'center').append(button);
+            $(td).addClass('button-cell').append(button);
         };
 
         $('#project-list').dataTable({
