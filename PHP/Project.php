@@ -41,13 +41,13 @@ class Project
     /**
      * Constructs a new Project object
      * @param string $name
-     * @param string $state
+     * @param string $state (initial state is assumed if none is given)
      */
     public static function create($name, $state)
     {
         $instance = new self();
         $instance->name = $name;
-        $instance->state = $state;
+        $instance->state = $state ? $state : json_encode(array("name" => $name));
         return $instance;
     }
 

@@ -170,8 +170,7 @@ function createProject($returnValue, $projectName) {
         return $returnValue;
     }
     
-    $projectState = "{}";
-    $project = Project::create($projectName, $projectState);
+    $project = Project::create($projectName);
     $success = $projectSerializer->set($project);
     
     if(!$success) {
@@ -186,7 +185,7 @@ function createProject($returnValue, $projectName) {
 
     // Set project variables.
     $returnValue["projectName"] = $projectName;
-    $returnValue["projectState"] = $projectState;
+    $returnValue["projectState"] = $project->getState();
     $returnValue["dataFolder"] = getDataFolder($projectName);
     
     return $returnValue;
