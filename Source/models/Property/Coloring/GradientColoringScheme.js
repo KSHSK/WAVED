@@ -32,7 +32,8 @@ define([
             validValue: createValidator({
                 regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
             }),
-            errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE
+            errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE,
+            onchange: viewModel.updateColoring
         });
 
         this.endColor = new StringProperty({
@@ -41,17 +42,18 @@ define([
             validValue: createValidator({
                 regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
             }),
-            errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE
+            errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE,
+            onchange: viewModel.updateColoring
         });
 
-        // TODO: Look to ScaledGlyphSizeScheme for how to do this
         this.dataSet = new ArrayProperty({
             displayName: 'Data Set',
             value: undefined,
             options: [],
             getOptionText: function(value) {
                 return value.getNameAndFilename();
-            }
+            },
+            onchange: viewModel.updateColoring
         });
 
         this.dataField = new ArrayProperty({
@@ -60,7 +62,8 @@ define([
             options: [],
             getOptionText: function(value) {
                 return value;
-            }
+            },
+            onchange: viewModel.updateColoring
         });
 
         ko.track(this);
@@ -84,15 +87,16 @@ define([
 
     GradientColoringScheme.prototype.getState = function() {
         var set;
+        // We use value vs originalValue here because we call getState(), which returns an object with key 'value'
         if(defined(this.dataSet.getState().value)) {
-            set = this.dataSet.getState().originalValue.name;
+            set = this.dataSet.getState().value.name;
         }
 
         var state = {
             startColor: this.startColor.getState(),
             endColor: this.endColor.getState(),
             dataSet: set,
-            dataField: this.dataField.getState().originalValue,
+            dataField: this.dataField.getState().value,
             type: this.getType()
         };
 
@@ -116,6 +120,7 @@ define([
                 if(defined(newValue)){
                     if(defined(newValue.data)){
                         self.dataField.options = newValue.dataFields;
+                        self.dataField.originalValue = undefined;
                     }
                     else {
                         // Keep trying until data is ready, as long as data is a defined object.
