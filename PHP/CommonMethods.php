@@ -34,6 +34,15 @@ function reportReturnValue($returnValue) {
 }
 
 /**
+ * Echos a return value for an error
+ */
+function reportError($errorMessage = "An unknown error occured.") {
+    $returnValue = getInitialReturnValue();
+    setReturnValueError($returnValue, $errorMessage);
+    reportReturnValue($returnValue);
+}
+
+/**
  * Checks to see if the project exists.
  * @param string $projectName
  */

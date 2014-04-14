@@ -1,13 +1,22 @@
 <?php
 include_once("CommonMethods.php");
 
-// Setup return object.
-$returnValue = getInitialReturnValue();
+/*
+    Avoid 500 errors and return proper
+    JSON error response
+*/
+try {
+    // Setup return object.
+    $returnValue = getInitialReturnValue();
 
-$projects = getExistingsProjects();
+    $projects = getExistingsProjects();
 
-$returnValue["projects"] = $projects;
+    $returnValue["projects"] = $projects;
 
-echo json_encode($returnValue);
+    reportReturnValue($returnValue);
+}
+catch (Exception $e) {
+    reportError();
+}
 
 ?>
