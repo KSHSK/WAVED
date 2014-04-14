@@ -72,7 +72,7 @@ define([
                 return;
             }
 
-            var component = viewModel.selectedComponent.viewModel;
+            var widget = viewModel.selectedComponent.viewModel;
 
             var dataSets = $.map(dataSetNames, function(name, index) {
                 return viewModel.currentProject.getDataSet(name);
@@ -80,13 +80,13 @@ define([
 
             var undoChange = function() {
                 for (var i = 0; i < dataSets.length; i++) {
-                    component.unbindData(dataSets[i]);
+                    widget.unbindData(dataSets[i]);
                 }
             };
 
             var executeChange = function() {
                 for (var i = 0; i < dataSets.length; i++) {
-                    component.bindData(dataSets[i]);
+                    widget.bindData(dataSets[i]);
                 }
             };
 
@@ -107,22 +107,22 @@ define([
 
                 var dataSet = viewModel.currentProject.getDataSet(name);
                 if (defined(dataSet)) {
-                    var component = viewModel.selectedComponent.viewModel;
+                    var widget = viewModel.selectedComponent.viewModel;
 
-                    var response = DependencyChecker.allowedToUnbindDataSet(dataSet, component);
+                    var response = DependencyChecker.allowedToUnbindDataSet(dataSet, widget);
                     if (!response.allowed) {
                         displayMessage(response.message);
                         return;
                     }
 
-                    var index = component.boundDataIndex(dataSet);
+                    var index = widget.boundDataIndex(dataSet);
 
                     var undoChange = function() {
-                        component.bindData(dataSet, index);
+                        widget.bindData(dataSet, index);
                     };
 
                     var executeChange = function() {
-                        component.unbindData(dataSet);
+                        widget.unbindData(dataSet);
                     };
 
                     var historyMonitor = HistoryMonitor.getInstance();
