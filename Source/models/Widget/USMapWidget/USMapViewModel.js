@@ -2,7 +2,7 @@ define([
         'models/Event/Trigger',
         'models/Property/Coloring/ColoringSelectionProperty',
         'models/Property/StringProperty',
-        'models/SuperComponentViewModel',
+        'models/ComponentViewModel',
         'models/Widget/WidgetViewModel',
         'modules/ReadData',
         'modules/UniqueTracker',
@@ -15,7 +15,7 @@ define([
         Trigger,
         ColoringSelectionProperty,
         StringProperty,
-        SuperComponentViewModel,
+        ComponentViewModel,
         WidgetViewModel,
         ReadData,
         UniqueTracker,
@@ -36,7 +36,7 @@ define([
         var self = this;
         state = (defined(state)) ? state : {};
         WidgetViewModel.call(this, state, getDataSet);
-        var namespace = SuperComponentViewModel.getUniqueNameNamespace();
+        var namespace = ComponentViewModel.getUniqueNameNamespace();
         this.id = UniqueTracker.getDefaultUniqueValue(namespace, USMapViewModel.getType(), this);
         if (!defined(state.name)) {
             this.name.originalValue = this.id;

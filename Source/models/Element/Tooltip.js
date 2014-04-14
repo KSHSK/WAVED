@@ -1,17 +1,17 @@
 define([
         'models/Element/TooltipViewModel',
-        'models/Constants/ComponentTemplateName',
+        'models/Constants/WidgetTemplateName',
         'knockout',
         'jquery'
     ],function(
         TooltipViewModel,
-        ComponentTemplateName,
+        WidgetTemplateName,
         ko,
         $){
     'use strict';
 
     var Tooltip = function(state) {
-        this._templateName = ComponentTemplateName.TOOLTIP;
+        this._templateName = WidgetTemplateName.TOOLTIP;
 
         var viewModel = new TooltipViewModel(state);
 

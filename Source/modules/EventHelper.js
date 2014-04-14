@@ -23,7 +23,7 @@ define([
         eventDialog: $('#event-editor-dialog'),
 
         resetEventEditor: function(viewModel) {
-            viewModel.eventEditorTriggeringComponent = undefined;
+            viewModel.eventEditorTriggeringWidget = undefined;
             viewModel.eventEditorTrigger = undefined;
             viewModel.selectedEventType = undefined;
             viewModel.selectedEventName.reset();
@@ -55,7 +55,7 @@ define([
                         var event = new Event({
                             name: viewModel.selectedEventName.value,
                             eventType: viewModel.selectedEventType,
-                            triggeringComponent: viewModel.eventEditorTriggeringComponent,
+                            triggeringWidget: viewModel.eventEditorTriggeringWidget,
                             trigger: $('#event-trigger-select').prop('selectedIndex'),
                             actions: viewModel.selectedEventActions
                         });
@@ -79,7 +79,7 @@ define([
 
             viewModel.selectedEventName.value = viewModel.selectedEvent.name;
             viewModel.selectedEventType = viewModel.selectedEvent.eventType;
-            viewModel.eventEditorTriggeringComponent = viewModel.selectedEvent.triggeringComponent;
+            viewModel.eventEditorTriggeringWidget = viewModel.selectedEvent.triggeringWidget;
             viewModel.eventEditorTrigger = viewModel.selectedEvent.trigger;
 
             // Make a shallow copy of the array so that it's not referencing the same object.
@@ -121,28 +121,28 @@ define([
 
             var oldName = event.name;
             var oldEventType = event.eventType;
-            var oldTriggeringComponent = event.triggeringComponent;
+            var oldTriggeringWidget = event.triggeringWidget;
             var oldTrigger = event.trigger;
             var oldActions = event.actions;
 
             function undoChange() {
                 event.name = oldName;
                 event.eventType = oldEventType;
-                event.triggeringComponent = oldTriggeringComponent;
+                event.triggeringWidget = oldTriggeringWidget;
                 event.trigger = oldTrigger;
                 event.actions = oldActions;
             }
 
             var newName = viewModel.selectedEventName.value;
             var newEventType = viewModel.selectedEventType;
-            var newTriggeringComponent = viewModel.eventEditorTriggeringComponent;
+            var newTriggeringWidget = viewModel.eventEditorTriggeringWidget;
             var newTrigger = viewModel.eventEditorTrigger;
             var newActions = viewModel.selectedEventActions;
 
             function executeChange() {
                 event.name = newName;
                 event.eventType = newEventType;
-                event.triggeringComponent = newTriggeringComponent;
+                event.triggeringWidget = newTriggeringWidget;
                 event.trigger = newTrigger;
                 event.actions = newActions;
             }
