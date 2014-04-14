@@ -1,13 +1,13 @@
 define([
         'models/Widget/ButtonWidget/ButtonViewModel',
-        'models/Constants/ComponentTemplateName',
+        'models/Constants/WidgetTemplateName',
         'models/Event/Trigger',
         '../Widget',
         'knockout',
         'jquery'
     ],function(
         ButtonViewModel,
-        ComponentTemplateName,
+        WidgetTemplateName,
         Trigger,
         Widget,
         ko,
@@ -17,7 +17,7 @@ define([
     var Button = function(state, getDataSet) {
         Widget.call(this, state);
 
-        this._templateName = ComponentTemplateName.BUTTON;
+        this._templateName = WidgetTemplateName.BUTTON;
 
         var button = this.newWidgetContainer();
         button.attr('data-bind', 'template: {name: \'' + this._templateName + '\'}');
