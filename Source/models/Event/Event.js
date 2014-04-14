@@ -1,5 +1,4 @@
 define([
-        'models/ComponentViewModel',
         'models/Constants/EventType',
         'models/Action/Action',
         'models/Action/PropertyAction',
@@ -13,7 +12,6 @@ define([
         'knockout',
         'jquery'
     ],function(
-        ComponentViewModel,
         EventType,
         Action,
         PropertyAction,
@@ -36,7 +34,7 @@ define([
         // TODO: Validation, etc
         this._name = '';
         this._eventType = ''; // EventType
-        this._triggeringComponent = {}; // ComponentViewModel
+        this._triggeringWidget = {}; // WidgetViewModel
         this._trigger = {}; // Trigger
         this._actions = []; // Action[]
 
@@ -84,12 +82,12 @@ define([
                 this._eventType = value;
             }
         },
-        triggeringComponent: {
+        triggeringWidget: {
             get: function() {
-                return this._triggeringComponent;
+                return this._triggeringWidget;
             },
             set: function(value) {
-                this._triggeringComponent = value;
+                this._triggeringWidget = value;
             }
         },
         trigger: {
@@ -119,12 +117,12 @@ define([
             this._eventType = state.eventType; // EventType
         }
 
-        if (defined(state.triggeringComponent)){
-            this._triggeringComponent = state.triggeringComponent;
+        if (defined(state.triggeringWidget)){
+            this._triggeringWidget = state.triggeringWidget;
         }
 
         if (defined(state.trigger)){
-            this._trigger = this._triggeringComponent.viewModel.triggers[state.trigger];
+            this._trigger = this._triggeringWidget.viewModel.triggers[state.trigger];
         }
 
         if (defined(state.actions)){
@@ -136,8 +134,8 @@ define([
         return {
             'name': this._name,
             'eventType': this._eventType,
-            'triggeringComponent': this._triggeringComponent.viewModel.name.value,
-            'trigger': this._triggeringComponent.viewModel.triggers.indexOf(this._trigger),
+            'triggeringWidget': this._triggeringWidget.viewModel.name.value,
+            'trigger': this._triggeringWidget.viewModel.triggers.indexOf(this._trigger),
             'actions': $.map(this._actions, function(action) {
                 return action.name;
             })

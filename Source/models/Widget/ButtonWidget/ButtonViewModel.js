@@ -1,5 +1,5 @@
 define([
-        'models/SuperComponentViewModel',
+        'models/ComponentViewModel',
         'models/Event/Trigger',
         'models/Property/StringProperty',
         'models/Widget/WidgetViewModel',
@@ -8,7 +8,7 @@ define([
         'util/createValidator',
         'knockout'
     ],function(
-        SuperComponentViewModel,
+        ComponentViewModel,
         Trigger,
         StringProperty,
         WidgetViewModel,
@@ -23,7 +23,7 @@ define([
         WidgetViewModel.call(this, state, getDataSet);
 
         if (!defined(state.name)) {
-            var namespace = SuperComponentViewModel.getUniqueNameNamespace();
+            var namespace = ComponentViewModel.getUniqueNameNamespace();
             this.name.originalValue = UniqueTracker.getDefaultUniqueValue(namespace, ButtonViewModel.getType(), this);
         }
 
