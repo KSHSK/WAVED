@@ -5,6 +5,7 @@ define([
         'jquery',
         'WAVEDViewModel',
         './HistoryMonitor',
+        './DependencyChecker',
         'models/Widget/WidgetViewModel',
         'models/Data/DataSet',
         'util/defined',
@@ -13,6 +14,7 @@ define([
         $,
         WAVEDViewModel,
         HistoryMonitor,
+        DependencyChecker,
         WidgetViewModel,
         DataSet,
         defined,
@@ -106,6 +108,13 @@ define([
                 var dataSet = viewModel.currentProject.getDataSet(name);
                 if (defined(dataSet)) {
                     var component = viewModel.selectedComponent.viewModel;
+
+                    var response = DependencyChecker.allowedToUnbindDataSet(dataSet, component);
+                    if (!response.allowed) {
+                        displayMessage(response.message);
+                        return;
+                    }
+
                     var index = component.boundDataIndex(dataSet);
 
                     var undoChange = function() {
