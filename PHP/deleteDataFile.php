@@ -5,8 +5,7 @@ $projectName = $_POST["project"];
 $fileName = $_POST["fileName"];
 
 /*
-    Avoid 500 errors and return proper
-    JSON error response
+    Avoid 500 errors and return proper JSON error response
 */
 try {
     // Setup return object.
