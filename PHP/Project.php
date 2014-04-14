@@ -43,7 +43,7 @@ class Project
      * @param string $name
      * @param string $state (initial state is assumed if none is given)
      */
-    public static function create($name, $state)
+    public static function create($name, $state = null)
     {
         $instance = new self();
         $instance->name = $name;
