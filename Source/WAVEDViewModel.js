@@ -8,6 +8,7 @@ define(['jquery',
         'models/ProjectViewModel',
         'models/Property/ArrayProperty',
         'models/Property/StringProperty',
+        'models/Widget/Widget',
         'models/Widget/ButtonWidget/Button',
         'models/ProjectTree',
         'modules/ActionHelper',
@@ -39,6 +40,7 @@ define(['jquery',
         ProjectViewModel,
         ArrayProperty,
         StringProperty,
+        Widget,
         Button,
         ProjectTree,
         ActionHelper,
@@ -136,12 +138,12 @@ define(['jquery',
         this.selectedActionName = getNamePropertyInstance('Action Name');
         this.selectedAction = undefined;
         this.selectedActionType = '';
-        this.actionEditorAffectedComponent = undefined;
+        this.actionEditorAffectedWidget = undefined;
         this.actionEditorDataSet = undefined;
 
         this.selectedEventName = getNamePropertyInstance('Event Name');
         this.selectedEvent = undefined;
-        this.eventEditorTriggeringComponent = undefined;
+        this.eventEditorTriggeringWidget = undefined;
         this.eventEditorTrigger = undefined;
         this.selectedEventType = undefined;
         this.selectedEventActions = [];
@@ -363,15 +365,19 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.removeSelectedComponent = function() {
-        self.disableOpeningPropertiesPanel = true;
+        var component = self.selectedComponent;
 
-        var success = self.currentProject.removeComponent(self.selectedComponent);
+        if (component instanceof Widget) {
+            self.disableOpeningPropertiesPanel = true;
 
-        if (success) {
-            self.selectedComponent = self.currentProject.workspace;
+            var success = self.currentProject.removeWidget(component);
+
+            if (success) {
+                self.selectedComponent = self.currentProject.workspace;
+            }
+
+            self.disableOpeningPropertiesPanel = false;
         }
-
-        self.disableOpeningPropertiesPanel = false;
     };
 
     WAVEDViewModel.prototype.saveProject = function() {
@@ -412,10 +418,9 @@ define(['jquery',
 
     WAVEDViewModel.prototype.propertiesPanelPosition = $('#accordion').children('div').index($('#properties-panel'));
 
-    // TODO: Component
     WAVEDViewModel.prototype.addNewWidget = function(w) {
         var widget = new w.o();
-        self._currentProject.addComponent(widget);
+        self._currentProject.addWidget(widget);
         self._selectedComponent = widget;
 
         self.openPropertiesPanel();
