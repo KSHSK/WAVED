@@ -1,6 +1,5 @@
 <?php
 include_once('SQLiteProjectSerializer.php');
-include_once('DummyProjectSerializer.php');
 
 class Serializer
 {
