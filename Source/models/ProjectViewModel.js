@@ -18,7 +18,8 @@ define([
         'models/Data/DataSubset',
         'modules/PropertyChangeSubscriber',
         'modules/HistoryMonitor',
-        'modules/UniqueTracker'
+        'modules/UniqueTracker',
+        'modules/DependencyChecker'
     ], function(
         $,
         ko,
@@ -38,7 +39,8 @@ define([
         DataSubset,
         PropertyChangeSubscriber,
         HistoryMonitor,
-        UniqueTracker) {
+        UniqueTracker,
+        DependencyChecker) {
     'use strict';
 
     var ProjectViewModel = function(state) {
@@ -458,6 +460,12 @@ define([
     ProjectViewModel.prototype.removeComponent = function(component) {
         var self = this;
 
+        var response = DependencyChecker.allowedToDeleteWidget(component, self);
+        if (!response.allowed) {
+            displayMessage(response.message);
+            return false;
+        }
+
         if (component !== this._workspace) {
             var index = this._components.indexOf(component);
             if (index > -1) {
@@ -469,19 +477,28 @@ define([
                 // Remove the DOM element.
                 component.removeFromWorkspace();
 
+                var boundData = component.viewModel.unbindAllData();
+
                 var historyMonitor = HistoryMonitor.getInstance();
 
                 // Undo by adding the item.
                 historyMonitor.addUndoChange(function() {
                     self.addComponent(component, index);
+
+                    boundData.forEach(function(dataSet) {
+                        component.viewModel.bindData(dataSet);
+                    });
                 });
 
                 // Redo by removing the item.
                 historyMonitor.addRedoChange(function() {
                     self.removeComponent(component);
+                    component.viewModel.unbindAllData();
                 });
             }
         }
+
+        return true;
     };
 
     // TODO: Do we want to allow removal using dataset instance and name?
@@ -501,13 +518,10 @@ define([
     ProjectViewModel.prototype.removeAction = function(action) {
         var self = this;
 
-        for (var i = 0; i < self._events.length; i++) {
-            for (var j = 0; j < self._events[i].actions[0].length; j++) {
-                if (self._events[i]._actions[0][j].name.value === action.name.value) {
-                    displayMessage('Action is in use by Event: ' + self._events[i].name.value);
-                    return;
-                }
-            }
+        var response = DependencyChecker.allowedToDeleteAction(action, self);
+        if (!response.allowed) {
+            displayMessage(response.message);
+            return;
         }
 
         var index = self._actions.indexOf(action);
