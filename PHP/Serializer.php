@@ -3,8 +3,7 @@ include_once('SQLiteProjectSerializer.php');
 
 class Serializer
 {
-    // Modify this depending on how you are hosting
-    // the website
+    // Modify this depending on how you are hosting the website
     private static $DB_PATH='../DB/waved.db';
     private static $_projectSerializer;
 
