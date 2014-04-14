@@ -31,6 +31,11 @@ define([
 
     GraphViewModel.prototype = Object.create(WidgetViewModel.prototype);
 
+    GraphViewModel.prototype.usesDataSet = function(dataSet) {
+        // TODO: Verify that this works.
+        return (this.dataSet.name === dataSet.name);
+    };
+
     Object.defineProperties(GraphViewModel.prototype, {
         properties: {
             get: function() {

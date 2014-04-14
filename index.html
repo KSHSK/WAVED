@@ -56,9 +56,9 @@
             <div id="accordion">
                 <h3>Project Tree</h3>
                 <div>
-                    <button
+                    <button id="project-tree-delete-button"
                         class="right button-small delete-icon-button"
-                        data-bind="click: tryToDeleteFromProjectTree">Delete</button>
+                        data-bind="click: tryToDeleteFromProjectTree, disable: isWorkspaceSelectedInProjectTree(), css: {'ui-state-disabled': isWorkspaceSelectedInProjectTree()}">Delete</button>
                     <ul id='project-tree'
                         data-bind="visible: currentProject.name">
                         <li><span class="tree-folder-icon"></span><a
