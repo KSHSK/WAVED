@@ -395,6 +395,17 @@ define(['jquery',
         return self._projectTree.isSelected(self, type, value);
     };
 
+    WAVEDViewModel.prototype.isWorkspaceSelectedInProjectTree = function() {
+        var selected =  self.isSelectedInProjectTree(self.projectTree.SelectedTypeEnum.COMPONENT, self.currentProject.workspace);
+
+        if (selected) {
+            // Remove the hover/focus look when the workspace is selected, since the button will be disabled.
+            $('#project-tree-delete-button').removeClass('ui-state-hover ui-state-focus');
+        }
+
+        return selected;
+    };
+
     WAVEDViewModel.prototype.selectInProjectTree = function(type, value) {
         self._projectTree.select(self, type, value);
     };
