@@ -34,6 +34,7 @@ try {
     $returnValue = copyDataFiles($returnValue, $oldProjectName, $projectName);
 
     reportReturnValue($returnValue);
+}
 catch (Exception $e) {
     reportError();
 }
