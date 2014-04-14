@@ -1,6 +1,6 @@
 define([
         'knockout',
-        'models/SuperComponentViewModel',
+        'models/ComponentViewModel',
         'models/Widget/WidgetViewModel',
         'models/Property/StringProperty',
         'models/Property/NumberProperty',
@@ -9,7 +9,7 @@ define([
         'util/createValidator'
     ],function(
         ko,
-        SuperComponentViewModel,
+        ComponentViewModel,
         WidgetViewModel,
         StringProperty,
         NumberProperty,
@@ -23,7 +23,7 @@ define([
         WidgetViewModel.call(this, state, getDataSet);
 
         if (!defined(state.name)) {
-            var namespace = SuperComponentViewModel.getUniqueNameNamespace();
+            var namespace = ComponentViewModel.getUniqueNameNamespace();
             this.name.originalValue = UniqueTracker.getDefaultUniqueValue(namespace, TextBlockViewModel.getType(), this);
         }
 

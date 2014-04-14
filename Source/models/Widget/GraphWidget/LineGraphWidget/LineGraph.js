@@ -1,17 +1,17 @@
 define([
         'models/Widget/GraphWidget/LineGraphWidget/LineGraphViewModel',
-        'models/Constants/ComponentTemplateName',
+        'models/Constants/WidgetTemplateName',
         'knockout',
         'jquery'
     ],function(
         LineGraphViewModel,
-        ComponentTemplateName,
+        WidgetTemplateName,
         ko,
         $){
     'use strict';
 
     var LineGraph = function(state) {
-        this._templateName = ComponentTemplateName.LINE_GRAPH;
+        this._templateName = WidgetTemplateName.LINE_GRAPH;
 
         var viewModel = new LineGraphViewModel(state);
 
