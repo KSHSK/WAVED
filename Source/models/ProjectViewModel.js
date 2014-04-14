@@ -18,7 +18,8 @@ define([
         'models/Data/DataSubset',
         'modules/PropertyChangeSubscriber',
         'modules/HistoryMonitor',
-        'modules/UniqueTracker'
+        'modules/UniqueTracker',
+        'modules/DependencyChecker'
     ], function(
         $,
         ko,
@@ -38,7 +39,8 @@ define([
         DataSubset,
         PropertyChangeSubscriber,
         HistoryMonitor,
-        UniqueTracker) {
+        UniqueTracker,
+        DependencyChecker) {
     'use strict';
 
     var ProjectViewModel = function(state) {
@@ -468,28 +470,45 @@ define([
     ProjectViewModel.prototype.removeWidget = function(widget) {
         var self = this;
 
-        var index = this._widgets.indexOf(widget);
-        if (index > -1) {
-            this._widgets.splice(index, 1);
-
-            // Remove unique name.
-            UniqueTracker.removeItem(ComponentViewModel.getUniqueNameNamespace(), widget.viewModel);
-
-            // Remove the DOM element.
-            widget.removeFromWorkspace();
-
-            var historyMonitor = HistoryMonitor.getInstance();
-
-            // Undo by adding the item.
-            historyMonitor.addUndoChange(function() {
-                self.addWidget(widget, index);
-            });
-
-            // Redo by removing the item.
-            historyMonitor.addRedoChange(function() {
-                self.removeWidget(widget);
-            });
+        var response = DependencyChecker.allowedToDeleteWidget(widget, self);
+        if (!response.allowed) {
+            displayMessage(response.message);
+            return false;
         }
+
+        if (widget !== this._workspace) {
+            var index = this._widgets.indexOf(widget);
+            if (index > -1) {
+                this._widgets.splice(index, 1);
+
+                // Remove unique name.
+                UniqueTracker.removeItem(ComponentViewModel.getUniqueNameNamespace(), widget.viewModel);
+
+                // Remove the DOM element.
+                widget.removeFromWorkspace();
+
+                var boundData = widget.viewModel.unbindAllData();
+
+                var historyMonitor = HistoryMonitor.getInstance();
+
+                // Undo by adding the item.
+                historyMonitor.addUndoChange(function() {
+                    self.addWidget(widget, index);
+
+                    boundData.forEach(function(dataSet) {
+                        widget.viewModel.bindData(dataSet);
+                    });
+                });
+
+                // Redo by removing the item.
+                historyMonitor.addRedoChange(function() {
+                    self.removeWidget(widget);
+                    widget.viewModel.unbindAllData();
+                });
+            }
+        }
+
+        return true;
     };
 
     // TODO: Do we want to allow removal using dataset instance and name?
@@ -509,13 +528,10 @@ define([
     ProjectViewModel.prototype.removeAction = function(action) {
         var self = this;
 
-        for (var i = 0; i < self._events.length; i++) {
-            for (var j = 0; j < self._events[i].actions[0].length; j++) {
-                if (self._events[i]._actions[0][j].name.value === action.name.value) {
-                    displayMessage('Action is in use by Event: ' + self._events[i].name.value);
-                    return;
-                }
-            }
+        var response = DependencyChecker.allowedToDeleteAction(action, self);
+        if (!response.allowed) {
+            displayMessage(response.message);
+            return;
         }
 
         var index = self._actions.indexOf(action);

@@ -73,6 +73,8 @@ define(['jquery',
         this._lastSaveIndex = undefined;
         this.resetHistory();
 
+        this.disableOpeningPropertiesPanel = false;
+
         this._projectList = [];
         this._selectedComponent = '';
         this._selectedDataSet = '';
@@ -363,11 +365,18 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.removeSelectedComponent = function() {
-        var component = self._selectedComponent;
-        self._selectedComponent = self.currentProject.workspace;
+        var component = self.selectedComponent;
 
         if (component instanceof Widget) {
-            self._currentProject.removeWidget(component);
+            self.disableOpeningPropertiesPanel = true;
+
+            var success = self.currentProject.removeWidget(component);
+
+            if (success) {
+                self.selectedComponent = self.currentProject.workspace;
+            }
+
+            self.disableOpeningPropertiesPanel = false;
         }
     };
 
@@ -392,6 +401,17 @@ define(['jquery',
         return self._projectTree.isSelected(self, type, value);
     };
 
+    WAVEDViewModel.prototype.isWorkspaceSelectedInProjectTree = function() {
+        var selected =  self.isSelectedInProjectTree(self.projectTree.SelectedTypeEnum.COMPONENT, self.currentProject.workspace);
+
+        if (selected) {
+            // Remove the hover/focus look when the workspace is selected, since the button will be disabled.
+            $('#project-tree-delete-button').removeClass('ui-state-hover ui-state-focus');
+        }
+
+        return selected;
+    };
+
     WAVEDViewModel.prototype.selectInProjectTree = function(type, value) {
         self._projectTree.select(self, type, value);
     };
@@ -407,6 +427,10 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.openPropertiesPanel = function() {
+        if (self.disableOpeningPropertiesPanel === true) {
+            return;
+        }
+
         // TODO: Really shouldn't do any jQuery stuff in here.
         $('#accordion').accordion('option', 'active', self.propertiesPanelPosition);
     };
