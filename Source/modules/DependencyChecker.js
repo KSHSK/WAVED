@@ -110,11 +110,7 @@ define([
          */
         allowedToUnbindDataSet: function(dataSet, widget) {
             var allowed = (!widget.usesDataSet(dataSet));
-            var message = '';
-
-            if (!allowed) {
-                message = 'Cannot unbind data that is used by a widget';
-            }
+            var message =  allowed ?  '' : 'Cannot unbind data that is used by a widget';
 
             return {
                 allowed: allowed,
