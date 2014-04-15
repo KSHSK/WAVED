@@ -77,12 +77,12 @@ define([
         };
 
         this.updateColoring = function() {
-            if(!self._isRendered){
+            if(!self._isRendered || !defined(self.coloring.value)){
                 return;
             }
 
-            var path = getElement(self).selectAll('svg').selectAll('path');
             var coloringScheme = self.coloring.value;
+            var path = getElement(self).selectAll('svg').selectAll('path');
             switch(coloringScheme.getType()){
                 case ColoringSchemeType.SOLID_COLORING:
                     path.style('fill', function(d) {
@@ -213,10 +213,10 @@ define([
 
     // Groupings of states so that
     USMapViewModel.prototype.fourColorStateGroupings = [
-        ['Alaska', 'Alabama', 'Arkansas', 'Connecticut', 'Delaware', 'Hawaii', 'Illinois', 'Maine', 'Michigan', 'Minnesota', 'Montana', 'Nebraska', 'New Mexico', 'Nevada', 'South Carolina', 'Virginia', 'Washington'],
-        ['Arizona', 'District of Columbia', 'Florida', 'Kansas', 'Kentucky', 'Mississippi', 'North Carolina', 'North Dakota', 'Oregon', 'Pennsylvania', 'Rhode Island', 'Texas', 'Vermont', 'Wisconsin', 'Wyoming'],
+        ['Alaska', 'Alabama', 'Arkansas', 'Connecticut', 'Delaware', 'Illinois', 'Maine', 'Michigan', 'Minnesota', 'Montana', 'Nebraska', 'New Mexico', 'Nevada', 'Virginia'],
+        ['Arizona', 'District of Columbia', 'Kansas', 'Kentucky', 'Mississippi', 'North Carolina', 'Oregon', 'Pennsylvania', 'Rhode Island', 'Texas', 'Vermont', 'Wisconsin', 'Wyoming'],
         ['California', 'Colorado', 'Georgia', 'Idaho', 'Indiana', 'Louisiana', 'Massachusetts', 'Missouri', 'New Jersey', 'South Dakota', 'West Virginia'],
-        ['Iowa', 'Maryland', 'New Hampshire', 'New York', 'Ohio', 'Oklahoma', 'Tennessee', 'Utah']
+        ['Florida', 'Hawaii', 'Iowa', 'Maryland', 'New Hampshire', 'New York', 'North Dakota', 'Ohio', 'Oklahoma', 'South Carolina', 'Tennessee', 'Utah', 'Washington']
     ];
 
     return USMapViewModel;

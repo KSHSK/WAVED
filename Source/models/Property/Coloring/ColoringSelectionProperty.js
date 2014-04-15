@@ -114,8 +114,7 @@ define([
         var scheme = state.value;
         switch(scheme.type) {
             case ColoringSchemeType.SOLID_COLORING:
-                // TODO: Use setState()?
-                this.solidColoring.color._originalValue = scheme.color.value;
+                this.solidColoring.setState(scheme);
                 this._originalValue = this.solidColoring;
                 break;
             case ColoringSchemeType.FOUR_COLORING:
@@ -127,7 +126,8 @@ define([
                 this._originalValue = this.gradientColoring;
                 break;
             default:
-                this._originalValue = undefined;
+                // Defaults to solid coloring
+                this._originalValue = this.solidColoring;
                 break;
         }
     };
