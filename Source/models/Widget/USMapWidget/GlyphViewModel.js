@@ -7,7 +7,6 @@ define([
         'models/Constants/GlyphSizeSchemeType',
         'models/Property/GlyphSize/GlyphSizeSelectionProperty',
         'modules/UniqueTracker',
-        'modules/HistoryMonitor',
         'util/defined',
         'knockout',
         'd3',
@@ -21,7 +20,6 @@ define([
         GlyphSizeSchemeType,
         GlyphSizeSelectionProperty,
         UniqueTracker,
-        HistoryMonitor,
         defined,
         ko,
         d3,
@@ -208,7 +206,7 @@ define([
     GlyphViewModel.prototype.getState = function() {
         var state = ComponentViewModel.prototype.getState.call(this);
         state.type = GlyphViewModel.getType();
-        state.dataSet = this.dataSet.getState();
+        state.dataSet = this.dataSet.getState().value.name;
         state.color = this.color.getState();
         state.opacity = this.opacity.getState();
         state.size = this.size.getState();
@@ -220,9 +218,13 @@ define([
 
     GlyphViewModel.prototype.setState = function(state) {
         ComponentViewModel.prototype.setState.call(this, state);
-
+        var self = this;
         if (defined(state.dataSet)) {
-            this.dataSet.setState(state.dataSet);
+            this.boundData.forEach(function(entry){
+                if(defined(state.dataSet) && (state.dataSet === entry.name)){
+                    self.dataSet.originalValue = entry;
+                }
+            });
         }
         if (defined(state.color)) {
             this.color.setState(state.color);

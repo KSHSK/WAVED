@@ -94,6 +94,92 @@ define([
         }
     }
 
+    function removeGlyph(options, value) {
+        value.remove();
+        UniqueTracker.removeItem(SuperComponentViewModel.getUniqueNameNamespace(), value);
+        options.splice(options.indexOf(value), 1);
+    }
+
+    function addGlyph(options, value) {
+        var success = UniqueTracker.addValueIfUnique(SuperComponentViewModel.getUniqueNameNamespace(),
+            value.name.value, value);
+
+        if (!success) {
+            console.log('New Component name was not unique.');
+            return;
+        }
+        options.push(value);
+        value.add();
+    }
+
+    function addSuccess(options, value) {
+        for (var i = 0; i < value.properties.length; i++) {
+            var property = value.properties[i];
+            property._originalValue = value.properties[i]._displayValue;
+            if (property instanceof GlyphSizeSelectionProperty){
+                var p = property.value.properties;
+                for (var j = 0; j < p.length; j++) {
+                    p[j]._originalValue = p[j]._displayValue;
+                }
+            }
+        }
+        value.add();
+
+        var historyMonitor = HistoryMonitor.getInstance();
+
+        // Undo by removing the item.
+        historyMonitor.addUndoChange(function() {
+            removeGlyph(options, value);
+        });
+
+        // Redo by readding the item.
+        historyMonitor.addRedoChange(function() {
+            addGlyph(options, value);
+        });
+    }
+
+    function editSuccess(value) {
+        var originalState = value.getState();
+
+        for (var i = 0; i < value.properties.length; i++) {
+            var property = value.properties[i];
+            property._originalValue = value.properties[i]._displayValue;
+            if (property instanceof GlyphSizeSelectionProperty){
+                var p = property.value.properties;
+                for (var j = 0; j < p.length; j++) {
+                    p[j]._originalValue = p[j]._displayValue;
+                }
+            }
+        }
+        value.edit();
+       var newState = value.getState();
+
+       var historyMonitor = HistoryMonitor.getInstance();
+
+       historyMonitor.addUndoChange(function() {
+           value.setState(originalState);
+           value.edit();
+       });
+
+       historyMonitor.addRedoChange(function() {
+           value.setState(newState);
+           value.edit();
+       });
+    }
+
+    function  editFailure(value) {
+        for (var i = 0; i < value.properties.length; i++) {
+            var property = value.properties[i];
+            property._displayValue = value.properties[i]._originalValue;
+            if (property instanceof GlyphSizeSelectionProperty){
+                var p = property.value.properties;
+                for (var j = 0; j < p.length; j++) {
+                    p[j]._displayValue = p[j]._originalValue;
+                }
+            }
+        }
+    }
+
     var USMapViewModel = function(state, getDataSet) {
         var self = this;
         state = (defined(state)) ? state : {};
@@ -141,117 +227,36 @@ define([
                     var options = this.options;
                     options.push(newGlyph);
                     this.value = newGlyph;
-                    GlyphHelper.addEditGlyph().then(function(){
-                        for (var i = 0; i < newGlyph.properties.length; i++) {
-                            var property = newGlyph.properties[i];
-                            property._originalValue = newGlyph.properties[i]._displayValue;
-                            if (property instanceof GlyphSizeSelectionProperty){
-                                var p = property.value.properties;
-                                for (var j = 0; j < p.length; j++) {
-                                    p[j]._originalValue = p[j]._displayValue;
-                                }
-                            }
-                        }
-                        newGlyph.add();
-
-                        var historyMonitor = HistoryMonitor.getInstance();
-
-                        // Undo by removing the item.
-                        historyMonitor.addUndoChange(function() {
-                            UniqueTracker.removeItem(SuperComponentViewModel.getUniqueNameNamespace(), self.glyphList.value);
-                            options.splice(options.indexOf(newGlyph), 1);
-                            newGlyph.remove();
-                        });
-
-                        // Redo by readding the item.
-                        historyMonitor.addRedoChange(function() {
-                            var success = UniqueTracker.addValueIfUnique(SuperComponentViewModel.getUniqueNameNamespace(),
-                                newGlyph.name.value, newGlyph);
-
-                            if (!success) {
-                                console.log('New Component name was not unique.');
-                                return;
-                            }
-                            newGlyph.add();
-                            options.push(newGlyph);
-                        });
-
-                    }, function() {
-                        this.options.splice(this.options.indexOf(this.value), 1);
+                    GlyphHelper.addEditGlyph().then(function() {
+                        addSuccess(options, newGlyph);
+                    }, function () {
+                        options.splice(options.indexOf(newGlyph), 1);
                     });
                 }
             },
             edit: function() {
                 if (defined(this.value)) {
-                    var selectedGlyph = this.value;
-                    var originalState;
-                    var newState;
+                    var value = this.value;
                     GlyphHelper.addEditGlyph().then(function() {
-                        originalState = selectedGlyph.getState();
-                        for (var i = 0; i < selectedGlyph.properties.length; i++) {
-                            var property = selectedGlyph.properties[i];
-                            property._originalValue = selectedGlyph.properties[i]._displayValue;
-                            if (property instanceof GlyphSizeSelectionProperty){
-                                var p = property.value.properties;
-                                for (var j = 0; j < p.length; j++) {
-                                    p[j]._originalValue = p[j]._displayValue;
-                                }
-                            }
-                        }
-                       selectedGlyph.edit();
-                       newState = selectedGlyph.getState();
-
-                       var historyMonitor = HistoryMonitor.getInstance();
-
-                       historyMonitor.addUndoChange(function() {
-                           selectedGlyph.setState(originalState);
-                           selectedGlyph.edit();
-                       });
-
-                       historyMonitor.addRedoChange(function() {
-                           selectedGlyph.setState(newState);
-                           selectedGlyph.edit();
-                       });
-
+                        editSuccess(value);
                     }, function() {
-                        for (var i = 0; i < selectedGlyph.properties.length; i++) {
-                            var property = selectedGlyph.properties[i];
-                            property._displayValue = selectedGlyph.properties[i]._originalValue;
-                            if (property instanceof GlyphSizeSelectionProperty){
-                                var p = property.value.properties;
-                                for (var j = 0; j < p.length; j++) {
-                                    p[j]._displayValue = p[j]._originalValue;
-                                }
-                            }
-                        }
+                        editFailure(value);
                     });
                 }
             },
             remove: function() {
                 var options = this.options;
                 var value = this.value;
-                value.remove();
-                UniqueTracker.removeItem(SuperComponentViewModel.getUniqueNameNamespace(), self.glyphList.value);
-                options.splice(this.options.indexOf(value), 1);
 
+                removeGlyph(options, value);
                 var historyMonitor = HistoryMonitor.getInstance();
 
                 historyMonitor.addUndoChange(function() {
-                    var success = UniqueTracker.addValueIfUnique(SuperComponentViewModel.getUniqueNameNamespace(),
-                        value.name.value, value);
-
-                    if (!success) {
-                        console.log('New Component name was not unique.');
-                        return;
-                    }
-                    options.push(value);
-                    value.add();
+                    addGlyph(options, value);
                 });
 
                 historyMonitor.addRedoChange(function() {
-                    value.remove();
-                    UniqueTracker.removeItem(SuperComponentViewModel.getUniqueNameNamespace(), self.glyphList.value);
-                    options.splice(options.indexOf(value), 1);
+                    removeGlyph(options, value);
                 });
             }
         });
@@ -307,7 +312,7 @@ define([
     Object.defineProperties(USMapViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.x, this.y, this.width, this.visible, this.coloring,
+                return [this.name, this.x, this.y, this.width, this.coloring, this.visible,
                 this.logGoogleAnalytics, this.glyphList];
             }
         }

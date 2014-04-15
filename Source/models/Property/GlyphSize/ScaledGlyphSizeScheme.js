@@ -93,7 +93,7 @@ define([
         var self = this;
 
         // Subscribe to the value of dataSet in order to automatically update dataField's options
-        subscribeObservable(self.dataSet, '_value', function(newValue){
+        subscribeObservable(self.dataSet, '_originalValue', function(newValue){
             var changeFunction = function() {
                 if(defined(newValue)){
                     if(defined(newValue.data)){
@@ -111,13 +111,14 @@ define([
                 }
                 else{
                     self.dataField.options = [];
-                    self.dataField.value = undefined; // Reset the dataField selection
+                    self.dataField.originalValue = undefined; // Reset the dataField selection
                 }
             };
 
             var historyMonitor = HistoryMonitor.getInstance();
             historyMonitor.executeAmendHistory(changeFunction);
         });
+
         subscribeObservable(self.dataSet, '_displayValue', function(newValue){
             var changeFunction = function() {
                 if(defined(newValue)){
@@ -147,7 +148,7 @@ define([
         // Properly unset the dataSet value when the options disappear (when the bound data is unbound)
         subscribeObservable(self.dataSet, '_options', function(newValue){
             if(defined(self.dataSet.value) && (newValue.indexOf(self.dataSet.value) === -1)){
-                    self.dataSet.value = undefined;
+                    self.dataSet.orignalValue = undefined;
             }
         });
 
@@ -159,16 +160,14 @@ define([
             if(defined(state.dataSet) && (state.dataSet === entry.name)){
                 self.dataSet.originalValue = entry;
                 self.dataField.originalValue = state.dataField;
-
-                return;
             }
         });
     };
 
     ScaledGlyphSizeScheme.prototype.getState = function(){
         var set;
-        if(defined(this.dataSet.getState().originalValue)){
-            set = this.dataSet.getState().originalValue.name;
+        if(defined(this.dataSet.getState().value)){
+            set = this.dataSet.getState().value.name;
         }
 
         var state = {

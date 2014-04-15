@@ -155,9 +155,6 @@ define([
                 }
             }
         }
-
-        this._value = this._originalValue;
-        this._displayValue = this._value;
     };
 
     return ArrayProperty;
