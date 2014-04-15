@@ -110,7 +110,7 @@ define([
     Object.defineProperties(GradientColoringScheme.prototype, {
        properties: {
            get: function() {
-               return [this.startColor, this.endColor, this.dataSet, this.dataField, this.keyField];
+               return [this.startColor, this.endColor, this.dataSet, this.keyField, this.dataField];
            }
        }
     });
