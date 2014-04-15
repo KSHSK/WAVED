@@ -140,9 +140,10 @@ define([
                     var gradient = d3.scale.linear().domain([min, max]).range([coloringScheme.startColor.value, coloringScheme.endColor.value]);
                     path.style('fill', function(d) {
                         var stateName = d.properties.name;
+                        var keyName = coloringScheme.keyField.value;
 
                         for(var i=0; i<coloringScheme.dataSet.value.data.length; i++){
-                            if(coloringScheme.dataSet.value.data[i].name === stateName){
+                            if(coloringScheme.dataSet.value.data[i][keyName] === stateName){
                                 return gradient(coloringScheme.dataSet.value.data[i][dataField]);
                             }
                         }

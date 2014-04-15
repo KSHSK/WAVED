@@ -66,6 +66,23 @@ define([
             onchange: viewModel.updateColoring
         });
 
+        /*
+         * keyField shadows the options in dataField.
+         * The user should select the field that contains the keys that match
+         * the keys that will be used to decide how objects are colored.
+         * For example: Coloring US states - You need to choose the keyField that
+         * contains the state names.
+         */
+        this.keyField = new ArrayProperty({
+            displayName : 'State Name Field',
+            value: undefined,
+            options:[],
+            getOptionText: function(value) {
+                return value;
+            },
+            onchange: viewModel.updateColoring
+        });
+
         var isValidValue = function(value) {
             var undef = (value === undefined);
             var validSelection = true;
@@ -93,7 +110,7 @@ define([
     Object.defineProperties(GradientColoringScheme.prototype, {
        properties: {
            get: function() {
-               return [this.startColor, this.endColor, this.dataSet, this.dataField];
+               return [this.startColor, this.endColor, this.dataSet, this.dataField, this.keyField];
            }
        }
     });
@@ -110,6 +127,7 @@ define([
             endColor: this.endColor.getState(),
             dataSet: set,
             dataField: this.dataField.getState().value,
+            keyField: this.keyField.getState().value,
             type: this.getType()
         };
 
@@ -139,12 +157,15 @@ define([
                          */
                         self.dataField.originalValue = undefined;
                         self.dataField.options = newValue.dataFields;
+                        self.keyField.originalValue = undefined;
+                        self.keyField.options = newValue.dataFields;
                     }
                     else {
                         // Keep trying until data is ready, as long as data is a defined object.
                         var interval = setInterval(function(){
                             if(defined(newValue.data)){
                                 self.dataField.options = newValue.dataFields;
+                                self.keyField.options = newValue.dataFields;
                                 clearInterval(interval);
                             }
                         }, 100);
@@ -154,6 +175,8 @@ define([
                     // Must set originalValue first before resetting options
                     self.dataField.originalValue = undefined; // Reset the dataField selection
                     self.dataField.options = [];
+                    self.keyField.originalValue = undefined;
+                    self.keyField.options = [];
                 }
             };
 
@@ -176,6 +199,7 @@ define([
             if(defined(state.dataSet) && (state.dataSet === entry.name)){
                 self.dataSet.originalValue = entry;
                 self.dataField.originalValue = state.dataField;
+                self.keyField.originalValue = state.keyField;
 
                 return;
             }
