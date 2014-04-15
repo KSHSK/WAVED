@@ -132,8 +132,13 @@ define([
             var changeFunction = function() {
                 if(defined(newValue)){
                     if(defined(newValue.data)){
-                        self.dataField.options = newValue.dataFields;
+                        /*
+                         * Must set originalValue to undefined before altering the options to
+                         * allow the field to reset itself correctly. Settings options first leads
+                         * to the field looking blank even though the default option is selected
+                         */
                         self.dataField.originalValue = undefined;
+                        self.dataField.options = newValue.dataFields;
                     }
                     else {
                         // Keep trying until data is ready, as long as data is a defined object.
@@ -146,8 +151,9 @@ define([
                     }
                 }
                 else{
-                    self.dataField.options = [];
+                    // Must set originalValue first before resetting options
                     self.dataField.originalValue = undefined; // Reset the dataField selection
+                    self.dataField.options = [];
                 }
             };
 
