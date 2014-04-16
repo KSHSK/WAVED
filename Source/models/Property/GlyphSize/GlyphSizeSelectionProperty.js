@@ -33,18 +33,10 @@ define([
         this.scaledGlyphSize = new ScaledGlyphSizeScheme(options, viewModel);
 
         var stateValueType;
-        if (defined(options.value)) {
-            switch(options.value.type) {
-                case GlyphSizeSchemeType.CONSTANT_SIZE:
-                    stateValueType = this.constantGlyphSize;
-                    break;
-                case GlyphSizeSchemeType.SCALED_SIZE:
-                    stateValueType = this.scaledGlyphSize;
-                    break;
-                default:
-                    stateValueType = undefined;
-                    break;
-            }
+        if (defined(options.value) && options.value.type === GlyphSizeSchemeType.SCALED_SIZE) {
+            stateValueType = this.scaledGlyphSize;
+        } else {
+            stateValueType = this.constantGlyphSize;
         }
 
         // Always set this to the GlyphSizeSchemeType enums
@@ -141,18 +133,12 @@ define([
         if(!defined(state.value)){
             return;
         }
-        switch(state.value.type) {
-            case GlyphSizeSchemeType.CONSTANT_SIZE:
-                this.constantGlyphSize.size.value = state.value.size.value;
-                this._originalValue = this.constantGlyphSize;
-                break;
-            case GlyphSizeSchemeType.SCALED_SIZE:
-                this.scaledGlyphSize.setState(state.value, viewModel);
-                this._originalValue = this.scaledGlyphSize;
-                break;
-            default:
-                this._originalValue = undefined;
-                break;
+        if (state.value.type === GlyphSizeSchemeType.SCALED_SIZE) {
+            this.scaledGlyphSize.setState(state.value, viewModel);
+            this.originalValue = this.scaledGlyphSize;
+        } else {
+            this.constantGlyphSize.size.value = state.value.size.value;
+            this.originalValue = this.constantGlyphSize;
         }
     };
 

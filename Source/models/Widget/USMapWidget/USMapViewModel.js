@@ -113,13 +113,19 @@ define([
     }
 
     function addSuccess(options, value) {
+        value.properties[5]._originalValue = value.properties[5]._displayValue; //set lat lon first for validation
+        value.properties[5]._value = value.properties[5]._displayValue;
+        value.properties[6]._originalValue = value.properties[6]._displayValue;
+        value.properties[6]._value = value.properties[6]._displayValue;
+
         for (var i = 0; i < value.properties.length; i++) {
             var property = value.properties[i];
-            property._originalValue = value.properties[i]._displayValue;
+            property._originalValue = property._displayValue;
             if (property instanceof GlyphSizeSelectionProperty){
                 var p = property.value.properties;
-                for (var j = 0; j < p.length; j++) {
+                for (var j = p.length - 1; j >= 0 ; j--) { // Reversed to get dataField before dataSet for scaled size
                     p[j]._originalValue = p[j]._displayValue;
+                    p[j]._value = p[j]._displayValue;
                 }
             }
         }
@@ -141,13 +147,19 @@ define([
     function editSuccess(value) {
         var originalState = value.getState();
 
+        value.properties[5]._originalValue = value.properties[5]._displayValue; // set lat lon first for validation
+        value.properties[5]._value = value.properties[5]._displayValue;
+        value.properties[6]._originalValue = value.properties[6]._displayValue;
+        value.properties[6]._value = value.properties[6]._displayValue;
+
         for (var i = 0; i < value.properties.length; i++) {
             var property = value.properties[i];
-            property._originalValue = value.properties[i]._displayValue;
+            property._originalValue = property._displayValue;
             if (property instanceof GlyphSizeSelectionProperty){
                 var p = property.value.properties;
                 for (var j = 0; j < p.length; j++) {
                     p[j]._originalValue = p[j]._displayValue;
+                    p[j]._value = p[j]._displayValue;
                 }
             }
         }
