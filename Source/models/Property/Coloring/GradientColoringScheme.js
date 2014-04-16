@@ -201,8 +201,6 @@ define([
                 self.dataSet.originalValue = entry;
                 self.dataField.originalValue = state.dataField;
                 self.keyField.originalValue = state.keyField;
-
-                return;
             }
         });
     };
