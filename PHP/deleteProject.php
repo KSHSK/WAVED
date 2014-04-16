@@ -34,7 +34,7 @@ try {
     }
 
     // Remove the database entry for the project.
-    $success = Serializer::projectSerializer->delete($projectName);
+    $success = Serializer::projectSerializer()->delete($projectName);
 
     if(!$success) {
         setReturnValueError($returnValue, "Unknown error deregistering project.");
