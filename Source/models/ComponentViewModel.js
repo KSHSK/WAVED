@@ -114,8 +114,8 @@ define([
             });
         }
     };
-	
-	ComponentViewModel.prototype.isValid = function() {
+
+    ComponentViewModel.prototype.isValid = function() {
         var valid = true;
         for (var i = 0; i < this.properties.length; i++) {
             valid = valid && !this.properties[i].error;

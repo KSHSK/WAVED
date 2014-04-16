@@ -58,7 +58,9 @@ define([
                 if (Array.isArray(options)) {
                     this._options = options;
                     if (options.indexOf(this._value) === -1) {
-                        this._value = undefined;
+                        this._value = '';
+                        this._displayValue = '';
+                        this.error = true;
                     }
                 }
             }

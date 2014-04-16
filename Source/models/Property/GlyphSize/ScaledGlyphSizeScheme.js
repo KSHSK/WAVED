@@ -89,7 +89,11 @@ define([
         },
         error: {
             get : function() {
-                return this.dataSet.error || this.dataField.error;
+                var dataSet = this.dataSet;
+                var dataField = this.dataField;
+                dataSet.error = !dataSet.isValidValue(dataSet.displayValue);
+                dataField.error = !dataField.isValidValue(dataField.displayValue);
+                return dataSet.error || dataField.error;
             }
         }
     });

@@ -1,7 +1,7 @@
 define([
-        'models/Widget/WidgetViewModel',
         'models/ComponentViewModel',
         'models/Property/ArrayProperty',
+        'models/Property/BooleanProperty',
         'models/Property/StringProperty',
         'models/Property/NumberProperty',
         'models/Constants/GlyphSizeSchemeType',
@@ -13,9 +13,9 @@ define([
         'd3',
         'jquery'
     ], function(
-        WidgetViewModel,
         ComponentViewModel,
         ArrayProperty,
+        BooleanProperty,
         StringProperty,
         NumberProperty,
         GlyphSizeSchemeType,
@@ -68,10 +68,14 @@ define([
             }
         })
         .attr('r', function(d, i) {
+            var value;
             if (glyph.size.value.type === GlyphSizeSchemeType.SCALED_SIZE) {
-                return radiusScale(d[glyph.size.value.dataField.value]);
+                value = radiusScale(d[glyph.size.value.dataField.value]);
             } else {
-                return glyph.size.value.size.value*glyph.parent.width.value/100;
+                value = glyph.size.value.size.value*glyph.parent.width.value/100;
+            }
+            if (value !== null && value > 0 && !isNaN(value)) {
+                return value;
             }
         })
         .style('fill', glyph.color.value)
@@ -132,7 +136,7 @@ define([
     var GlyphViewModel = function(state, parent) {
         var self = this;
         state = (defined(state)) ? state : {};
-        WidgetViewModel.call(this, state);
+        ComponentViewModel.call(this, state);
 
         if (!defined(state.name)) {
             var namespace = ComponentViewModel.getUniqueNameNamespace();
@@ -147,10 +151,6 @@ define([
             options: this.parent.boundData,
             getOptionText: function(value) {
                 return value.getNameAndFilename();
-            },
-            ondisplaychange: function(newValue){
-                self.latitude.options = newValue.dataFields;
-                self.longitude.options = newValue.dataFields;
             }
         });
         this.color = new StringProperty({
@@ -177,16 +177,32 @@ define([
 
         this.latitude = new ArrayProperty({
             displayName: 'Latitude',
-            errorMessage: 'Valid is required.',
+            errorMessage: 'Value is required.',
             options: []
         });
 
         this.longitude = new ArrayProperty({
             displayName: 'Longitude',
-            errorMessage: 'Valid is required.',
+            errorMessage: 'Value is required.',
             options: []
         });
 
+        // Set visible
+        this.visible = new BooleanProperty({
+            displayName: 'Visible',
+            value: true
+        });
+
+        // Set logGoogleAnalytics
+        this.logGoogleAnalytics = new BooleanProperty({
+            displayName: 'Log Google Analytics',
+            value: false
+        });
+
+        this.dataSet.ondisplaychange = function(newValue){
+            self.latitude.options = newValue.dataFields;
+            self.longitude.options = newValue.dataFields;
+        };
         this.setState(state);
         this.id = this.name.value;
         this._dom = undefined;
@@ -231,10 +247,10 @@ define([
         ko.track(this);
     };
 
-    GlyphViewModel.prototype = Object.create(WidgetViewModel.prototype);
+    GlyphViewModel.prototype = Object.create(ComponentViewModel.prototype);
 
     GlyphViewModel.prototype.getState = function() {
-        var state = WidgetViewModel.prototype.getState.call(this);
+        var state = ComponentViewModel.prototype.getState.call(this);
         state.type = GlyphViewModel.getType();
         state.dataSet = this.dataSet.getState().value.name;
         state.color = this.color.getState();
@@ -242,12 +258,14 @@ define([
         state.size = this.size.getState();
         state.latitude = this.latitude.getState();
         state.longitude = this.longitude.getState();
+        state.visible = this.visible.getState();
+        state.logGoogleAnalytics = this.logGoogleAnalytics.getState();
 
         return state;
     };
 
     GlyphViewModel.prototype.setState = function(state) {
-        WidgetViewModel.prototype.setState.call(this, state);
+        ComponentViewModel.prototype.setState.call(this, state);
         var self = this;
         if (defined(state.dataSet)) {
             this.boundData.forEach(function(entry){
@@ -271,6 +289,13 @@ define([
         if (defined(state.longitude)) {
             this.longitude.setState(state.longitude);
         }
+        if (defined(state.visible)) {
+            this.visible.setState(state.visible);
+        }
+        if (defined(state.logGoogleAnalytics)) {
+            this.logGoogleAnalytics.setState(state.logGoogleAnalytics);
+        }
+
     };
 
     /**
