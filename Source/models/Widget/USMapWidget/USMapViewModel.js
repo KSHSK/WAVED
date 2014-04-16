@@ -3,7 +3,7 @@ define([
         'models/Property/Coloring/ColoringSelectionProperty',
         'models/Constants/ColoringSchemeType',
         'models/Property/StringProperty',
-        'models/SuperComponentViewModel',
+        'models/ComponentViewModel',
         'models/Widget/WidgetViewModel',
         'modules/UniqueTracker',
         'util/defined',
@@ -17,7 +17,7 @@ define([
         ColoringSelectionProperty,
         ColoringSchemeType,
         StringProperty,
-        SuperComponentViewModel,
+        ComponentViewModel,
         WidgetViewModel,
         UniqueTracker,
         defined,
@@ -36,7 +36,7 @@ define([
         var self = this;
         state = (defined(state)) ? state : {};
         WidgetViewModel.call(this, state, getDataSet);
-        var namespace = SuperComponentViewModel.getUniqueNameNamespace();
+        var namespace = ComponentViewModel.getUniqueNameNamespace();
         this.id = UniqueTracker.getDefaultUniqueValue(namespace, USMapViewModel.getType(), this);
         if (!defined(state.name)) {
             this.name.originalValue = this.id;
@@ -201,6 +201,11 @@ define([
         if (defined(state.coloring)) {
             this.coloring.setState(state.coloring, this);
         }
+    };
+
+    USMapViewModel.prototype.usesDataSet = function(dataSet) {
+        // TODO: Once Coloring and Glyphs are implemented, this will need to be implemented.
+        return false;
     };
 
     Object.defineProperties(USMapViewModel.prototype, {

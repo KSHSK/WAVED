@@ -27,7 +27,7 @@ define([
         actionDialog: $('#action-editor-dialog'),
 
         resetActionEditor: function(viewModel) {
-            viewModel.actionEditorAffectedComponent = undefined;
+            viewModel.actionEditorAffectedWidget = undefined;
             viewModel.actionEditorDataSet = undefined;
             viewModel.selectedActionName.reset();
             viewModel.selectedActionType = '';
@@ -39,7 +39,7 @@ define([
 
             // Restore displayValue to value so that it's not shown as the new value
             // if the action isn't applied automatically.
-            var properties = viewModel.actionEditorAffectedComponent.viewModel.properties;
+            var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
             for (var i = 0; i < properties.length; i++) {
                 properties[i].displayValue = properties[i].value;
             }
@@ -68,9 +68,9 @@ define([
                         }
 
                         var actionValues = {};
-                        var properties = viewModel.actionEditorAffectedComponent.viewModel.properties;
-                        for (var property in viewModel.actionEditorAffectedComponent.viewModel) {
-                            var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedComponent.viewModel[property]);
+                        var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
+                        for (var property in viewModel.actionEditorAffectedWidget.viewModel) {
+                            var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
                             if (propertyIndex > -1) {
                                 if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
                                     actionValues[property] = properties[propertyIndex].displayValue;
@@ -81,7 +81,7 @@ define([
                         // TODO: Handle QueryAction
                         var action = new PropertyAction({
                             name: viewModel.selectedActionName.value,
-                            target: viewModel.actionEditorAffectedComponent,
+                            target: viewModel.actionEditorAffectedWidget,
                             newValues: actionValues,
                             applyAutomatically: $('#actionApplyAutomatically').is(':checked')
                         });
@@ -106,18 +106,18 @@ define([
             self.resetActionEditor(viewModel);
 
             viewModel.selectedActionName.value = viewModel.selectedAction.name;
-            viewModel.actionEditorAffectedComponent = viewModel.selectedAction.target;
+            viewModel.actionEditorAffectedWidget = viewModel.selectedAction.target;
             $('#actionApplyAutomatically').prop('checked', viewModel.selectedAction.applyAutomatically ? true : false);
 
-            var component = viewModel.actionEditorAffectedComponent.viewModel;
+            var widget = viewModel.actionEditorAffectedWidget.viewModel;
 
             // Set the displayValues to match those saved in the Action
-            for (var index in component.properties) {
-                component.properties[index].displayValue = component.properties[index].originalValue;
+            for (var index in widget.properties) {
+                widget.properties[index].displayValue = widget.properties[index].originalValue;
             }
 
             for (var key in viewModel.selectedAction.newValues) {
-                component[key].displayValue = viewModel.selectedAction.newValues[key];
+                widget[key].displayValue = viewModel.selectedAction.newValues[key];
             }
 
             self.actionDialog.dialog({
@@ -148,7 +148,7 @@ define([
             });
         },
         updateEditChanges: function(viewModel) {
-            var properties = viewModel.actionEditorAffectedComponent.viewModel.properties;
+            var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
             var action = viewModel.selectedAction;
 
             var oldName = action.name;
@@ -169,8 +169,8 @@ define([
 
             var actionValues = {};
 
-            for (var property in viewModel.actionEditorAffectedComponent.viewModel) {
-                var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedComponent.viewModel[property]);
+            for (var property in viewModel.actionEditorAffectedWidget.viewModel) {
+                var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
                 if (propertyIndex > -1) {
                     if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
                         actionValues[property] = properties[propertyIndex].displayValue;
@@ -179,7 +179,7 @@ define([
             }
 
             var newName = viewModel.selectedActionName.value;
-            var newTarget = viewModel.actionEditorAffectedComponent;
+            var newTarget = viewModel.actionEditorAffectedWidget;
             var newApplyAutomatically = $('#actionApplyAutomatically').is(':checked');
 
             function executeChange() {
