@@ -53,8 +53,7 @@ define([
             getOptionText: function(value) {
                 return value.getNameAndFilename();
             },
-            onchange: viewModel.updateColoring,
-            allowUnset: false
+            onchange: viewModel.updateColoring
         });
 
         this.dataField = new ArrayProperty({
