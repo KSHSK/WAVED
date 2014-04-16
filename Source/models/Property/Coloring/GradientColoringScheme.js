@@ -84,13 +84,14 @@ define([
         });
 
         var isValidValue = function(value) {
-            var undef = (value === undefined);
-            var validSelection = true;
-            if (defined(this._options) && this._options.length > 0) {
-                validSelection = (this.options.indexOf(value) !== -1);
+            if (value === undefined) {
+                return true;
+            }
+            else if (defined(this._options) && this._options.length > 0) {
+                return (this.options.indexOf(value) !== -1);
             }
 
-            return undef || validSelection;
+            return true;
         };
 
         this.dataSet.isValidValue = isValidValue;
