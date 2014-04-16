@@ -8,6 +8,7 @@ define(['jquery',
         'models/ProjectViewModel',
         'models/Property/ArrayProperty',
         'models/Property/StringProperty',
+        'models/Widget/Widget',
         'models/Widget/ButtonWidget/Button',
         'models/ProjectTree',
         'modules/ActionHelper',
@@ -39,6 +40,7 @@ define(['jquery',
         ProjectViewModel,
         ArrayProperty,
         StringProperty,
+        Widget,
         Button,
         ProjectTree,
         ActionHelper,
@@ -70,6 +72,8 @@ define(['jquery',
         this._historyIndex = undefined;
         this._lastSaveIndex = undefined;
         this.resetHistory();
+
+        this.disableOpeningPropertiesPanel = false;
 
         this._projectList = [];
         this._selectedComponent = '';
@@ -133,12 +137,12 @@ define(['jquery',
         this.selectedActionName = getNamePropertyInstance('Action Name');
         this.selectedAction = undefined;
         this.selectedActionType = '';
-        this.actionEditorAffectedComponent = undefined;
+        this.actionEditorAffectedWidget = undefined;
         this.actionEditorDataSet = undefined;
 
         this.selectedEventName = getNamePropertyInstance('Event Name');
         this.selectedEvent = undefined;
-        this.eventEditorTriggeringComponent = undefined;
+        this.eventEditorTriggeringWidget = undefined;
         this.eventEditorTrigger = undefined;
         this.selectedEventType = undefined;
         this.selectedEventActions = [];
@@ -360,9 +364,19 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.removeSelectedComponent = function() {
-        var component = self._selectedComponent;
-        self._selectedComponent = self.currentProject.workspace;
-        self._currentProject.removeComponent(component);
+        var component = self.selectedComponent;
+
+        if (component instanceof Widget) {
+            self.disableOpeningPropertiesPanel = true;
+
+            var success = self.currentProject.removeWidget(component);
+
+            if (success) {
+                self.selectedComponent = self.currentProject.workspace;
+            }
+
+            self.disableOpeningPropertiesPanel = false;
+        }
     };
 
     WAVEDViewModel.prototype.saveProject = function() {
@@ -386,22 +400,36 @@ define(['jquery',
         return self._projectTree.isSelected(self, type, value);
     };
 
+    WAVEDViewModel.prototype.isWorkspaceSelectedInProjectTree = function() {
+        var selected =  self.isSelectedInProjectTree(self.projectTree.SelectedTypeEnum.COMPONENT, self.currentProject.workspace);
+
+        if (selected) {
+            // Remove the hover/focus look when the workspace is selected, since the button will be disabled.
+            $('#project-tree-delete-button').removeClass('ui-state-hover ui-state-focus');
+        }
+
+        return selected;
+    };
+
     WAVEDViewModel.prototype.selectInProjectTree = function(type, value) {
         self._projectTree.select(self, type, value);
     };
 
     WAVEDViewModel.prototype.propertiesPanelPosition = $('#accordion').children('div').index($('#properties-panel'));
 
-    // TODO: Component
     WAVEDViewModel.prototype.addNewWidget = function(w) {
         var widget = new w.o();
-        self._currentProject.addComponent(widget);
+        self._currentProject.addWidget(widget);
         self._selectedComponent = widget;
 
         self.openPropertiesPanel();
     };
 
     WAVEDViewModel.prototype.openPropertiesPanel = function() {
+        if (self.disableOpeningPropertiesPanel === true) {
+            return;
+        }
+
         // TODO: Really shouldn't do any jQuery stuff in here.
         $('#accordion').accordion('option', 'active', self.propertiesPanelPosition);
     };

@@ -4,8 +4,8 @@ define([
         'models/Property/Coloring/ColoringSelectionProperty',
         'models/Property/GlyphSize/GlyphSizeSelectionProperty',
         'models/Property/StringProperty',
+        'models/ComponentViewModel',
         'models/Property/ListProperty',
-        'models/SuperComponentViewModel',
         'models/Widget/WidgetViewModel',
         'models/Constants/GlyphSizeSchemeType',
         './GlyphViewModel',
@@ -23,8 +23,8 @@ define([
         ColoringSelectionProperty,
         GlyphSizeSelectionProperty,
         StringProperty,
+        ComponentViewModel,
         ListProperty,
-        SuperComponentViewModel,
         WidgetViewModel,
         GlyphSizeSchemeType,
         GlyphViewModel,
@@ -96,12 +96,12 @@ define([
 
     function removeGlyph(options, value) {
         value.remove();
-        UniqueTracker.removeItem(SuperComponentViewModel.getUniqueNameNamespace(), value);
+        UniqueTracker.removeItem(ComponentViewModel.getUniqueNameNamespace(), value);
         options.splice(options.indexOf(value), 1);
     }
 
     function addGlyph(options, value) {
-        var success = UniqueTracker.addValueIfUnique(SuperComponentViewModel.getUniqueNameNamespace(),
+        var success = UniqueTracker.addValueIfUnique(ComponentViewModel.getUniqueNameNamespace(),
             value.name.value, value);
 
         if (!success) {
@@ -184,7 +184,7 @@ define([
         var self = this;
         state = (defined(state)) ? state : {};
         WidgetViewModel.call(this, state, getDataSet);
-        var namespace = SuperComponentViewModel.getUniqueNameNamespace();
+        var namespace = ComponentViewModel.getUniqueNameNamespace();
         this.id = UniqueTracker.getDefaultUniqueValue(namespace, USMapViewModel.getType(), this);
         if (!defined(state.name)) {
             this.name.originalValue = this.id;
@@ -309,6 +309,11 @@ define([
                 this.glyphs.push(new GlyphViewModel(state.glyphs[i], this));
             }
         }
+    };
+
+    USMapViewModel.prototype.usesDataSet = function(dataSet) {
+        // TODO: Once Coloring and Glyphs are implemented, this will need to be implemented.
+        return false;
     };
 
     Object.defineProperties(USMapViewModel.prototype, {
