@@ -22,7 +22,7 @@ define([
         // All colors default to black
         this.color1 = new StringProperty({
             displayName: 'Color #1',
-            value: '#000000',
+            value: '#0000FF',
             validValue: createValidator({
                 regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
             }),
@@ -32,7 +32,7 @@ define([
 
         this.color2 = new StringProperty({
             displayName: 'Color #2',
-            value: '#000000',
+            value: '#00FF00',
             validValue: createValidator({
                 regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
             }),
@@ -42,7 +42,7 @@ define([
 
         this.color3 = new StringProperty({
             displayName: 'Color #3',
-            value: '#000000',
+            value: '#FF0000',
             validValue: createValidator({
                 regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
             }),
@@ -52,7 +52,7 @@ define([
 
         this.color4 = new StringProperty({
             displayName: 'Color #4',
-            value: '#000000',
+            value: '#FFDD00',
             validValue: createValidator({
                 regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
             }),
