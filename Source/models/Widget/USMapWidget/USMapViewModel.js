@@ -227,7 +227,7 @@ define([
                     var options = this.options;
                     options.push(newGlyph);
                     this.value = newGlyph;
-                    GlyphHelper.addEditGlyph().then(function() {
+                    GlyphHelper.addEditGlyph(newGlyph).then(function() {
                         addSuccess(options, newGlyph);
                     }, function () {
                         options.splice(options.indexOf(newGlyph), 1);
@@ -237,7 +237,7 @@ define([
             edit: function() {
                 if (defined(this.value)) {
                     var value = this.value;
-                    GlyphHelper.addEditGlyph().then(function() {
+                    GlyphHelper.addEditGlyph(value).then(function() {
                         editSuccess(value);
                     }, function() {
                         editFailure(value);
@@ -248,16 +248,18 @@ define([
                 var options = this.options;
                 var value = this.value;
 
-                removeGlyph(options, value);
-                var historyMonitor = HistoryMonitor.getInstance();
-
-                historyMonitor.addUndoChange(function() {
-                    addGlyph(options, value);
-                });
-
-                historyMonitor.addRedoChange(function() {
+                if (defined(value)) {
                     removeGlyph(options, value);
-                });
+                    var historyMonitor = HistoryMonitor.getInstance();
+
+                    historyMonitor.addUndoChange(function() {
+                        addGlyph(options, value);
+                    });
+
+                    historyMonitor.addRedoChange(function() {
+                        removeGlyph(options, value);
+                    });
+                }
             }
         });
 

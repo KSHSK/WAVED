@@ -8,6 +8,7 @@ define([
         'models/Property/GlyphSize/GlyphSizeSelectionProperty',
         'modules/UniqueTracker',
         'util/defined',
+        'util/createValidator',
         'knockout',
         'd3',
         'jquery'
@@ -21,6 +22,7 @@ define([
         GlyphSizeSelectionProperty,
         UniqueTracker,
         defined,
+        createValidator,
         ko,
         d3,
         $) {
@@ -103,10 +105,14 @@ define([
             }
         })
         .attr('r', function(d, i) {
+            var value;
             if (glyph.size.value.type === GlyphSizeSchemeType.SCALED_SIZE) {
-                return radiusScale(d[glyph.size.value.dataField.value]);
+                value = radiusScale(d[glyph.size.value.dataField.value]);
             } else {
-                return glyph.size.value.size.value*glyph.parent.width.value/100;
+                value = glyph.size.value.size.value*glyph.parent.width.value/100;
+            }
+            if (value !== null && value > 0 && !isNaN(value)) {
+                return value;
             }
         })
         .style('fill', glyph.color.value)
@@ -127,6 +133,7 @@ define([
 
         this.dataSet = new ArrayProperty({
             displayName: 'Data Set',
+            errorMessage: 'Valid is required.',
             options: this.parent.boundData,
             getOptionText: function(value) {
                 return value.getNameAndFilename();
@@ -138,23 +145,36 @@ define([
         });
         this.color = new StringProperty({
             displayName: 'Color',
-            value: 'Red'
+            value: 'Red',
+            validValue: createValidator({
+                minLength: 1
+            }),
+            errorMessage: 'Value is required.'
         });
         this.opacity = new NumberProperty({
             displayName: 'Opacity',
-            value: 50
+            value: 50,
+            validValue: createValidator({
+                min: 0,
+                max: 100
+            }),
+            errorMessage: 'Value must be between 0 and 100'
         });
         this.size = new GlyphSizeSelectionProperty({
             displayName: 'Size',
-            value: ''
+            errorMessage: 'All size fields are required.'
         }, this);
 
         this.latitude = new ArrayProperty({
-            displayName: 'Latitude'
+            displayName: 'Latitude',
+            errorMessage: 'Valid is required.',
+            options: []
         });
 
         this.longitude = new ArrayProperty({
-            displayName: 'Longitude'
+            displayName: 'Longitude',
+            errorMessage: 'Valid is required.',
+            options: []
         });
 
         this.setState(state);
