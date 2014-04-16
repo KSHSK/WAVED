@@ -24,11 +24,6 @@ define(['WAVEDViewModel',
         }
     });
 
-    //used for setState
-    var wavedTypes = {};
-    wavedTypes[DataSet.getType()] = DataSet;
-    window.wavedTypes = wavedTypes;
-
     /* ### WAVED Definition ### */
     var WAVED = {
         viewModel: viewModel

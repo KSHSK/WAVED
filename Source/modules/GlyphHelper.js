@@ -26,7 +26,7 @@ define([
 
     GlyphHelper.glyphDialog = $('#glyph-editor-dialog');
 
-    GlyphHelper.addEditGlyph = function() {
+    GlyphHelper.addEditGlyph = function(glyph) {
         var self = this;
         var glyphAdded = $.Deferred();
         self.glyphDialog.dialog({
@@ -35,11 +35,15 @@ define([
             modal: true,
             buttons: {
                 'Save': function() {
-                    self.closeActionDialog();
-                    glyphAdded.resolve();
+                    if (glyph.isValid()) {
+                        self.glyphDialog.dialog('close');
+                        glyphAdded.resolve();
+                    } else {
+                        glyph.displayErrors();
+                    }
                 },
                 'Cancel': function() {
-                    self.closeActionDialog();
+                    self.glyphDialog.dialog('close');
                     glyphAdded.reject();
                 }
             }
@@ -47,11 +51,6 @@ define([
 
         return glyphAdded.promise();
     };
-
-    GlyphHelper.closeActionDialog = function(viewModel) {
-        this.glyphDialog.dialog('close');
-    };
-
 
     return GlyphHelper;
 });

@@ -27,22 +27,24 @@ define([
 
         this._templateName = PropertyTemplateName.GLYPH_SIZE;
         this._displayTemplateName = PropertyTemplateName.GLYPH_SIZE_DISPLAY;
-        this.error = '';
+        this.error = true;
 
         this.constantGlyphSize = new ConstantGlyphSizeScheme(options);
         this.scaledGlyphSize = new ScaledGlyphSizeScheme(options, viewModel);
 
         var stateValueType;
-        switch(options.value.type) {
-            case GlyphSizeSchemeType.CONSTANT_SIZE:
-                stateValueType = this.constantGlyphSize;
-                break;
-            case GlyphSizeSchemeType.SCALED_SIZE:
-                stateValueType = this.scaledGlyphSize;
-                break;
-            default:
-                stateValueType = undefined;
-                break;
+        if (defined(options.value)) {
+            switch(options.value.type) {
+                case GlyphSizeSchemeType.CONSTANT_SIZE:
+                    stateValueType = this.constantGlyphSize;
+                    break;
+                case GlyphSizeSchemeType.SCALED_SIZE:
+                    stateValueType = this.scaledGlyphSize;
+                    break;
+                default:
+                    stateValueType = undefined;
+                    break;
+            }
         }
 
         // Always set this to the GlyphSizeSchemeType enums
@@ -69,7 +71,15 @@ define([
                 return this._originalValue;
             },
             set: function(value) {
-                this._originalValue = value;
+                if (defined(value)) {
+                    this.error = value.error;
+                    this.message = '';
+                    this._originalValue = value;
+                }
+                else {
+                    this.error = true;
+                    this.message = this.errorMessage;
+                }
             }
         },
         value: {
@@ -77,7 +87,15 @@ define([
                 return this._value;
             },
             set: function(value) {
-                this._value = value;
+                if (defined(value)) {
+                    this.error = value.error;
+                    this.message = '';
+                    this._value = value;
+                }
+                else {
+                    this.error = true;
+                    this.message = this.errorMessage;
+                }
             }
         },
         displayValue: {
@@ -85,7 +103,24 @@ define([
                 return this._displayValue;
             },
             set: function(value) {
-                this._displayValue = value;
+                if (defined(value)) {
+                    this.error = value.error;
+                    this.message = '';
+                    this._displayValue = value;
+                }
+                else {
+                    this.error = true;
+                    this.message = this.errorMessage;
+                }
+            }
+        },
+        error: {
+            get : function() {
+                // displayValue is the one that's used in glyph pop-up dialog
+                return !defined(this.displayValue) || this.displayValue.error;
+            },
+            set : function(value) {
+                this._error = value;
             }
         }
     });

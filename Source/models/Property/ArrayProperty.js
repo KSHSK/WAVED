@@ -22,7 +22,7 @@ define([
         this._templateName = PropertyTemplateName.ARRAY;
         this._displayTemplateName = PropertyTemplateName.ARRAY_DISPLAY;
 
-        this._options = [];
+        this._options = defaultValue(opts.options, []);
 
         // Set a default isValidValue function if necessary.
         if (!defined(opts.validValue)) {
@@ -30,7 +30,7 @@ define([
                 if (defined(this._options) && this._options.length > 0) {
                     return (this._options.indexOf(value) !== -1);
                 }
-                return true;
+                return false;
             };
         }
 
@@ -114,47 +114,11 @@ define([
     });
 
     ArrayProperty.prototype.getState = function() {
-        var state = Property.prototype.getState.call(this);
-        state.options = [];
-        var options = this.options;
-        for (var i = 0; i < options.length; i++) {
-            if (typeof options[i] === 'object' && typeof options[i].getState === 'function') {
-                state.options.push(options[i].getState());
-            } else {
-                state.options.push(options[i]);
-            }
-        }
-
-        return state;
+        return Property.prototype.getState.call(this);
     };
 
     ArrayProperty.prototype.setState = function(state) {
         Property.prototype.setState.call(this, state);
-        this._options = [];
-        var options = defaultValue(state.options, []);
-        var replaceWithObject = false;
-        for (var i = 0; i < options.length; i++) {
-            var value = options[i];
-            if (defined(value.type)) {
-                var O = window.wavedTypes[value.type];
-                if (defined(O)) {
-                    replaceWithObject = true;
-                    value = new O(value);
-                }
-            }
-            this._options.push(value);
-        }
-
-        // Need to call this after this._options is set, so the isValidValue function works.
-        Property.prototype.setState.call(this, state);
-
-        if (replaceWithObject) {
-            for (var j = 0; j < this._options.length; j++) {
-                if (defined(this._originalValue) && this._options[j].name === this._originalValue.name) {
-                    this._originalValue = this._options[j];
-                }
-            }
-        }
     };
 
     return ArrayProperty;

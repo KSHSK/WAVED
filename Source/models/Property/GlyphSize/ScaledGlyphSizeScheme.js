@@ -86,6 +86,11 @@ define([
             get : function() {
                 return GlyphSizeSchemeType.SCALED_SIZE;
             }
+        },
+        error: {
+            get : function() {
+                return this.dataSet.error || this.dataField.error;
+            }
         }
     });
 

@@ -19,7 +19,7 @@ define(['knockout',
         this.ondisplaychange = options.ondisplaychange;
 
         this.message = '';
-        this.error = false;
+        this._error = false;
 
         this._displayName = options.displayName;
         this.errorMessage = defined(options.errorMessage) ? options.errorMessage : 'Invalid value';
@@ -80,6 +80,14 @@ define(['knockout',
             get: function() {
                 return this._displayTemplateName;
             }
+        },
+        error : {
+            get : function() {
+                return this._error;
+            },
+            set : function(value) {
+                this._error = value;
+            }
         }
     });
 
@@ -106,7 +114,7 @@ define(['knockout',
         this._value = value;
         this._originalValue = value;
         this._displayValue = value;
-        this.error = !this.isValidValue(this._value);
+        this._error = !this.isValidValue(this._value);
     };
 
     Property.prototype.isValidValue = function() {

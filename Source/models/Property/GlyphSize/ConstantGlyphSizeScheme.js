@@ -5,7 +5,8 @@ define([
         'knockout',
         'jquery',
         'util/defined',
-        'util/defaultValue'
+        'util/defaultValue',
+        'util/createValidator'
     ],function(
         GlyphSizeScheme,
         GlyphSizeSchemeType,
@@ -13,7 +14,8 @@ define([
         ko,
         $,
         defined,
-        defaultValue){
+        defaultValue,
+        createValidator){
     'use strict';
 
     var ConstantGlyphSizeScheme = function(state) {
@@ -29,8 +31,12 @@ define([
 
         // Default size
         var stateSize = {
-            displayName: 'Size (%)',
-            value: 3
+            displayName: 'Size (px)',
+            value: 3,
+            validValue : createValidator({
+                min: 0
+            }),
+            errorMessage: 'Value must be greater than 0'
         };
         this.size = new NumberProperty(stateSize);
 
@@ -51,6 +57,11 @@ define([
             get : function() {
                 return GlyphSizeSchemeType.CONSTANT_SIZE;
             }
+        },
+        error: {
+            get : function() {
+                return this.size.error;
+            }
         }
     });
 
@@ -64,7 +75,7 @@ define([
     };
 
     ConstantGlyphSizeScheme.prototype.setState = function(state) {
-        if(defined(state.value.size) && state.value.size.value > 0){
+        if(defined(state.value) && defined(state.value.size) && state.value.size.value > 0){
             this.size.value = state.value.size.value;
         }
     };

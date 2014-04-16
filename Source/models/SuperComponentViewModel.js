@@ -62,6 +62,23 @@ define([
         }
     };
 
+    SuperComponentViewModel.prototype.isValid = function() {
+        var valid = true;
+        for (var i = 0; i < this.properties.length; i++) {
+            valid = valid && !this.properties[i].error;
+        }
+        return valid;
+    };
+
+    SuperComponentViewModel.prototype.displayErrors = function() {
+        for (var i = 0; i < this.properties.length; i++) {
+            var property = this.properties[i];
+            if (property.error) {
+                property.message = property.errorMessage;
+            }
+        }
+    };
+
     SuperComponentViewModel.prototype.subscribed = false;
 
     SuperComponentViewModel.prototype.subscribeChanges = function() {
