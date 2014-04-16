@@ -87,7 +87,8 @@ define([
             if (value === undefined) {
                 return true;
             }
-            else if (defined(this._options) && this._options.length > 0) {
+
+            if (defined(this._options) && this._options.length > 0) {
                 return (this.options.indexOf(value) !== -1);
             }
 
