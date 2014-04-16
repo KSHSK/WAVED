@@ -159,7 +159,6 @@ define([
                         self.dataField.originalValue = undefined;
                         self.dataField.options = newValue.dataFields;
                         self.keyField.originalValue = undefined;
-                        self.keyField.options = [];
                         self.keyField.options = newValue.dataFields;
                     }
                     else {
