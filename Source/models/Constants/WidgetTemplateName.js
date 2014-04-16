@@ -1,7 +1,7 @@
 define([], function(){
     'use strict';
 
-    var ComponentTemplateName = {
+    var WidgetTemplateName = {
         BUTTON: 'buttonTemplate',
         TEXTBLOCK: 'textblockTemplate',
         US_MAP: 'usMapTemplate',
@@ -9,5 +9,5 @@ define([], function(){
         TOOLTIP: 'tooltipTemplate'
     };
 
-    return ComponentTemplateName;
+    return WidgetTemplateName;
 });

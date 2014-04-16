@@ -3,11 +3,11 @@
  */
 define([
         'jquery',
-        'WAVEDViewModel',
+        './ReadData',
         'util/displayMessage'
     ], function(
         $,
-        WAVEDViewModel,
+        ReadData,
         displayMessage) {
     'use strict';
 
@@ -93,6 +93,9 @@ define([
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
                     if (data.success) {
+                        // Update the data folder path.
+                        ReadData.dataFolderPath = data.dataFolder;
+
                         // Set the project name since the name has changed.
                         viewModel.currentProject.name = data.projectName;
 
