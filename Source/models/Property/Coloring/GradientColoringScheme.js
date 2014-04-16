@@ -53,7 +53,8 @@ define([
             getOptionText: function(value) {
                 return value.getNameAndFilename();
             },
-            onchange: viewModel.updateColoring
+            onchange: viewModel.updateColoring,
+            allowUnset: false
         });
 
         this.dataField = new ArrayProperty({
@@ -95,6 +96,7 @@ define([
 
         this.dataSet.isValidValue = isValidValue;
         this.dataField.isValidValue = isValidValue;
+        this.keyField.isValidValue = isValidValue;
 
         ko.track(this);
 
@@ -158,6 +160,7 @@ define([
                         self.dataField.originalValue = undefined;
                         self.dataField.options = newValue.dataFields;
                         self.keyField.originalValue = undefined;
+                        self.keyField.options = [];
                         self.keyField.options = newValue.dataFields;
                     }
                     else {
@@ -188,7 +191,7 @@ define([
         // Properly unset the dataSet value when the options disappear (when the bound data is unbound)
         subscribeObservable(self.dataSet, '_options', function(newValue){
             if(defined(self.dataSet.originalValue) && (newValue.indexOf(self.dataSet.originalValue) === -1)){
-                    self.dataSet.orignalValue = undefined;
+                self.dataSet.originalValue = undefined;
             }
         });
 
