@@ -28,7 +28,7 @@ define([
         // Start and end colors default to black
         this.startColor = new StringProperty({
             displayName: 'Start color',
-            value: '#000000',
+            value: '#DDDDDD',
             validValue: createValidator({
                 regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
             }),
