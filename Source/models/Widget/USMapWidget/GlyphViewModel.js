@@ -46,6 +46,12 @@ define([
     }
 
     function editGlyph(glyph) {
+        if (!glyph.visible.value) {
+            glyph._dom.attr('class', 'hide');
+            return;
+        } else {
+            glyph._dom.attr('class', 'show');
+        }
         var data = glyph.dataSet.value.data;
 
         glyph._dom.selectAll('circle').data(data)
@@ -86,9 +92,13 @@ define([
             .attr('class', 'widget-container')
             .attr('id', glyph.id);
 
-
         var data = glyph.dataSet.value.data;
         glyph._dom = svg.append('g');
+        if (!glyph.visible.value) {
+            glyph._dom.attr('class', 'hide');
+        } else {
+            glyph._dom.attr('class', 'show');
+        }
 
         glyph._dom.selectAll('circle').data(data)
         .enter().append('circle')

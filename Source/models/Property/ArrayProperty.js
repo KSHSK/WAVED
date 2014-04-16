@@ -114,10 +114,13 @@ define([
     });
 
     ArrayProperty.prototype.getState = function() {
-        return Property.prototype.getState.call(this);
+        var state = Property.prototype.getState.call(this);
+        state.options = this.options;
+        return state;
     };
 
     ArrayProperty.prototype.setState = function(state) {
+        this.options = state.options;
         Property.prototype.setState.call(this, state);
     };
 
