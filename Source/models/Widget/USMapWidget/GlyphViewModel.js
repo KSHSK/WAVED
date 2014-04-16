@@ -1,6 +1,6 @@
 define([
+        'models/Widget/WidgetViewModel',
         'models/ComponentViewModel',
-        'models/SuperComponentViewModel',
         'models/Property/ArrayProperty',
         'models/Property/StringProperty',
         'models/Property/NumberProperty',
@@ -13,8 +13,8 @@ define([
         'd3',
         'jquery'
     ], function(
+        WidgetViewModel,
         ComponentViewModel,
-        SuperComponentViewModel,
         ArrayProperty,
         StringProperty,
         NumberProperty,
@@ -132,10 +132,10 @@ define([
     var GlyphViewModel = function(state, parent) {
         var self = this;
         state = (defined(state)) ? state : {};
-        ComponentViewModel.call(this, state);
+        WidgetViewModel.call(this, state);
 
         if (!defined(state.name)) {
-            var namespace = SuperComponentViewModel.getUniqueNameNamespace();
+            var namespace = ComponentViewModel.getUniqueNameNamespace();
             this.name.value = UniqueTracker.getDefaultUniqueValue(namespace, GlyphViewModel.getType(), this);
         }
 
@@ -231,10 +231,10 @@ define([
         ko.track(this);
     };
 
-    GlyphViewModel.prototype = Object.create(ComponentViewModel.prototype);
+    GlyphViewModel.prototype = Object.create(WidgetViewModel.prototype);
 
     GlyphViewModel.prototype.getState = function() {
-        var state = ComponentViewModel.prototype.getState.call(this);
+        var state = WidgetViewModel.prototype.getState.call(this);
         state.type = GlyphViewModel.getType();
         state.dataSet = this.dataSet.getState().value.name;
         state.color = this.color.getState();
@@ -247,7 +247,7 @@ define([
     };
 
     GlyphViewModel.prototype.setState = function(state) {
-        ComponentViewModel.prototype.setState.call(this, state);
+        WidgetViewModel.prototype.setState.call(this, state);
         var self = this;
         if (defined(state.dataSet)) {
             this.boundData.forEach(function(entry){

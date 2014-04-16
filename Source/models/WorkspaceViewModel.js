@@ -1,5 +1,5 @@
 define([
-        'models/SuperComponentViewModel',
+        'models/ComponentViewModel',
         'models/Property/StringProperty',
         'models/Property/NumberProperty',
         'modules/UniqueTracker',
@@ -8,7 +8,7 @@ define([
         'util/defaultValue',
         'knockout'
     ], function(
-        SuperComponentViewModel,
+        ComponentViewModel,
         StringProperty,
         NumberProperty,
         UniqueTracker,
@@ -50,12 +50,11 @@ define([
             errorMessage: 'Value must be greater than 0'
         });
 
+        UniqueTracker.addValueIfUnique(ComponentViewModel.getUniqueNameNamespace(), this.name.value, this);
         this.color = new StringProperty({
             displayName: 'Color',
             value: 'White'
         });
-
-        UniqueTracker.addValueIfUnique(SuperComponentViewModel.getUniqueNameNamespace(), this.name.value, this);
 
         this.setState(state);
 
@@ -64,7 +63,7 @@ define([
         window.wavedWorkspace = this;
     };
 
-    WorkspaceViewModel.prototype = Object.create(SuperComponentViewModel.prototype);
+    WorkspaceViewModel.prototype = Object.create(ComponentViewModel.prototype);
 
     WorkspaceViewModel.prototype.resetWorkspace = function() {
         this.width.value = DEFAULT_WIDTH;
@@ -72,7 +71,7 @@ define([
     };
 
     WorkspaceViewModel.prototype.getState = function() {
-        var state = SuperComponentViewModel.prototype.getState.call(this);
+        var state = ComponentViewModel.prototype.getState.call(this);
         state.width = this.width.getState();
         state.height = this.height.getState();
 

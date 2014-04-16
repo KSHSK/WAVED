@@ -17,9 +17,7 @@
     <div id="mainSection" class="hide-on-load">
         <div id="header-container">
                 <div class="inline bottom" id="header-logo-container">
-                    <a href="http://kshsk.github.io/WAVED/" target="_blank">
-                        <img id="header-logo" src="images/logo/WAVED_HighRes_Color_NoText.png" ondragstart="return false;" />
-                    </a>
+                    <img id="header-logo" src="images/logo/WAVED_HighRes_Color_NoText.png" ondragstart="return false;" />
                 </div>
                 <div class="inline bottom">
                     <div>
@@ -56,9 +54,9 @@
             <div id="accordion">
                 <h3>Project Tree</h3>
                 <div>
-                    <button
+                    <button id="project-tree-delete-button"
                         class="right button-small delete-icon-button"
-                        data-bind="click: tryToDeleteFromProjectTree">Delete</button>
+                        data-bind="click: tryToDeleteFromProjectTree, disable: isWorkspaceSelectedInProjectTree(), css: {'ui-state-disabled': isWorkspaceSelectedInProjectTree()}">Delete</button>
                     <ul id='project-tree'
                         data-bind="visible: currentProject.name">
                         <li><span class="tree-folder-icon"></span><a
@@ -351,13 +349,13 @@
                     data-bind="options: ['Property Action', 'Query Action'],
                     value: selectedActionType">
             </select>
-            <div>Affected Component:</div>
+            <div>Affected Widget:</div>
             <select class="marginBottom10 width100"
-                    data-bind="options: currentProject.components, 
-                      optionsText: function(component) {
-                         return component.viewModel.name.value;
+                    data-bind="options: currentProject.widgets, 
+                      optionsText: function(widget) {
+                         return widget.viewModel.name.value;
                       },
-                  value: actionEditorAffectedComponent">
+                  value: actionEditorAffectedWidget">
             </select>
             <!-- ko if: selectedActionType === 'Query Action' -->
             <div>Dataset:</div>
@@ -377,8 +375,8 @@
         </div>
         <div class="inline top padding15">
             <div>Options</div>
-            <!-- ko if: selectedActionType === 'Property Action' -->
-            <div data-bind="foreach: actionEditorAffectedComponent.viewModel.properties">
+            <!-- ko if: selectedActionType === 'Property Action' && actionEditorAffectedWidget-->
+            <div data-bind="foreach: actionEditorAffectedWidget.viewModel.properties">
                 <!-- ko if:  $data.displayName !== 'Name'  && $data.displayTemplateName !== undefined -->
                 <div data-bind="template: {name : $data.displayTemplateName, data: $data}"></div>
                 <!-- /ko -->
@@ -404,15 +402,15 @@
                                }, value: selectedEventType"></select>
         </div>
         <div>
-            <label class="inline">Triggering Component: </label>
-            <select data-bind="options: currentProject.components,
-                            optionsText: function(component) {
-                                return component.viewModel.name.value;
-                            }, value: eventEditorTriggeringComponent"></select>
+            <label class="inline">Triggering Widget: </label>
+            <select data-bind="options: currentProject.widgets,
+                            optionsText: function(widget) {
+                                return widget.viewModel.name.value;
+                            }, value: eventEditorTriggeringWidget"></select>
         </div>
         <div>
             <label class="inline">Trigger: </label>
-            <select id="event-trigger-select" data-bind="options: eventEditorTriggeringComponent.viewModel.triggers,
+            <select id="event-trigger-select" data-bind="options: (eventEditorTriggeringWidget) ? eventEditorTriggeringWidget.viewModel.triggers : [],
                             optionsText: function(trigger) {
                                 return trigger.name;
                             }, value: eventEditorTrigger"></select>
@@ -422,7 +420,7 @@
             Action:
             <button class="button-small add-icon-button right" data-bind="click: addAction">Add Action</button>
             </div>
-            <div data-bind="foreach: currentProject.actions">
+            <div data-bind="foreach: currentProject.nonAutoActions">
                 <div>
                     <input type="checkbox" data-bind="checkedValue: $data, checked: $root.selectedEventActions"></input>
                     <span data-bind="text: $data.name"></span>

@@ -1,13 +1,13 @@
 define([
         'models/Widget/USMapWidget/USMapViewModel',
-        'models/Constants/ComponentTemplateName',
+        'models/Constants/WidgetTemplateName',
         'models/Event/Trigger',
         '../Widget',
         'knockout',
         'jquery'
     ],function(
         USMapViewModel,
-        ComponentTemplateName,
+        WidgetTemplateName,
         Trigger,
         Widget,
         ko,
@@ -17,7 +17,7 @@ define([
     var USMap = function(state, getDataSet) {
         Widget.call(this, state);
 
-        this._templateName = ComponentTemplateName.US_MAP;
+        this._templateName = WidgetTemplateName.US_MAP;
 
         var $workspace = $('#waved-workspace');
         var usMap = this.newWidgetContainer();

@@ -33,6 +33,18 @@ define([
             return getDataSet(dataSetName);
         };
 
+        // Set visible
+        this.visible = new BooleanProperty({
+            displayName: 'Visible',
+            value: true
+        });
+
+        // Set logGoogleAnalytics
+        this.logGoogleAnalytics = new BooleanProperty({
+            displayName: 'Log Google Analytics',
+            value: false
+        });
+
         // Set width
         this.width = new NumberProperty({
             displayName: 'Width',
@@ -78,6 +90,7 @@ define([
         });
 
         this._boundData = []; // String[]
+        this._triggers = []; // Trigger[]
     };
 
     WidgetViewModel.prototype = Object.create(ComponentViewModel.prototype);
@@ -92,11 +105,18 @@ define([
             get: function() {
                 return this._boundData;
             }
+        },
+        triggers: {
+            get: function() {
+                return this._triggers;
+            }
         }
     });
 
     WidgetViewModel.prototype.getState = function() {
         var state = ComponentViewModel.prototype.getState.call(this);
+        state.visible = this.visible.getState();
+        state.logGoogleAnalytics = this.logGoogleAnalytics.getState();
         state.width = this.width.getState();
         state.height = this.height.getState();
         state.x = this.x.getState();
@@ -113,6 +133,14 @@ define([
 
     WidgetViewModel.prototype.setState = function(state) {
         ComponentViewModel.prototype.setState.call(this, state);
+
+        if (defined(state.visible)) {
+            this.visible.originalValue = state.visible.value;
+        }
+
+        if (defined(state.logGoogleAnalytics)) {
+            this.logGoogleAnalytics.originalValue = state.logGoogleAnalytics.value;
+        }
 
         if (defined(state.width)) {
             this.width.originalValue = state.width.value;
@@ -138,6 +166,14 @@ define([
                 }
             }
         }
+    };
+
+    WidgetViewModel.prototype.getTriggers = function() {
+        return this._triggers;
+    };
+
+    WidgetViewModel.prototype.addTrigger = function(trigger) {
+        this._triggers.push(trigger);
     };
 
     WidgetViewModel.prototype.boundDataIndex = function(dataSet) {
@@ -170,6 +206,26 @@ define([
             self._boundData.splice(index, 1);
             dataSet.decrementReferenceCount();
         }
+    };
+
+    WidgetViewModel.prototype.unbindAllData = function() {
+        var self = this;
+
+        var data = this.boundData.slice(0);
+        data.forEach(function(dataSet) {
+            self.unbindData(dataSet);
+        });
+
+        return data;
+    };
+
+    /**
+     * Checks if this widget use the dataSet.
+     * @param dataSet
+     * @returns Returns false by default.
+     */
+    WidgetViewModel.prototype.usesDataSet = function(dataSet) {
+        return false;
     };
 
     return WidgetViewModel;
