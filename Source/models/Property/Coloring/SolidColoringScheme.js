@@ -19,10 +19,10 @@ define([
 
         ColoringScheme.call(this, state);
 
-        // Default to black
+        // Default to grey
         var stateColor = {
             displayName: 'Color',
-            value: '#000000',
+            value: '#C0C0C0',
             validValue: createValidator({
                 regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
             }),

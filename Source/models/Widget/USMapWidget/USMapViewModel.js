@@ -110,7 +110,7 @@ define([
                     // If either a dataSet or dataField isn't selected, break
                     if(!defined(coloringScheme.dataField.value) || !defined(coloringScheme.dataSet.value)){
                         path.style('fill', function(d){
-                            return '#000000'; // Default to black
+                            return '#C0C0C0'; // Default to grey
                         });
                         break;
                     }
@@ -132,7 +132,7 @@ define([
                     // Default the map to black when we can't extract an actual min or max (the field is not numeric)
                     if(!defined(min) || !defined(max)){
                         path.style('fill', function(d){
-                            return '#000000'; // Default to black
+                            return '#C0C0C0'; // Default to grey
                         });
                     }
 
