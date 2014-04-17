@@ -45,6 +45,13 @@ define([
                             return;
                         }
 
+                        if (!defined(viewModel.eventEditorTriggeringWidget) || !defined(viewModel.eventEditorTrigger) ||
+                            !defined(viewModel.selectedEventType)) {
+
+                            // TODO: Report these errors.
+                            return;
+                        }
+
                         if (!UniqueTracker.isValueUnique(Event.getUniqueNameNamespace(),
                             viewModel.selectedEventName.value)) {
 
