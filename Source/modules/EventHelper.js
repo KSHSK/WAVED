@@ -48,7 +48,7 @@ define([
                         if (!defined(viewModel.eventEditorTriggeringWidget) || !defined(viewModel.eventEditorTrigger) ||
                             !defined(viewModel.selectedEventType)) {
 
-                            // TODO: Report these errors.
+                            displayMessage('Need to select an option from all dropdowns');
                             return;
                         }
 
