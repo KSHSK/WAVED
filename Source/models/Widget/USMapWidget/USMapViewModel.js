@@ -4,6 +4,7 @@ define([
         'models/Property/StringProperty',
         'models/ComponentViewModel',
         'models/Widget/WidgetViewModel',
+        'modules/ReadData',
         'modules/UniqueTracker',
         'util/defined',
         'util/subscribeObservable',
@@ -16,6 +17,7 @@ define([
         StringProperty,
         ComponentViewModel,
         WidgetViewModel,
+        ReadData,
         UniqueTracker,
         defined,
         subscribeObservable,
@@ -23,6 +25,8 @@ define([
         d3,
         $){
     'use strict';
+
+    var STATES_DATA_FILE = 'states.json';
 
     function getElement(viewModel){
         return d3.select('#' + viewModel.id);
@@ -54,7 +58,9 @@ define([
                     .attr('width', w2);
                 self._svg = svg;
                 var states = svg.append('g');
-                d3.json('data/states.json', function(json) {
+
+                var statesDataPath = ReadData.getFilePath(STATES_DATA_FILE);
+                d3.json(statesDataPath, function(json) {
                     states.selectAll('path')
                         .data(json.features)
                         .enter()
