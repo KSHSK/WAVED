@@ -5,6 +5,7 @@ define([
         'models/Action/Action',
         'models/Action/PropertyAction',
         'models/Action/QueryAction',
+        'models/Constants/ActionType',
         'util/defined',
         'util/displayMessage',
         'knockout',
@@ -16,6 +17,7 @@ define([
         Action,
         PropertyAction,
         QueryAction,
+        ActionType,
         defined,
         displayMessage,
         ko,
@@ -27,10 +29,15 @@ define([
         actionDialog: $('#action-editor-dialog'),
 
         resetActionEditor: function(viewModel) {
-            viewModel.actionEditorAffectedWidget = undefined;
-            viewModel.actionEditorDataSet = undefined;
+            // Reset name.
             viewModel.selectedActionName.reset();
-            viewModel.selectedActionType = '';
+
+            // Select Property Action
+            viewModel.selectedActionType = ActionType.PROPERTY_ACTION;
+
+            // Unselect DataSet.
+            viewModel.actionEditorDataSet = undefined;
+
             $('#actionApplyAutomatically').attr('checked', false);
         },
 
@@ -39,11 +46,15 @@ define([
 
             // Restore displayValue to value so that it's not shown as the new value
             // if the action isn't applied automatically.
-            var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
-            for (var i = 0; i < properties.length; i++) {
-                properties[i].displayValue = properties[i].value;
-            }
+            if (defined(viewModel.actionEditorAffectedWidget)) {
+                var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
+                for (var i = 0; i < properties.length; i++) {
+                    properties[i].displayValue = properties[i].value;
 
+                    // Force the view to update.
+                    ko.getObservable(properties[i], '_displayValue').valueHasMutated();
+                }
+            }
         },
 
         addAction: function(viewModel) {

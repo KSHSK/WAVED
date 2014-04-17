@@ -1,6 +1,7 @@
 /* global console*/
 define(['jquery',
         'knockout',
+        'models/Constants/ActionType',
         'models/Action/Action',
         'models/Constants/EventType',
         'models/Event/Event',
@@ -33,6 +34,7 @@ define(['jquery',
     ], function(
         $,
         ko,
+        ActionType,
         Action,
         EventType,
         Event,
@@ -113,6 +115,11 @@ define(['jquery',
         this.eventTypes = [];
         for (var eventType in EventType) {
             this.eventTypes.push(eventType);
+        }
+
+        this.actionTypes = [];
+        for (var key in ActionType) {
+            this.actionTypes.push(ActionType[key]);
         }
 
         this.newProjectName = getNamePropertyInstance('Project Name:');
