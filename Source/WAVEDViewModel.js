@@ -149,6 +149,7 @@ define(['jquery',
         this.selectedAction = undefined;
         this.selectedActionType = '';
         this.actionEditorAffectedWidget = undefined;
+        this.actionEditorAffectedWidgetError = false;
         this.actionEditorDataSet = undefined;
 
         this.selectedEventName = getNamePropertyInstance('Event Name');

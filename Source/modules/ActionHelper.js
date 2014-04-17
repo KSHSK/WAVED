@@ -35,6 +35,9 @@ define([
             // Select Property Action
             viewModel.selectedActionType = ActionType.PROPERTY_ACTION;
 
+            // Select first Widget
+            viewModel.actionEditorAffectedWidgetError = false;
+
             // Unselect DataSet.
             viewModel.actionEditorDataSet = undefined;
 
@@ -66,8 +69,7 @@ define([
                 modal: true,
                 buttons: {
                     'Save': function() {
-                        if (viewModel.selectedActionName.error) {
-                            viewModel.selectedActionName.message = viewModel.selectedActionName.errorMessage;
+                        if (self.hasErrors(viewModel)) {
                             return;
                         }
 
@@ -207,6 +209,42 @@ define([
             historyMonitor.addChanges(undoChange, executeChange);
 
             historyMonitor.executeIgnoreHistory(executeChange);
+        },
+        hasErrors: function(viewModel) {
+            var error = false;
+
+            // Error with Action name.
+            if (viewModel.selectedActionName.error) {
+                viewModel.selectedActionName.message = viewModel.selectedActionName.errorMessage;
+                error = true;
+            }
+
+            if (viewModel.selectedActionType === ActionType.PROPERTY_ACTION) {
+                // Check Property Action errors.
+
+                // Check that a widget is selected.
+                if (!defined(viewModel.actionEditorAffectedWidget)) {
+                    viewModel.actionEditorAffectedWidgetError = true;
+                    error = true;
+                }
+
+                // Check if any property has an error.
+                if (defined(viewModel.actionEditorAffectedWidget)) {
+                    var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
+                    for (var i = 0; i < properties.length; i++) {
+                        if (properties[i].error) {
+                            error = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                // Check Query Action errors.
+                // TODO
+            }
+
+            return error;
         }
     };
 
