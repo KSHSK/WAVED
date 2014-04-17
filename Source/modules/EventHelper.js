@@ -70,7 +70,6 @@ define([
         },
         editEvent: function(viewModel) {
             if (!defined(viewModel.selectedEvent)) {
-                displayMessage('Select an event to edit.');
                 return;
             }
 
