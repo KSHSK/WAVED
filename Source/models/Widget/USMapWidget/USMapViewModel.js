@@ -95,7 +95,7 @@ define([
             switch(coloringScheme.getType()){
                 case ColoringSchemeType.SOLID_COLORING:
                     path.style('fill', function(d) {
-                        return defined(coloringScheme.color.value) ? coloringScheme.color.value : '#000000';
+                        return defined(coloringScheme.color.value) ? coloringScheme.color.value : '#C0C0C0';
                     });
                     break;
                 case ColoringSchemeType.FOUR_COLORING:
@@ -150,6 +150,10 @@ define([
                     path.style('fill', function(d) {
                         var stateName = d.properties.name;
                         var keyName = coloringScheme.keyField.value;
+
+                        if(keyName === undefined){
+                            return '#C0C0C0';
+                        }
 
                         for(var i=0; i<coloringScheme.dataSet.value.data.length; i++){
                             if(coloringScheme.dataSet.value.data[i][keyName] === stateName){
