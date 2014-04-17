@@ -231,9 +231,8 @@ define([
 
     USMapViewModel.prototype.usesDataSet = function(dataSet) {
         // TODO: Once Coloring and Glyphs are implemented, this will need to be implemented.
-
-        if(this.coloring.value.type === ColoringSchemeType.GRADIENT_COLORING) {
-            if(this.coloring.value.dataSet === dataSet){
+        if(this.coloring.value.getType() === ColoringSchemeType.GRADIENT_COLORING) {
+            if(this.coloring.value.dataSet.value === dataSet){
                 return true;
             }
         }
