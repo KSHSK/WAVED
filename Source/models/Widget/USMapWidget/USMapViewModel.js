@@ -1,11 +1,14 @@
 define([
         'models/Event/Trigger',
+        'models/Property/Coloring/ColoringScheme',
         'models/Property/Coloring/ColoringSelectionProperty',
+        'models/Property/Coloring/SolidColoringScheme',
         'models/Constants/ColoringSchemeType',
         'models/Property/StringProperty',
         'models/ComponentViewModel',
         'models/Widget/WidgetViewModel',
         'modules/UniqueTracker',
+        'util/createValidator',
         'util/defined',
         'util/subscribeObservable',
         'knockout',
@@ -14,12 +17,15 @@ define([
         'jquery'
     ],function(
         Trigger,
+        ColoringScheme,
         ColoringSelectionProperty,
+        SolidColoringScheme,
         ColoringSchemeType,
         StringProperty,
         ComponentViewModel,
         WidgetViewModel,
         UniqueTracker,
+        createValidator,
         defined,
         subscribeObservable,
         ko,
@@ -77,12 +83,17 @@ define([
         };
 
         this.updateColoring = function() {
-            if(!self._isRendered || !defined(self.coloring.value)){
+            if(!self._isRendered || !defined(self.coloring.value) || !defined(self.strokeColor.value)){
                 return;
             }
 
             var coloringScheme = self.coloring.value;
             var path = getElement(self).selectAll('svg').selectAll('path');
+
+            path.style('stroke', function(d) {
+                return self.strokeColor.value;
+            });
+
             switch(coloringScheme.getType()){
                 case ColoringSchemeType.SOLID_COLORING:
                     path.style('fill', function(d) {
@@ -165,6 +176,16 @@ define([
             onchange: self.updateColoring
         }, this);
 
+        // Default to black strokes
+        this.strokeColor = new StringProperty({
+            displayName: 'Stroke Color',
+            value: '#000000',
+            validValue: createValidator({
+                regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
+            }),
+            onchange: self.updateColoring
+        }, this);
+
         this.width.onchange = this.render;
         this.width.originalValue = 100;
         this.width._displayName = 'Scale';
@@ -190,6 +211,7 @@ define([
         var state = WidgetViewModel.prototype.getState.call(this);
         state.type = USMapViewModel.getType();
         state.coloring = this.coloring.getState();
+        state.strokeColor = this.strokeColor.getState();
 
         return state;
 
@@ -200,6 +222,10 @@ define([
 
         if (defined(state.coloring)) {
             this.coloring.setState(state.coloring, this);
+        }
+
+        if(defined(state.strokeColor)){
+            this.strokeColor.setState(state.strokeColor);
         }
     };
 
@@ -212,7 +238,7 @@ define([
         properties: {
             get: function() {
                 return [this.name, this.x, this.y, this.width, this.visible, this.logGoogleAnalytics,
-                this.coloring];
+                this.strokeColor, this.coloring];
             }
         }
     });
