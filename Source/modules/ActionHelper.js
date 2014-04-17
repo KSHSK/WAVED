@@ -98,7 +98,6 @@ define([
 
         editAction: function(viewModel) {
             if (!defined(viewModel.selectedAction)) {
-                displayMessage('Select an action to edit.');
                 return;
             }
 
