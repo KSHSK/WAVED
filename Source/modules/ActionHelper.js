@@ -138,8 +138,7 @@ define([
                 modal: true,
                 buttons: {
                     'Save': function() {
-                        if (viewModel.selectedActionName.error) {
-                            viewModel.selectedActionName.message = viewModel.selectedActionName.errorMessage;
+                        if (self.hasErrors(viewModel)) {
                             return;
                         }
 

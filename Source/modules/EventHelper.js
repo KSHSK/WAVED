@@ -41,7 +41,6 @@ define([
                 modal: true,
                 buttons: {
                     'Save': function() {
-
                         if (self.hasErrors(viewModel)) {
                             return;
                         }
@@ -91,9 +90,7 @@ define([
                 modal: true,
                 buttons: {
                     'Save': function() {
-
-                        if (viewModel.selectedEventName.error) {
-                            viewModel.selectedEventName.message = viewModel.selectedEventName.errorMessage;
+                        if (self.hasErrors(viewModel)) {
                             return;
                         }
 
