@@ -161,8 +161,16 @@ function createProject($returnValue, $projectName) {
     // Create the directory for the project.
     $success = mkdir("../projects/" . $projectName, 0755);
     
+    $dataFolder = "../projects/" . $projectName . "/data/";
+    
     if ($success) {
-        $success = mkdir("../projects/" . $projectName . "/data", 0755);
+        // Create the directory for the data files.
+        $success = mkdir($dataFolder, 0755);
+    }
+    
+    if ($success) {
+        // Copy 'states.json' to the project's data folder.
+        $success = copy("../data/" . "states.json", $dataFolder . "states.json");
     }
     
     if (!$success) {
