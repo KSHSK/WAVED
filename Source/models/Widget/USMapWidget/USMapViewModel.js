@@ -13,7 +13,6 @@ define([
         'util/subscribeObservable',
         'knockout',
         'd3',
-        'topojson',
         'jquery'
     ],function(
         Trigger,
@@ -30,7 +29,6 @@ define([
         subscribeObservable,
         ko,
         d3,
-        topojson,
         $){
     'use strict';
 
