@@ -213,7 +213,7 @@ define([
         hasErrors: function(viewModel) {
             var error = false;
 
-            // Error with Action name.
+            // Check that the action name is valid.
             if (viewModel.selectedActionName.error) {
                 viewModel.selectedActionName.message = viewModel.selectedActionName.errorMessage;
                 error = true;
