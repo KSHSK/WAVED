@@ -328,42 +328,47 @@
 
     <div id="action-editor-dialog" title="Action Editor" class="dialog">
         <div class="inline top padding15 dialogColumnMaxWidth">
-            <div class="required">Action Name:</div>
             <div class="marginBottom10">
-                   <input data-bind="value: selectedActionName.value, valueUpdate: 'keyup'"/>
-                   <div class="error" data-bind="visible: selectedActionName.error, html: selectedActionName.message"></div>
+                <label class="required" for="action-editor-selected-action-name">Action Name:</label>
+                <input id="action-editor-selected-action-name" data-bind="value: selectedActionName.value, valueUpdate: 'keyup'"/>
+                <div class="error" data-bind="visible: selectedActionName.error, html: selectedActionName.message"></div>
             </div>
             
-            <div>Action Type:</div>
-            <select class="marginBottom10 width100"
-                    data-bind="options: actionTypes,
-                    value: selectedActionType">
-            </select>
+            <div class="marginBottom10">
+                <label class="required" for="action-editor-selected-action-type">Action Type:</label>
+                <select id="action-editor-selected-action-type" class="width100"
+                        data-bind="options: actionTypes, value: selectedActionType">
+                </select>
+            </div>
             
             <!-- ko if: selectedActionType === 'Property Action' -->
-            <label class="required" for="action-editor-selected-widget">Affected Widget:</label> 
-            <select id="action-editor-selected-widget" class="marginBottom10 width100"
-                    data-bind="options: currentProject.widgets, 
-                      optionsText: function(widget) {
-                         return widget.viewModel.name.value;
-                      },
-                  value: actionEditorAffectedWidget">
-            </select>
-            <div class="error" data-bind="visible: actionEditorAffectedWidgetError">Must select a Widget.</div>
+            <div class="marginBottom10">
+                <label class="required" for="action-editor-selected-widget">Affected Widget:</label> 
+                <select id="action-editor-selected-widget" class="width100"
+                        data-bind="options: currentProject.widgets, 
+                          optionsText: function(widget) {
+                             return widget.viewModel.name.value;
+                          },
+                      value: actionEditorAffectedWidget">
+                </select>
+                <div class="error" data-bind="visible: actionEditorAffectedWidgetError">Must select a Widget.</div>
+            </div>
             <!-- /ko -->
             
             <!-- ko if: selectedActionType === 'Query Action' -->
-            <div>Dataset:</div>
-            <select class="marginBottom10 width100"
-                    data-bind="optionsCaption: 'None',
-                    options: currentProject.dataSets, 
-                      optionsText: function(dataSet) {
-                           return dataSet.name;
-                      },
-                  value: actionEditorDataSet">
-            </select>
+            <div class="marginBottom10">
+                <label class="required" for="action-editor-dataset">Dataset:</label> 
+                <select id="action-editor-dataset" class="marginBottom10 width100"
+                        data-bind="optionsCaption: 'None',
+                        options: currentProject.dataSets, 
+                          optionsText: function(dataSet) {
+                               return dataSet.name;
+                          },
+                      value: actionEditorDataSet">
+                </select>
+            </div>
             <!-- /ko -->
-            <div>
+            <div class="marginBottom10">
                 <input type="checkbox" id="actionApplyAutomatically"></input>
                 <span>Apply Automatically</span>
             </div>
@@ -394,21 +399,26 @@
             <select data-bind="options: eventTypes, 
                                optionsText: function(eventType) {
                                    return eventType.toLowerCase();
-                               }, value: selectedEventType"></select>
+                               }, value: selectedEventType">
+            </select>
         </div>
         <div>
             <label class="inline">Triggering Widget: </label>
             <select data-bind="options: currentProject.widgets,
                             optionsText: function(widget) {
                                 return widget.viewModel.name.value;
-                            }, value: eventEditorTriggeringWidget"></select>
+                            }, value: eventEditorTriggeringWidget">
+            </select>
+            <div class="error" data-bind="visible: eventEditorTriggeringWidgetError">Must select a triggering widget.</div>
         </div>
         <div>
             <label class="inline">Trigger: </label>
             <select id="event-trigger-select" data-bind="options: (eventEditorTriggeringWidget) ? eventEditorTriggeringWidget.viewModel.triggers : [],
                             optionsText: function(trigger) {
                                 return trigger.name;
-                            }, value: eventEditorTrigger"></select>
+                            }, value: eventEditorTrigger">
+            </select>
+            <div class="error" data-bind="visible: eventEditorTriggerError">Must select a trigger</div>
         </div>
         <div>
             <div>

@@ -24,7 +24,9 @@ define([
 
         resetEventEditor: function(viewModel) {
             viewModel.eventEditorTriggeringWidget = undefined;
+            viewModel.eventEditorTriggeringWidgetError = false;
             viewModel.eventEditorTrigger = undefined;
+            viewModel.eventEditorTriggerError = false;
             viewModel.selectedEventType = undefined;
             viewModel.selectedEventName.reset();
             viewModel.selectedEventActions = [];
@@ -40,15 +42,7 @@ define([
                 buttons: {
                     'Save': function() {
 
-                        if (viewModel.selectedEventName.error) {
-                            viewModel.selectedEventName.message = viewModel.selectedEventName.errorMessage;
-                            return;
-                        }
-
-                        if (!defined(viewModel.eventEditorTriggeringWidget) || !defined(viewModel.eventEditorTrigger) ||
-                            !defined(viewModel.selectedEventType)) {
-
-                            displayMessage('Need to select an option from all dropdowns');
+                        if (self.hasErrors(viewModel)) {
                             return;
                         }
 
@@ -157,6 +151,29 @@ define([
             historyMonitor.addChanges(undoChange, executeChange);
 
             historyMonitor.executeIgnoreHistory(executeChange);
+        },
+        hasErrors: function(viewModel) {
+            var error = false;
+
+            // Check that the event name is valid.
+            if (viewModel.selectedEventName.error) {
+                viewModel.selectedEventName.message = viewModel.selectedEventName.errorMessage;
+                error = true;
+            }
+
+            // Check that a triggering widget is selected.
+            if (!defined(viewModel.eventEditorTriggeringWidget)) {
+                viewModel.eventEditorTriggeringWidgetError = true;
+                error = true;
+            }
+
+            // Check that a trigger is selected.
+            if (!defined(viewModel.eventEditorTrigger)) {
+                viewModel.eventEditorTriggerError = true;
+                error = true;
+            }
+
+            return error;
         }
 
     };
