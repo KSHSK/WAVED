@@ -95,7 +95,7 @@ define([
             switch(coloringScheme.getType()){
                 case ColoringSchemeType.SOLID_COLORING:
                     path.style('fill', function(d) {
-                        return defined(coloringScheme.color.value) ? coloringScheme.color.value : '#C0C0C0';
+                        return defined(coloringScheme.color.value) ? coloringScheme.color.value : self.DEFAULT_MAP_COLOR;
                     });
                     break;
                 case ColoringSchemeType.FOUR_COLORING:
@@ -119,7 +119,7 @@ define([
                     // If either a dataSet or dataField isn't selected, break
                     if(!defined(coloringScheme.dataField.value) || !defined(coloringScheme.dataSet.value)){
                         path.style('fill', function(d){
-                            return '#C0C0C0'; // Default to grey
+                            return self.DEFAULT_MAP_COLOR; // Default to grey
                         });
                         break;
                     }
@@ -141,7 +141,7 @@ define([
                     // Default the map to black when we can't extract an actual min or max (the field is not numeric)
                     if(!defined(min) || !defined(max)){
                         path.style('fill', function(d){
-                            return '#C0C0C0'; // Default to grey
+                            return self.DEFAULT_MAP_COLOR; // Default to grey
                         });
                     }
 
@@ -152,12 +152,17 @@ define([
                         var keyName = coloringScheme.keyField.value;
 
                         if(keyName === undefined){
-                            return '#C0C0C0';
+                            return self.DEFAULT_MAP_COLOR;
                         }
 
                         for(var i=0; i<coloringScheme.dataSet.value.data.length; i++){
                             if(coloringScheme.dataSet.value.data[i][keyName] === stateName){
                                 return gradient(coloringScheme.dataSet.value.data[i][dataField]);
+                            }
+
+                            // Didn't find any matches, return default color
+                            if(i === coloringScheme.dataSet.value.data.length-1){
+                                return self.DEFAULT_MAP_COLOR;
                             }
                         }
                     });
@@ -258,6 +263,8 @@ define([
         ['California', 'Colorado', 'Georgia', 'Idaho', 'Indiana', 'Louisiana', 'Massachusetts', 'Missouri', 'New Jersey', 'South Dakota', 'West Virginia'],
         ['Florida', 'Hawaii', 'Iowa', 'Maryland', 'New Hampshire', 'New York', 'North Dakota', 'Ohio', 'Oklahoma', 'South Carolina', 'Tennessee', 'Utah', 'Washington']
     ];
+
+    USMapViewModel.prototype.DEFAULT_MAP_COLOR = '#C0C0C0';
 
     return USMapViewModel;
 });
