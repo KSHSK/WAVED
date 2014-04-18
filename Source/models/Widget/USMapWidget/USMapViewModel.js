@@ -2,8 +2,9 @@ define([
         'models/Event/Trigger',
         'models/Property/Coloring/ColoringSelectionProperty',
         'models/Property/StringProperty',
-        'models/SuperComponentViewModel',
+        'models/ComponentViewModel',
         'models/Widget/WidgetViewModel',
+        'modules/ReadData',
         'modules/UniqueTracker',
         'util/defined',
         'util/subscribeObservable',
@@ -14,8 +15,9 @@ define([
         Trigger,
         ColoringSelectionProperty,
         StringProperty,
-        SuperComponentViewModel,
+        ComponentViewModel,
         WidgetViewModel,
+        ReadData,
         UniqueTracker,
         defined,
         subscribeObservable,
@@ -23,6 +25,8 @@ define([
         d3,
         $){
     'use strict';
+
+    var STATES_DATA_FILE = 'states.json';
 
     function getElement(viewModel){
         return d3.select('#' + viewModel.id);
@@ -32,7 +36,7 @@ define([
         var self = this;
         state = (defined(state)) ? state : {};
         WidgetViewModel.call(this, state, getDataSet);
-        var namespace = SuperComponentViewModel.getUniqueNameNamespace();
+        var namespace = ComponentViewModel.getUniqueNameNamespace();
         this.id = UniqueTracker.getDefaultUniqueValue(namespace, USMapViewModel.getType(), this);
         if (!defined(state.name)) {
             this.name.originalValue = this.id;
@@ -54,7 +58,9 @@ define([
                     .attr('width', w2);
                 self._svg = svg;
                 var states = svg.append('g');
-                d3.json('data/states.json', function(json) {
+
+                var statesDataPath = ReadData.getFilePath(STATES_DATA_FILE);
+                d3.json(statesDataPath, function(json) {
                     states.selectAll('path')
                         .data(json.features)
                         .enter()
@@ -127,6 +133,11 @@ define([
         if (defined(state.coloring)) {
             this.coloring.originalValue = state.coloring.value;
         }
+    };
+
+    USMapViewModel.prototype.usesDataSet = function(dataSet) {
+        // TODO: Once Coloring and Glyphs are implemented, this will need to be implemented.
+        return false;
     };
 
     Object.defineProperties(USMapViewModel.prototype, {
