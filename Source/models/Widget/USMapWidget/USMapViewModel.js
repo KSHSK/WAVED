@@ -119,7 +119,7 @@ define([
                     // If either a dataSet or dataField isn't selected, break
                     if(!defined(coloringScheme.dataField.value) || !defined(coloringScheme.dataSet.value)){
                         path.style('fill', function(d){
-                            return self.DEFAULT_MAP_COLOR; // Default to grey
+                            return self.DEFAULT_MAP_COLOR;
                         });
                         break;
                     }
@@ -141,7 +141,7 @@ define([
                     // Default the map to black when we can't extract an actual min or max (the field is not numeric)
                     if(!defined(min) || !defined(max)){
                         path.style('fill', function(d){
-                            return self.DEFAULT_MAP_COLOR; // Default to grey
+                            return self.DEFAULT_MAP_COLOR;
                         });
                     }
 
@@ -160,7 +160,7 @@ define([
                                 return gradient(coloringScheme.dataSet.value.data[i][dataField]);
                             }
 
-                            // Didn't find any matches, return default color
+                            // Didn't find any matches
                             if(i === coloringScheme.dataSet.value.data.length-1){
                                 return self.DEFAULT_MAP_COLOR;
                             }
