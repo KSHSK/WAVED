@@ -14,8 +14,8 @@ define([
     var ReadData = {
         dataFolderPath: '',
 
-        getFilePath: function(dataSet) {
-            return this.dataFolderPath + dataSet.filename;
+        getFilePath: function(filename) {
+            return this.dataFolderPath + filename;
         },
 
         endsWithInsensitive: function(str, suffix) {
@@ -30,7 +30,7 @@ define([
         readData: function(dataSet) {
             var readComplete = $.Deferred();
 
-            var path = this.getFilePath(dataSet);
+            var path = this.getFilePath(dataSet.filename);
 
             if (this.endsWithInsensitive(path, '.csv')) {
                 d3.csv(path, function(error, data) {
