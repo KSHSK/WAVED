@@ -23,7 +23,6 @@ define([
         var stateColor = {
             displayName: 'Color',
             value: '#C0C0C0',
-            errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE,
             onchange: viewModel.updateColoring
         };
         this.color = new StringProperty(stateColor);
