@@ -64,7 +64,11 @@ define([
         openLoadDialog: function(viewModel) {
             var self = this;
             var projectLoaded = LoadProject.tryToLoadProject(viewModel);
-            $.when(projectLoaded).done(function() {
+            $.when(projectLoaded).always(function() {
+                // Move the welcome dialog forward in case we moved it back
+                self.zIndex(100);
+            })
+            .done(function() {
                 self.welcomeDialog.dialog('close');
             });
         },
@@ -75,6 +79,10 @@ define([
             $.when(projectCreated).done(function() {
                 self.welcomeDialog.dialog('close');
             });
+        },
+
+        zIndex: function(value) {
+            this.welcomeDialog.parent().zIndex(value);
         },
     };
 
