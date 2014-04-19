@@ -121,6 +121,7 @@ define([
                         }
                     },
                     'Cancel': function() {
+                        projectLoaded.reject();
                         loadProjectDialog.dialog('close');
                     }
                 }
@@ -129,6 +130,7 @@ define([
             // Update column sizes now that the dialog is open
             var table = $('#project-list').dataTable();
             table.fnAdjustColumnSizing();
+
         },
 
         /**

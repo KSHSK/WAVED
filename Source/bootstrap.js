@@ -66,30 +66,20 @@
 
             // Deleting the current project requires the Welcome Dialog
             if (WAVED.viewModel.currentProject.name == fullData.name) {
-                fnDeleteDone = function() {
-                    /*
-                        Open the welcome dialog while hidden to bring
-                        up the load dialog again without flashing.
-                    */
-                    WelcomeModule.welcomeDialog.parent().hide();
-                    WelcomeModule.openWelcomeDialog(WAVED.viewModel);
-                    WelcomeModule.openLoadDialog(WAVED.viewModel);
-                    WelcomeModule.welcomeDialog.parent().show();
-                };
+                fnDeleteDone =  WelcomeModule.openLoadDialog.bind(WelcomeModule, WAVED.viewModel);
                 cleanUp = true;
             }
             // Otherwise just refresh the project list
             else {
-                fnDeleteDone = function() {
-                    LoadProject.updateProjectList(WAVED.viewModel);
-                };
+                fnDeleteDone = LoadProject.updateProjectList.bind(LoadProject, WAVED.viewModel);
             }
 
             button.click(function() {
-                // Delete selected project without going through Welcome Dialog
-                var projectDeleted = DeleteProject.tryToDeleteProject(WAVED.viewModel, fullData.name, cleanUp);
+                // Move welcome dialog back in case we open it
+                WelcomeModule.zIndex(99);
 
-                // Update project list to show deletion
+                // Delete selected project
+                var projectDeleted = DeleteProject.tryToDeleteProject(WAVED.viewModel, fullData.name, cleanUp);
                 $.when(projectDeleted).done(fnDeleteDone);
             });
 
