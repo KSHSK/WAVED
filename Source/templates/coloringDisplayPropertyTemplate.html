@@ -2,12 +2,12 @@
     <span data-bind="text:displayName"></span>
     <select data-bind="options: coloringType, optionsText: function(item) { return item.getType(); }, value: displayValue"></select>
     <div class="error" data-bind="visible: error, html: message"></div>
+    <a href="#" onclick="$('#coloring-display-help-dialog').dialog({ resizable: false, modal: true})">Need help?</a>
     <!-- ko if: displayValue !== undefined -->
     <div data-bind="foreach: displayValue.properties">
         <div data-bind="template: {name : $data.templateName, data: $data}"></div>
     </div>
     <!-- /ko -->
-    <a href="#" onclick="$('#coloring-display-help-dialog').dialog({ resizable: false, height: 200, width: 400, modal: true})">Need help?</a>
     <div id="coloring-display-help-dialog" title="Coloring help" class="dialog">
         <p>Color fields accept the following formats:</p>
         <ul>
