@@ -71,7 +71,7 @@ define([
                         table.fnAddData(data.projects, true);
 
                         // Click events for selecting a project
-                        $('#project-list tbody tr').click(function() {
+                        table.$('tr').click(function() {
                             if ($(this).hasClass('row_selected')) {
                                 $(this).removeClass('row_selected');
                                 viewModel.loadProjectName._value = '';
