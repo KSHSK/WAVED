@@ -192,9 +192,6 @@ define([
         this.strokeColor = new StringProperty({
             displayName: 'Stroke Color',
             value: '#000000',
-            validValue: createValidator({
-                regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
-            }),
             onchange: self.updateColoring
         }, this);
 
