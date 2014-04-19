@@ -29,14 +29,12 @@ define([
         this.startColor = new StringProperty({
             displayName: 'Start color',
             value: '#DDDDDD',
-            errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE,
             onchange: viewModel.updateColoring
         });
 
         this.endColor = new StringProperty({
             displayName: 'End color',
             value: '#000000',
-            errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE,
             onchange: viewModel.updateColoring
         });
 

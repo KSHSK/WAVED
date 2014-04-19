@@ -23,28 +23,24 @@ define([
         this.color1 = new StringProperty({
             displayName: 'Color #1',
             value: '#0000FF',
-            errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE,
             onchange: viewModel.updateColoring
         });
 
         this.color2 = new StringProperty({
             displayName: 'Color #2',
             value: '#00FF00',
-            errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE,
             onchange: viewModel.updateColoring
         });
 
         this.color3 = new StringProperty({
             displayName: 'Color #3',
             value: '#FF0000',
-            errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE,
             onchange: viewModel.updateColoring
         });
 
         this.color4 = new StringProperty({
             displayName: 'Color #4',
             value: '#FFDD00',
-            errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE,
             onchange: viewModel.updateColoring
         });
 
