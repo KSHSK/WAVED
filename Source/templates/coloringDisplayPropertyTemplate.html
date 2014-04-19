@@ -7,4 +7,13 @@
         <div data-bind="template: {name : $data.templateName, data: $data}"></div>
     </div>
     <!-- /ko -->
+    <a href="#" onclick="$('#coloring-display-help-dialog').dialog({ resizable: false, height: 200, width: 400, modal: true})">Need help?</a>
+    <div id="coloring-display-help-dialog" title="Coloring help" class="dialog">
+        <p>Color fields accept the following formats:</p>
+        <ul>
+            <li>HTML color names (see <a href="http://www.w3schools.com/html/html_colornames.asp" target="_blank">here</a>)</li>
+            <li>Hex values (see <a href="http://www.w3schools.com/tags/ref_colorpicker.asp" target="_blank">here</a>)</li>
+            <li>RGB values (see <a href="http://www.w3schools.com/html/html_colors.asp" target="_blank">here</a>)</li>
+        </ul>
+    </div>
 </div>

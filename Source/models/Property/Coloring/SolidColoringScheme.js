@@ -23,9 +23,6 @@ define([
         var stateColor = {
             displayName: 'Color',
             value: '#C0C0C0',
-            validValue: createValidator({
-                regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
-            }),
             errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE,
             onchange: viewModel.updateColoring
         };

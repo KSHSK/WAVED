@@ -29,9 +29,6 @@ define([
         this.startColor = new StringProperty({
             displayName: 'Start color',
             value: '#DDDDDD',
-            validValue: createValidator({
-                regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
-            }),
             errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE,
             onchange: viewModel.updateColoring
         });
@@ -39,9 +36,6 @@ define([
         this.endColor = new StringProperty({
             displayName: 'End color',
             value: '#000000',
-            validValue: createValidator({
-                regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
-            }),
             errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE,
             onchange: viewModel.updateColoring
         });

@@ -23,9 +23,6 @@ define([
         this.color1 = new StringProperty({
             displayName: 'Color #1',
             value: '#0000FF',
-            validValue: createValidator({
-                regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
-            }),
             errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE,
             onchange: viewModel.updateColoring
         });
@@ -33,9 +30,6 @@ define([
         this.color2 = new StringProperty({
             displayName: 'Color #2',
             value: '#00FF00',
-            validValue: createValidator({
-                regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
-            }),
             errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE,
             onchange: viewModel.updateColoring
         });
@@ -43,9 +37,6 @@ define([
         this.color3 = new StringProperty({
             displayName: 'Color #3',
             value: '#FF0000',
-            validValue: createValidator({
-                regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
-            }),
             errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE,
             onchange: viewModel.updateColoring
         });
@@ -53,9 +44,6 @@ define([
         this.color4 = new StringProperty({
             displayName: 'Color #4',
             value: '#FFDD00',
-            validValue: createValidator({
-                regex: new RegExp(ColoringScheme.prototype.HEX_REGEX)
-            }),
             errorMessage: ColoringScheme.prototype.INVALID_COLOR_MESSAGE,
             onchange: viewModel.updateColoring
         });
