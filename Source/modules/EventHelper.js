@@ -24,7 +24,6 @@ define([
 
         resetEventEditor: function(viewModel) {
             viewModel.eventEditorTriggeringWidget = undefined;
-            viewModel.eventEditorTrigger = undefined;
             viewModel.selectedEventType = undefined;
             viewModel.selectedEventName.reset();
             viewModel.selectedEventActions = [];
@@ -56,7 +55,6 @@ define([
                             name: viewModel.selectedEventName.value,
                             eventType: viewModel.selectedEventType,
                             triggeringWidget: viewModel.eventEditorTriggeringWidget,
-                            trigger: $('#event-trigger-select').prop('selectedIndex'),
                             actions: viewModel.selectedEventActions
                         });
                         viewModel.currentProject.addEvent(event);
@@ -80,7 +78,6 @@ define([
             viewModel.selectedEventName.value = viewModel.selectedEvent.name;
             viewModel.selectedEventType = viewModel.selectedEvent.eventType;
             viewModel.eventEditorTriggeringWidget = viewModel.selectedEvent.triggeringWidget;
-            viewModel.eventEditorTrigger = viewModel.selectedEvent.trigger;
 
             // Make a shallow copy of the array so that it's not referencing the same object.
             viewModel.selectedEventActions = viewModel.selectedEvent.actions.slice(0);
@@ -136,14 +133,12 @@ define([
             var newName = viewModel.selectedEventName.value;
             var newEventType = viewModel.selectedEventType;
             var newTriggeringWidget = viewModel.eventEditorTriggeringWidget;
-            var newTrigger = viewModel.eventEditorTrigger;
             var newActions = viewModel.selectedEventActions;
 
             function executeChange() {
                 event.name = newName;
                 event.eventType = newEventType;
                 event.triggeringWidget = newTriggeringWidget;
-                event.trigger = newTrigger;
                 event.actions = newActions;
             }
 

@@ -35,12 +35,11 @@ define([
         this._name = '';
         this._eventType = ''; // EventType
         this._triggeringWidget = {}; // WidgetViewModel
-        this._trigger = {}; // Trigger
         this._actions = []; // Action[]
 
         this.setState(state);
 
-        this.applyActions = function() {
+        this.applyActions = function(event) {
             for (var i = 0; i < self.actions.length; i++) {
                 // TODO: pass in information from trigger as a param?
                 self.actions[i].apply();
@@ -48,11 +47,11 @@ define([
         };
 
         this.register = function() {
-            $(self._trigger.domElement).on(EventType[self._eventType], self.applyActions);
+            $(self._triggeringWidget.viewModel.trigger.domElement).on(EventType[self._eventType], self.applyActions);
         };
 
         this.unregister = function() {
-            $(self._trigger.domElement).off(EventType[self._eventType], self.applyActions);
+            $(self._triggeringWidget.viewModel.trigger.domElement).off(EventType[self._eventType], self.applyActions);
         };
 
         ko.track(this);
@@ -90,14 +89,6 @@ define([
                 this._triggeringWidget = value;
             }
         },
-        trigger: {
-            get: function() {
-                return this._trigger;
-            },
-            set: function(value) {
-                this._trigger = value;
-            }
-        },
         actions: {
             get: function() {
                 return this._actions;
@@ -121,10 +112,6 @@ define([
             this._triggeringWidget = state.triggeringWidget;
         }
 
-        if (defined(state.trigger)){
-            this._trigger = this._triggeringWidget.viewModel.triggers[state.trigger];
-        }
-
         if (defined(state.actions)){
             this._actions = state.actions;
         }
@@ -135,7 +122,6 @@ define([
             'name': this._name,
             'eventType': this._eventType,
             'triggeringWidget': this._triggeringWidget.viewModel.name.value,
-            'trigger': this._triggeringWidget.viewModel.triggers.indexOf(this._trigger),
             'actions': $.map(this._actions, function(action) {
                 return action.name;
             })
