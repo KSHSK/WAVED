@@ -31,7 +31,7 @@ define(['knockout',
         data: {
             get: function() {
                 return this._data;
-            },
+            }
         }
     });
 
