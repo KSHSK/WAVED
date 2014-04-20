@@ -398,13 +398,6 @@
                             }, value: eventEditorTriggeringWidget"></select>
         </div>
         <div>
-            <label class="inline">Trigger: </label>
-            <select id="event-trigger-select" data-bind="options: (eventEditorTriggeringWidget) ? eventEditorTriggeringWidget.viewModel.triggers : [],
-                            optionsText: function(trigger) {
-                                return trigger.name;
-                            }, value: eventEditorTrigger"></select>
-        </div>
-        <div>
             <div>
             Action:
             <button class="button-small add-icon-button right" data-bind="click: addAction">Add Action</button>

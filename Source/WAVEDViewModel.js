@@ -144,7 +144,6 @@ define(['jquery',
         this.selectedEventName = getNamePropertyInstance('Event Name');
         this.selectedEvent = undefined;
         this.eventEditorTriggeringWidget = undefined;
-        this.eventEditorTrigger = undefined;
         this.selectedEventType = undefined;
         this.selectedEventActions = [];
 

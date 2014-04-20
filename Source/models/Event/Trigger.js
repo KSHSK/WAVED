@@ -10,24 +10,30 @@ define(['knockout',
      * @param {String} name
      * @param {function} getDomElement
      */
-    var Trigger = function(name, getDomElement) {
+    var Trigger = function(domElement, data) {
 
-        this._name = name;
-        this._getDomElement = getDomElement;
+        this._domElement = domElement;
+        this._data = data;
 
         // TODO: Do we still need this?
         ko.track(this);
     };
 
     Object.defineProperties(Trigger.prototype, {
-        name: {
-            get: function() {
-                return this._name;
-            }
-        },
         domElement: {
             get: function() {
-                return this._getDomElement();
+                return this._domElement;
+            },
+            set: function(value) {
+                this._domElement = value;
+            }
+        },
+        data: {
+            get: function() {
+                return this._data;
+            },
+            set: function(value) {
+                this._data = value;
             }
         }
     });

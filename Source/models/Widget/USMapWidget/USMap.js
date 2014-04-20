@@ -24,9 +24,7 @@ define([
         usMap.attr('data-bind', 'template: {name: \'' + this._templateName + '\', afterRender: render}');
 
         var viewModel = new USMapViewModel(state, getDataSet);
-        viewModel.addTrigger(new Trigger('US Map', function() {
-            return usMap;
-        }));
+        viewModel.trigger.domElement = usMap;
 
         this._domElement = usMap;
         this.viewModel = viewModel;
