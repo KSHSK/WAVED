@@ -10,10 +10,10 @@ define(['knockout',
      * @param {String} name
      * @param {function} getDomElement
      */
-    var Trigger = function(domElement, data) {
+    var Trigger = function(domElement) {
 
         this._domElement = domElement;
-        this._data = data;
+        this._data = {};
 
         // TODO: Do we still need this?
         ko.track(this);
@@ -32,11 +32,15 @@ define(['knockout',
             get: function() {
                 return this._data;
             },
-            set: function(value) {
-                this._data = value;
-            }
         }
     });
+
+    Trigger.prototype.addData = function(name, key, value) {
+        if (!defined(this._data[name])) {
+            this._data[name] = {};
+        }
+        this._data[name][key] = value;
+    };
 
     return Trigger;
 });
