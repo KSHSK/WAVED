@@ -115,8 +115,6 @@ define([
 
         this.setState(state);
 
-        this._trigger = new Trigger('USMap');
-
         this._isRendered = false;
         this._ready = true;
 

@@ -22,7 +22,6 @@ define([
         this._newValues = {};
 
         this.apply = function(data) {
-            console.log(data);
             var historyMonitor = HistoryMonitor.getInstance();
 
             var executeChange = function(data) {
