@@ -21,17 +21,18 @@ define([
 
         this._newValues = {};
 
-        this.apply = function() {
+        this.apply = function(data) {
+            console.log(data);
             var historyMonitor = HistoryMonitor.getInstance();
 
-            var executeChange = function() {
+            var executeChange = function(data) {
                 for (var key in self._newValues) {
                     self._target.viewModel[key].value = self._newValues[key];
                 }
             };
 
             // Don't add individual changes to the history.
-            historyMonitor.executeIgnoreHistory(executeChange);
+            historyMonitor.executeIgnoreHistory(executeChange, data);
         };
 
         this.setState(state);

@@ -39,19 +39,26 @@ define([
 
         this.setState(state);
 
-        this.applyActions = function(event) {
+        this.applyActions = function() {
             for (var i = 0; i < self.actions.length; i++) {
                 // TODO: pass in information from trigger as a param?
-                self.actions[i].apply();
+                self.actions[i].apply(self._triggeringWidget.viewModel.trigger.data);
             }
         };
 
+        this.fireEvent = function(event) {
+            self._triggeringWidget.viewModel.trigger.addData('event', 'x', event.pageX);
+            self._triggeringWidget.viewModel.trigger.addData('event', 'y', event.pageY);
+
+            self.applyActions();
+        };
+
         this.register = function() {
-            $(self._triggeringWidget.viewModel.trigger.domElement).on(EventType[self._eventType], self.applyActions);
+            $(self._triggeringWidget.viewModel.trigger.domElement).on(EventType[self._eventType], self.fireEvent);
         };
 
         this.unregister = function() {
-            $(self._triggeringWidget.viewModel.trigger.domElement).off(EventType[self._eventType], self.applyActions);
+            $(self._triggeringWidget.viewModel.trigger.domElement).off(EventType[self._eventType], self.fireEvent);
         };
 
         ko.track(this);

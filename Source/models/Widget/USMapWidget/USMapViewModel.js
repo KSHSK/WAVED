@@ -69,6 +69,18 @@ define([
                         .attr('stroke', 'white')
                         .style('fill', function(d) {
                             return self.coloring.value;
+                        })
+                        .on('mouseover', function(d) {
+                            self._trigger.addData(self.name.originalValue, 'state', d.properties.name);
+                        })
+                        .on('mousemove', function(d) {
+                            self._trigger.addData(self.name.originalValue, 'state', d.properties.name);
+                        })
+                        .on('mouseout', function(d) {
+                            self._trigger.addData(self.name.originalValue, 'state', d.properties.name);
+                        })
+                        .on('click', function(d) {
+                            self._trigger.addData(self.name.originalValue, 'state', d.properties.name);
                         });
                     self._isRendered = true;
                     self.updateSvg();
@@ -102,6 +114,8 @@ define([
         this.width._displayName = 'Scale';
 
         this.setState(state);
+
+        this._trigger = new Trigger('USMap');
 
         this._isRendered = false;
         this._ready = true;
