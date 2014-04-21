@@ -38,8 +38,6 @@ define([
                 }
 
                 for (var key in self._newValues) {
-                   // TODO: Figure out work around to prevent error message
-                   // for when a template is used in a NumberProperty.
                    var templates = getTemplateMatches(self._newValues[key]);
                     if (templates.length > 0) {
                         var temp = self._newValues[key];

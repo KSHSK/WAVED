@@ -41,16 +41,14 @@ define([
 
         this.applyActions = function() {
             for (var i = 0; i < self.actions.length; i++) {
-                // TODO: pass in information from trigger as a param?
                 self.actions[i].apply(self._triggeringWidget.viewModel.trigger.data);
             }
         };
 
         this.fireEvent = function(event) {
-            // TODO: Eliminate magic numbers based on page layout.
-            // TODO: Convert to percentages of Workspace width/height?
-            self._triggeringWidget.viewModel.trigger.data.x =  event.pageX - 320;
-            self._triggeringWidget.viewModel.trigger.data.y = event.pageY - 105;
+            var workspace = $('#waved-workspace');
+            self._triggeringWidget.viewModel.trigger.data.x =  100 * (event.pageX - workspace.offset().left) / workspace.width();
+            self._triggeringWidget.viewModel.trigger.data.y = 100 * (event.pageY - workspace.offset().top) / workspace.height();
 
             self.applyActions();
         };
