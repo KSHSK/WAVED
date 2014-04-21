@@ -7,6 +7,7 @@ define([
         'models/ComponentViewModel',
         'models/Property/ListProperty',
         'models/Widget/WidgetViewModel',
+        'modules/ReadData',
         'models/Constants/GlyphSizeSchemeType',
         './GlyphViewModel',
         'modules/UniqueTracker',
@@ -26,6 +27,7 @@ define([
         ComponentViewModel,
         ListProperty,
         WidgetViewModel,
+        ReadData,
         GlyphSizeSchemeType,
         GlyphViewModel,
         UniqueTracker,
@@ -39,6 +41,8 @@ define([
         $){
     'use strict';
     var glyphId = 0;
+
+    var STATES_DATA_FILE = 'states.json';
 
     function getElement(viewModel){
         return d3.select('#' + viewModel.id);
@@ -61,7 +65,7 @@ define([
     function renderMap (viewModel) {
         if (viewModel._ready) {
             var w = $('#waved-workspace').width();
-            var w2 = w *viewModel.width.value/100;
+            var w2 = w * viewModel.width.value/100;
             var h = $('#waved-workspace').height();
             var h2 = h * viewModel.width.value/100;
             removeGlyphs(viewModel);
@@ -77,7 +81,8 @@ define([
             viewModel._svg = svg;
             viewModel._states = svg.append('g')
                 .attr('pointer-events', 'none');
-            d3.json('data/states.json', function(json) {
+            var statesDataPath = ReadData.getFilePath(STATES_DATA_FILE);
+            d3.json(statesDataPath, function(json) {
                 viewModel._states.selectAll('path')
                     .data(json.features)
                     .enter()
