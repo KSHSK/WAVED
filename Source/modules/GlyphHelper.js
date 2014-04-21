@@ -31,6 +31,8 @@ define([
         var glyphAdded = $.Deferred();
         glyphDialog.dialog({
             resizable: false,
+            dialogClass: 'no-close',
+            closeOnEscape: false,
             width: 500,
             modal: true,
             buttons: {
