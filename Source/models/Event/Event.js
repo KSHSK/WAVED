@@ -47,8 +47,10 @@ define([
         };
 
         this.fireEvent = function(event) {
-            self._triggeringWidget.viewModel.trigger.data.x =  event.pageX;
-            self._triggeringWidget.viewModel.trigger.data.y = event.pageY;
+            // TODO: Eliminate magic numbers based on page layout.
+            // TODO: Convert to percentages of Workspace width/height?
+            self._triggeringWidget.viewModel.trigger.data.x =  event.pageX - 320;
+            self._triggeringWidget.viewModel.trigger.data.y = event.pageY - 105;
 
             self.applyActions();
         };
