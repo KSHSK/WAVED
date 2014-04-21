@@ -34,9 +34,9 @@ define([
             displayName: 'Size (px)',
             value: 3,
             validValue : createValidator({
-                min: 0
+                min: 1
             }),
-            errorMessage: 'Value must be greater than 0'
+            errorMessage: 'Value must be greater than 0.'
         };
         this.size = new NumberProperty(stateSize);
 
