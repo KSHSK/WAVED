@@ -81,6 +81,11 @@ define(['knockout',
                 return this._displayTemplateName;
             }
         },
+        originalValue: {
+            get: function() {
+                return this._originalValue;
+            }
+        },
         error : {
             get : function() {
                 return this._error;

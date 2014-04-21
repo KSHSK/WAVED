@@ -1,7 +1,10 @@
 /*global console*/
 define([
         'models/Event/Trigger',
+        'models/Property/Coloring/ColoringScheme',
         'models/Property/Coloring/ColoringSelectionProperty',
+        'models/Property/Coloring/SolidColoringScheme',
+        'models/Constants/ColoringSchemeType',
         'models/Property/GlyphSize/GlyphSizeSelectionProperty',
         'models/Property/StringProperty',
         'models/ComponentViewModel',
@@ -11,6 +14,7 @@ define([
         'models/Constants/GlyphSizeSchemeType',
         './GlyphViewModel',
         'modules/UniqueTracker',
+        'util/createValidator',
         'modules/GlyphHelper',
         'modules/HistoryMonitor',
         'util/defined',
@@ -21,7 +25,10 @@ define([
         'jquery'
     ],function(
         Trigger,
+        ColoringScheme,
         ColoringSelectionProperty,
+        SolidColoringScheme,
+        ColoringSchemeType,
         GlyphSizeSelectionProperty,
         StringProperty,
         ComponentViewModel,
@@ -31,6 +38,7 @@ define([
         GlyphSizeSchemeType,
         GlyphViewModel,
         UniqueTracker,
+        createValidator,
         GlyphHelper,
         HistoryMonitor,
         defined,
@@ -94,6 +102,7 @@ define([
                 viewModel.updateSvg();
             });
             renderGlyphs(viewModel);
+            viewModel.updateColoring();
         }
     }
 
@@ -211,11 +220,99 @@ define([
         };
 
         this.updateSvg = function() {
-            if (self._isRendered) {
-                getElement(self).selectAll('svg').selectAll('path')
-                .style('fill', function(d) {
-                    return self.coloring.value;
-                });
+            // TODO: Keeping this around since it might be useful for general svg updates
+        };
+
+        this.updateColoring = function() {
+            if(!self._isRendered || !defined(self.coloring.value) || !defined(self.strokeColor.value)){
+                return;
+            }
+
+            var coloringScheme = self.coloring.value;
+            var path = getElement(self).selectAll('svg').selectAll('path');
+
+            path.style('stroke', function(d) {
+                return self.strokeColor.value;
+            });
+
+            switch(coloringScheme.getType()){
+                case ColoringSchemeType.SOLID_COLORING:
+                    path.style('fill', function(d) {
+                        return defined(coloringScheme.color.value) ? coloringScheme.color.value : self.DEFAULT_MAP_COLOR;
+                    });
+                    break;
+                case ColoringSchemeType.FOUR_COLORING:
+                    path.style('fill', function(d) {
+                        var stateName = d.properties.name;
+                        for(var i=0; i<self.fourColorStateGroupings.length; i++){
+                            if(self.fourColorStateGroupings[i].indexOf(stateName) !== -1){
+                                return coloringScheme.getColorArray()[i];
+                            }
+                        }
+                    });
+                    break;
+                case ColoringSchemeType.GRADIENT_COLORING:
+                    /*
+                     * This makes some very broad assumptions:
+                     * 1. All the data is in 1 file
+                     * 2. The path data's key and the key in the data used to scale have the same key.
+                     * 2.1. For example, both files must have a key of 'New York' for things to match up. No abbreviations.
+                     */
+
+                    // If either a dataSet or dataField isn't selected, break
+                    if(!defined(coloringScheme.dataField.value) || !defined(coloringScheme.dataSet.value)){
+                        path.style('fill', function(d){
+                            return self.DEFAULT_MAP_COLOR;
+                        });
+                        break;
+                    }
+
+                    // Wait until data is available
+                    if(!defined(coloringScheme.dataSet.value.data)){
+                        var interval = setInterval(function(){
+                            if(defined(coloringScheme.dataSet.value.data)){
+                                clearInterval(interval);
+                            }
+                        }, 100);
+                    }
+
+                    // Find the min and max values for the dataField we're using to scale the gradient
+                    var dataField = coloringScheme.dataField.value;
+                    var min = d3.min(coloringScheme.dataSet.value.data, function(d) { return +d[dataField]; });
+                    var max = d3.max(coloringScheme.dataSet.value.data, function(d) { return +d[dataField]; });
+
+                    // Default the map to black when we can't extract an actual min or max (the field is not numeric)
+                    if(!defined(min) || !defined(max)){
+                        path.style('fill', function(d){
+                            return self.DEFAULT_MAP_COLOR;
+                        });
+                    }
+
+                    // Set up the gradient function
+                    var gradient = d3.scale.linear().domain([min, max]).range([coloringScheme.startColor.value, coloringScheme.endColor.value]);
+                    path.style('fill', function(d) {
+                        var stateName = d.properties.name;
+                        var keyName = coloringScheme.keyField.value;
+
+                        if(!defined(keyName)){
+                            return self.DEFAULT_MAP_COLOR;
+                        }
+
+                        for(var i=0; i<coloringScheme.dataSet.value.data.length; i++){
+                            if(coloringScheme.dataSet.value.data[i][keyName] === stateName){
+                                return gradient(coloringScheme.dataSet.value.data[i][dataField]);
+                            }
+
+                            // Didn't find any matches
+                            if(i === coloringScheme.dataSet.value.data.length-1){
+                                return self.DEFAULT_MAP_COLOR;
+                            }
+                        }
+                    });
+
+                    break;
+                default:
+                    break;
             }
         };
 
@@ -223,13 +320,18 @@ define([
         subscribeObservable(window.wavedWorkspace.width, '_value', this.render);
         subscribeObservable(window.wavedWorkspace.height, '_value', this.render);
 
-        //TODO: Use ColoringSelectionProperty
-        this.coloring = new StringProperty({
-            displayName: 'Color',
-            value: 'grey',
-            errorMessage: 'Must be a color name, hexidecimal number, or rgb color',
-            onchange: self.updateSvg
-        });
+        this.coloring = new ColoringSelectionProperty({
+            displayName: 'Color Scheme',
+            value: '',
+            onchange: self.updateColoring
+        }, this);
+
+        // Default to black strokes
+        this.strokeColor = new StringProperty({
+            displayName: 'Stroke Color',
+            value: '#000000',
+            onchange: self.updateColoring
+        }, this);
 
         this.glyphList = new ListProperty({
             displayName: 'Glyphs',
@@ -303,6 +405,7 @@ define([
         var state = WidgetViewModel.prototype.getState.call(this);
         state.type = USMapViewModel.getType();
         state.coloring = this.coloring.getState();
+        state.strokeColor = this.strokeColor.getState();
         state.glyphs = [];
         for(var i = 0; i < this.glyphs.length; i++) { //TODO: push this to ListProperty.getState
             state.glyphs.push(this.glyphs[i].getState());
@@ -316,7 +419,11 @@ define([
         WidgetViewModel.prototype.setState.call(this, state);
 
         if (defined(state.coloring)) {
-            this.coloring.originalValue = state.coloring.value;
+            this.coloring.setState(state.coloring, this);
+        }
+
+        if(defined(state.strokeColor)){
+            this.strokeColor.setState(state.strokeColor);
         }
 
         if (defined(state.glyphs)){
@@ -328,17 +435,33 @@ define([
 
     USMapViewModel.prototype.usesDataSet = function(dataSet) {
         // TODO: Once Coloring and Glyphs are implemented, this will need to be implemented.
+        if(this.coloring.value.getType() === ColoringSchemeType.GRADIENT_COLORING) {
+            if(this.coloring.value.dataSet.value === dataSet){
+                return true;
+            }
+        }
+
         return false;
     };
 
     Object.defineProperties(USMapViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.x, this.y, this.width, this.coloring, this.visible,
-                this.logGoogleAnalytics, this.glyphList];
-            }
+                return [this.name, this.x, this.y, this.width, this.strokeColor, this.coloring,
+                this.visible, this.logGoogleAnalytics, this.glyphList];
+             }
         }
     });
+
+    // Groupings of states so that no adjacent states are colored the same when using four-coloring scheme
+    USMapViewModel.prototype.fourColorStateGroupings = [
+        ['Alaska', 'Alabama', 'Arkansas', 'Connecticut', 'Delaware', 'Illinois', 'Maine', 'Michigan', 'Minnesota', 'Montana', 'Nebraska', 'New Mexico', 'Nevada', 'Virginia'],
+        ['Arizona', 'District of Columbia', 'Kansas', 'Kentucky', 'Mississippi', 'North Carolina', 'Oregon', 'Pennsylvania', 'Rhode Island', 'Texas', 'Vermont', 'Wisconsin', 'Wyoming'],
+        ['California', 'Colorado', 'Georgia', 'Idaho', 'Indiana', 'Louisiana', 'Massachusetts', 'Missouri', 'New Jersey', 'South Dakota', 'West Virginia'],
+        ['Florida', 'Hawaii', 'Iowa', 'Maryland', 'New Hampshire', 'New York', 'North Dakota', 'Ohio', 'Oklahoma', 'South Carolina', 'Tennessee', 'Utah', 'Washington']
+    ];
+
+    USMapViewModel.prototype.DEFAULT_MAP_COLOR = '#C0C0C0';
 
     return USMapViewModel;
 });

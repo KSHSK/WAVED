@@ -1,21 +1,97 @@
 define([
         'models/Property/Coloring/ColoringScheme',
-        'knockout',
-        'jquery'
+        'models/Property/StringProperty',
+        'models/Constants/ColoringSchemeType',
+        'util/createValidator',
+        'util/defined',
+        'knockout'
     ],function(
         ColoringScheme,
-        ko,
-        $){
+        StringProperty,
+        ColoringSchemeType,
+        createValidator,
+        defined,
+        ko){
     'use strict';
 
-    var FourColoringScheme = function(state) {
+    var FourColoringScheme = function(state, viewModel) {
+        state = defined(state) ? state : {};
+
         ColoringScheme.call(this, state);
 
-        // TODO: Define these, validation, etc.
-        this.color1 = state.color1; // StringProperty
-        this.color2 = state.color2; // StringProperty
-        this.color3 = state.color3; // StringProperty
-        this.color4 = state.color4; // StringProperty
+        // All colors default to black
+        this.color1 = new StringProperty({
+            displayName: 'Color #1',
+            value: '#D7FFD0',
+            onchange: viewModel.updateColoring
+        });
+
+        this.color2 = new StringProperty({
+            displayName: 'Color #2',
+            value: '#F2D0FF',
+            onchange: viewModel.updateColoring
+        });
+
+        this.color3 = new StringProperty({
+            displayName: 'Color #3',
+            value: '#FFFFD0',
+            onchange: viewModel.updateColoring
+        });
+
+        this.color4 = new StringProperty({
+            displayName: 'Color #4',
+            value: '#FFD0D0',
+            onchange: viewModel.updateColoring
+        });
+
+        this.setState(state);
+
+        ko.track(this);
+    };
+
+    FourColoringScheme.prototype = Object.create(ColoringScheme.prototype);
+
+    FourColoringScheme.prototype.getType = function() {
+        return ColoringSchemeType.FOUR_COLORING;
+    };
+
+    Object.defineProperties(FourColoringScheme.prototype, {
+        properties: {
+            get: function() {
+                return [this.color1, this.color2, this.color3, this.color4];
+            }
+        }
+    });
+
+    FourColoringScheme.prototype.getColorArray = function() {
+        return [this.color1.value, this.color2.value, this.color3.value, this.color4.value];
+    };
+
+    FourColoringScheme.prototype.getState = function() {
+        var state = {
+            color1: this.color1.getState(),
+            color2: this.color2.getState(),
+            color3: this.color3.getState(),
+            color4: this.color4.getState(),
+            type: this.getType()
+        };
+
+        return state;
+    };
+
+    FourColoringScheme.prototype.setState = function(state) {
+        if(defined(state.color1)){
+            this.color1._originalValue = state.color1.value;
+        }
+        if(defined(state.color2)){
+            this.color2._originalValue = state.color2.value;
+        }
+        if(defined(state.color3)){
+            this.color3._originalValue = state.color3.value;
+        }
+        if(defined(state.color4)){
+            this.color4._originalValue = state.color4.value;
+        }
     };
 
     return FourColoringScheme;
