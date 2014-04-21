@@ -230,3 +230,13 @@ textarea:disabled {
 .widget-selector img {
     cursor: pointer;
 }
+
+td.button-cell {
+    text-align: center
+}
+
+table.dataTable#project-list tr.odd { background-color: #e8e8e8; }
+table.dataTable#project-list tr.even { background-color: white; }
+table.dataTable#project-list tr.odd td { background-color: inherit; }
+table.dataTable#project-list tr.even td { background-color: inherit; }
+table.dataTable#project-list tr.row_selected td { background-color: #aaaaaa; }
