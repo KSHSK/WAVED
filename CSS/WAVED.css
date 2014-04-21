@@ -231,10 +231,6 @@ textarea:disabled {
     cursor: pointer;
 }
 
-.no-close .ui-dialog-titlebar-close {
-    display: none;
-}
-
 td.button-cell {
     text-align: center
 }
