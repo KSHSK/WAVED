@@ -6,7 +6,7 @@
         'jqueryUI',
         'DataTables',
         'modules/DeleteProject',
-        'modules/LoadProject',
+        'modules/LoadProject'
     ], function (
         require,
         WAVED,
@@ -65,7 +65,7 @@
             var cleanUp = false;
 
             // Deleting the current project requires the Welcome Dialog
-            if (WAVED.viewModel.currentProject.name == fullData.name) {
+            if (WAVED.viewModel.currentProject.name === fullData.name) {
                 fnDeleteDone =  WelcomeModule.openLoadDialog.bind(WelcomeModule, WAVED.viewModel);
                 cleanUp = true;
             }
@@ -102,8 +102,8 @@
                 { 'mData': 'name' },
                 { 'mData': 'created', 'mRender': dateRender },
                 { 'mData': 'lastModified', 'mRender': dateRender },
-                { 'mData': null, 'bSortable': false, 'fnCreatedCell': deleteRender },
-            ],
+                { 'mData': null, 'bSortable': false, 'fnCreatedCell': deleteRender }
+            ]
         });
 
         // Add/Edit/Remove Buttons.
