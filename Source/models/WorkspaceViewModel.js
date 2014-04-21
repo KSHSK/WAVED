@@ -22,6 +22,7 @@ define([
     var DEFAULT_HEIGHT = 600;
 
     var WorkspaceViewModel = function(state) {
+        ComponentViewModel.call(this, state);
         state = defined(state) ? state : {};
 
         // Set name

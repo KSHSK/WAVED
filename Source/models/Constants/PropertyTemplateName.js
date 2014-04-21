@@ -14,6 +14,7 @@ define([], function(){
         ARRAY: 'arrayPropertyTemplate',
         ARRAY_DISPLAY: 'arrayDisplayPropertyTemplate',
         COLORING: 'coloringPropertyTemplate',
+        COLORING_DISPLAY: 'coloringDisplayPropertyTemplate',
         GLYPH_SIZE: 'glyphSizePropertyTemplate',
         GLYPH_SIZE_DISPLAY: 'glyphSizeDisplayPropertyTemplate'
     };

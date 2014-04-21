@@ -51,7 +51,7 @@ define([
             self.resetActionEditor(viewModel);
             self.actionDialog.dialog({
                 resizable: false,
-                width: 500,
+                width: 'auto',
                 modal: true,
                 buttons: {
                     'Save': function() {
@@ -122,7 +122,7 @@ define([
 
             self.actionDialog.dialog({
                 resizable: false,
-                width: 500,
+                width: 'auto',
                 modal: true,
                 buttons: {
                     'Save': function() {
