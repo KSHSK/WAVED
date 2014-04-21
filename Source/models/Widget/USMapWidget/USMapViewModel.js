@@ -100,9 +100,102 @@ define([
                     });
                 viewModel._isRendered = true;
                 viewModel.updateSvg();
+                updateColoring(viewModel);
             });
             renderGlyphs(viewModel);
-            viewModel.updateColoring();
+        }
+    }
+
+    function updateColoring(viewModel) {
+        if(!viewModel._isRendered || !defined(viewModel.coloring.value) || !defined(viewModel.strokeColor.value)) {
+            return;
+        }
+
+        var coloringScheme = viewModel.coloring.value;
+        var path = viewModel._states.selectAll('path');
+
+        path.style('stroke', function(d) {
+            return viewModel.strokeColor.value;
+        });
+
+        switch(coloringScheme.getType()){
+            case ColoringSchemeType.SOLID_COLORING:
+                path.style('fill', function(d) {
+                    return defined(coloringScheme.color.value) ? coloringScheme.color.value : viewModel.DEFAULT_MAP_COLOR;
+                });
+                break;
+            case ColoringSchemeType.FOUR_COLORING:
+                path.style('fill', function(d) {
+                    var stateName = d.properties.name;
+                    for(var i=0; i < viewModel.fourColorStateGroupings.length; i++){
+                        if(viewModel.fourColorStateGroupings[i].indexOf(stateName) !== -1){
+                            return coloringScheme.getColorArray()[i];
+                        }
+                    }
+                });
+                break;
+            case ColoringSchemeType.GRADIENT_COLORING:
+                /*
+                 * This makes some very broad assumptions:
+                 * 1. All the data is in 1 file
+                 * 2. The path data's key and the key in the data used to scale have the same key.
+                 * 2.1. For example, both files must have a key of 'New York' for things to match up. No abbreviations.
+                 */
+
+                // If either a dataSet or dataField isn't selected, break
+                if(!defined(coloringScheme.dataField.value) || !defined(coloringScheme.dataSet.value)){
+                    path.style('fill', function(d){
+                        return viewModel.DEFAULT_MAP_COLOR;
+                    });
+                    break;
+                }
+
+                // Wait until data is available
+                if(!defined(coloringScheme.dataSet.value.data)){
+                    var interval = setInterval(function(){
+                        if(defined(coloringScheme.dataSet.value.data)){
+                            clearInterval(interval);
+                        }
+                    }, 100);
+                }
+
+                // Find the min and max values for the dataField we're using to scale the gradient
+                var dataField = coloringScheme.dataField.value;
+                var min = d3.min(coloringScheme.dataSet.value.data, function(d) { return +d[dataField]; });
+                var max = d3.max(coloringScheme.dataSet.value.data, function(d) { return +d[dataField]; });
+
+                // Default the map to black when we can't extract an actual min or max (the field is not numeric)
+                if(!defined(min) || !defined(max)){
+                    path.style('fill', function(d){
+                        return viewModel.DEFAULT_MAP_COLOR;
+                    });
+                }
+
+                // Set up the gradient function
+                var gradient = d3.scale.linear().domain([min, max]).range([coloringScheme.startColor.value, coloringScheme.endColor.value]);
+                path.style('fill', function(d) {
+                    var stateName = d.properties.name;
+                    var keyName = coloringScheme.keyField.value;
+
+                    if(!defined(keyName)){
+                        return viewModel.DEFAULT_MAP_COLOR;
+                    }
+
+                    for(var i=0; i<coloringScheme.dataSet.value.data.length; i++){
+                        if(coloringScheme.dataSet.value.data[i][keyName] === stateName){
+                            return gradient(coloringScheme.dataSet.value.data[i][dataField]);
+                        }
+
+                        // Didn't find any matches
+                        if(i === coloringScheme.dataSet.value.data.length-1){
+                            return viewModel.DEFAULT_MAP_COLOR;
+                        }
+                    }
+                });
+
+                break;
+            default:
+                break;
         }
     }
 
@@ -223,99 +316,6 @@ define([
             // TODO: Keeping this around since it might be useful for general svg updates
         };
 
-        this.updateColoring = function() {
-            if(!self._isRendered || !defined(self.coloring.value) || !defined(self.strokeColor.value)){
-                return;
-            }
-
-            var coloringScheme = self.coloring.value;
-            var path = getElement(self).selectAll('svg').selectAll('path');
-
-            path.style('stroke', function(d) {
-                return self.strokeColor.value;
-            });
-
-            switch(coloringScheme.getType()){
-                case ColoringSchemeType.SOLID_COLORING:
-                    path.style('fill', function(d) {
-                        return defined(coloringScheme.color.value) ? coloringScheme.color.value : self.DEFAULT_MAP_COLOR;
-                    });
-                    break;
-                case ColoringSchemeType.FOUR_COLORING:
-                    path.style('fill', function(d) {
-                        var stateName = d.properties.name;
-                        for(var i=0; i<self.fourColorStateGroupings.length; i++){
-                            if(self.fourColorStateGroupings[i].indexOf(stateName) !== -1){
-                                return coloringScheme.getColorArray()[i];
-                            }
-                        }
-                    });
-                    break;
-                case ColoringSchemeType.GRADIENT_COLORING:
-                    /*
-                     * This makes some very broad assumptions:
-                     * 1. All the data is in 1 file
-                     * 2. The path data's key and the key in the data used to scale have the same key.
-                     * 2.1. For example, both files must have a key of 'New York' for things to match up. No abbreviations.
-                     */
-
-                    // If either a dataSet or dataField isn't selected, break
-                    if(!defined(coloringScheme.dataField.value) || !defined(coloringScheme.dataSet.value)){
-                        path.style('fill', function(d){
-                            return self.DEFAULT_MAP_COLOR;
-                        });
-                        break;
-                    }
-
-                    // Wait until data is available
-                    if(!defined(coloringScheme.dataSet.value.data)){
-                        var interval = setInterval(function(){
-                            if(defined(coloringScheme.dataSet.value.data)){
-                                clearInterval(interval);
-                            }
-                        }, 100);
-                    }
-
-                    // Find the min and max values for the dataField we're using to scale the gradient
-                    var dataField = coloringScheme.dataField.value;
-                    var min = d3.min(coloringScheme.dataSet.value.data, function(d) { return +d[dataField]; });
-                    var max = d3.max(coloringScheme.dataSet.value.data, function(d) { return +d[dataField]; });
-
-                    // Default the map to black when we can't extract an actual min or max (the field is not numeric)
-                    if(!defined(min) || !defined(max)){
-                        path.style('fill', function(d){
-                            return self.DEFAULT_MAP_COLOR;
-                        });
-                    }
-
-                    // Set up the gradient function
-                    var gradient = d3.scale.linear().domain([min, max]).range([coloringScheme.startColor.value, coloringScheme.endColor.value]);
-                    path.style('fill', function(d) {
-                        var stateName = d.properties.name;
-                        var keyName = coloringScheme.keyField.value;
-
-                        if(!defined(keyName)){
-                            return self.DEFAULT_MAP_COLOR;
-                        }
-
-                        for(var i=0; i<coloringScheme.dataSet.value.data.length; i++){
-                            if(coloringScheme.dataSet.value.data[i][keyName] === stateName){
-                                return gradient(coloringScheme.dataSet.value.data[i][dataField]);
-                            }
-
-                            // Didn't find any matches
-                            if(i === coloringScheme.dataSet.value.data.length-1){
-                                return self.DEFAULT_MAP_COLOR;
-                            }
-                        }
-                    });
-
-                    break;
-                default:
-                    break;
-            }
-        };
-
         //TODO: Make this less hacky
         subscribeObservable(window.wavedWorkspace.width, '_value', this.render);
         subscribeObservable(window.wavedWorkspace.height, '_value', this.render);
@@ -323,14 +323,18 @@ define([
         this.coloring = new ColoringSelectionProperty({
             displayName: 'Color Scheme',
             value: '',
-            onchange: self.updateColoring
+            onchange: function() {
+                updateColoring(self);
+            }
         }, this);
 
         // Default to black strokes
         this.strokeColor = new StringProperty({
             displayName: 'Stroke Color',
             value: '#000000',
-            onchange: self.updateColoring
+            onchange: function() {
+                updateColoring(self);
+            }
         }, this);
 
         this.glyphList = new ListProperty({
