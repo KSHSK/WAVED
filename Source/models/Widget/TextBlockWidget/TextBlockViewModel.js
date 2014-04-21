@@ -89,7 +89,7 @@ define([
     Object.defineProperties(TextBlockViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.text, this.x, this.y, this.zIncrement, this.zDecrement, this.width, this.height, this.border, this.visible,
+                return [this.name, this.text, this.x, this.y, this.z, this.zIncrement, this.zDecrement, this.width, this.height, this.border, this.visible,
                 this.logGoogleAnalytics];
             }
         }

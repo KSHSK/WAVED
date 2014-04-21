@@ -92,7 +92,8 @@ define([
 
         this.z = new NumberProperty({
             displayName: 'Z',
-            value: 0
+            value: 0,
+            visible: false
         });
 
         this.incrementZIndex = function() {
@@ -124,7 +125,7 @@ define([
     Object.defineProperties(WidgetViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.x, this.y, this.zIncrement, this.zDecrement, this.width, this.height, this.visible, this.logGoogleAnalytics];
+                return [this.name, this.x, this.y, this.z, this.zIncrement, this.zDecrement, this.width, this.height, this.visible, this.logGoogleAnalytics];
             }
         },
         boundData: {

@@ -15,6 +15,7 @@ define(['knockout',
         this._originalValue = undefined;
         this._value = undefined; // Type determined by subclasses.
         this._displayValue = undefined;
+        this.visible = true;
         this.onchange = options.onchange;
 
         this.message = '';
@@ -82,7 +83,8 @@ define(['knockout',
 
     Property.prototype.getState = function() {
         return {
-            'value': this._originalValue
+            'value': this._originalValue,
+            'visible': this.visible
         };
     };
 
@@ -91,6 +93,10 @@ define(['knockout',
         this._value = state.value;
         this._displayValue = state.value;
         this.error = !this.isValidValue(this._value);
+
+        if(defined(state.visible)){
+            this.visible = state.visible;
+        }
     };
 
     Property.prototype.isValidValue = function() {
