@@ -218,10 +218,10 @@ define([
     }
 
     function addSuccess(options, value) {
-        value.properties[5]._originalValue = value.properties[5]._displayValue; //set lat lon first for validation
-        value.properties[5]._value = value.properties[5]._displayValue;
-        value.properties[6]._originalValue = value.properties[6]._displayValue;
-        value.properties[6]._value = value.properties[6]._displayValue;
+        value.properties[5].originalValue = value.properties[5].displayValue; //set lat lon first for validation
+        value.properties[5].value = value.properties[5].displayValue; //TODO: look into why subscription isn't working for array property
+        value.properties[6].originalValue = value.properties[6].displayValue;
+        value.properties[6].value = value.properties[6].displayValue;
 
         for (var i = 0; i < value.properties.length; i++) {
             var property = value.properties[i];
@@ -229,8 +229,8 @@ define([
             if (property instanceof GlyphSizeSelectionProperty){
                 var p = property.value.properties;
                 for (var j = p.length - 1; j >= 0 ; j--) { // Reversed to get dataField before dataSet for scaled size
-                    p[j]._originalValue = p[j]._displayValue;
-                    p[j]._value = p[j]._displayValue;
+                    p[j].originalValue = p[j].displayValue;
+                    p[j].value = p[j].displayValue;
                 }
             }
         }
@@ -252,19 +252,19 @@ define([
     function editSuccess(value) {
         var originalState = value.getState();
 
-        value.properties[5]._originalValue = value.properties[5]._displayValue; // set lat lon first for validation
-        value.properties[5]._value = value.properties[5]._displayValue;
-        value.properties[6]._originalValue = value.properties[6]._displayValue;
-        value.properties[6]._value = value.properties[6]._displayValue;
+        value.properties[5].originalValue = value.properties[5].displayValue; // set lat lon first for validation
+        value.properties[5].value = value.properties[5].displayValue;
+        value.properties[6].originalValue = value.properties[6].displayValue;
+        value.properties[6].value = value.properties[6].displayValue;
 
         for (var i = 0; i < value.properties.length; i++) {
             var property = value.properties[i];
             property._originalValue = property._displayValue;
             if (property instanceof GlyphSizeSelectionProperty){
                 var p = property.value.properties;
-                for (var j = 0; j < p.length; j++) {
-                    p[j]._originalValue = p[j]._displayValue;
-                    p[j]._value = p[j]._displayValue;
+                for (var j = p.length - 1; j >= 0 ; j--) {
+                    p[j].originalValue = p[j].displayValue;
+                    p[j].value = p[j].displayValue;
                 }
             }
         }
@@ -287,11 +287,11 @@ define([
     function  editFailure(value) {
         for (var i = 0; i < value.properties.length; i++) {
             var property = value.properties[i];
-            property._displayValue = value.properties[i]._originalValue;
+            property.displayValue = value.properties[i].originalValue;
             if (property instanceof GlyphSizeSelectionProperty){
                 var p = property.value.properties;
-                for (var j = 0; j < p.length; j++) {
-                    p[j]._displayValue = p[j]._originalValue;
+                for (var j = p.length - 1; j >= 0 ; j--) {
+                    p[j].displayValue = p[j].originalValue;
                 }
             }
         }
