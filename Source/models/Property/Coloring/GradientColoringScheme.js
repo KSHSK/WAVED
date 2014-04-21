@@ -25,7 +25,7 @@ define([
 
         ColoringScheme.call(this, state);
 
-        // Start and end colors default to black
+        // Start and end colors default to grey and black
         this.startColor = new StringProperty({
             displayName: 'Start color',
             value: '#DDDDDD',

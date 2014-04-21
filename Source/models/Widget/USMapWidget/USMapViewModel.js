@@ -156,7 +156,7 @@ define([
                         var stateName = d.properties.name;
                         var keyName = coloringScheme.keyField.value;
 
-                        if(keyName === undefined){
+                        if(!defined(keyName)){
                             return self.DEFAULT_MAP_COLOR;
                         }
 
@@ -258,7 +258,7 @@ define([
         }
     });
 
-    // Groupings of states so that
+    // Groupings of states so that no adjacent states are colored the same when using four-coloring scheme
     USMapViewModel.prototype.fourColorStateGroupings = [
         ['Alaska', 'Alabama', 'Arkansas', 'Connecticut', 'Delaware', 'Illinois', 'Maine', 'Michigan', 'Minnesota', 'Montana', 'Nebraska', 'New Mexico', 'Nevada', 'Virginia'],
         ['Arizona', 'District of Columbia', 'Kansas', 'Kentucky', 'Mississippi', 'North Carolina', 'Oregon', 'Pennsylvania', 'Rhode Island', 'Texas', 'Vermont', 'Wisconsin', 'Wyoming'],

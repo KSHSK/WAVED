@@ -26,9 +26,7 @@ define([
 
        this._templateName = PropertyTemplateName.COLORING;
        this._displayTemplateName = PropertyTemplateName.COLORING_DISPLAY;
-       this.error = '';
-       this._value = '';
-       this._originalValue = '';
+       this.error = false;
 
        this.solidColoring = new SolidColoringScheme(state, viewModel);
        this.fourColoring = new FourColoringScheme(state, viewModel);
@@ -55,7 +53,6 @@ define([
        // Initially bind this to the coloringType specified by stateValueType
        // Will be set by the setter onwards
        this._originalValue = stateValueType;
-       this._value = stateValueType;
 
        ko.track(this);
     };
