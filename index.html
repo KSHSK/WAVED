@@ -8,6 +8,7 @@
     
     <!-- CSS -->
     <link rel="stylesheet" href="ThirdParty/jquery/css/waved-theme/jquery-ui-1.10.4.custom.min.css">
+    <link rel="stylesheet" href="ThirdParty/DataTables/css/jquery.dataTables.css">
     <link rel="stylesheet" type="text/css" href="CSS/WAVED.css">
     
     <!-- JavaScript-->
@@ -53,7 +54,7 @@
         <div id="accordion-container" class="inline top">
             <div id="accordion">
                 <h3>Project Tree</h3>
-                <div>
+                <div id="project-tree-panel">
                     <button id="project-tree-delete-button"
                         class="right button-small delete-icon-button"
                         data-bind="click: tryToDeleteFromProjectTree, disable: isWorkspaceSelectedInProjectTree(), css: {'ui-state-disabled': isWorkspaceSelectedInProjectTree()}">Delete</button>
@@ -266,12 +267,21 @@
     </div>
 
     <div id="load-project-dialog" title="Load Project" class="dialog">
-        <p>Please select an existing project to load.</p>
-        <label class="required" for="load-project-select" data-bind="text: loadProjectName.displayName"></label> 
-        <select id="load-project-select"
-            data-bind="options: projectList, value: loadProjectName.value">
-        </select>
-        <button class="button-small refresh-icon-button" data-bind="click: updateProjectList">Refresh List</button>
+        <span class="required">Please select an existing project to load.</span>
+        <button class="button-small refresh-icon-button right" data-bind="click: updateProjectList">Refresh List</button>
+        <table id="project-list">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Created Time</th>
+                    <th>Modified Time</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <br />
         <div class="error" data-bind="visible: loadProjectName.error, html: loadProjectName.message"></div>
     </div>
     
@@ -331,43 +341,54 @@
 
     <div id="action-editor-dialog" title="Action Editor" class="dialog">
         <div class="inline top padding15 dialogColumnMaxWidth">
-            <div class="required">Action Name:</div>
             <div class="marginBottom10">
-                   <input data-bind="value: selectedActionName.value, valueUpdate: 'keyup'"/>
-                   <div class="error" data-bind="visible: selectedActionName.error, html: selectedActionName.message"></div>
+                <label class="required" for="action-editor-selected-action-name">Action Name:</label>
+                <input id="action-editor-selected-action-name" data-bind="value: selectedActionName.value, valueUpdate: 'keyup'"/>
+                <div class="error" data-bind="visible: selectedActionName.error, html: selectedActionName.message"></div>
             </div>
-            <div>Action Type:</div>
-            <select class="marginBottom10 width100"
-                    data-bind="options: ['Property Action', 'Query Action'],
-                    value: selectedActionType">
-            </select>
-            <div>Affected Widget:</div>
-            <select class="marginBottom10 width100"
-                    data-bind="options: currentProject.widgets, 
-                      optionsText: function(widget) {
-                         return widget.viewModel.name.value;
-                      },
-                  value: actionEditorAffectedWidget">
-            </select>
-            <!-- ko if: selectedActionType === 'Query Action' -->
-            <div>Dataset:</div>
-            <select class="marginBottom10 width100"
-                    data-bind="optionsCaption: 'None',
-                    options: currentProject.dataSets, 
-                      optionsText: function(dataSet) {
-                           return dataSet.name;
-                      },
-                  value: actionEditorDataSet">
-            </select>
+            
+            <div class="marginBottom10">
+                <label class="required" for="action-editor-selected-action-type">Action Type:</label>
+                <select id="action-editor-selected-action-type" class="width100"
+                        data-bind="options: actionTypes, value: selectedActionType">
+                </select>
+            </div>
+            
+            <!-- ko if: selectedActionType === 'Property Action' -->
+            <div class="marginBottom10">
+                <label class="required" for="action-editor-selected-widget">Affected Widget:</label> 
+                <select id="action-editor-selected-widget" class="width100"
+                        data-bind="options: currentProject.widgets, 
+                          optionsText: function(widget) {
+                             return widget.viewModel.name.value;
+                          },
+                      value: actionEditorAffectedWidget">
+                </select>
+                <div class="error" data-bind="visible: actionEditorAffectedWidgetError">Must select a Widget.</div>
+            </div>
             <!-- /ko -->
-            <div>
+            
+            <!-- ko if: selectedActionType === 'Query Action' -->
+            <div class="marginBottom10">
+                <label class="required" for="action-editor-dataset">Dataset:</label> 
+                <select id="action-editor-dataset" class="marginBottom10 width100"
+                        data-bind="optionsCaption: 'None',
+                        options: currentProject.dataSets, 
+                          optionsText: function(dataSet) {
+                               return dataSet.name;
+                          },
+                      value: actionEditorDataSet">
+                </select>
+            </div>
+            <!-- /ko -->
+            <div class="marginBottom10">
                 <input type="checkbox" id="actionApplyAutomatically"></input>
                 <span>Apply Automatically</span>
             </div>
         </div>
         <div class="inline top padding15">
             <div>Options</div>
-            <!-- ko if: selectedActionType === 'Property Action' && actionEditorAffectedWidget-->
+            <!-- ko if: selectedActionType === 'Property Action' && actionEditorAffectedWidget -->
             <div data-bind="foreach: actionEditorAffectedWidget.viewModel.properties">
                 <!-- ko if:  $data.displayName !== 'Name' -->
                 <div data-bind="template: {name : $data.displayTemplateName, data: $data}"></div>
@@ -387,18 +408,21 @@
             <div class="error" data-bind="visible: selectedEventName.error, html: selectedEventName.message"></div>
         </div>
         <div>
-            <label class="inline">Event: </label>
+            <label class="inline required">Event: </label>
             <select data-bind="options: eventTypes, 
                                optionsText: function(eventType) {
                                    return eventType.toLowerCase();
-                               }, value: selectedEventType"></select>
+                               }, value: selectedEventType">
+            </select>
         </div>
         <div>
             <label class="inline">Trigger: </label>
             <select data-bind="options: currentProject.widgets,
                             optionsText: function(widget) {
                                 return widget.viewModel.name.value;
-                            }, value: eventEditorTriggeringWidget"></select>
+                            }, value: eventEditorTriggeringWidget">
+            </select>
+            <div class="error" data-bind="visible: eventEditorTriggeringWidgetError">Must select a triggering widget.</div>
         </div>
         <div>
             <div>
