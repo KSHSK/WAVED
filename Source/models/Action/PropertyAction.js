@@ -25,8 +25,44 @@ define([
             var historyMonitor = HistoryMonitor.getInstance();
 
             var executeChange = function(data) {
+
+                function getTemplateMatches(str) {
+                    var index = 1;
+                    var matches = [];
+                    var templateRegex = /{{([\w]+)}}/g;
+                    var match;
+                    while ((match = templateRegex.exec(str)) !== null) {
+                        matches.push(match[index]);
+                    }
+                    return matches;
+                }
+
                 for (var key in self._newValues) {
-                    self._target.viewModel[key].value = self._newValues[key];
+                   // TODO: Figure out work around to prevent error message
+                   // for when a template is used in a NumberProperty.
+                   var templates = getTemplateMatches(self._newValues[key]);
+                    if (templates.length > 0) {
+                        var temp = self._newValues[key];
+                        if (typeof self._target.viewModel[key].value === 'number') {
+                            temp = self._newValues[key].toString();
+                        }
+
+                        for (var i = 0; i < templates.length; i++) {
+                            if (defined(data.data[templates[i]])) {
+                                temp = temp.replace('{{' + templates[i]+ '}}', data.data[templates[i]]);
+                            } else {
+                                temp = temp.replace('{{' + templates[i]+ '}}', data[templates[i]]);
+                            }
+                        }
+
+                        if (typeof self._target.viewModel[key].value === 'number') {
+                            self._target.viewModel[key].value = parseFloat(temp);
+                        } else {
+                            self._target.viewModel[key].value = temp;
+                        }
+                    } else {
+                        self._target.viewModel[key].value = self._newValues[key];
+                    }
                 }
             };
 
