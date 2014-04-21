@@ -22,23 +22,17 @@ define([
         start: function(viewModel) {
             var self = this;
 
-            var projectName = getQueryParamByName('project');
-            if (projectName.length === 0) {
-                // Open welcome dialog.
+            var projectName = getQueryParamByName('project').trim();
+            var projectLoaded = $.Deferred();
+
+            // Try to load the project, rejecting deferred on failure
+            LoadProject.loadProject(projectLoaded, projectName, viewModel, false);
+
+            // If this project failed to load...
+            $.when(projectLoaded).fail(function() {
+                // Open welcome window.
                 self.openWelcomeDialog(viewModel);
-            }
-            else {
-                var projectLoaded = $.Deferred();
-
-                // Try to load the project.
-                LoadProject.loadProject(projectLoaded, projectName, viewModel);
-
-                // If this project failed to load...
-                $.when(projectLoaded).fail(function() {
-                    // Open welcome window.
-                    self.openWelcomeDialog(viewModel);
-                });
-            }
+            });
         },
 
         /**
@@ -54,18 +48,8 @@ define([
                 modal: true,
                 closeOnEscape: false,
                 buttons: {
-                    'New Project': function() {
-                        var projectCreated = NewProject.tryToCreateNewProject(viewModel);
-                        $.when(projectCreated).done(function() {
-                            self.welcomeDialog.dialog('close');
-                        });
-                    },
-                    'Load Project': function() {
-                        var projectLoaded = LoadProject.tryToLoadProject(viewModel);
-                        $.when(projectLoaded).done(function() {
-                            self.welcomeDialog.dialog('close');
-                        });
-                    }
+                    'New Project': self.openNewDialog.bind(self, viewModel),
+                    'Load Project': self.openLoadDialog.bind(self, viewModel)
                 },
                 open: function(event, ui) {
                     // Hide the close button so that the user must select a button.
@@ -75,7 +59,31 @@ define([
                     $('button', $(this).parent()).blur();
                 }
             });
-        }
+        },
+
+        openLoadDialog: function(viewModel) {
+            var self = this;
+            var projectLoaded = LoadProject.tryToLoadProject(viewModel);
+            $.when(projectLoaded).always(function() {
+                // Move the welcome dialog forward in case we moved it back
+                self.zIndex(100);
+            })
+            .done(function() {
+                self.welcomeDialog.dialog('close');
+            });
+        },
+
+        openNewDialog: function(viewModel) {
+            var self = this;
+            var projectCreated = NewProject.tryToCreateNewProject(viewModel);
+            $.when(projectCreated).done(function() {
+                self.welcomeDialog.dialog('close');
+            });
+        },
+
+        zIndex: function(value) {
+            this.welcomeDialog.parent().zIndex(value);
+        },
     };
 
     return Welcome;

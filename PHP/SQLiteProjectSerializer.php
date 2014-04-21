@@ -125,7 +125,7 @@ class SQLiteProjectSerializer implements ISerializer, IDeserializer
     public function getAll()
     {
         $projects = array();
-        $query = "SELECT * FROM  " . self::TABLE . " ORDER BY UPPER(name)";
+        $query = "SELECT * FROM  " . self::TABLE;
         $result = $this->db->query($query);
 
         while ($res = $result->fetchArray(SQLITE3_ASSOC))

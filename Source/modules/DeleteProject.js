@@ -5,21 +5,33 @@ define([
         '../WAVEDViewModel',
         './Welcome',
         'models/ProjectViewModel',
+        'util/defined',
         'util/updateQueryByName',
         'jquery'
     ], function(
         WAVEDViewModel,
         Welcome,
         ProjectViewModel,
+        defined,
         updateQueryByName,
         $) {
     'use strict';
 
     var DeleteProject = {
 
-        tryToDeleteProject: function(viewModel) {
+        tryToDeleteProject: function(viewModel, projectName, doCleanUp) {
+            /* Try to delete current project by default */
+            if (!defined(projectName)) {
+                projectName = viewModel.currentProject.name.trim();
+            }
+
+            /* Do clean up of open project and Open Welcome Dialog by default */
+            if (!defined(doCleanUp)) {
+                doCleanUp = true;
+            }
+
             var projectDeleted = $.Deferred();
-            this.openDeleteProjectDialog(projectDeleted, viewModel);
+            this.openDeleteProjectDialog(projectDeleted, projectName, viewModel, doCleanUp);
 
             return projectDeleted.promise();
         },
@@ -27,7 +39,7 @@ define([
         /**
          * Open the dialog for deleting a project.
          */
-        openDeleteProjectDialog: function(projectDeleted, viewModel) {
+        openDeleteProjectDialog: function(projectDeleted, projectName, viewModel, doCleanUp) {
             var self = this;
             var deleteProjectDialog = $('#delete-project-dialog');
             deleteProjectDialog.find('.error').html('');
@@ -39,7 +51,7 @@ define([
                 modal: true,
                 buttons: {
                     'Delete Project': function() {
-                        self.deleteProject(projectDeleted, viewModel);
+                        self.deleteProject(projectDeleted, projectName, viewModel, doCleanUp);
                         $.when(projectDeleted).done(function() {
                             deleteProjectDialog.dialog('close');
                         });
@@ -62,9 +74,8 @@ define([
         /**
          * Actually submit the deleteProject request.
          */
-        deleteProject: function(projectDeleted, viewModel) {
+        deleteProject: function(projectDeleted, projectName, viewModel, doCleanUp) {
             var self = this;
-            var projectName = viewModel.currentProject.name.trim();
 
             $.ajax({
                 type: 'POST',
@@ -81,13 +92,16 @@ define([
                         return;
                     }
 
-                    viewModel.reset();
+                    if (doCleanUp) {
+                        viewModel.reset();
 
-                    // Remove project name from URL
-                    updateQueryByName('project', '');
+                        // Remove project name from URL
+                        updateQueryByName('project', '');
 
-                    // Open welcome dialog
-                    Welcome.openWelcomeDialog(viewModel);
+                        // Open welcome dialog
+                        Welcome.openWelcomeDialog(viewModel);
+                    }
+
                     projectDeleted.resolve();
                 }
             });

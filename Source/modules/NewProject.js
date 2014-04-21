@@ -99,7 +99,6 @@ define([
                         ReadData.dataFolderPath = data.dataFolder;
 
                         viewModel.selectedComponent = viewModel.workspace;
-                        viewModel.newProjectName._value = '';
 
                         // Reset everything using the updated state.
                         viewModel.reset({name: data.projectName});
