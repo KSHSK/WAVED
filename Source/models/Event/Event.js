@@ -47,8 +47,8 @@ define([
         };
 
         this.fireEvent = function(event) {
-            self._triggeringWidget.viewModel.trigger.addData('event', 'x', event.pageX);
-            self._triggeringWidget.viewModel.trigger.addData('event', 'y', event.pageY);
+            self._triggeringWidget.viewModel.trigger.data.x =  event.pageX;
+            self._triggeringWidget.viewModel.trigger.data.y = event.pageY;
 
             self.applyActions();
         };

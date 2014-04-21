@@ -42,6 +42,25 @@ define([
             this.name.originalValue = this.id;
         }
 
+        var addStateDataToTrigger = function(d) {
+            self._trigger.addData('data', 'state', d.properties.name);
+
+            for (var i = 0; i < self._boundData.length; i++) {
+                var data = self._boundData[i].data;
+                for (var j = 0; j < data.length; j++) {
+                    for (var key in data[j]) {
+                        if (data[j][key] === d.properties.name) {
+                            for (var k in data[j]) {
+                                if (k !== key) {
+                                    self._trigger.addData('data', k, data[j][k]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
         this.render = function() {
             if (self._ready) {
                 var w = $('#waved-workspace').width();
@@ -71,17 +90,18 @@ define([
                             return self.coloring.value;
                         })
                         .on('mouseover', function(d) {
-                            self._trigger.addData(self.name.originalValue, 'state', d.properties.name);
+                            addStateDataToTrigger(d);
                         })
                         .on('mousemove', function(d) {
-                            self._trigger.addData(self.name.originalValue, 'state', d.properties.name);
+                            addStateDataToTrigger(d);
                         })
                         .on('mouseout', function(d) {
-                            self._trigger.addData(self.name.originalValue, 'state', d.properties.name);
+                            addStateDataToTrigger(d);
                         })
                         .on('click', function(d) {
-                            self._trigger.addData(self.name.originalValue, 'state', d.properties.name);
+                            addStateDataToTrigger(d);
                         });
+
                     self._isRendered = true;
                     self.updateSvg();
                 });
