@@ -45,43 +45,6 @@ define([
         glyph._dom = undefined;
     }
 
-    function editGlyph(glyph) {
-        if (!glyph.visible.value) {
-            glyph._dom.attr('class', 'hide');
-            return;
-        } else {
-            glyph._dom.attr('class', 'show');
-        }
-        var data = glyph.dataSet.value.data;
-
-        glyph._dom.selectAll('circle').data(data)
-        .attr('cx', function(d, i) {
-            var coords = glyph.parent._projection([d[glyph.longitude.value], d[glyph.latitude.value]]);
-            if (coords !== null) {
-                return coords[0];
-            }
-        })
-        .attr('cy', function(d, i) {
-            var coords = glyph.parent._projection([d[glyph.longitude.value], d[glyph.latitude.value]]);
-            if (coords !== null) {
-                return coords[1];
-            }
-        })
-        .attr('r', function(d, i) {
-            var value;
-            if (glyph.size.value.type === GlyphSizeSchemeType.SCALED_SIZE) {
-                value = radiusScale(d[glyph.size.value.dataField.value]);
-            } else {
-                value = glyph.size.value.size.value*glyph.parent.width.value/100;
-            }
-            if (value !== null && value > 0 && !isNaN(value)) {
-                return value;
-            }
-        })
-        .style('fill', glyph.color.value)
-        .style('opacity', glyph.opacity.value/100);
-    }
-
     function addGlyph(glyph, id) {
         if (defined(glyph._dom)) {
             return;
@@ -213,14 +176,16 @@ define([
 
         this.edit = function() {
             if(defined(self.dataSet.value.data)){
-                editGlyph(self);
+                removeGlyph(self);
+                addGlyph(self);
             }
             else {
                 // Keep trying until data is ready, as long as data is a defined object.
                 // Needed for on load
                 var interval = setInterval(function(){
                     if(defined(self.dataSet.value.data)){
-                        editGlyph(self);
+                        removeGlyph(self);
+                        addGlyph(self);
                         clearInterval(interval);
                     }
                 }, 100);

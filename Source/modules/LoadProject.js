@@ -142,7 +142,7 @@ define([
             // Client side check for name before sending server request
             if (projectName.length === 0) {
                 viewModel.loadProjectName.error = true;
-                viewModel.loadProjectName.message = "A project name needs to be given!";
+                viewModel.loadProjectName.message = 'A project name needs to be given!';
 
                 /* Reject the deferred only if we're not expecting
                    to fail 'softly', allowing for another attempt
