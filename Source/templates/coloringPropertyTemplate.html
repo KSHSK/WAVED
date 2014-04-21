@@ -1,0 +1,19 @@
+<div>
+    <span data-bind="text:displayName"></span>
+    <select data-bind="options: coloringType, optionsText: function(item) { return item.getType(); }, value: _originalValue"></select>
+    <div class="error" data-bind="visible: error, html: message"></div>
+    <a style="font-size: 0.8em; text-decoration: underline; cursor: pointer;" onclick="$('#coloring-help-dialog').dialog({ resizable: false, modal: true})">Need coloring help?</a>
+    <!-- ko if: originalValue !== undefined -->
+    <div data-bind="foreach: originalValue.properties">
+        <div data-bind="template: {name : $data.templateName, data: $data}"></div>
+    </div>
+    <!-- /ko -->
+    <div id="coloring-help-dialog" title="Coloring help" class="dialog">
+        <p>Color fields accept the following formats:</p>
+        <ul>
+            <li>HTML color names (see <a href="http://www.w3schools.com/html/html_colornames.asp" target="_blank">here</a>)</li>
+            <li>Hex values (see <a href="http://www.w3schools.com/tags/ref_colorpicker.asp" target="_blank">here</a>)</li>
+            <li>RGB values (see <a href="http://www.w3schools.com/html/html_colors.asp" target="_blank">here</a>)</li>
+        </ul>
+    </div>
+</div>
