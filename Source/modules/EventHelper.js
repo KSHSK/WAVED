@@ -24,7 +24,9 @@ define([
 
         resetEventEditor: function(viewModel) {
             viewModel.eventEditorTriggeringWidget = undefined;
+            viewModel.eventEditorTriggeringWidgetError = false;
             viewModel.eventEditorTrigger = undefined;
+            viewModel.eventEditorTriggerError = false;
             viewModel.selectedEventType = undefined;
             viewModel.selectedEventName.reset();
             viewModel.selectedEventActions = [];
@@ -39,9 +41,7 @@ define([
                 modal: true,
                 buttons: {
                     'Save': function() {
-
-                        if (viewModel.selectedEventName.error) {
-                            viewModel.selectedEventName.message = viewModel.selectedEventName.errorMessage;
+                        if (self.hasErrors(viewModel)) {
                             return;
                         }
 
@@ -70,7 +70,6 @@ define([
         },
         editEvent: function(viewModel) {
             if (!defined(viewModel.selectedEvent)) {
-                displayMessage('Select an event to edit.');
                 return;
             }
 
@@ -91,9 +90,7 @@ define([
                 modal: true,
                 buttons: {
                     'Save': function() {
-
-                        if (viewModel.selectedEventName.error) {
-                            viewModel.selectedEventName.message = viewModel.selectedEventName.errorMessage;
+                        if (self.hasErrors(viewModel)) {
                             return;
                         }
 
@@ -151,6 +148,29 @@ define([
             historyMonitor.addChanges(undoChange, executeChange);
 
             historyMonitor.executeIgnoreHistory(executeChange);
+        },
+        hasErrors: function(viewModel) {
+            var error = false;
+
+            // Check that the event name is valid.
+            if (viewModel.selectedEventName.error) {
+                viewModel.selectedEventName.message = viewModel.selectedEventName.errorMessage;
+                error = true;
+            }
+
+            // Check that a triggering widget is selected.
+            if (!defined(viewModel.eventEditorTriggeringWidget)) {
+                viewModel.eventEditorTriggeringWidgetError = true;
+                error = true;
+            }
+
+            // Check that a trigger is selected.
+            if (!defined(viewModel.eventEditorTrigger)) {
+                viewModel.eventEditorTriggerError = true;
+                error = true;
+            }
+
+            return error;
         }
 
     };
