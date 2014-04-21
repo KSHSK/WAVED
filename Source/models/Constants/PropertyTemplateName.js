@@ -13,7 +13,9 @@ define([], function(){
         ARRAY: 'arrayPropertyTemplate',
         COLORING: 'coloringPropertyTemplate',
         COLORING_DISPLAY: 'coloringDisplayPropertyTemplate',
-        GLYPH_SIZE: 'glyphSizePropertyTemplate'
+        GLYPH_SIZE: 'glyphSizePropertyTemplate',
+        BUTTON: 'buttonPropertyTemplate',
+        BUTTON_DISPLAY: 'buttonDisplayPropertyTemplate'
     };
 
     return PropertyTemplateName;

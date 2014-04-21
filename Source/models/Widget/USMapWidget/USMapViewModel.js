@@ -252,7 +252,7 @@ define([
     Object.defineProperties(USMapViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.x, this.y, this.width, this.visible, this.logGoogleAnalytics,
+                return [this.name, this.x, this.y, this.zIncrement, this.zDecrement, this.width, this.visible, this.logGoogleAnalytics,
                 this.strokeColor, this.coloring];
             }
         }
