@@ -1,6 +1,7 @@
 /* global console*/
 define(['jquery',
         'knockout',
+        'models/Constants/ActionType',
         'models/Action/Action',
         'models/Constants/EventType',
         'models/Event/Event',
@@ -33,6 +34,7 @@ define(['jquery',
     ], function(
         $,
         ko,
+        ActionType,
         Action,
         EventType,
         Event,
@@ -65,6 +67,9 @@ define(['jquery',
     'use strict';
 
     var self;
+    var propertiesPanelPosition = $('#accordion').children('div').index($('#properties-panel'));
+    var projectTreePanelPosition = $('#accordion').children('div').index($('#project-tree-panel'));
+
     var WAVEDViewModel = function() {
         self = this;
 
@@ -112,6 +117,11 @@ define(['jquery',
             this.eventTypes.push(eventType);
         }
 
+        this.actionTypes = [];
+        for (var key in ActionType) {
+            this.actionTypes.push(ActionType[key]);
+        }
+
         this.newProjectName = getNamePropertyInstance('Project Name:');
 
         this.saveProjectAsName = getNamePropertyInstance('Project Name:');
@@ -138,12 +148,15 @@ define(['jquery',
         this.selectedAction = undefined;
         this.selectedActionType = '';
         this.actionEditorAffectedWidget = undefined;
+        this.actionEditorAffectedWidgetError = false;
         this.actionEditorDataSet = undefined;
 
         this.selectedEventName = getNamePropertyInstance('Event Name');
         this.selectedEvent = undefined;
         this.eventEditorTriggeringWidget = undefined;
+        this.eventEditorTriggeringWidgetError = false;
         this.eventEditorTrigger = undefined;
+        this.eventEditorTriggerError = false;
         this.selectedEventType = undefined;
         this.selectedEventActions = [];
 
@@ -181,6 +194,8 @@ define(['jquery',
         // Remove history.
         self.resetHistory();
 
+        // Open project tree panel.
+        self.openProjectTreePanel();
     };
 
     WAVEDViewModel.prototype.resetHistory = function() {
@@ -415,8 +430,6 @@ define(['jquery',
         self._projectTree.select(self, type, value);
     };
 
-    WAVEDViewModel.prototype.propertiesPanelPosition = $('#accordion').children('div').index($('#properties-panel'));
-
     WAVEDViewModel.prototype.addNewWidget = function(w) {
         var widget = new w.o();
         self._currentProject.addWidget(widget);
@@ -430,8 +443,11 @@ define(['jquery',
             return;
         }
 
-        // TODO: Really shouldn't do any jQuery stuff in here.
-        $('#accordion').accordion('option', 'active', self.propertiesPanelPosition);
+        $('#accordion').accordion('option', 'active', propertiesPanelPosition);
+    };
+
+    WAVEDViewModel.prototype.openProjectTreePanel = function() {
+        $('#accordion').accordion('option', 'active', projectTreePanelPosition);
     };
 
     Object.defineProperties(WAVEDViewModel.prototype, {

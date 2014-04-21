@@ -33,12 +33,19 @@ define([
     StringProperty.prototype = Object.create(Property.prototype);
 
     StringProperty.prototype.reset = function() {
-        this.originalValue = '';
-        this.message = '';
-        this.error = !this.isValidValue(this._value);
+        // Update values.
+        this._originalValue = '';
+        this._value = '';
+        this._displayValue = '';
 
         // Force the view to update.
+        ko.getObservable(this, '_originalValue').valueHasMutated();
         ko.getObservable(this, '_value').valueHasMutated();
+        ko.getObservable(this, '_displayValue').valueHasMutated();
+
+        // Update error.
+        this.message = '';
+        this.error = !this.isValidValue(this._value);
     };
 
     Object.defineProperties(StringProperty.prototype, {
