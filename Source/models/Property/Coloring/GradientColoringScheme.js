@@ -29,13 +29,13 @@ define([
         this.startColor = new StringProperty({
             displayName: 'Start color',
             value: '#DDDDDD',
-            onchange: viewModel.updateColoring
+            onchange: state.onchange
         });
 
         this.endColor = new StringProperty({
             displayName: 'End color',
             value: '#000000',
-            onchange: viewModel.updateColoring
+            onchange: state.onchange
         });
 
         this.dataSet = new ArrayProperty({
@@ -45,7 +45,7 @@ define([
             getOptionText: function(value) {
                 return value.getNameAndFilename();
             },
-            onchange: viewModel.updateColoring
+            onchange: state.onchange
         });
 
         this.dataField = new ArrayProperty({
@@ -55,7 +55,7 @@ define([
             getOptionText: function(value) {
                 return value;
             },
-            onchange: viewModel.updateColoring
+            onchange: state.onchange
         });
 
         /*
@@ -72,7 +72,7 @@ define([
             getOptionText: function(value) {
                 return value;
             },
-            onchange: viewModel.updateColoring
+            onchange: state.onchange
         });
 
         var isValidValue = function(value) {

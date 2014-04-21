@@ -14,7 +14,7 @@ define([
         ko){
     'use strict';
 
-    var FourColoringScheme = function(state, viewModel) {
+    var FourColoringScheme = function(state) {
         state = defined(state) ? state : {};
 
         ColoringScheme.call(this, state);
@@ -23,25 +23,25 @@ define([
         this.color1 = new StringProperty({
             displayName: 'Color #1',
             value: '#D7FFD0',
-            onchange: viewModel.updateColoring
+            onchange: state.onchange
         });
 
         this.color2 = new StringProperty({
             displayName: 'Color #2',
             value: '#F2D0FF',
-            onchange: viewModel.updateColoring
+            onchange: state.onchange
         });
 
         this.color3 = new StringProperty({
             displayName: 'Color #3',
             value: '#FFFFD0',
-            onchange: viewModel.updateColoring
+            onchange: state.onchange
         });
 
         this.color4 = new StringProperty({
             displayName: 'Color #4',
             value: '#FFD0D0',
-            onchange: viewModel.updateColoring
+            onchange: state.onchange
         });
 
         this.setState(state);
