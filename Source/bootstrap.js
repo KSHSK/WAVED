@@ -3,13 +3,19 @@
         'WAVED',
         'modules/Welcome',
         'knockout',
-        'jqueryUI'
+        'jqueryUI',
+        'DataTables',
+        'modules/DeleteProject',
+        'modules/LoadProject',
     ], function (
         require,
         WAVED,
         WelcomeModule,
         ko,
-        $) {
+        $,
+        DataTables,
+        DeleteProject,
+        LoadProject) {
     'use strict';
 
     require(['../ThirdParty/domReady!', 'koExternalTemplateEngine'], function(document) {
@@ -41,6 +47,63 @@
 
             folder.siblings('ul').slideToggle(duration);
             folder.toggleClass('closed');
+        });
+
+        // Project List Table
+        var dateRender = function(data) {
+            var date = new Date(data * 1000);
+            return date.toLocaleString();
+        };
+
+        var deleteRender = function(td, cellData, fullData) {
+            // Create button
+            var button = $('<button>');
+            button.append('Delete Project "' + fullData.name + '"');
+
+            // Button click
+            var fnDeleteDone;
+            var cleanUp = false;
+
+            // Deleting the current project requires the Welcome Dialog
+            if (WAVED.viewModel.currentProject.name == fullData.name) {
+                fnDeleteDone =  WelcomeModule.openLoadDialog.bind(WelcomeModule, WAVED.viewModel);
+                cleanUp = true;
+            }
+            // Otherwise just refresh the project list
+            else {
+                fnDeleteDone = LoadProject.updateProjectList.bind(LoadProject, WAVED.viewModel);
+            }
+
+            button.click(function() {
+                // Move welcome dialog back in case we open it
+                WelcomeModule.zIndex(99);
+
+                // Delete selected project
+                var projectDeleted = DeleteProject.tryToDeleteProject(WAVED.viewModel, fullData.name, cleanUp);
+                $.when(projectDeleted).done(fnDeleteDone);
+            });
+
+            // Button style
+            button.button({
+                text: false,
+                icons: {
+                    primary: 'ui-icon-trash'
+                }
+            });
+
+            $(td).addClass('button-cell').append(button);
+        };
+
+        $('#project-list').dataTable({
+            'sScrollY': '200px',
+            'bPaginate': false,
+            'bScrollCollapse': false,
+            'aoColumns' : [
+                { 'mData': 'name' },
+                { 'mData': 'created', 'mRender': dateRender },
+                { 'mData': 'lastModified', 'mRender': dateRender },
+                { 'mData': null, 'bSortable': false, 'fnCreatedCell': deleteRender },
+            ],
         });
 
         // Add/Edit/Remove Buttons.
