@@ -41,16 +41,6 @@
         </div>
         
         <div id="accordion-container" class="inline top">
-            <span class="menu-text">Select: </span>
-	        <select class="inline" 
-	                id="widget-select" 
-	                data-bind="options: currentProject.components, 
-	                    optionsText: function(item) {
-	                       return item.viewModel.name.value;
-	                    },
-	                    value: selectedComponent,
-	                    event: {change: openPropertiesPanel}">
-	        </select>
             <div id="accordion">
                 <h3>Project Tree</h3>
                 <div>
@@ -175,7 +165,15 @@
                                 }, value: selectedEvent"></select>
                     </div>
                 </div>
-                <h3>Properties - <span data-bind="text: selectedComponent.viewModel.name.value"></span></h3>
+                <h3>Properties - <select class="inline" 
+                        id="widget-select" 
+                        data-bind="options: currentProject.components, 
+                            optionsText: function(item) {
+                               return item.viewModel.name.value;
+                            },
+                            value: selectedComponent,
+                            event: {change: openPropertiesPanel}">
+                </select></h3>
                 <div id="properties-panel">
                     <div id="properties-panel-properties" data-bind="foreach: currentProject.components">
                         <div data-bind="foreach: $data.viewModel.properties, visible: $parent.selectedComponent == $data">
