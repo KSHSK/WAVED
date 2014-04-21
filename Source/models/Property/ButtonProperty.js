@@ -67,6 +67,8 @@ define([
         if(defined(state.buttonLabel)) {
             this.buttonLabel = state.buttonLabel;
         }
+
+        Property.prototype.setState.call(this, state);
     };
 
     ButtonProperty.prototype.getState = function() {
