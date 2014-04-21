@@ -195,7 +195,10 @@
                                 <select id="bound-data-list" size="5" class="select-full-size"
                                     data-bind="options: selectedComponent.viewModel.boundData, 
                                         optionsText: function(data) {
-                                           return currentProject.getDataSet(data._name).getNameAndFilename();
+                                            var dataSet = currentProject.getDataSet(data._name);
+                                            if(dataSet !== null){
+                                                return currentProject.getDataSet(data._name).getNameAndFilename();
+                                            }
                                         }, value: selectedBoundData">
                                 </select>
                             </div>
