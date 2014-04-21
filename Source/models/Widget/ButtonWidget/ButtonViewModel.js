@@ -74,7 +74,7 @@ define([
     Object.defineProperties(ButtonViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.label, this.x, this.y, this.width, this.height, this.visible,
+                return [this.name, this.label, this.x, this.y, this.zIncrement, this.zDecrement, this.width, this.height, this.visible,
                 this.logGoogleAnalytics];
             }
         }
