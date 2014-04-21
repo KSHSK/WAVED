@@ -83,7 +83,7 @@ define([
 
         zIndex: function(value) {
             this.welcomeDialog.parent().zIndex(value);
-        },
+        }
     };
 
     return Welcome;
