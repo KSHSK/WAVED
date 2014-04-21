@@ -55,11 +55,11 @@ function projectExists($projectName) {
  */
 function getExistingsProjects() {
     $projects = Serializer::projectSerializer()->getAll();
-    $getName = function($project) { return $project->getName(); };
+    $getDetails = function($project) { return $project->toDetailsArray(); };
 
     // Map through the array, returning only the name
     // for each project
-    return array_map($getName, $projects);
+    return array_map($getDetails, $projects);
 }
 
 /**
