@@ -31,23 +31,23 @@ define([
         var glyphAdded = $.Deferred();
         glyphDialog.dialog({
             resizable: false,
-            dialogClass: 'no-close',
-            closeOnEscape: false,
             width: 500,
             modal: true,
             buttons: {
                 'Save': function() {
                     if (glyph.isValid()) {
-                        glyphDialog.dialog('close');
                         glyphAdded.resolve();
+                        glyphDialog.dialog('close');
                     } else {
                         glyph.displayErrors();
                     }
                 },
                 'Cancel': function() {
                     glyphDialog.dialog('close');
-                    glyphAdded.reject();
                 }
+            },
+            close: function(event, ui) {
+                glyphAdded.reject();
             }
         });
 
