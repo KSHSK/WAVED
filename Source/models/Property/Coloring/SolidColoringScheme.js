@@ -1,18 +1,64 @@
 define([
         'models/Property/Coloring/ColoringScheme',
-        'knockout',
-        'jquery'
+        'models/Property/StringProperty',
+        'models/Constants/ColoringSchemeType',
+        'util/createValidator',
+        'util/defined',
+        'knockout'
     ],function(
         ColoringScheme,
-        ko,
-        $){
+        StringProperty,
+        ColoringSchemeType,
+        createValidator,
+        defined,
+        ko){
     'use strict';
 
-    var SolidColoringScheme = function(state) {
+    var SolidColoringScheme = function(state, viewModel) {
+        state = defined(state) ? state : {};
+
         ColoringScheme.call(this, state);
 
-        // TODO: Validation, etc
-        this.color = state.color; // StringProperty
+        // Default to grey
+        var stateColor = {
+            displayName: 'Color',
+            value: '#C0C0C0',
+            onchange: viewModel.updateColoring
+        };
+        this.color = new StringProperty(stateColor);
+
+        this.setState(state);
+
+        ko.track(this);
+    };
+
+    SolidColoringScheme.prototype = Object.create(ColoringScheme.prototype);
+
+    SolidColoringScheme.prototype.getType = function() {
+        return ColoringSchemeType.SOLID_COLORING;
+    };
+
+    Object.defineProperties(SolidColoringScheme.prototype, {
+        properties: {
+            get: function() {
+                return [this.color];
+            }
+        }
+    });
+
+    SolidColoringScheme.prototype.getState = function() {
+        var state = {
+            color: this.color.getState(),
+            type: this.getType()
+        };
+
+        return state;
+    };
+
+    SolidColoringScheme.prototype.setState = function(state) {
+        if(defined(state.color)){
+            this.color._originalValue = state.color.value;
+        }
     };
 
     return SolidColoringScheme;
