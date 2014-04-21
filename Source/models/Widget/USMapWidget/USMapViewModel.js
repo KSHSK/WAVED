@@ -304,7 +304,7 @@ define([
         state.type = USMapViewModel.getType();
         state.coloring = this.coloring.getState();
         state.glyphs = [];
-        for(var i = 0; i < this.glyphs.length; i++) {
+        for(var i = 0; i < this.glyphs.length; i++) { //TODO: push this to ListProperty.getState
             state.glyphs.push(this.glyphs[i].getState());
         }
 
@@ -320,7 +320,7 @@ define([
         }
 
         if (defined(state.glyphs)){
-            for(var i = 0; i < state.glyphs.length; i++) {
+            for(var i = 0; i < state.glyphs.length; i++) { //TODO: push this to ListProperty.setState
                 this.glyphs.push(new GlyphViewModel(state.glyphs[i], this));
             }
         }
