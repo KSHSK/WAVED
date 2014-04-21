@@ -348,15 +348,17 @@ define([
                     var options = this.options;
                     options.push(newGlyph);
                     this.value = newGlyph;
+                    var that = this;
                     GlyphHelper.addEditGlyph(newGlyph).then(function() {
                         addSuccess(options, newGlyph);
-                    }, function () {
+                    }, function() {
+                        that._value = undefined;
                         options.splice(options.indexOf(newGlyph), 1);
                     });
                 }
             },
             edit: function() {
-                if (defined(this.value)) {
+                if (defined(this._value)) {
                     var value = this.value;
                     GlyphHelper.addEditGlyph(value).then(function() {
                         editSuccess(value);
