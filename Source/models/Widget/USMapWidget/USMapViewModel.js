@@ -40,8 +40,6 @@ define([
         d3,
         $){
     'use strict';
-    var glyphId = 0;
-
     var STATES_DATA_FILE = 'states.json';
 
     function getElement(viewModel){

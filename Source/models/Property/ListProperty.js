@@ -108,7 +108,7 @@ define([
 
     ListProperty.prototype.getState = function() {
         var state = Property.prototype.getState.call(this);
-
+        state.options = this.options;
         return state;
     };
 

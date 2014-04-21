@@ -147,7 +147,7 @@ define([
 
         this.dataSet = new ArrayProperty({
             displayName: 'Data Set',
-            errorMessage: 'Valid is required.',
+            errorMessage: 'Value is required.',
             options: this.parent.boundData,
             getOptionText: function(value) {
                 return value.getNameAndFilename();
@@ -168,7 +168,7 @@ define([
                 min: 0,
                 max: 100
             }),
-            errorMessage: 'Value must be between 0 and 100'
+            errorMessage: 'Value must be between 0 and 100.'
         });
         this.size = new GlyphSizeSelectionProperty({
             displayName: 'Size',
@@ -185,18 +185,6 @@ define([
             displayName: 'Longitude',
             errorMessage: 'Value is required.',
             options: []
-        });
-
-        // Set visible
-        this.visible = new BooleanProperty({
-            displayName: 'Visible',
-            value: true
-        });
-
-        // Set logGoogleAnalytics
-        this.logGoogleAnalytics = new BooleanProperty({
-            displayName: 'Log Google Analytics',
-            value: false
         });
 
         this.dataSet.ondisplaychange = function(newValue){
@@ -258,8 +246,6 @@ define([
         state.size = this.size.getState();
         state.latitude = this.latitude.getState();
         state.longitude = this.longitude.getState();
-        state.visible = this.visible.getState();
-        state.logGoogleAnalytics = this.logGoogleAnalytics.getState();
 
         return state;
     };
@@ -289,13 +275,6 @@ define([
         if (defined(state.longitude)) {
             this.longitude.setState(state.longitude);
         }
-        if (defined(state.visible)) {
-            this.visible.setState(state.visible);
-        }
-        if (defined(state.logGoogleAnalytics)) {
-            this.logGoogleAnalytics.setState(state.logGoogleAnalytics);
-        }
-
     };
 
     /**

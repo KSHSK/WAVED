@@ -17,7 +17,8 @@ define([
         opts = defined(opts) ? opts : {};
         Property.call(this, opts);
 
-        //type
+        //TODO: Add type property to track the object type of the options in the array.
+        // (Which is probably needed for a cleaner setState solution)
 
         this._templateName = PropertyTemplateName.ARRAY;
         this._displayTemplateName = PropertyTemplateName.ARRAY_DISPLAY;

@@ -24,26 +24,26 @@ define([
     'use strict';
     var GlyphHelper = {};
 
-    GlyphHelper.glyphDialog = $('#glyph-editor-dialog');
+    var glyphDialog = $('#glyph-editor-dialog');
 
     GlyphHelper.addEditGlyph = function(glyph) {
         var self = this;
         var glyphAdded = $.Deferred();
-        self.glyphDialog.dialog({
+        glyphDialog.dialog({
             resizable: false,
             width: 500,
             modal: true,
             buttons: {
                 'Save': function() {
                     if (glyph.isValid()) {
-                        self.glyphDialog.dialog('close');
+                        glyphDialog.dialog('close');
                         glyphAdded.resolve();
                     } else {
                         glyph.displayErrors();
                     }
                 },
                 'Cancel': function() {
-                    self.glyphDialog.dialog('close');
+                    glyphDialog.dialog('close');
                     glyphAdded.reject();
                 }
             }
