@@ -45,7 +45,6 @@ define([
         // Initially bind this to the sizeType specified by stateValueType
         // Will be set by the setter onwards
         this._originalValue = stateValueType;
-        this._value = stateValueType;
 
         ko.track(this);
     };

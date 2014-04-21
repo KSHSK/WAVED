@@ -1,10 +1,8 @@
 define(['WAVEDViewModel',
-        'models/Data/DataSet',
         'knockout',
         'jquery'
     ], function(
         WAVEDViewModel,
-        DataSet,
         ko,
         $) {
     'use strict';

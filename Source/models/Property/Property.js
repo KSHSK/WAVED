@@ -45,10 +45,10 @@ define(['knockout',
 
         // When this._value changes, call onchange.
         subscribeObservable(this, '_value', function(newValue) {
-            self._displayValue = self._value;
             if (defined(self.onchange)) {
                 self.onchange(newValue);
             }
+            self._displayValue = self._value;
         });
 
         subscribeObservable(this, '_displayValue', function(newValue) {
