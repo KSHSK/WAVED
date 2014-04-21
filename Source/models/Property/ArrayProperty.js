@@ -123,7 +123,10 @@ define([
     };
 
     ArrayProperty.prototype.setState = function(state) {
-        this.options = state.options;
+        if (defined(state.options)) {
+            this.options = state.options;
+        }
+
         Property.prototype.setState.call(this, state);
     };
 
