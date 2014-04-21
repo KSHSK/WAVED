@@ -35,22 +35,22 @@
                     <button class="inline" id="save-as-button" data-bind="click: tryToSaveProjectAs">Save As</button>
                     
                     <button class="inline" id="export-button">Export</button>
-                
-                    <span class="menu-text">Select: </span>
-                    <select class="inline" 
-                            id="widget-select" 
-                            data-bind="options: currentProject.components, 
-                                optionsText: function(item) {
-                                   return item.viewModel.name.value;
-                                },
-                                value: selectedComponent,
-                                event: {change: openPropertiesPanel}">
-                    </select>
+                    
                     <button class="inline" id="refresh-button" data-bind="click: refreshWorkspace">Refresh</button>
                 </div>                
         </div>
         
         <div id="accordion-container" class="inline top">
+            <span class="menu-text">Select: </span>
+	        <select class="inline" 
+	                id="widget-select" 
+	                data-bind="options: currentProject.components, 
+	                    optionsText: function(item) {
+	                       return item.viewModel.name.value;
+	                    },
+	                    value: selectedComponent,
+	                    event: {change: openPropertiesPanel}">
+	        </select>
             <div id="accordion">
                 <h3>Project Tree</h3>
                 <div>
