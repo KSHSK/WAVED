@@ -62,7 +62,7 @@ define([
                validSelection = (this._options.indexOf(value) !== -1);
            }
 
-           return undef || validSelection;
+           return !undef && validSelection;
         };
 
         this.dataSet.isValidValue = isValidValue;
@@ -91,8 +91,6 @@ define([
             get : function() {
                 var dataSet = this.dataSet;
                 var dataField = this.dataField;
-                dataSet.error = !dataSet.isValidValue(dataSet.displayValue);
-                dataField.error = !dataField.isValidValue(dataField.displayValue);
                 return dataSet.error || dataField.error;
             }
         }

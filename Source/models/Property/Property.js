@@ -116,7 +116,7 @@ define(['knockout',
             }
         }
 
-        this._value = value;
+        this._value = value; //setState called before subscription is added
         this._originalValue = value;
         this._displayValue = value;
         this._error = !this.isValidValue(this._value);
