@@ -38,7 +38,7 @@ define([
                 }
 
                 for (var key in self._newValues) {
-                   var templates = getTemplateMatches(self._newValues[key]);
+                    var templates = getTemplateMatches(self._newValues[key]);
                     if (templates.length > 0) {
                         var temp = self._newValues[key];
                         if (typeof self._target.viewModel[key].value === 'number') {
@@ -48,7 +48,7 @@ define([
                         for (var i = 0; i < templates.length; i++) {
                             if (defined(data.data) && defined(data.data[templates[i]])) {
                                 temp = temp.replace('{{' + templates[i]+ '}}', data.data[templates[i]]);
-                            } else {
+                            } else if (defined(data[templates[i]])) {
                                 temp = temp.replace('{{' + templates[i]+ '}}', data[templates[i]]);
                             }
                         }
