@@ -83,8 +83,7 @@ define(['knockout',
 
     Property.prototype.getState = function() {
         return {
-            'value': this._originalValue,
-            'visible': this.visible
+            'value': this._originalValue
         };
     };
 
