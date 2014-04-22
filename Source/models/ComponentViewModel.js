@@ -156,5 +156,14 @@ define([
         }
     };
 
+    /**
+     * Checks if this widget use the dataSet.
+     * @param dataSet
+     * @returns Returns false by default.
+     */
+    ComponentViewModel.prototype.usesDataSet = function(dataSet) {
+        return false;
+    };
+
     return ComponentViewModel;
 });
