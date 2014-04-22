@@ -58,7 +58,6 @@ define([
         }
     });
 
-    // TODO: Necessary?
     ButtonProperty.prototype.setState = function(state) {
         if(defined(state.clickFunction)) {
             this.clickFunction = state.clickFunction;
@@ -69,10 +68,6 @@ define([
         }
 
         Property.prototype.setState.call(this, state);
-    };
-
-    ButtonProperty.prototype.getState = function() {
-
     };
 
     return ButtonProperty;
