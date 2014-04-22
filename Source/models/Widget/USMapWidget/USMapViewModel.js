@@ -218,10 +218,10 @@ define([
     }
 
     function addSuccess(options, value) {
-        value.properties[5].originalValue = value.properties[5].displayValue; //set lat lon first for validation
-        value.properties[5].value = value.properties[5].displayValue; //TODO: look into why subscription isn't working for array property
-        value.properties[6].originalValue = value.properties[6].displayValue;
-        value.properties[6].value = value.properties[6].displayValue;
+        value.latitude.originalValue = value.latitude.displayValue; //set lat lon first for validation reasons
+        value.latitude.value = value.latitude.displayValue; //TODO: look into why subscription isn't working for array property
+        value.longitude.originalValue = value.longitude.displayValue;
+        value.longitude.value = value.longitude.displayValue;
 
         for (var i = 0; i < value.properties.length; i++) {
             var property = value.properties[i];
@@ -252,10 +252,10 @@ define([
     function editSuccess(value) {
         var originalState = value.getState();
 
-        value.properties[5].originalValue = value.properties[5].displayValue; // set lat lon first for validation
-        value.properties[5].value = value.properties[5].displayValue;
-        value.properties[6].originalValue = value.properties[6].displayValue;
-        value.properties[6].value = value.properties[6].displayValue;
+        value.latitude.originalValue = value.latitude.displayValue; // set lat lon first for validation reasons
+        value.latitude.value = value.latitude.displayValue;
+        value.longitude.originalValue = value.longitude.displayValue;
+        value.longitude.value = value.longitude.displayValue;
 
         for (var i = 0; i < value.properties.length; i++) {
             var property = value.properties[i];
