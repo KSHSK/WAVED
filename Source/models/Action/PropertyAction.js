@@ -46,7 +46,7 @@ define([
                         }
 
                         for (var i = 0; i < templates.length; i++) {
-                            if (defined(data.data[templates[i]])) {
+                            if (defined(data.data) && defined(data.data[templates[i]])) {
                                 temp = temp.replace('{{' + templates[i]+ '}}', data.data[templates[i]]);
                             } else {
                                 temp = temp.replace('{{' + templates[i]+ '}}', data[templates[i]]);
