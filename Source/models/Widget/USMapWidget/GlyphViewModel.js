@@ -208,6 +208,16 @@ define([
 
     GlyphViewModel.prototype = Object.create(ComponentViewModel.prototype);
 
+    GlyphViewModel.prototype.usesDataSet = function(dataSet) {
+        if (this.dataSet.value === dataSet) {
+            return true;
+        }
+        if (this.size.type === GlyphSizeSchemeType.SCALED_SIZE) {
+            return this.size.value.dataField.value === dataSet;
+        }
+        return false;
+    };
+
     GlyphViewModel.prototype.getState = function() {
         var state = ComponentViewModel.prototype.getState.call(this);
         state.type = GlyphViewModel.getType();
