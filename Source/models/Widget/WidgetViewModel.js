@@ -78,32 +78,6 @@ define([
             errorMessage: 'Value must be between 0 and 100'
         });
 
-        this.z = new NumberProperty({
-            displayName: 'Z',
-            value: 0,
-            visible: false
-        });
-
-        this.incrementZIndex = function() {
-            self.z.originalValue++;
-        };
-
-        this.decrementZIndex = function() {
-            self.z.originalValue--;
-        };
-
-        this.zIncrement = new ButtonProperty({
-            displayName: '',
-            buttonLabel: 'Move Forward',
-            clickFunction: self.incrementZIndex
-        });
-
-        this.zDecrement = new ButtonProperty({
-           displayName: '',
-           buttonLabel: 'Move Backward',
-           clickFunction: self.decrementZIndex
-        });
-
         this._boundData = []; // String[]
         this._triggers = []; // Trigger[]
     };
