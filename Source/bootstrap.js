@@ -85,6 +85,14 @@
             heightStyle: 'fill'
         });
 
+        $('#accordion').on('accordionactivate', function(event, ui) {
+            if ($('#accordion').accordion('option', 'active') === 5) {
+                $('#widget-select').prop('disabled', false);
+            } else {
+                $('#widget-select').prop('disabled', true);
+            }
+        });
+
         $('input').addClass('ui-corner-all');
 
         var viewModel = WAVED.viewModel;

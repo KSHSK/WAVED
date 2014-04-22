@@ -167,12 +167,11 @@
                 </div>
                 <h3>Properties - <select class="inline" 
                         id="widget-select" 
-                        data-bind="options: currentProject.components, 
+                        data-bind="disable: true, options: currentProject.components, 
                             optionsText: function(item) {
                                return item.viewModel.name.value;
                             },
-                            value: selectedComponent,
-                            event: {change: openPropertiesPanel}">
+                            value: selectedComponent">
                 </select></h3>
                 <div id="properties-panel">
                     <div id="properties-panel-properties" data-bind="foreach: currentProject.components">
