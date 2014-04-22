@@ -205,7 +205,7 @@ define([
         options.splice(options.indexOf(value), 1);
     }
 
-    function addGlyph(options, value) {
+    function addGlyph(options, value, index) {
         var success = UniqueTracker.addValueIfUnique(ComponentViewModel.getUniqueNameNamespace(),
             value.name.value, value);
 
@@ -213,7 +213,13 @@ define([
             console.log('New Component name was not unique.');
             return;
         }
-        options.push(value);
+
+        if (defined(index)) {
+            options.splice(index, 0, value);
+        } else {
+            options.push(value);
+        }
+
         value.add();
     }
 
@@ -270,18 +276,26 @@ define([
             }
         }
         value.edit();
-       var newState = value.getState();
+        var newState = value.getState();
 
-       var historyMonitor = HistoryMonitor.getInstance();
+        var historyMonitor = HistoryMonitor.getInstance();
 
-       historyMonitor.addUndoChange(function() {
-           value.setState(originalState);
-           value.edit();
-       });
+        historyMonitor.addUndoChange(function() {
+            value.setState(originalState);
+            value.latitude.options = value.dataSet.value.dataFields;
+            value.longitude.options = value.dataSet.value.dataFields;
+            value.latitude.value = originalState.latitude.value;
+            value.longitude.value = originalState.longitude.value;
+            value.edit();
+        });
 
-       historyMonitor.addRedoChange(function() {
-           value.setState(newState);
-           value.edit();
+        historyMonitor.addRedoChange(function() {
+            value.setState(newState);
+            value.latitude.options = value.dataSet.value.dataFields;
+            value.longitude.options = value.dataSet.value.dataFields;
+            value.latitude.value = newState.latitude.value;
+            value.longitude.value = newState.longitude.value;
+            value.edit();
        });
     }
 
@@ -373,18 +387,19 @@ define([
             remove: function() {
                 var options = this.options;
                 var value = this.value;
-
-                if (defined(value)) {
+                var index = options.indexOf(value);
+                if (index > -1) {
                     removeGlyph(options, value);
                     var historyMonitor = HistoryMonitor.getInstance();
 
                     historyMonitor.addUndoChange(function() {
-                        addGlyph(options, value);
+                        addGlyph(options, value, index);
                     });
 
                     historyMonitor.addRedoChange(function() {
                         removeGlyph(options, value);
                     });
+                    this._value = undefined;
                 }
             }
         });
