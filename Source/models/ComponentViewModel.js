@@ -3,6 +3,8 @@ define([
         'knockout',
         'models/Property/StringProperty',
         'models/Property/BooleanProperty',
+        'models/Property/NumberProperty',
+        'models/Property/ButtonProperty',
         'modules/PropertyChangeSubscriber',
         'modules/UniqueTracker',
         'util/defined',
@@ -14,6 +16,8 @@ define([
         ko,
         StringProperty,
         BooleanProperty,
+        NumberProperty,
+        ButtonProperty,
         PropertyChangeSubscriber,
         UniqueTracker,
         defined,
@@ -41,6 +45,32 @@ define([
         this.logGoogleAnalytics = new BooleanProperty({
             displayName: 'Log Google Analytics',
             value: false
+        });
+
+        this.z = new NumberProperty({
+            displayName: 'Z',
+            value: 0,
+            visible: false
+        });
+
+        this.incrementZIndex = function() {
+            self.z.originalValue++;
+        };
+
+        this.decrementZIndex = function() {
+            self.z.originalValue--;
+        };
+
+        this.zIncrement = new ButtonProperty({
+            displayName: '',
+            buttonLabel: 'Move Forward',
+            clickFunction: self.incrementZIndex
+        });
+
+        this.zDecrement = new ButtonProperty({
+           displayName: '',
+           buttonLabel: 'Move Backward',
+           clickFunction: self.decrementZIndex
         });
 
         ko.track(this);

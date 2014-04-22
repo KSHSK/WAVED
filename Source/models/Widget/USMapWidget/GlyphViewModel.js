@@ -268,7 +268,7 @@ define([
     Object.defineProperties(GlyphViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.dataSet, this.color, this.opacity, this.size, this.latitude, this.longitude, this.visible,
+                return [this.name, this.dataSet, this.z, this.zIncrement, this.zDecrement, this.color, this.opacity, this.size, this.latitude, this.longitude, this.visible,
                 this.logGoogleAnalytics];
             }
         },
