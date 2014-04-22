@@ -469,7 +469,12 @@ define([
             }
         }
         if (this.glyphList.options.length > 0) {
-            return true;
+            var glyphs = this.glyphList.options;
+            for (var i = 0; i < glyphs.length; i++) {
+                if (glyphs[i].usesDataSet(dataSet)) {
+                    return true;
+                }
+            }
         }
 
         return false;
