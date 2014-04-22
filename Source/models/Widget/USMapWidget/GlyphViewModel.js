@@ -99,41 +99,9 @@ define([
             .attr('class', 'widget-container')
             .attr('id', glyph.id);
 
-        var data = glyph.dataSet.value.data;
         glyph._dom = svg.append('g');
-        if (!glyph.visible.value) {
-            glyph._dom.attr('class', 'hide');
-        } else {
-            glyph._dom.attr('class', 'show');
-        }
 
-        glyph._dom.selectAll('circle').data(data)
-        .enter().append('circle')
-        .attr('cx', function(d, i) {
-            var coords = glyph.parent._projection([d[glyph.longitude.value], d[glyph.latitude.value]]);
-            if (coords !== null) {
-                return coords[0];
-            }
-        })
-        .attr('cy', function(d, i) {
-            var coords = glyph.parent._projection([d[glyph.longitude.value], d[glyph.latitude.value]]);
-            if (coords !== null) {
-                return coords[1];
-            }
-        })
-        .attr('r', function(d, i) {
-            var value;
-            if (glyph.size.value.type === GlyphSizeSchemeType.SCALED_SIZE) {
-                value = radiusScale(d[glyph.size.value.dataField.value]);
-            } else {
-                value = glyph.size.value.size.value*glyph.parent.width.value/100;
-            }
-            if (value !== null && value > 0 && !isNaN(value)) {
-                return value;
-            }
-        })
-        .style('fill', glyph.color.value)
-        .style('opacity', glyph.opacity.value/100);
+        editGlyph(glyph);
     }
 
     var GlyphViewModel = function(state, parent) {

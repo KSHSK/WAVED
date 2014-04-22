@@ -225,8 +225,10 @@ define([
 
     function addSuccess(options, value) {
         options.push(value);
-        value.latitude.originalValue = value.latitude.displayValue; //set lat lon first for validation reasons
-        value.latitude.value = value.latitude.displayValue; //TODO: look into why subscription isn't working for array property
+        //set lat lon first for validation reasons
+        //TODO: look into why subscription isn't working for array property
+        value.latitude.originalValue = value.latitude.displayValue;
+        value.latitude.value = value.latitude.displayValue;
         value.longitude.originalValue = value.longitude.displayValue;
         value.longitude.value = value.longitude.displayValue;
 
@@ -235,7 +237,8 @@ define([
             property._originalValue = property._displayValue;
             if (property instanceof GlyphSizeSelectionProperty){
                 var p = property.value.properties;
-                for (var j = p.length - 1; j >= 0 ; j--) { // Reversed to get dataField before dataSet for scaled size
+                // Reversed to get dataField before dataSet for scaled size
+                for (var j = p.length - 1; j >= 0 ; j--) {
                     p[j].originalValue = p[j].displayValue;
                     p[j].value = p[j].displayValue;
                 }
@@ -259,7 +262,7 @@ define([
     function editSuccess(value) {
         var originalState = value.getState();
 
-        value.latitude.originalValue = value.latitude.displayValue; // set lat lon first for validation reasons
+        value.latitude.originalValue = value.latitude.displayValue;
         value.latitude.value = value.latitude.displayValue;
         value.longitude.originalValue = value.longitude.displayValue;
         value.longitude.value = value.longitude.displayValue;
@@ -431,7 +434,8 @@ define([
         state.coloring = this.coloring.getState();
         state.strokeColor = this.strokeColor.getState();
         state.glyphs = [];
-        for(var i = 0; i < this.glyphs.length; i++) { //TODO: push this to ListProperty.getState
+        //TODO: push this to ListProperty.getState
+        for(var i = 0; i < this.glyphs.length; i++) {
             state.glyphs.push(this.glyphs[i].getState());
         }
 
@@ -451,7 +455,8 @@ define([
         }
 
         if (defined(state.glyphs)){
-            for(var i = 0; i < state.glyphs.length; i++) { //TODO: push this to ListProperty.setState
+            //TODO: push this to ListProperty.setState
+            for(var i = 0; i < state.glyphs.length; i++) {
                 this.glyphs.push(new GlyphViewModel(state.glyphs[i], this));
             }
         }
