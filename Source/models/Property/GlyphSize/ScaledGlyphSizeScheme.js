@@ -62,7 +62,7 @@ define([
                validSelection = (this._options.indexOf(value) !== -1);
            }
 
-           return undef || validSelection;
+           return !undef && validSelection;
         };
 
         this.dataSet.isValidValue = isValidValue;
@@ -76,14 +76,22 @@ define([
 
     ScaledGlyphSizeScheme.prototype = Object.create(GlyphSizeScheme.prototype);
 
-    ScaledGlyphSizeScheme.prototype.getType = function() {
-        return GlyphSizeSchemeType.SCALED_SIZE;
-    };
-
     Object.defineProperties(ScaledGlyphSizeScheme.prototype, {
         properties: {
             get: function() {
                 return [this.dataSet, this.dataField];
+            }
+        },
+        type : {
+            get : function() {
+                return GlyphSizeSchemeType.SCALED_SIZE;
+            }
+        },
+        error: {
+            get : function() {
+                var dataSet = this.dataSet;
+                var dataField = this.dataField;
+                return dataSet.error || dataField.error;
             }
         }
     });
@@ -92,7 +100,7 @@ define([
         var self = this;
 
         // Subscribe to the value of dataSet in order to automatically update dataField's options
-        subscribeObservable(self.dataSet, '_value', function(newValue){
+        subscribeObservable(self.dataSet, '_originalValue', function(newValue){
             var changeFunction = function() {
                 if(defined(newValue)){
                     if(defined(newValue.data)){
@@ -110,7 +118,33 @@ define([
                 }
                 else{
                     self.dataField.options = [];
-                    self.dataField.value = undefined; // Reset the dataField selection
+                    self.dataField.originalValue = undefined; // Reset the dataField selection
+                }
+            };
+
+            var historyMonitor = HistoryMonitor.getInstance();
+            historyMonitor.executeAmendHistory(changeFunction);
+        });
+
+        subscribeObservable(self.dataSet, '_displayValue', function(newValue){
+            var changeFunction = function() {
+                if(defined(newValue)){
+                    if(defined(newValue.data)){
+                        self.dataField.options = newValue.dataFields;
+                    }
+                    else {
+                        // Keep trying until data is ready, as long as data is a defined object.
+                        var interval = setInterval(function(){
+                            if(defined(newValue.data)){
+                                self.dataField.options = newValue.dataFields;
+                                clearInterval(interval);
+                            }
+                        }, 100);
+                    }
+                }
+                else{
+                    self.dataField.options = [];
+                    self.dataField.displayValue = undefined; // Reset the dataField selection
                 }
             };
 
@@ -121,7 +155,7 @@ define([
         // Properly unset the dataSet value when the options disappear (when the bound data is unbound)
         subscribeObservable(self.dataSet, '_options', function(newValue){
             if(defined(self.dataSet.value) && (newValue.indexOf(self.dataSet.value) === -1)){
-                    self.dataSet.value = undefined;
+                    self.dataSet.orignalValue = undefined;
             }
         });
 
@@ -131,10 +165,8 @@ define([
         // Set default selection. This MUST go after the subscribe in order to trigger dataField to update
         viewModel.boundData.forEach(function(entry){
             if(defined(state.dataSet) && (state.dataSet === entry.name)){
-                self.dataSet.value = entry;
-                self.dataField.value = state.dataField;
-
-                return;
+                self.dataSet.originalValue = entry;
+                self.dataField.originalValue = state.dataField;
             }
         });
     };
@@ -148,7 +180,7 @@ define([
         var state = {
             dataSet: set,
             dataField: this.dataField.getState().value,
-            type: this.getType()
+            type: this.type
         };
 
         return state;

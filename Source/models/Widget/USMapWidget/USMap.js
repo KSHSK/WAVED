@@ -36,6 +36,12 @@ define([
 
     USMap.prototype = Object.create(Widget.prototype);
 
+    USMap.prototype.addToWorkspace = function() {
+        Widget.prototype.addToWorkspace.call(this);
+
+        this.viewModel.render();
+    };
+
     /**
      * Static method that returns the type String for this class's ViewModel.
      */
@@ -45,11 +51,6 @@ define([
 
     USMap.iconLocation = function() {
         return 'Source/models/Widget/USMapWidget/usmap-icon.png';
-    };
-
-    USMap.prototype.addToWorkspace = function() {
-        Widget.prototype.addToWorkspace.call(this);
-        this.viewModel.render();
     };
 
     return USMap;

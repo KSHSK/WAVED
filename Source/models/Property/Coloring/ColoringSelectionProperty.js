@@ -28,8 +28,8 @@ define([
        this._displayTemplateName = PropertyTemplateName.COLORING_DISPLAY;
        this.error = false;
 
-       this.solidColoring = new SolidColoringScheme(state, viewModel);
-       this.fourColoring = new FourColoringScheme(state, viewModel);
+       this.solidColoring = new SolidColoringScheme(state);
+       this.fourColoring = new FourColoringScheme(state);
        this.gradientColoring = new GradientColoringScheme(state, viewModel);
 
        var stateValueType;
