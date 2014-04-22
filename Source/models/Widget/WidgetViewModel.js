@@ -97,11 +97,11 @@ define([
         });
 
         this.incrementZIndex = function() {
-            self.z.originalValue = self.z.originalValue+1;
+            self.z.originalValue++;
         };
 
         this.decrementZIndex = function() {
-            self.z.originalValue = self.z.originalValue-1;
+            self.z.originalValue--;
         };
 
         this.zIncrement = new ButtonProperty({
