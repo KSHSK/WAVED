@@ -157,12 +157,6 @@ define([
                 error = true;
             }
 
-            // Check that a trigger is selected.
-            if (!defined(viewModel.eventEditorTrigger)) {
-                viewModel.eventEditorTriggerError = true;
-                error = true;
-            }
-
             return error;
         }
 
