@@ -17,9 +17,10 @@ define(['knockout',
         this._displayValue = undefined;
         this.visible = true;
         this.onchange = options.onchange;
+        this.ondisplaychange = options.ondisplaychange;
 
         this.message = '';
-        this.error = false;
+        this._error = false;
 
         this._displayName = options.displayName;
         this.errorMessage = defined(options.errorMessage) ? options.errorMessage : 'Invalid value';
@@ -43,16 +44,23 @@ define(['knockout',
             self._displayValue = self._originalValue;
         });
 
-        subscribeObservable(this, '_value', function() {
+        // When this._value changes, call onchange.
+        subscribeObservable(this, '_value', function(newValue) {
+            if (defined(self.onchange)) {
+                self.onchange(newValue);
+            }
             self._displayValue = self._value;
         });
 
-        // When this._value changes, call onchange.
-        subscribeObservable(this, '_value', function() {
-            if (defined(self.onchange)) {
-                self.onchange();
+        subscribeObservable(this, '_displayValue', function(newValue) {
+            if (defined(self.ondisplaychange)) {
+                self.ondisplaychange(newValue);
             }
         });
+
+        this.updateUI = function() {
+            //abstract
+        };
     };
 
     Object.defineProperties(Property.prototype, {
@@ -78,20 +86,41 @@ define(['knockout',
             get: function() {
                 return this._originalValue;
             }
+        },
+        error : {
+            get : function() {
+                return this._error;
+            },
+            set : function(value) {
+                this._error = value;
+            }
         }
     });
 
     Property.prototype.getState = function() {
+        if (typeof this._value === 'object' && typeof this._value.getState === 'function') {
+            return {
+                'value': this._originalValue.getState()
+            };
+        }
         return {
             'value': this._originalValue
         };
     };
 
     Property.prototype.setState = function(state) {
-        this._originalValue = state.value;
-        this._value = state.value;
-        this._displayValue = state.value;
-        this.error = !this.isValidValue(this._value);
+        var value = state.value;
+        if (defined(state.value) && defined(state.value.type)) {
+            var O = window.wavedTypes[state.value.type];
+            if (defined(O)) {
+                value = new O(state.value);
+            }
+        }
+
+        this._value = value; //setState called before subscription is added
+        this._originalValue = value;
+        this._displayValue = value;
+        this._error = !this.isValidValue(this._value);
 
         if(defined(state.visible)){
             this.visible = state.visible;

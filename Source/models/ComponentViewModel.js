@@ -2,6 +2,7 @@ define([
         'jquery',
         'knockout',
         'models/Property/StringProperty',
+        'models/Property/BooleanProperty',
         'modules/PropertyChangeSubscriber',
         'modules/UniqueTracker',
         'util/defined',
@@ -12,6 +13,7 @@ define([
         $,
         ko,
         StringProperty,
+        BooleanProperty,
         PropertyChangeSubscriber,
         UniqueTracker,
         defined,
@@ -27,6 +29,18 @@ define([
         this.name = getNamePropertyInstance('Name', {
             namespace: ComponentViewModel.getUniqueNameNamespace(),
             item: this
+        });
+
+        // Set visible
+        this.visible = new BooleanProperty({
+            displayName: 'Visible',
+            value: true
+        });
+
+        // Set logGoogleAnalytics
+        this.logGoogleAnalytics = new BooleanProperty({
+            displayName: 'Log Google Analytics',
+            value: false
         });
 
         ko.track(this);
@@ -45,20 +59,30 @@ define([
     Object.defineProperties(ComponentViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name];
+                return [this.name, this.visible, this.logGoogleAnalytics];
             }
         }
     });
 
     ComponentViewModel.prototype.getState = function() {
         return {
-            'name': this.name.getState()
+            name: this.name.getState(),
+            visible : this.visible.getState(),
+            logGoogleAnalytics : this.logGoogleAnalytics.getState()
         };
     };
 
     ComponentViewModel.prototype.setState = function(state) {
         if (defined(state.name)) {
             this.name.originalValue = state.name.value;
+        }
+
+        if (defined(state.visible)) {
+            this.visible.originalValue = state.visible.value;
+        }
+
+        if (defined(state.logGoogleAnalytics)) {
+            this.logGoogleAnalytics.originalValue = state.logGoogleAnalytics.value;
         }
     };
 
@@ -113,6 +137,32 @@ define([
                 self.subscribeChange(value, '_originalValue', propertyChangeSubscriber);
             });
         }
+    };
+
+    ComponentViewModel.prototype.isValid = function() {
+        var valid = true;
+        for (var i = 0; i < this.properties.length; i++) {
+            valid = valid && !this.properties[i].error;
+        }
+        return valid;
+    };
+
+    ComponentViewModel.prototype.displayErrors = function() {
+        for (var i = 0; i < this.properties.length; i++) {
+            var property = this.properties[i];
+            if (property.error) {
+                property.message = property.errorMessage;
+            }
+        }
+    };
+
+    /**
+     * Checks if this widget use the dataSet.
+     * @param dataSet
+     * @returns Returns false by default.
+     */
+    ComponentViewModel.prototype.usesDataSet = function(dataSet) {
+        return false;
     };
 
     return ComponentViewModel;

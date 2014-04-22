@@ -22,6 +22,7 @@ define([
     var DEFAULT_HEIGHT = 600;
 
     var WorkspaceViewModel = function(state) {
+        ComponentViewModel.call(this, state);
         state = defined(state) ? state : {};
 
         // Set name
@@ -51,6 +52,10 @@ define([
         });
 
         UniqueTracker.addValueIfUnique(ComponentViewModel.getUniqueNameNamespace(), this.name.value, this);
+        this.color = new StringProperty({
+            displayName: 'Color',
+            value: 'White'
+        });
 
         this.setState(state);
 
@@ -93,7 +98,7 @@ define([
         },
         properties: {
             get: function() {
-                return [this.width, this.height];
+                return [this.width, this.height, this.color];
             }
         }
     });
