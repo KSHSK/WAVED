@@ -197,14 +197,5 @@ define([
         return data;
     };
 
-    /**
-     * Checks if this widget use the dataSet.
-     * @param dataSet
-     * @returns Returns false by default.
-     */
-    WidgetViewModel.prototype.usesDataSet = function(dataSet) {
-        return false;
-    };
-
     return WidgetViewModel;
 });
