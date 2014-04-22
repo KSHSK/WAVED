@@ -218,6 +218,7 @@ define([
     }
 
     function addSuccess(options, value) {
+        options.push(value);
         value.latitude.originalValue = value.latitude.displayValue; //set lat lon first for validation reasons
         value.latitude.value = value.latitude.displayValue; //TODO: look into why subscription isn't working for array property
         value.longitude.originalValue = value.longitude.displayValue;
@@ -346,19 +347,21 @@ define([
                 } else {
                     var newGlyph = new GlyphViewModel({}, self);
                     var options = this.options;
-                    options.push(newGlyph);
-                    this.value = newGlyph;
+
+                    // Force this glyph to be the value by not using the setter.
+                    this._value = newGlyph;
+
                     var that = this;
                     GlyphHelper.addEditGlyph(newGlyph).then(function() {
                         addSuccess(options, newGlyph);
                     }, function() {
                         that._value = undefined;
-                        options.splice(options.indexOf(newGlyph), 1);
+                        UniqueTracker.removeItem(ComponentViewModel.getUniqueNameNamespace(), newGlyph);
                     });
                 }
             },
             edit: function() {
-                if (defined(this._value)) {
+                if (defined(this.value)) {
                     var value = this.value;
                     GlyphHelper.addEditGlyph(value).then(function() {
                         editSuccess(value);
