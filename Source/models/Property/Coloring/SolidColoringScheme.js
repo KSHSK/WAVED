@@ -14,7 +14,7 @@ define([
         ko){
     'use strict';
 
-    var SolidColoringScheme = function(state, viewModel) {
+    var SolidColoringScheme = function(state) {
         state = defined(state) ? state : {};
 
         ColoringScheme.call(this, state);
@@ -23,7 +23,7 @@ define([
         var stateColor = {
             displayName: 'Color',
             value: '#C0C0C0',
-            onchange: viewModel.updateColoring
+            onchange: state.onchange
         };
         this.color = new StringProperty(stateColor);
 

@@ -1,0 +1,10 @@
+<div>
+    <span data-bind="text:displayName"></span>
+    <select data-bind="options: sizeType, optionsText: function(item) { return item.type; }, value: displayValue"></select>
+    <div class="error" data-bind="visible: error, html: message"></div>
+    <!-- ko if: displayValue !== undefined -->
+    <div data-bind="foreach: displayValue.properties">
+        <div data-bind="template: {name : $data.displayTemplateName, data: $data}"></div>
+    </div>
+    <!-- /ko -->
+</div>
