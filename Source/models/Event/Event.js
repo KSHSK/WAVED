@@ -45,8 +45,8 @@ define([
 
         this.fireEvent = function(event) {
             var workspace = $('#waved-workspace');
-            self._triggeringWidget.viewModel.trigger.data.x =  100 * (event.pageX - workspace.offset().left) / workspace.width();
-            self._triggeringWidget.viewModel.trigger.data.y = 100 * (event.pageY - workspace.offset().top) / workspace.height();
+            self._triggeringWidget.viewModel.trigger.addData('x', 100 * (event.pageX - workspace.offset().left) / workspace.width());
+            self._triggeringWidget.viewModel.trigger.addData('y', 100 * (event.pageY - workspace.offset().top) / workspace.height());
 
             self.applyActions();
         };

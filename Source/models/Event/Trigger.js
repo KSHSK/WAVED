@@ -37,7 +37,10 @@ define(['knockout',
 
     Trigger.prototype.addData = function(name, key, value) {
         if (arguments.length === 2) {
-            this._data[name] = key;
+            if (!defined(this._data.trigger)) {
+                this._data.trigger = {};
+            }
+            this._data.trigger[name] = key;
             return;
         }
 
