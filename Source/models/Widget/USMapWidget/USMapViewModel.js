@@ -69,7 +69,7 @@ define([
     }
 
     var addStateDataToTrigger = function(viewModel, d) {
-        viewModel._trigger.addData('data', 'state', d.properties.name);
+        viewModel._trigger.addData('state', d.properties.name);
 
         for (var i = 0; i < viewModel._boundData.length; i++) {
             var data = viewModel._boundData[i].data;
@@ -78,13 +78,15 @@ define([
                     if (data[j][key] === d.properties.name) {
                         for (var k in data[j]) {
                             if (k !== key) {
-                                viewModel._trigger.addData('data', k, data[j][k]);
+                                viewModel._trigger.addData(viewModel._boundData[i].name, k, data[j][k]);
                             }
                         }
                     }
                 }
             }
         }
+
+        console.log(viewModel._trigger.data);
     };
 
     function renderMap (viewModel) {
@@ -101,8 +103,7 @@ define([
             var svg = getElement(viewModel)
                 .append('svg')
                 .attr('height', h2)
-                .attr('width', w2)
-                .attr('class', 'widget-container');
+                .attr('width', w2);
             viewModel._svg = svg;
             viewModel._states = svg.append('g');
             var statesDataPath = ReadData.getFilePath(STATES_DATA_FILE);

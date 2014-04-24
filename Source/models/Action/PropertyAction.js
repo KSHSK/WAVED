@@ -29,7 +29,7 @@ define([
                 function getTemplateMatches(str) {
                     var index = 1;
                     var matches = [];
-                    var templateRegex = /{{([\w]+)}}/g;
+                    var templateRegex = /{{([.\w]+)}}/g;
                     var match;
                     while ((match = templateRegex.exec(str)) !== null) {
                         matches.push(match[index]);
@@ -46,10 +46,15 @@ define([
                         }
 
                         for (var i = 0; i < templates.length; i++) {
-                            if (defined(data.data) && defined(data.data[templates[i]])) {
-                                temp = temp.replace('{{' + templates[i]+ '}}', data.data[templates[i]]);
-                            } else if (defined(data[templates[i]])) {
+                            if (defined(data[templates[i]])) {
                                 temp = temp.replace('{{' + templates[i]+ '}}', data[templates[i]]);
+                            } else {
+                                var components = templates[i].split('.');
+                                if (components.length > 1) {
+                                    if (defined(data[components[0]]) && defined(data[components[0]][components[1]])) {
+                                        temp = temp.replace('{{' + templates[i]+ '}}', data[components[0]][components[1]]);
+                                    }
+                                }
                             }
                         }
 
