@@ -5,7 +5,8 @@ define([
         'knockout',
         'jquery',
         'util/defined',
-        'util/defaultValue'
+        'util/defaultValue',
+        'util/createValidator'
     ],function(
         GlyphSizeScheme,
         GlyphSizeSchemeType,
@@ -13,7 +14,8 @@ define([
         ko,
         $,
         defined,
-        defaultValue){
+        defaultValue,
+        createValidator){
     'use strict';
 
     var ConstantGlyphSizeScheme = function(state) {
@@ -29,8 +31,12 @@ define([
 
         // Default size
         var stateSize = {
-            displayName: 'Size (%)',
-            value: 10
+            displayName: 'Size (px)',
+            value: 3,
+            validValue : createValidator({
+                min: 1
+            }),
+            errorMessage: 'Value must be greater than 0.'
         };
         this.size = new NumberProperty(stateSize);
 
@@ -41,14 +47,20 @@ define([
 
     ConstantGlyphSizeScheme.prototype = Object.create(GlyphSizeScheme.prototype);
 
-    ConstantGlyphSizeScheme.prototype.getType = function() {
-        return GlyphSizeSchemeType.CONSTANT_SIZE;
-    };
-
     Object.defineProperties(ConstantGlyphSizeScheme.prototype, {
         properties: {
             get: function() {
                 return [this.size];
+            }
+        },
+        type: {
+            get : function() {
+                return GlyphSizeSchemeType.CONSTANT_SIZE;
+            }
+        },
+        error: {
+            get : function() {
+                return this.size.error;
             }
         }
     });
@@ -56,14 +68,14 @@ define([
     ConstantGlyphSizeScheme.prototype.getState = function() {
         var state = {
             size: this.size.getState(),
-            type: this.getType()
+            type: this.type
         };
 
         return state;
     };
 
     ConstantGlyphSizeScheme.prototype.setState = function(state) {
-        if(defined(state.value.size) && state.value.size.value > 0){
+        if(defined(state.value) && defined(state.value.size) && state.value.size.value > 0){
             this.size.value = state.value.size.value;
         }
     };

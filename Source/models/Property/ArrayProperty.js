@@ -17,10 +17,13 @@ define([
         opts = defined(opts) ? opts : {};
         Property.call(this, opts);
 
+        //TODO: Add type property to track the object type of the options in the array.
+        // (Which is probably needed for a cleaner setState solution)
+
         this._templateName = PropertyTemplateName.ARRAY;
         this._displayTemplateName = PropertyTemplateName.ARRAY_DISPLAY;
 
-        this._options = [];
+        this._options = defaultValue(opts.options, []);
 
         // Set a default isValidValue function if necessary.
         if (!defined(opts.validValue)) {
@@ -28,7 +31,7 @@ define([
                 if (defined(this._options) && this._options.length > 0) {
                     return (this._options.indexOf(value) !== -1);
                 }
-                return true;
+                return false;
             };
         }
 
@@ -36,6 +39,8 @@ define([
             this.getOptionText = function(value){
                 return value;
             };
+        } else {
+            this.getOptionText = opts.getOptionText;
         }
 
         this.setState(opts);
@@ -54,7 +59,9 @@ define([
                 if (Array.isArray(options)) {
                     this._options = options;
                     if (options.indexOf(this._value) === -1) {
-                        this._value = undefined;
+                        this._value = '';
+                        this._displayValue = '';
+                        this.error = true;
                     }
                 }
             }
@@ -90,20 +97,36 @@ define([
                     this.message = this.errorMessage;
                 }
             }
+        },
+        displayValue: {
+            get: function() {
+                return this._displayValue;
+            },
+            set: function(value) {
+                if (this.isValidValue(value)) {
+                    this.error = false;
+                    this.message = '';
+                    this._displayValue = value;
+                }
+                else {
+                    this.error = true;
+                    this.message = this.errorMessage;
+                }
+            }
         }
     });
 
     ArrayProperty.prototype.getState = function() {
         var state = Property.prototype.getState.call(this);
-
+        state.options = this.options;
         return state;
     };
 
     ArrayProperty.prototype.setState = function(state) {
-        this._options = defaultValue(state.options, []);
-        this.getOptionText = state.getOptionText;
+        if (defined(state.options)) {
+            this.options = state.options;
+        }
 
-        // Need to call this after this._options is set, so the isValidValue function works.
         Property.prototype.setState.call(this, state);
     };
 
