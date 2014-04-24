@@ -85,8 +85,6 @@ define([
                 }
             }
         }
-
-        console.log(viewModel._trigger.data);
     };
 
     function renderMap (viewModel) {
