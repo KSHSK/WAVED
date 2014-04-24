@@ -37,8 +37,6 @@ define([
         this._triggeringWidget = {}; // WidgetViewModel
         this._actions = []; // Action[]
 
-        this.setState(state);
-
         this.applyActions = function() {
             for (var i = 0; i < self.actions.length; i++) {
                 self.actions[i].apply(self._triggeringWidget.viewModel.trigger.data);
@@ -54,12 +52,18 @@ define([
         };
 
         this.register = function() {
-            $(self._triggeringWidget.viewModel.trigger.domElement).on(EventType[self._eventType], self.fireEvent);
+            if (defined(self._triggeringWidget)) {
+                $(self._triggeringWidget.viewModel.trigger.domElement).on(EventType[self._eventType], self.fireEvent);
+            }
         };
 
         this.unregister = function() {
-            $(self._triggeringWidget.viewModel.trigger.domElement).off(EventType[self._eventType], self.fireEvent);
+            if (defined(self._triggeringWidget)) {
+                $(self._triggeringWidget.viewModel.trigger.domElement).off(EventType[self._eventType], self.fireEvent);
+            }
         };
+
+        this.setState(state);
 
         ko.track(this);
     };
@@ -85,7 +89,9 @@ define([
                 return this._eventType;
             },
             set: function(value) {
+                this.unregister();
                 this._eventType = value;
+                this.register();
             }
         },
         triggeringWidget: {
@@ -93,7 +99,9 @@ define([
                 return this._triggeringWidget;
             },
             set: function(value) {
+                this.unregister();
                 this._triggeringWidget = value;
+                this.register();
             }
         },
         actions: {
