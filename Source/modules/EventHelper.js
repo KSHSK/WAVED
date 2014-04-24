@@ -114,14 +114,12 @@ define([
             var oldName = event.name;
             var oldEventType = event.eventType;
             var oldTriggeringWidget = event.triggeringWidget;
-            var oldTrigger = event.trigger;
             var oldActions = event.actions;
 
             function undoChange() {
                 event.name = oldName;
                 event.eventType = oldEventType;
                 event.triggeringWidget = oldTriggeringWidget;
-                event.trigger = oldTrigger;
                 event.actions = oldActions;
             }
 
