@@ -77,9 +77,7 @@ define([
                 for (var key in data[j]) {
                     if (data[j][key] === d.properties.name) {
                         for (var k in data[j]) {
-                            if (k !== key) {
-                                viewModel._trigger.addData(viewModel._boundData[i].name, k, data[j][k]);
-                            }
+                            viewModel._trigger.addData(viewModel._boundData[i].name, k, data[j][k]);
                         }
                     }
                 }
