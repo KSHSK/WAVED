@@ -96,9 +96,7 @@ define([
                             return;
                         }
 
-                        viewModel.selectedEvent.unregister();
                         self.updateEditChanges(viewModel);
-                        viewModel.selectedEvent.register();
 
                         self.eventDialog.dialog('close');
                     },
