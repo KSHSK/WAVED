@@ -150,7 +150,6 @@ textarea:disabled {
     height: inherit;
     width: inherit;
     position: absolute;
-    pointer-events: none;
 }
 
 .widget {

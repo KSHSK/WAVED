@@ -104,8 +104,7 @@ define([
                 .attr('width', w2)
                 .attr('class', 'widget-container');
             viewModel._svg = svg;
-            viewModel._states = svg.append('g')
-                .attr('pointer-events', 'none');
+            viewModel._states = svg.append('g');
             var statesDataPath = ReadData.getFilePath(STATES_DATA_FILE);
             d3.json(statesDataPath, function(json) {
                 viewModel._states.selectAll('path')
