@@ -29,7 +29,7 @@ define([
                 function getTemplateMatches(str) {
                     var index = 1;
                     var matches = [];
-                    var templateRegex = /{{([.\w]+)}}/g;
+                    var templateRegex = /{{([ _.\w]+)}}/g;
                     var match;
                     while ((match = templateRegex.exec(str)) !== null) {
                         matches.push(match[index]);
