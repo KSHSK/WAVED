@@ -46,8 +46,8 @@ define([
                         }
 
                         for (var i = 0; i < templates.length; i++) {
-                            if (defined(data[templates[i]])) {
-                                temp = temp.replace('{{' + templates[i]+ '}}', data[templates[i]]);
+                            if (defined(data.trigger) && defined(data.trigger[templates[i]])) {
+                                temp = temp.replace('{{' + templates[i]+ '}}', data.trigger[templates[i]]);
                             } else {
                                 var components = templates[i].split('.');
                                 if (components.length > 1) {
