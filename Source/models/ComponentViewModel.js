@@ -61,7 +61,7 @@ define([
 
         this.decrementZIndex = function() {
             /*
-             * Don't let this go below 0. Z-index is relative to the parent container
+             * Don't let this go below zMinimum. Z-index is relative to the parent container
              * so a negative z will put it behind the parent.
              */
             if(self.z.originalValue > self.zMinimum) {
