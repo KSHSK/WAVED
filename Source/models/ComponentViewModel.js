@@ -53,12 +53,20 @@ define([
             visible: false
         });
 
+        this.zMinimum = 0;
+
         this.incrementZIndex = function() {
             self.z.originalValue++;
         };
 
         this.decrementZIndex = function() {
-            self.z.originalValue--;
+            /*
+             * Don't let this go below 0. Z-index is relative to the parent container
+             * so a negative z will put it behind the parent.
+             */
+            if(self.z.originalValue > self.zMinimum) {
+                self.z.originalValue--;
+            }
         };
 
         this.zIncrement = new ButtonProperty({
@@ -98,7 +106,8 @@ define([
         return {
             name: this.name.getState(),
             visible : this.visible.getState(),
-            logGoogleAnalytics : this.logGoogleAnalytics.getState()
+            logGoogleAnalytics : this.logGoogleAnalytics.getState(),
+            z : this.z.getState()
         };
     };
 
@@ -113,6 +122,10 @@ define([
 
         if (defined(state.logGoogleAnalytics)) {
             this.logGoogleAnalytics.originalValue = state.logGoogleAnalytics.value;
+        }
+
+        if(defined(state.z)){
+            this.z.originalValue = state.z.value;
         }
     };
 

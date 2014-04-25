@@ -2,12 +2,14 @@ define([
         './Property',
         'util/defined',
         'models/Constants/PropertyTemplateName',
-        'knockout'
+        'knockout',
+        'jqueryUI'
     ],function(
         Property,
         defined,
         PropertyTemplateName,
-        ko
+        ko,
+        $
     ){
     'use strict';
 
@@ -19,9 +21,20 @@ define([
         this._displayTemplateName = PropertyTemplateName.BUTTON_DISPLAY;
 
         this.buttonLabel = '';
-
         this.clickFunction = function() {
             return;
+        };
+
+        if(defined(options.clickFunction)) {
+            this.clickFunction = options.clickFunction;
+        }
+
+        if(defined(options.buttonLabel)) {
+            this.buttonLabel = options.buttonLabel;
+        }
+
+        this.updateUI = function() {
+            $('.button-property').button();
         };
 
         this.setState(options);
@@ -59,13 +72,7 @@ define([
     });
 
     ButtonProperty.prototype.setState = function(state) {
-        if(defined(state.clickFunction)) {
-            this.clickFunction = state.clickFunction;
-        }
 
-        if(defined(state.buttonLabel)) {
-            this.buttonLabel = state.buttonLabel;
-        }
 
         Property.prototype.setState.call(this, state);
     };

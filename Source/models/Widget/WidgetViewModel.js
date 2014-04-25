@@ -108,7 +108,6 @@ define([
         state.height = this.height.getState();
         state.x = this.x.getState();
         state.y = this.y.getState();
-        state.z = this.z.getState();
 
         var boundDataSetStates = [];
         for(var index=0; index < this.boundData.length; index++){
@@ -136,10 +135,6 @@ define([
 
         if (defined(state.y)) {
             this.y.originalValue = state.y.value;
-        }
-
-        if(defined(state.z)){
-            this.z.originalValue = state.z.value;
         }
 
         if (defined(state.elements)) {

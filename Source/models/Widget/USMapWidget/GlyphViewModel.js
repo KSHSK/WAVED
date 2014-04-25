@@ -203,6 +203,10 @@ define([
             removeGlyph(self);
         };
 
+        // Override the default values
+        this.z.orignalValue = 1;
+        this.zMinimum = 1;
+
         ko.track(this);
     };
 
