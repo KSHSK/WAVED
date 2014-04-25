@@ -34,8 +34,8 @@ define(['knockout',
             };
         }
 
-        if(defined(state.visible)){
-            this.visible = state.visible;
+        if(defined(options.visible)){
+            this.visible = options.visible;
         }
 
         this.setState(options);
