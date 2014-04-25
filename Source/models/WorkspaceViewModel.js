@@ -58,7 +58,7 @@ define([
         });
 
         // Override so workspace is always on the bottom
-        this.z = 0;
+        this.z.originalValue = 0;
 
         this.setState(state);
 
