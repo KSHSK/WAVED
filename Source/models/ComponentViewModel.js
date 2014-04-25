@@ -47,13 +47,18 @@ define([
             value: false
         });
 
+        /*
+         * Default to 25. Override 0 for components that need to always be on bottom (e.g. WorkspaceViewModel, USMapViewModel)
+         * 25 is a magic number, it's just so that if you add multiple widgets on top of one another and want to send one to the back,
+         * you don't need to send all the other ones forward, just move the one back.
+         */
         this.z = new NumberProperty({
             displayName: 'Z',
-            value: 0,
+            value: 25,
             visible: false
         });
 
-        this.zMinimum = 0;
+        this.zMinimum = 1;
 
         this.incrementZIndex = function() {
             self.z.originalValue++;

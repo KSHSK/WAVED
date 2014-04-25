@@ -203,10 +203,6 @@ define([
             removeGlyph(self);
         };
 
-        // Override the default values
-        this.z.orignalValue = 1;
-        this.zMinimum = 1;
-
         ko.track(this);
     };
 
@@ -272,8 +268,8 @@ define([
     Object.defineProperties(GlyphViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.dataSet, this.z, this.zIncrement, this.zDecrement, this.color, this.opacity, this.size, this.latitude, this.longitude, this.visible,
-                this.logGoogleAnalytics];
+                return [this.name, this.dataSet, this.color, this.opacity, this.size, this.latitude, this.longitude, this.visible,
+                this.logGoogleAnalytics, this.z, this.zIncrement, this.zDecrement];
             }
         },
 
