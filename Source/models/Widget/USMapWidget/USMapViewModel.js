@@ -416,6 +416,9 @@ define([
         this._isRendered = false;
         this._ready = true;
 
+        // Map will always be below everything else. Must always be set to 0.
+        this.z.value = 0;
+
         ko.track(this);
     };
 
@@ -483,7 +486,7 @@ define([
     Object.defineProperties(USMapViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.x, this.y, this.z, this.zIncrement, this.zDecrement, this.width, this.visible,
+                return [this.name, this.x, this.y, this.width, this.visible,
                         this.strokeColor, this.coloring, this.logGoogleAnalytics, this.glyphList];
             }
         }

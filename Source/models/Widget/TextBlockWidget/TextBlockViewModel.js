@@ -51,6 +51,10 @@ define([
         this.height.originalValue = 5;
         this.width.originalValue = 15;
 
+        // Override the default values
+        this.z.orignalValue = 1;
+        this.zMinimum = 1;
+
         this.setState(state);
 
         ko.track(this);
