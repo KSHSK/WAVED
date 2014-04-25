@@ -41,10 +41,6 @@ define([
         this.height.originalValue = 5;
         this.width.originalValue = 10;
 
-        // Override the default values
-        this.z.orignalValue = 1;
-        this.zMinimum = 1;
-
         this.setState(state);
 
         ko.track(this);
@@ -78,8 +74,8 @@ define([
     Object.defineProperties(ButtonViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.label, this.x, this.y, this.z, this.zIncrement, this.zDecrement, this.width, this.height, this.visible,
-                this.logGoogleAnalytics];
+                return [this.name, this.label, this.x, this.y, this.width, this.height, this.visible,
+                this.logGoogleAnalytics, this.z, this.zIncrement, this.zDecrement];
             }
         }
     });

@@ -416,7 +416,10 @@ define([
         this._isRendered = false;
         this._ready = true;
 
-        // Map will always be below everything else. Must always be set to 0.
+        /*
+         * Map will always be below everything else. Must always be set to 0.
+         * This is due to a click-through issue where clicks on the map will propagate to elements underneath.
+         */
         this.z.value = 0;
 
         ko.track(this);
