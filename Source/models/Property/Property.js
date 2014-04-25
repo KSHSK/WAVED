@@ -34,6 +34,10 @@ define(['knockout',
             };
         }
 
+        if(defined(state.visible)){
+            this.visible = state.visible;
+        }
+
         this.setState(options);
 
         ko.track(this);
@@ -121,10 +125,6 @@ define(['knockout',
         this._originalValue = value;
         this._displayValue = value;
         this._error = !this.isValidValue(this._value);
-
-        if(defined(state.visible)){
-            this.visible = state.visible;
-        }
     };
 
     Property.prototype.isValidValue = function() {
