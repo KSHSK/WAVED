@@ -18,7 +18,6 @@ define([
         Property.call(this, options);
 
         this._templateName = PropertyTemplateName.BUTTON;
-        this._displayTemplateName = PropertyTemplateName.BUTTON_DISPLAY;
 
         this.buttonLabel = '';
         this.clickFunction = function() {
