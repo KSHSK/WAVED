@@ -18,7 +18,7 @@ author: Steve Nguyen
 	* [#165](https://github.com/KSHSK/WAVED/issues/165) - Implement LineGraphViewModel class
 	* [#168](https://github.com/KSHSK/WAVED/issues/168) - New widgets on top of older widgets - need z-index property (BUG)
 	* [#170](https://github.com/KSHSK/WAVED/issues/170) - Copy states.json to project data folder
-	* [#174](https://github.com/KSHSK/WAVED/issues/174) - Delete project form list
+	* [#174](https://github.com/KSHSK/WAVED/issues/174) - Delete project from list
 	* [#175](https://github.com/KSHSK/WAVED/issues/175) - View DataSet contents
 	* [#176](https://github.com/KSHSK/WAVED/issues/176) - Use DataSet in PropertyAction
 	* [#177](https://github.com/KSHSK/WAVED/issues/177) - When in history last save was made
