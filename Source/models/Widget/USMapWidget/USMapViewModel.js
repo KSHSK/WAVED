@@ -420,7 +420,7 @@ define([
          * Map will always be below everything else. Must always be set to 0.
          * This is due to a click-through issue where clicks on the map will propagate to elements underneath.
          */
-        this.z.value = 0;
+        this.z.originalValue = 0;
 
         ko.track(this);
     };
