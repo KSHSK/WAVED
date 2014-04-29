@@ -17,10 +17,10 @@ define([
         displayMessage) {
     'use strict';
 
-    var UploadData = {
-        uploadDataDialog: $('#upload-data-dialog'),
-        uploadDataFileInput: $('#upload-data-file'),
+    var uploadDataDialog = $('#upload-data-dialog');
+    var uploadDataFileInput = $('#upload-data-file');
 
+    var UploadData = {
         tryToUploadData: function(viewModel){
             var dataUploaded = $.Deferred();
             this.openUploadDataDialog(dataUploaded, viewModel);
@@ -33,9 +33,9 @@ define([
             // Clear the inputs and errors.
             viewModel.uploadDataName.reset();
             viewModel.uploadDataFile.reset();
-            self.uploadDataFileInput.val('');
+            uploadDataFileInput.val('');
 
-            self.uploadDataDialog.dialog({
+            uploadDataDialog.dialog({
                 resizable: false,
                 height: 250,
                 width: 400,
@@ -60,12 +60,12 @@ define([
 
                             self.uploadData(dataUploaded, viewModel);
                             $.when(dataUploaded).done(function() {
-                                self.uploadDataDialog.dialog('close');
+                                uploadDataDialog.dialog('close');
                             });
                         }
                     },
                     'Cancel': function() {
-                        self.uploadDataDialog.dialog('close');
+                        uploadDataDialog.dialog('close');
                     }
                 }
             });
@@ -79,7 +79,7 @@ define([
             var dataSetName = viewModel.uploadDataName.value;
 
             var form = new FormData();
-            var file = self.uploadDataFileInput[0].files[0];
+            var file = uploadDataFileInput[0].files[0];
             if (file === undefined) {
                 // Just a precaution, but should never be called.
                 displayMessage('No file has been selected');

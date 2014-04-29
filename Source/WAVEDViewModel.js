@@ -4,6 +4,7 @@ define(['jquery',
         'models/Constants/ActionType',
         'models/Action/Action',
         'models/Constants/EventType',
+        'models/ComponentRecord',
         'models/Event/Event',
         'models/GoogleAnalytics',
         'models/ProjectViewModel',
@@ -37,6 +38,7 @@ define(['jquery',
         ActionType,
         Action,
         EventType,
+        ComponentRecord,
         Event,
         GoogleAnalytics,
         ProjectViewModel,
@@ -98,19 +100,23 @@ define(['jquery',
 
         this._projectTree = new ProjectTree();
 
-        this._availableWidgets = [{
-            name: 'Button',
-            icon: Button.iconLocation(),
-            o: Button
-        }, {
-            name: 'Text Block',
-            icon: TextBlock.iconLocation(),
-            o: TextBlock
-        }, {
-            name: 'US Map',
-            icon: USMap.iconLocation(),
-            o: USMap
-        }];
+        this._availableWidgets = [
+            new ComponentRecord({
+                name: 'Button',
+                icon: Button.iconLocation(),
+                component: Button
+            }),
+            new ComponentRecord({
+                name: 'Text Block',
+                icon: TextBlock.iconLocation(),
+                o: TextBlock
+            }),
+            new ComponentRecord({
+                name: 'US Map',
+                icon: USMap.iconLocation(),
+                o: USMap
+            })
+        ];
 
         this.eventTypes = [];
         for (var eventType in EventType) {
@@ -474,30 +480,6 @@ define(['jquery',
         availableWidgets: {
             get: function() {
                 return this._availableWidgets;
-            }
-        },
-        selectedComponent: {
-            get: function() {
-                return this._selectedComponent;
-            },
-            set: function(value) {
-                this._selectedComponent = value;
-            }
-        },
-        selectedDataSet: {
-            get: function() {
-                return this._selectedDataSet;
-            },
-            set: function(value) {
-                this._selectedDataSet = value;
-            }
-        },
-        selectedBoundData: {
-            get: function() {
-                return this._selectedBoundData;
-            },
-            set: function(value) {
-                this._selectedBoundData = value;
             }
         },
         availableDataForBinding: {

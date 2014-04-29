@@ -29,7 +29,7 @@ define([
         ComponentViewModel.call(this, state);
         self = this;
 
-        this.getDataSetByName = function(dataSetName){
+        this.getDataSetByName = function(dataSetName){ // Does this have to be in the constructor?
             return getDataSet(dataSetName);
         };
 
@@ -144,10 +144,6 @@ define([
                 }
             }
         }
-    };
-
-    WidgetViewModel.prototype.getTriggers = function() {
-        return this._triggers;
     };
 
     WidgetViewModel.prototype.addTrigger = function(trigger) {

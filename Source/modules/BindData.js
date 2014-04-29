@@ -21,10 +21,8 @@ define([
         displayMessage) {
     'use strict';
 
+    var bindDataDialog = $('#bind-data-dialog');
     var BindData = {
-        bindDataDialog: $('#bind-data-dialog'),
-        bindDataOptions: $('#bind-data-options'),
-
         tryToBindData: function(viewModel){
             this.openBindDataDialog(viewModel);
         },
@@ -35,7 +33,7 @@ define([
             // Uncheck all.
             $('.bind-data-selections').removeAttr('checked');
 
-            self.bindDataDialog.dialog({
+            bindDataDialog.dialog({
                 resizable: false,
                 height: 250,
                 width: 400,
@@ -54,10 +52,10 @@ define([
                         });
                         self.bindData(viewModel, dataSetNames);
 
-                        self.bindDataDialog.dialog('close');
+                        bindDataDialog.dialog('close');
                     },
                     'Cancel': function() {
-                        self.bindDataDialog.dialog('close');
+                        bindDataDialog.dialog('close');
                     }
                 },
                 open: function() {

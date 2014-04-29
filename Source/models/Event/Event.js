@@ -33,10 +33,10 @@ define([
 
         // TODO: Validation, etc
         this._name = '';
-        this._eventType = ''; // EventType
-        this._triggeringWidget = {}; // WidgetViewModel
-        this._trigger = {}; // Trigger
-        this._actions = []; // Action[]
+        this.eventType = ''; // EventType
+        this.riggeringWidget = {}; // WidgetViewModel
+        this.trigger = {}; // Trigger
+        this.actions = []; // Action[]
 
         this.setState(state);
 
@@ -56,6 +56,8 @@ define([
         };
 
         ko.track(this);
+
+        this.subscribed = false;
     };
 
     Event.getUniqueNameNamespace = function() {
@@ -72,38 +74,6 @@ define([
                 if (success) {
                     this._name = value;
                 }
-            }
-        },
-        eventType: {
-            get: function() {
-                return this._eventType;
-            },
-            set: function(value) {
-                this._eventType = value;
-            }
-        },
-        triggeringWidget: {
-            get: function() {
-                return this._triggeringWidget;
-            },
-            set: function(value) {
-                this._triggeringWidget = value;
-            }
-        },
-        trigger: {
-            get: function() {
-                return this._trigger;
-            },
-            set: function(value) {
-                this._trigger = value;
-            }
-        },
-        actions: {
-            get: function() {
-                return this._actions;
-            },
-            set: function(value) {
-                this._actions = value;
             }
         }
     });
@@ -141,8 +111,6 @@ define([
             })
         };
     };
-
-    Event.prototype.subscribed = false;
 
     Event.prototype.subscribeChanges = function() {
         var self = this;

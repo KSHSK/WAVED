@@ -163,7 +163,7 @@ define([
             self.longitude.options = newValue.dataFields;
         };
         this.setState(state);
-        this.id = this.name.value;
+        this._id = this.name.value;
         this._dom = undefined;
 
         this.add = function() {
@@ -272,7 +272,11 @@ define([
                 this.logGoogleAnalytics];
             }
         },
-
+        id : {
+            get : function() {
+                return this._id;
+            }
+        },
         boundData : {
             get : function() {
                 return this.parent.boundData;

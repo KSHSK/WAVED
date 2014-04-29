@@ -5,8 +5,7 @@ define([], function(){
         BUTTON: 'buttonTemplate',
         TEXTBLOCK: 'textblockTemplate',
         US_MAP: 'usMapTemplate',
-        LINE_GRAPH: 'lineGraphTemplate',
-        TOOLTIP: 'tooltipTemplate'
+        LINE_GRAPH: 'lineGraphTemplate'
     };
 
     return WidgetTemplateName;

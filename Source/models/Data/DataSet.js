@@ -29,13 +29,16 @@ define(['knockout',
         state = defined(state) ? state : {};
 
         this._name = '';
-        this._filename = '';
+        this.filename = '';
         this._referenceCount = 0;
-        this._dataFields = [];
+        this.dataFields = [];
+        this._data = undefined;
 
         this.setState(state);
 
         ko.track(this);
+
+        this.subscribed = false;
     };
 
     /**
@@ -116,8 +119,6 @@ define(['knockout',
         }
     };
 
-    DataSet.prototype.subscribed = false;
-
     DataSet.prototype.subscribeChanges = function() {
         var self = this;
         var propertyChangeSubscriber = PropertyChangeSubscriber.getInstance();
@@ -154,14 +155,6 @@ define(['knockout',
                 }
             }
         },
-        filename: {
-            get: function() {
-                return this._filename;
-            },
-            set: function(value) {
-                this._filename = value;
-            }
-        },
         data: {
             get: function() {
                 return this._data;
@@ -175,14 +168,6 @@ define(['knockout',
         referenceCount: {
             get: function() {
                 return this._referenceCount;
-            }
-        },
-        dataFields: {
-            get: function() {
-                return this._dataFields;
-            },
-            set: function(fields){
-                this._dataFields = fields;
             }
         }
     });

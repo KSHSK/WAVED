@@ -22,10 +22,12 @@ define(['jquery',
         state = defined(state) ? state : {};
 
         this._name = '';
-        this._target = undefined;
-        this._applyAutomatically  = false;
+        this.target = undefined;
+        this.applyAutomatically  = false;
 
         ko.track(this);
+
+        this.subscribed = false;
     };
 
     Action.getUniqueNameNamespace = function() {
@@ -42,23 +44,6 @@ define(['jquery',
                 if (success) {
                     this._name = value;
                 }
-            }
-        },
-        // TODO: These not in the DD, should be required
-        target: {
-            get: function() {
-                return this._target;
-            },
-            set: function(target) {
-                this._target = target;
-            }
-        },
-        applyAutomatically: {
-            get: function() {
-                return this._applyAutomatically;
-            },
-            set: function(value) {
-                this._applyAutomatically = value;
             }
         }
     });
@@ -84,8 +69,6 @@ define(['jquery',
             'applyAutomatically': this._applyAutomatically
         };
     };
-
-    Action.prototype.subscribed = false;
 
     Action.prototype.subscribeChanges = function() {
         var self = this;

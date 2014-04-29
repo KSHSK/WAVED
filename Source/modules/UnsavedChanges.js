@@ -4,14 +4,13 @@
 define(['jquery'], function($) {
     'use strict';
 
-    var UnsavedChangesModule = {
-        unsavedChangesDialog: $('#unsaved-changes-dialog'),
-
+    var unsavedChangesDialog = $('#unsaved-changes-dialog');
+    var UnsavedChanges = {
         /**
          * Handles when the user tries to close the project when there are unsaved changes.
          */
         handleUnsavedChanges: function(deferred) {
-            this.unsavedChangesDialog.dialog({
+            unsavedChangesDialog.dialog({
                 resizable: false,
                 height: 225,
                 width: 300,
@@ -39,5 +38,5 @@ define(['jquery'], function($) {
         }
     };
 
-    return UnsavedChangesModule;
+    return UnsavedChanges;
 });

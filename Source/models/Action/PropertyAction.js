@@ -19,7 +19,7 @@ define([
         var self = this;
         Action.call(this, state);
 
-        this._newValues = {};
+        this.newValues = {};
 
         this.apply = function() {
             var historyMonitor = HistoryMonitor.getInstance();
@@ -54,17 +54,6 @@ define([
     };
 
     PropertyAction.prototype = Object.create(Action.prototype);
-
-    Object.defineProperties(PropertyAction.prototype, {
-        newValues: {
-            get: function() {
-                return this._newValues;
-            },
-            set: function(newValues) {
-                this._newValues = newValues;
-            }
-        }
-    });
 
     PropertyAction.prototype.setState = function(state) {
         Action.prototype.setState.call(this, state);

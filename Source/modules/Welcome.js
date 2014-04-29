@@ -13,9 +13,9 @@ define([
         $) {
     'use strict';
 
-    var Welcome = {
-        welcomeDialog: $('#welcome-dialog'),
+    var welcomeDialog = $('#welcome-dialog');
 
+    var Welcome = {
         /**
          * Starts the application
          */
@@ -41,7 +41,7 @@ define([
         openWelcomeDialog: function(viewModel) {
             var self = this;
 
-            this.welcomeDialog.dialog({
+            welcomeDialog.dialog({
                 resizable: false,
                 height: 200,
                 width: 300,
@@ -69,7 +69,7 @@ define([
                 self.zIndex(100);
             })
             .done(function() {
-                self.welcomeDialog.dialog('close');
+                welcomeDialog.dialog('close');
             });
         },
 
@@ -77,12 +77,12 @@ define([
             var self = this;
             var projectCreated = NewProject.tryToCreateNewProject(viewModel);
             $.when(projectCreated).done(function() {
-                self.welcomeDialog.dialog('close');
+                welcomeDialog.dialog('close');
             });
         },
 
         zIndex: function(value) {
-            this.welcomeDialog.parent().zIndex(value);
+            welcomeDialog.parent().zIndex(value);
         }
     };
 

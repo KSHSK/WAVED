@@ -50,8 +50,8 @@ define([
             throw new Error('ProjectViewModel name is required');
         }
 
-        this._name = state.name;
-        this._googleAnalytics = new GoogleAnalytics();
+        this.name = state.name;
+        this.googleAnalytics = new GoogleAnalytics();
         this._workspace = new WorkspaceViewModel();
         this._widgets = [];
         this._dataSets = [];
@@ -66,14 +66,6 @@ define([
     };
 
     Object.defineProperties(ProjectViewModel.prototype, {
-        name: {
-            get: function() {
-                return this._name;
-            },
-            set: function(value) {
-                this._name = value;
-            }
-        },
         widgets: {
             get: function() {
                 return this._widgets;
@@ -96,14 +88,6 @@ define([
                 return this._dataSets.filter(function(dataSet) {
                     return !dataSet.isMarkedForDeletion();
                 });
-            }
-        },
-        googleAnalytics: {
-            get: function() {
-                return this._googleAnalytics;
-            },
-            set: function(value) {
-                this._googleAnalytics = value;
             }
         },
         events: {

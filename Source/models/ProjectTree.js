@@ -1,30 +1,32 @@
 define(['knockout',
-        'util/defined'
+        'util/defined',
+        'models/SelectedType'
     ],function(
         ko,
-        defined
+        defined,
+        SelectedType
     ){
     'use strict';
 
     var self;
     var ProjectTree = function() {
         self = this;
-        this._selectedType = this.SelectedTypeEnum.PROJECT;
+        this.selectedType = SelectedType.PROJECT;
 
         ko.track(this);
     };
 
     ProjectTree.prototype.tryToDeleteSelected = function(wavedViewModel) {
         switch (self._selectedType) {
-            case self.SelectedTypeEnum.PROJECT:
+            case SelectedType.PROJECT:
                 return wavedViewModel.tryToDeleteProject();
-            case self.SelectedTypeEnum.COMPONENT:
+            case SelectedType.COMPONENT:
                 return wavedViewModel.removeSelectedComponent();
-            case self.SelectedTypeEnum.DATA:
+            case SelectedType.DATA:
                 return wavedViewModel.markDataForDeletion();
-            case self.SelectedTypeEnum.ACTION:
+            case SelectedType.ACTION:
                 return wavedViewModel.removeSelectedAction();
-            case self.SelectedTypeEnum.EVENT:
+            case SelectedType.EVENT:
                 return wavedViewModel.removeSelectedEvent();
         }
     };
@@ -35,15 +37,15 @@ define(['knockout',
         }
 
         switch (type) {
-            case self.SelectedTypeEnum.PROJECT:
+            case SelectedType.PROJECT:
                 return true;
-            case self.SelectedTypeEnum.COMPONENT:
+            case SelectedType.COMPONENT:
                 return wavedViewModel.selectedComponent === value;
-            case self.SelectedTypeEnum.DATA:
+            case SelectedType.DATA:
                 return wavedViewModel.selectedDataSet === value;
-            case self.SelectedTypeEnum.ACTION:
+            case SelectedType.ACTION:
                 return wavedViewModel.selectedAction === value;
-            case self.SelectedTypeEnum.EVENT:
+            case SelectedType.EVENT:
                 return wavedViewModel.selectedEvent === value;
         }
     };
@@ -52,44 +54,22 @@ define(['knockout',
         self.selectedType = type;
 
         switch (type) {
-            case self.SelectedTypeEnum.PROJECT:
+            case SelectedType.PROJECT:
                 break;
-            case self.SelectedTypeEnum.COMPONENT:
+            case SelectedType.COMPONENT:
                 wavedViewModel.selectedComponent = value;
                 break;
-            case self.SelectedTypeEnum.DATA:
+            case SelectedType.DATA:
                 wavedViewModel.selectedDataSet = value;
                 break;
-            case self.SelectedTypeEnum.ACTION:
+            case SelectedType.ACTION:
                 wavedViewModel.selectedAction = value;
                 break;
-            case self.SelectedTypeEnum.EVENT:
+            case SelectedType.EVENT:
                 wavedViewModel.selectedEvent = value;
                 break;
         }
     };
-
-    Object.defineProperties(ProjectTree.prototype, {
-        SelectedTypeEnum: {
-            get: function() {
-                return {
-                    PROJECT: 0,
-                    COMPONENT: 1,
-                    DATA: 2,
-                    ACTION: 3,
-                    EVENT: 4
-                };
-            }
-        },
-        selectedType: {
-            get: function() {
-                return this._selectedType;
-            },
-            set: function(value) {
-                this._selectedType = value;
-            }
-        }
-    });
 
     return ProjectTree;
 });

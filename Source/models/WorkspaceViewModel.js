@@ -25,12 +25,6 @@ define([
         ComponentViewModel.call(this, state);
         state = defined(state) ? state : {};
 
-        // Set name
-        this.name = new StringProperty({
-            displayName: 'Name',
-            value: 'Workspace'
-        });
-
         // Set width
         this.width = new NumberProperty({
             displayName: 'Width',
@@ -69,6 +63,7 @@ define([
     WorkspaceViewModel.prototype.resetWorkspace = function() {
         this.width.value = DEFAULT_WIDTH;
         this.height.value = DEFAULT_HEIGHT;
+        //Should this include color?
     };
 
     WorkspaceViewModel.prototype.getState = function() {
