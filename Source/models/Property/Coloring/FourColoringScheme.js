@@ -34,7 +34,7 @@ define([
 
         this.color3 = new StringProperty({
             displayName: 'Color #3',
-            value: 'PapayaWhip',
+            value: 'LightYellow',
             onchange: state.onchange
         });
 
