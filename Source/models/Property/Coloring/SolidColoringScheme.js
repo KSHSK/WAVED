@@ -22,7 +22,7 @@ define([
         // Default to grey
         var stateColor = {
             displayName: 'Color',
-            value: '#C0C0C0',
+            value: 'LightGrey',
             onchange: state.onchange
         };
         this.color = new StringProperty(stateColor);
