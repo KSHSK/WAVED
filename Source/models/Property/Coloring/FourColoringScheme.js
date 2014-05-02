@@ -22,25 +22,25 @@ define([
         // All colors default to black
         this.color1 = new StringProperty({
             displayName: 'Color #1',
-            value: '#69DE83',
+            value: 'PaleGreen',
             onchange: state.onchange
         });
 
         this.color2 = new StringProperty({
             displayName: 'Color #2',
-            value: '#84EAFE',
+            value: 'LightBlue',
             onchange: state.onchange
         });
 
         this.color3 = new StringProperty({
             displayName: 'Color #3',
-            value: '#FE98E7',
+            value: 'PapayaWhip',
             onchange: state.onchange
         });
 
         this.color4 = new StringProperty({
             displayName: 'Color #4',
-            value: '#FEFEAC',
+            value: 'Pink',
             onchange: state.onchange
         });
 

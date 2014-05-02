@@ -349,7 +349,7 @@ define([
         // Default to black strokes
         this.strokeColor = new StringProperty({
             displayName: 'Stroke Color',
-            value: '#000000',
+            value: 'Black',
             onchange: function() {
                 updateColoring(self);
             }
@@ -497,7 +497,7 @@ define([
         ['Florida', 'Hawaii', 'Iowa', 'Maryland', 'New Hampshire', 'New York', 'North Dakota', 'Ohio', 'Oklahoma', 'South Carolina', 'Tennessee', 'Utah', 'Washington']
     ];
 
-    USMapViewModel.prototype.DEFAULT_MAP_COLOR = '#C0C0C0';
+    USMapViewModel.prototype.DEFAULT_MAP_COLOR = 'LightGrey';
 
     return USMapViewModel;
 });
