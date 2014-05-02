@@ -70,9 +70,5 @@ define([
         }
     });
 
-    ButtonProperty.prototype.setState = function(state) {
-        Property.prototype.setState.call(this, state);
-    };
-
     return ButtonProperty;
 });

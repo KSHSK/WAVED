@@ -488,6 +488,7 @@ define([
 
     Object.defineProperties(USMapViewModel.prototype, {
         properties: {
+            // z is not exposed here because the map should always be on the bottom
             get: function() {
                 return [this.name, this.x, this.y, this.width, this.visible,
                         this.strokeColor, this.coloring, this.logGoogleAnalytics, this.glyphList];
