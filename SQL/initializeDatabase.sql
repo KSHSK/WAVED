@@ -1,7 +1,7 @@
 -- SQLite3 Datatype Affinity: http://www.sqlite.org/datatype3.html
 CREATE TABLE project(
     id INTEGER PRIMARY KEY ASC,
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL COLLATE nocase,
     state BLOB,
     created DATETIME,
     createdBy INTEGER,
