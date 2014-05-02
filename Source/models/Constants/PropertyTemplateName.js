@@ -16,9 +16,9 @@ define([], function(){
         COLORING: 'coloringPropertyTemplate',
         COLORING_DISPLAY: 'coloringDisplayPropertyTemplate',
         GLYPH_SIZE: 'glyphSizePropertyTemplate',
+        GLYPH_SIZE_DISPLAY: 'glyphSizeDisplayPropertyTemplate',
         BUTTON: 'buttonPropertyTemplate',
-        BUTTON_DISPLAY: 'buttonDisplayPropertyTemplate',
-        GLYPH_SIZE_DISPLAY: 'glyphSizeDisplayPropertyTemplate'
+        BUTTON_DISPLAY: 'buttonDisplayPropertyTemplate'
     };
 
     return PropertyTemplateName;
