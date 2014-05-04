@@ -38,7 +38,7 @@ define([
             value: undefined,
             options: [],
             getOptionText: function(value){
-                return value.getNameAndFilename();
+                return value.nameAndFilename;
             }
         };
         this.dataSet = new ArrayProperty(dataSetOptions);

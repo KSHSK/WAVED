@@ -91,10 +91,20 @@ define([
         },
         unmarkedDataSets: {
             get: function() {
-                // TODO: Should this also filter to only grab proper DataSets (exclude DataSubsets)?
-                // If not here, it still needs to be done somewhere for displaying on the page.
-                return this._dataSets.filter(function(dataSet) {
+                var unmarkedDataSets = this._dataSets.filter(function(dataSet) {
                     return !dataSet.isMarkedForDeletion();
+                });
+
+                var subsets = this.dataSubsets;
+                return unmarkedDataSets.filter(function(dataSet) {
+                    return subsets.indexOf(dataSet) === -1;
+                });
+            }
+        },
+        dataSubsets: {
+            get: function() {
+                return this._dataSets.filter(function(dataSet) {
+                    return dataSet instanceof DataSubset;
                 });
             }
         },
@@ -326,7 +336,8 @@ define([
         });
     };
 
-    ProjectViewModel.prototype.addDataSet = function(data) {
+    ProjectViewModel.prototype.addDataSet = function(data, index) {
+        var self = this;
         var namespace = DataSet.getUniqueNameNamespace();
 
         // Try to add unique name.
@@ -339,7 +350,25 @@ define([
 
         var historyMonitor = HistoryMonitor.getInstance();
 
-        if (data instanceof DataSet) {
+        if (data instanceof DataSubset) {
+            if (defined(index)) {
+                this._dataSets.splice(index, 0, data);
+            }
+            else {
+                this._dataSets.push(data);
+            }
+
+            // Undo by removing the item.
+            historyMonitor.addUndoChange(function() {
+                self.removeDataSet(data);
+            });
+
+            // Redo by readding the item.
+            historyMonitor.addRedoChange(function() {
+                self.addDataSet(data);
+            });
+        }
+        else {
             this._dataSets.push(data);
 
             // Undo by marking the DataSet for deletion.
