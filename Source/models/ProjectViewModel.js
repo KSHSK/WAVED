@@ -232,6 +232,9 @@ define([
                     dataSet = new DataSet(itemState);
                 }
                 else if (itemState.type === DataSubset.getType()) {
+                    // Get the parent object from the name.
+                    itemState.parent = self.getDataSet(itemState.parent);
+
                     dataSet = new DataSubset(itemState);
                 }
                 else {

@@ -12,29 +12,60 @@ define([
     'use strict';
 
     var DataSubset = function(state) {
+        this._query = new Query(); // Query
+        this._parent = undefined; // DataSet
+
+        // Call super after variables are defined, because DataSet will call setState.
         DataSet.call(this, state);
 
-        // TODO: Validation, etc
-        this._query = state.query; // Query
-
-        this._parent = state.parent; // DataSet
-
-        // By default, use all of the parent's data.
-        this._data = this.parent.data;
+        this.setState(state);
 
         ko.track(this);
     };
 
+    /**
+     * Static method that returns the type String for this class.
+     */
+    DataSubset.getType = function() {
+        return 'DataSubset';
+    };
+
     DataSubset.prototype = Object.create(DataSet.prototype);
 
-    DataSubset.prototype.executeQuery = function() {
+    DataSubset.prototype.getState = function() {
+        var state = DataSet.prototype.getState.call(this);
 
+        state.type = DataSubset.getType();
+        state.parent = this.parent.name;
+        state.query = this.query.getState();
+
+        return state;
+    };
+
+    DataSubset.prototype.setState = function(state) {
+        DataSet.prototype.setState.call(this, state);
+
+        if (defined(state.parent)) {
+            this.parent = state.parent;
+        }
+
+        if (defined(state.query)) {
+            this.query.setState(state.query);
+            this.executeQuery();
+        }
+    };
+
+    DataSubset.prototype.executeQuery = function() {
+        var data = this.parent.data;
     };
 
     Object.defineProperties(DataSubset.prototype, {
         parent: {
             get: function() {
                 return this._parent;
+            },
+            set: function(value) {
+                this._parent = value;
             }
         },
         nameAndParentName: {
