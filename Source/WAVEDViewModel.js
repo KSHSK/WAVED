@@ -85,6 +85,7 @@ define(['jquery',
         this._projectList = [];
         this._selectedComponent = '';
         this._selectedDataSet = '';
+        this._selectedDataSubset = '';
         this._selectedBoundData = '';
 
         // Create the HistoryMonitor singleton that everything else will use.
@@ -504,6 +505,14 @@ define(['jquery',
             },
             set: function(value) {
                 this._selectedDataSet = value;
+            }
+        },
+        selectedDataSubset: {
+            get: function() {
+                return this._selectedDataSubset;
+            },
+            set: function(value) {
+                this._selectedDataSubset = value;
             }
         },
         selectedBoundData: {

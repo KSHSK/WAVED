@@ -31,6 +31,7 @@ define(['knockout',
         this._name = '';
         this._filename = '';
         this._referenceCount = 0;
+        this._data = {};
         this._dataFields = [];
 
         this.setState(state);
