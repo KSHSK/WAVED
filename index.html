@@ -74,12 +74,21 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <li><span class="tree-folder-icon"></span>Data
+                                <li><span class="tree-folder-icon"></span>Data Sources
                                     <ul
-                                        data-bind="foreach: currentProject.unmarkedDataSets">
+                                        data-bind="foreach: currentProject.unmarkedProperDataSets">
                                         <li data-bind="css: {'tree-row-selected': $parent.isSelectedInProjectTree($parent.projectTree.SelectedTypeEnum.DATA, $data) }">
                                             <span class="tree-gear-icon"></span><a class="tree-row"
                                             data-bind="text: $data.name, click: function(data) { $parent.selectInProjectTree($parent.projectTree.SelectedTypeEnum.DATA, $data) }"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li><span class="tree-folder-icon"></span>Data Subsets
+                                    <ul
+                                        data-bind="foreach: currentProject.dataSubsets">
+                                        <li data-bind="css: {'tree-row-selected': $parent.isSelectedInProjectTree($parent.projectTree.SelectedTypeEnum.DATA_SUBSET, $data) }">
+                                            <span class="tree-gear-icon"></span><a class="tree-row"
+                                            data-bind="text: $data.name, click: function(data) { $parent.selectInProjectTree($parent.projectTree.SelectedTypeEnum.DATA_SUBSET, $data) }"></a>
                                         </li>
                                     </ul>
                                 </li>
@@ -122,7 +131,7 @@
                             </div>
                         </div>
                         <select id="data-file-list" size="5" class="select-full-size"
-                            data-bind="options: currentProject.unmarkedDataSets, 
+                            data-bind="options: currentProject.unmarkedProperDataSets, 
                                 optionsText: function(item) {
                                    return item.nameAndFilename;
                                 }, value: selectedDataSet"></select>
