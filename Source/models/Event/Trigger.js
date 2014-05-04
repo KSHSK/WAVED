@@ -6,13 +6,9 @@ define(['knockout',
     ){
     'use strict';
 
-    /**
-     * @param {String} name
-     * @param {function} getDomElement
-     */
-    var Trigger = function(domElement) {
+    var Trigger = function() {
 
-        this._domElement = domElement;
+        this._domElement = undefined;
         this._data = {};
 
         // TODO: Do we still need this?
