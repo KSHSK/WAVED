@@ -121,7 +121,7 @@ define([
             errorMessage: 'Value is required.',
             options: this.parent.boundData,
             getOptionText: function(value) {
-                return value.getNameAndFilename();
+                return value.nameAndFilename;
             }
         });
         this.color = new StringProperty({

@@ -14,6 +14,7 @@ define(['jquery',
         'models/ProjectTree',
         'modules/ActionHelper',
         'modules/EventHelper',
+        'modules/DataSubsetHelper',
         'modules/NewProject',
         'modules/LoadProject',
         'modules/SaveProject',
@@ -47,6 +48,7 @@ define(['jquery',
         ProjectTree,
         ActionHelper,
         EventHelper,
+        DataSubsetHelper,
         NewProject,
         LoadProject,
         SaveProject,
@@ -350,8 +352,20 @@ define(['jquery',
             height: 'auto',
             width: 'auto',
             modal: true,
-            title: 'Preview Data for "' + this.selectedDataSet.getNameAndFilename() + '"'
+            title: 'Preview Data for "' + this.selectedDataSet.name + '"'
         });
+    };
+
+    WAVEDViewModel.prototype.addDataSubset = function() {
+        DataSubsetHelper.addDataSubset(self);
+    };
+
+    WAVEDViewModel.prototype.editDataSubset = function() {
+        // TODO
+    };
+
+    WAVEDViewModel.prototype.removeSelectedDataSubset = function() {
+        // TODO
     };
 
     WAVEDViewModel.prototype.addAction = function() {

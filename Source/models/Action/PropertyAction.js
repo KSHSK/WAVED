@@ -30,6 +30,7 @@ define([
                 }
             };
 
+            // TODO: Is this necessary?
             // Don't add individual changes to the history.
             historyMonitor.executeIgnoreHistory(executeChange);
         };
