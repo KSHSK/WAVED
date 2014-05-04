@@ -28,13 +28,13 @@ define([
         // Start and end colors default to grey and black
         this.startColor = new StringProperty({
             displayName: 'Start color',
-            value: '#DDDDDD',
+            value: 'LightGrey',
             onchange: state.onchange
         });
 
         this.endColor = new StringProperty({
             displayName: 'End color',
-            value: '#000000',
+            value: 'Black',
             onchange: state.onchange
         });
 

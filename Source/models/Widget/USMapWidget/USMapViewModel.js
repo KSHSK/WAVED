@@ -118,10 +118,11 @@ define([
             return viewModel.strokeColor.value;
         });
 
+        // Every time a color is used here, it should be converted toLowerCase() to be consistent across the board
         switch(coloringScheme.getType()){
             case ColoringSchemeType.SOLID_COLORING:
                 path.style('fill', function(d) {
-                    return defined(coloringScheme.color.value) ? coloringScheme.color.value : viewModel.DEFAULT_MAP_COLOR;
+                    return defined(coloringScheme.color.value) ? coloringScheme.color.value.toLowerCase() : viewModel.DEFAULT_MAP_COLOR.toLowerCase();
                 });
                 break;
             case ColoringSchemeType.FOUR_COLORING:
@@ -129,7 +130,7 @@ define([
                     var stateName = d.properties.name;
                     for(var i=0; i < viewModel.fourColorStateGroupings.length; i++){
                         if(viewModel.fourColorStateGroupings[i].indexOf(stateName) !== -1){
-                            return coloringScheme.getColorArray()[i];
+                            return coloringScheme.getColorArray()[i].toLowerCase();
                         }
                     }
                 });
@@ -145,7 +146,7 @@ define([
                 // If either a dataSet or dataField isn't selected, break
                 if(!defined(coloringScheme.dataField.value) || !defined(coloringScheme.dataSet.value)){
                     path.style('fill', function(d){
-                        return viewModel.DEFAULT_MAP_COLOR;
+                        return viewModel.DEFAULT_MAP_COLOR.toLowerCase();
                     });
                     break;
                 }
@@ -167,12 +168,13 @@ define([
                 // Default the map to black when we can't extract an actual min or max (the field is not numeric)
                 if(!defined(min) || !defined(max)){
                     path.style('fill', function(d){
-                        return viewModel.DEFAULT_MAP_COLOR;
+                        return viewModel.DEFAULT_MAP_COLOR.toLowerCase();
                     });
                 }
 
                 // Set up the gradient function
-                var gradient = d3.scale.linear().domain([min, max]).range([coloringScheme.startColor.value, coloringScheme.endColor.value]);
+                // Color names must be lowercase or this won't work due to the range function not liking caps
+                var gradient = d3.scale.linear().domain([min, max]).range([coloringScheme.startColor.value.toLowerCase(), coloringScheme.endColor.value.toLowerCase()]);
                 path.style('fill', function(d) {
                     var stateName = d.properties.name;
                     var keyName = coloringScheme.keyField.value;
@@ -349,7 +351,7 @@ define([
         // Default to black strokes
         this.strokeColor = new StringProperty({
             displayName: 'Stroke Color',
-            value: '#000000',
+            value: 'Black',
             onchange: function() {
                 updateColoring(self);
             }
@@ -504,7 +506,7 @@ define([
         ['Florida', 'Hawaii', 'Iowa', 'Maryland', 'New Hampshire', 'New York', 'North Dakota', 'Ohio', 'Oklahoma', 'South Carolina', 'Tennessee', 'Utah', 'Washington']
     ];
 
-    USMapViewModel.prototype.DEFAULT_MAP_COLOR = '#C0C0C0';
+    USMapViewModel.prototype.DEFAULT_MAP_COLOR = 'LightGrey';
 
     return USMapViewModel;
 });
