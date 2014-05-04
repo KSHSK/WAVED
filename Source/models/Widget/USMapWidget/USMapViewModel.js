@@ -72,7 +72,7 @@ define([
         viewModel._trigger.addData('state', d.properties.name);
 
         // Iterate through each bound DataSet and add data values to the trigger
-        // only for the states that match the specified name.
+        // only for the state matching the specified name.
         for (var i = 0; i < viewModel._boundData.length; i++) {
             var data = viewModel._boundData[i].data;
             for (var j = 0; j < data.length; j++) {
@@ -81,6 +81,7 @@ define([
                         for (var k in data[j]) {
                             viewModel._trigger.addData(viewModel._boundData[i].name, k, data[j][k]);
                         }
+                        break;
                     }
                 }
             }
