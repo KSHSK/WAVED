@@ -366,7 +366,7 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.removeSelectedDataSubset = function() {
-        // TODO
+        this.currentProject.removeDataSet(this.selectedDataSubset);
     };
 
     WAVEDViewModel.prototype.addAction = function() {

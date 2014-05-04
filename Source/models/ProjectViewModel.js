@@ -91,12 +91,15 @@ define([
         },
         unmarkedDataSets: {
             get: function() {
-                var unmarkedDataSets = this._dataSets.filter(function(dataSet) {
+                return this._dataSets.filter(function(dataSet) {
                     return !dataSet.isMarkedForDeletion();
                 });
-
+            }
+        },
+        unmarkedProperDataSets: {
+            get: function() {
                 var subsets = this.dataSubsets;
-                return unmarkedDataSets.filter(function(dataSet) {
+                return this.unmarkedDataSets.filter(function(dataSet) {
                     return subsets.indexOf(dataSet) === -1;
                 });
             }
@@ -354,6 +357,8 @@ define([
         var historyMonitor = HistoryMonitor.getInstance();
 
         if (data instanceof DataSubset) {
+            // DataSubset
+
             if (defined(index)) {
                 this._dataSets.splice(index, 0, data);
             }
@@ -372,6 +377,8 @@ define([
             });
         }
         else {
+            // DataSet
+
             this._dataSets.push(data);
 
             // Undo by marking the DataSet for deletion.
@@ -543,9 +550,15 @@ define([
         return true;
     };
 
-    // TODO: Do we want to allow removal using dataset instance and name?
-    // The DD specifies this, but we should probably pick one.
     ProjectViewModel.prototype.removeDataSet = function(dataSet) {
+        var self = this;
+
+        var response = DependencyChecker.allowedToDeleteDataSet(dataSet, self);
+        if (!response.allowed) {
+            displayMessage(response.message);
+            return;
+        }
+
         var index = this._dataSets.indexOf(dataSet);
         if (index > -1) {
             this._dataSets.splice(index, 1);
@@ -553,7 +566,20 @@ define([
             // Remove unique name.
             UniqueTracker.removeItem(DataSet.getUniqueNameNamespace(), dataSet);
 
-            // Cannot undo/redo removing a DataSet.
+            // Cannot undo/redo removing a DataSet. Only add history if removing DataSubset.
+            if (dataSet instanceof DataSubset) {
+                var historyMonitor = HistoryMonitor.getInstance();
+
+                // Undo by adding the item.
+                historyMonitor.addUndoChange(function() {
+                    self.addDataSet(dataSet, index);
+                });
+
+                // Redo by removing the item.
+                historyMonitor.addRedoChange(function() {
+                    self.removeDataSet(dataSet);
+                });
+            }
         }
     };
 
