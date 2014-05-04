@@ -63,11 +63,11 @@ function getExistingsProjects() {
 }
 
 /**
- * Returns the stored state of a project.
+ * Returns the stored information of a project.
  * @param string $projectName
  */
-function getProjectState($projectName) {
-    return Serializer::projectSerializer()->get($projectName)->getState();
+function getProject($projectName) {
+    return Serializer::projectSerializer()->get($projectName);
 }
 
 /**
