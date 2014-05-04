@@ -269,7 +269,7 @@ define([
         properties: {
             get: function() {
                 return [this.name, this.dataSet, this.color, this.opacity, this.size, this.latitude, this.longitude, this.visible,
-                this.logGoogleAnalytics, this.z, this.zIncrement, this.zDecrement];
+                this.logGoogleAnalytics, this.z];
             }
         },
 
