@@ -136,6 +136,10 @@ define([
 
         if(defined(state.z)){
             this.z.originalValue = state.z.value;
+
+            if(this.z.originalValue === this.zMinimum){
+                this.zDecrement.disableButton();
+            }
         }
     };
 
