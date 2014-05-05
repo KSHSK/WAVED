@@ -14,11 +14,13 @@ define([
     'use strict';
 
     var ButtonProperty = function(options) {
+        var self = this;
         options = defined(options) ? options : {};
         Property.call(this, options);
 
         this._templateName = PropertyTemplateName.BUTTON;
 
+        this.disabled = false;
         this.buttonLabel = '';
         this.clickFunction = function() {
             return;
@@ -34,6 +36,15 @@ define([
 
         this.updateUI = function() {
             $('.button-property').button();
+        };
+
+        this.disableButton = function() {
+            this.disabled = true;
+            $('.button-property').removeClass('ui-state-hover ui-state-focus');
+        };
+
+        this.enableButton = function() {
+            this.disabled = false;
         };
 
         this.setState(options);
