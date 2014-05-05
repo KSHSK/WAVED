@@ -1,8 +1,8 @@
 /* global console*/
 define(['jquery',
         'knockout',
-        'models/Constants/ActionType',
         'models/Action/Action',
+        'models/Constants/ActionType',
         'models/Constants/EventType',
         'models/Event/Event',
         'models/GoogleAnalytics',
@@ -11,6 +11,8 @@ define(['jquery',
         'models/Property/StringProperty',
         'models/Widget/Widget',
         'models/Widget/ButtonWidget/Button',
+        'models/Widget/TextBlockWidget/TextBlock',
+        'models/Widget/USMapWidget/USMap',
         'models/ProjectTree',
         'modules/ActionHelper',
         'modules/EventHelper',
@@ -25,8 +27,6 @@ define(['jquery',
         'modules/PropertyChangeSubscriber',
         'modules/HistoryMonitor',
         'modules/UniqueTracker',
-        'models/Widget/TextBlockWidget/TextBlock',
-        'models/Widget/USMapWidget/USMap',
         'util/defined',
         'util/defaultValue',
         'util/createValidator',
@@ -35,8 +35,8 @@ define(['jquery',
     ], function(
         $,
         ko,
-        ActionType,
         Action,
+        ActionType,
         EventType,
         Event,
         GoogleAnalytics,
@@ -45,6 +45,8 @@ define(['jquery',
         StringProperty,
         Widget,
         Button,
+        TextBlock,
+        USMap,
         ProjectTree,
         ActionHelper,
         EventHelper,
@@ -59,8 +61,6 @@ define(['jquery',
         PropertyChangeSubscriber,
         HistoryMonitor,
         UniqueTracker,
-        TextBlock,
-        USMap,
         defined,
         defaultValue,
         createValidator,
@@ -79,6 +79,9 @@ define(['jquery',
         this._historyIndex = undefined;
         this._lastSaveIndex = undefined;
         this.resetHistory();
+
+        // Used to know when to display DataSet vs DataSubset for preview.
+        this.dataSetToPreview = '';
 
         this.disableOpeningPropertiesPanel = false;
 
@@ -349,11 +352,28 @@ define(['jquery',
             return;
         }
 
+        this.dataSetToPreview = this.selectedDataSet;
+
         $('#preview-data-dialog').dialog({
             height: 'auto',
             width: 'auto',
             modal: true,
-            title: 'Preview Data for "' + this.selectedDataSet.name + '"'
+            title: 'Preview Data for "' + this.selectedDataSet.displayName + '"'
+        });
+    };
+
+    WAVEDViewModel.prototype.previewDataSubset = function() {
+        if (!defined(this.selectedDataSubset)) {
+            return;
+        }
+
+        this.dataSetToPreview = this.selectedDataSubset;
+
+        $('#preview-data-dialog').dialog({
+            height: 'auto',
+            width: 'auto',
+            modal: true,
+            title: 'Preview Data for "' + this.selectedDataSubset.displayName + '"'
         });
     };
 
@@ -530,8 +550,6 @@ define(['jquery',
                     return [];
                 }
 
-                // TODO: Make sure use of 'unmarkedDataSets' works after DataSubsets are implemented
-                // since implementation of that function could change at that point.
                 var dataSets = this.currentProject.unmarkedDataSets;
                 var boundDataSets = defaultValue(this.selectedComponent.viewModel.boundData, []);
 

@@ -43,7 +43,7 @@ define([
             value: undefined,
             options: [],
             getOptionText: function(value) {
-                return value.nameAndFilename;
+                return value.displayName;
             },
             onchange: state.onchange
         });

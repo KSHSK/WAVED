@@ -133,7 +133,7 @@
                         <select id="data-file-list" size="5" class="select-full-size"
                             data-bind="options: currentProject.unmarkedProperDataSets, 
                                 optionsText: function(item) {
-                                   return item.nameAndFilename;
+                                   return item.displayName;
                                 }, value: selectedDataSet"></select>
                     </div>
                     <br />
@@ -143,14 +143,14 @@
                             <div class="inline right">
                                 <button class="button-small add-icon-button" data-bind="click: addDataSubset">Add Data Subset</button>
                                 <button class="button-small edit-icon-button" data-bind="click: editDataSubset">Edit Data Subset</button>
-                                <button class="button-small preview-icon-button" data-bind="click: previewDataSet">Preview Data Subset</button>
+                                <button class="button-small preview-icon-button" data-bind="click: previewDataSubset">Preview Data Subset</button>
                                 <button class="button-small delete-icon-button" data-bind="click: removeSelectedDataSubset">Delete Data Subset</button>
                             </div>
                         </div>
                         <select id="data-subset-list" size="5" class="select-full-size"
                             data-bind="options: currentProject.dataSubsets, 
                                 optionsText: function(item) {
-                                   return item.nameAndParentName;
+                                   return item.displayName;
                                 }, value: selectedDataSubset"></select>
                     </div>
                 </div>
@@ -212,7 +212,7 @@
                                         optionsText: function(data) {
                                             var dataSet = currentProject.getDataSet(data._name);
                                             if(dataSet !== null){
-                                                return currentProject.getDataSet(data._name).nameAndFilename;
+                                                return currentProject.getDataSet(data._name).displayName;
                                             }
                                         }, value: selectedBoundData">
                                 </select>
@@ -319,7 +319,8 @@
                 <tr>
                     <th>Include</th>
                     <th>Name</th>
-                    <th>File</th>
+                    <th>File/Parent</th>
+                    <th>Type</th>
                 </tr>
             </thead>
             <tbody id="bind-data-options" data-bind="foreach: availableDataForBinding">
@@ -328,24 +329,34 @@
                         <input type="checkbox" class="bind-data-selections"
                             data-bind="attr: {'data-name': $data.name}" />
                     </td>
+                    
                     <td data-bind="text: $data.name"></td>
+                    
+                    <!-- ko if: $data.type === 'DataSet' -->
                     <td data-bind="text: $data.filename"></td>
+                    <td>Source File</td>
+                    <!-- /ko -->
+                    
+                    <!-- ko if: $data.type === 'DataSubset' -->
+                    <td data-bind="text: $data.parent.name"></td>
+                    <td>Data Subset</td>
+                    <!-- /ko -->
                 </tr>
             </tbody>
         </table>
     </div>
     
     <div id="preview-data-dialog" class="dialog">
-        <div data-bind="if: selectedDataSet">
+    <div data-bind="if: dataSetToPreview">
             <table id="preview-data-table">
                 <thead>
-                    <tr data-bind="foreach: selectedDataSet.dataFields">
+                    <tr data-bind="foreach: dataSetToPreview.dataFields">
                         <th data-bind="text: $data"></th>
                     </tr>
                 </thead>
                 <!-- Need to limit to 10 rows or this could lock up the browser if there are too many rows. -->
-                <tbody data-bind="foreach: {data: selectedDataSet.data.slice(0,10), as: 'dataRow'}">
-                    <tr data-bind="foreach: {data: $parent.selectedDataSet.dataFields, as: 'key'}">
+                <tbody data-bind="foreach: {data: dataSetToPreview.data.slice(0,10), as: 'dataRow'}">
+                    <tr data-bind="foreach: {data: $parent.dataSetToPreview.dataFields, as: 'key'}">
                         <td data-bind="text: dataRow[key]">
                     </tr>
                 </tbody>
