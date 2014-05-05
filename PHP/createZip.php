@@ -14,6 +14,9 @@ if ($html == "") {
    return;
 }
 
+$css = $_POST["css"];
+$js = $_POST["js"];
+
 // Get the data files.
 $data_files = $_POST["data_files"];
 if ($data_files == null) {
@@ -40,6 +43,8 @@ $zip->open($zipPath, ZipArchive::CREATE | ZIPARCHIVE::OVERWRITE);
 
 // Add the HTML file.
 $zip->addFromString("index.html", $html);
+$zip->addFromString("WAVED.css", $css);
+$zip->addFromString("WAVED.js", $js);
 
 // Add all of the data files.
 foreach ($data_files as $file) {
