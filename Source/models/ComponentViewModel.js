@@ -62,6 +62,7 @@ define([
 
         this.incrementZIndex = function() {
             self.z.originalValue++;
+            self.zDecrement.enableButton();
         };
 
         this.decrementZIndex = function() {
@@ -71,6 +72,10 @@ define([
              */
             if(self.z.originalValue > self.zMinimum) {
                 self.z.originalValue--;
+
+                if(self.z.originalValue === self.zMinimum){
+                    self.zDecrement.disableButton();
+                }
             }
         };
 
