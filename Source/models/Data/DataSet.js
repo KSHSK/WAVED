@@ -31,7 +31,7 @@ define(['knockout',
         this._name = '';
         this._filename = '';
         this._referenceCount = 0;
-        this._data = {};
+        this._data = [];
         this._dataFields = [];
 
         this.setState(state);
@@ -140,6 +140,11 @@ define(['knockout',
     };
 
     Object.defineProperties(DataSet.prototype, {
+        type: {
+            get: function() {
+                return DataSet.getType();
+            }
+        },
         name: {
             get: function() {
                 return this._name;
@@ -159,7 +164,7 @@ define(['knockout',
                 this._filename = value;
             }
         },
-        nameAndFilename: {
+        displayName: {
             get: function() {
                 return this._name + ' : ' + this._filename;
             }

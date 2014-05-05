@@ -15,10 +15,11 @@ define([
         this._query = new Query(); // Query
         this._parent = undefined; // DataSet
 
+        // The resultant data after running the query.
+        this._queryData = [];
+
         // Call super after variables are defined, because DataSet will call setState.
         DataSet.call(this, state);
-
-        this.setState(state);
 
         ko.track(this);
     };
@@ -57,9 +58,17 @@ define([
 
     DataSubset.prototype.executeQuery = function() {
         var data = this.parent.data;
+
+        // TODO: Run query
+        this._queryData = data;
     };
 
     Object.defineProperties(DataSubset.prototype, {
+        type: {
+            get: function() {
+                return DataSubset.getType();
+            }
+        },
         parent: {
             get: function() {
                 return this._parent;
@@ -68,7 +77,7 @@ define([
                 this._parent = value;
             }
         },
-        nameAndParentName: {
+        displayName: {
             get: function() {
                 return this.name + ' : ' + this.parent.name;
             }
