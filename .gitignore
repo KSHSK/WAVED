@@ -3,5 +3,5 @@
 projects
 waved.db
 *.swp
-
+generated_files/*
 RemoteSystemsTempFiles/.project

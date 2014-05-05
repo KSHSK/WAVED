@@ -304,7 +304,7 @@ define([
        });
     }
 
-    function  editFailure(value) {
+    function editFailure(value) {
         for (var i = 0; i < value.properties.length; i++) {
             var property = value.properties[i];
             property.displayValue = value.properties[i].originalValue;
