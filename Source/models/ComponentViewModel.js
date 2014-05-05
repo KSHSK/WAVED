@@ -55,40 +55,37 @@ define([
         this.z = new NumberProperty({
             displayName: 'Z',
             value: 25,
-            visible: false
+            visible: false,
+            onchange: function() {
+                /*
+                 * Don't let this go below zMinimum. Z-index is relative to the parent container
+                 * so a negative z will put it behind the parent.
+                 */
+                if (this.value === self.zMinimum) {
+                    self.zDecrement.disableButton();
+                }
+                else {
+                    self.zDecrement.enableButton();
+                }
+            }
         });
 
         this.zMinimum = 1;
 
-        this.incrementZIndex = function() {
-            self.z.originalValue++;
-            self.zDecrement.enableButton();
-        };
-
-        this.decrementZIndex = function() {
-            /*
-             * Don't let this go below zMinimum. Z-index is relative to the parent container
-             * so a negative z will put it behind the parent.
-             */
-            if(self.z.originalValue > self.zMinimum) {
-                self.z.originalValue--;
-
-                if(self.z.originalValue === self.zMinimum){
-                    self.zDecrement.disableButton();
-                }
-            }
-        };
-
         this.zIncrement = new ButtonProperty({
             displayName: '',
             buttonLabel: 'Move Forward',
-            clickFunction: self.incrementZIndex
+            clickFunction: function() {
+                self.z.originalValue++;
+            }
         });
 
         this.zDecrement = new ButtonProperty({
            displayName: '',
            buttonLabel: 'Move Backward',
-           clickFunction: self.decrementZIndex
+           clickFunction: function() {
+               self.z.originalValue--;
+           }
         });
 
         ko.track(this);
