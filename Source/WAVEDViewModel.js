@@ -31,6 +31,7 @@ define(['jquery',
         'modules/UniqueTracker',
         'util/defined',
         'util/defaultValue',
+        'util/displayMessage',
         'util/createValidator',
         'util/subscribeObservable',
         'util/getNamePropertyInstance'
@@ -67,6 +68,7 @@ define(['jquery',
         UniqueTracker,
         defined,
         defaultValue,
+        displayMessage,
         createValidator,
         subscribeObservable,
         getNamePropertyInstance) {
@@ -404,6 +406,11 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.addDataSubset = function() {
+        if (this.currentProject.unmarkedDataSets.length === 0) {
+            displayMessage('Must upload a Data Source before creating a Data Subset.');
+            return;
+        }
+
         DataSubsetHelper.addDataSubset(self);
     };
 

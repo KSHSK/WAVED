@@ -21,9 +21,22 @@ define([
     ){
     'use strict';
 
-    var DataSubsetHelper = {
-        dataSubsetDialog: $('#data-subset-editor-dialog'),
+    var dataSubsetDialog = $('#data-subset-editor-dialog');
 
+    var openDialog = function(saveCallback, cancelCallback) {
+        dataSubsetDialog.dialog({
+            minHeight: 250,
+            minWidth: 400,
+            width: 650,
+            modal: true,
+            buttons: {
+                'Save': saveCallback,
+                'Cancel': cancelCallback
+            }
+        });
+    };
+
+    var DataSubsetHelper = {
         resetDataSubsetEditor: function(viewModel) {
             // Reset name.
             viewModel.dataSubsetEditorName.reset();
@@ -39,39 +52,35 @@ define([
             var self = this;
             self.resetDataSubsetEditor(viewModel);
 
-            self.dataSubsetDialog.dialog({
-                minHeight: 250,
-                minWidth: 400,
-                modal: true,
-                buttons: {
-                    'Save': function() {
-                        if (self.hasErrors(viewModel)) {
-                            return;
-                        }
-
-                        if (!UniqueTracker.isValueUnique(DataSubset.getUniqueNameNamespace(),
-                            viewModel.dataSubsetEditorName.value)) {
-
-                            displayMessage('The name "' + viewModel.dataSubsetEditorName.value + '" is already in use.');
-                            return;
-                        }
-//
-//                        var dataSubset = new DataSubset({
-//                            name: viewModel.selectedDataSubsetName.value,
-//                            dataSubsetType: viewModel.selectedDataSubsetType,
-//                            triggeringWidget: viewModel.dataSubsetEditorTriggeringWidget,
-//                            trigger: $('#dataSubset-trigger-select').prop('selectedIndex'),
-//                            actions: viewModel.selectedDataSubsetActions
-//                        });
-//                        viewModel.currentProject.addDataSubset(dataSubset);
-
-                        self.dataSubsetDialog.dialog('close');
-                    },
-                    'Cancel': function() {
-                        self.dataSubsetDialog.dialog('close');
-                    }
+            var saveCallback = function() {
+                if (self.hasErrors(viewModel)) {
+                    return;
                 }
-            });
+
+                if (!UniqueTracker.isValueUnique(DataSubset.getUniqueNameNamespace(),
+                    viewModel.dataSubsetEditorName.value)) {
+
+                    displayMessage('The name "' + viewModel.dataSubsetEditorName.value + '" is already in use.');
+                    return;
+                }
+//
+//                var dataSubset = new DataSubset({
+//                    name: viewModel.selectedDataSubsetName.value,
+//                    dataSubsetType: viewModel.selectedDataSubsetType,
+//                    triggeringWidget: viewModel.dataSubsetEditorTriggeringWidget,
+//                    trigger: $('#dataSubset-trigger-select').prop('selectedIndex'),
+//                    actions: viewModel.selectedDataSubsetActions
+//                });
+//                viewModel.currentProject.addDataSubset(dataSubset);
+
+                dataSubsetDialog.dialog('close');
+            };
+
+            var cancelCallback = function() {
+                dataSubsetDialog.dialog('close');
+            };
+
+            openDialog(saveCallback, cancelCallback);
         },
         editDataSubset: function(viewModel) {
             if (!defined(viewModel.selectedDataSubset)) {
@@ -89,34 +98,30 @@ define([
             // Make a shallow copy of the array so that it's not referencing the same object.
             viewModel.selectedDataSubsetActions = viewModel.selectedDataSubset.actions.slice(0);
 
-            self.dataSubsetDialog.dialog({
-                minHeight: 250,
-                minWidth: 400,
-                modal: true,
-                buttons: {
-                    'Save': function() {
-                        if (self.hasErrors(viewModel)) {
-                            return;
-                        }
-
-//                        if (!UniqueTracker.isValueUnique(DataSubset.getUniqueNameNamespace(),
-//                            viewModel.selectedDataSubsetName.value, viewModel.selectedDataSubset)) {
-//
-//                            displayMessage('The name "' + viewModel.selectedDataSubsetName.value + '" is already in use.');
-//                            return;
-//                        }
-//
-//                        viewModel.selectedDataSubset.unregister();
-//                        self.updateEditChanges(viewModel);
-//                        viewModel.selectedDataSubset.register();
-
-                        self.dataSubsetDialog.dialog('close');
-                    },
-                    'Cancel': function() {
-                        self.dataSubsetDialog.dialog('close');
-                    }
+            var saveCallback = function() {
+                if (self.hasErrors(viewModel)) {
+                    return;
                 }
-            });
+
+//                if (!UniqueTracker.isValueUnique(DataSubset.getUniqueNameNamespace(),
+//                    viewModel.selectedDataSubsetName.value, viewModel.selectedDataSubset)) {
+//
+//                    displayMessage('The name "' + viewModel.selectedDataSubsetName.value + '" is already in use.');
+//                    return;
+//                }
+//
+//                viewModel.selectedDataSubset.unregister();
+//                self.updateEditChanges(viewModel);
+//                viewModel.selectedDataSubset.register();
+
+                dataSubsetDialog.dialog('close');
+            };
+
+            var cancelCallback = function() {
+                dataSubsetDialog.dialog('close');
+            };
+
+            openDialog(saveCallback, cancelCallback);
         },
         updateEditChanges: function(viewModel) {
             var dataSubset = viewModel.selectedDataSubset;
