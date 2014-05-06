@@ -427,22 +427,13 @@
             </select>
         </div>
         <div>
-            <label class="inline required">Triggering Widget: </label>
+            <label class="inline">Trigger: </label>
             <select data-bind="options: currentProject.widgets,
                             optionsText: function(widget) {
                                 return widget.viewModel.name.value;
                             }, value: eventEditorTriggeringWidget">
             </select>
             <div class="error" data-bind="visible: eventEditorTriggeringWidgetError">Must select a triggering widget.</div>
-        </div>
-        <div>
-            <label class="inline required">Trigger: </label>
-            <select id="event-trigger-select" data-bind="options: (eventEditorTriggeringWidget) ? eventEditorTriggeringWidget.viewModel.triggers : [],
-                            optionsText: function(trigger) {
-                                return trigger.name;
-                            }, value: eventEditorTrigger">
-            </select>
-            <div class="error" data-bind="visible: eventEditorTriggerError">Must select a trigger</div>
         </div>
         <div>
             <div>
