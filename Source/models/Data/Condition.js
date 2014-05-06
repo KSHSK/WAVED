@@ -25,7 +25,7 @@ define([
     Condition.prototype.getState = function() {
         return {
             field: this.field,
-            operator: this.operator,
+            comparisonOperator: this.comparisonOperator,
             value: this.value,
             logicalOperator: this.logicalOperator
         };
@@ -36,8 +36,8 @@ define([
             this.field = state.field;
         }
 
-        if (defined(state.operator)) {
-            this.operator = state.operator;
+        if (defined(state.comparisonOperator)) {
+            this.comparisonOperator = state.comparisonOperator;
         }
 
         if (defined(state.value)) {

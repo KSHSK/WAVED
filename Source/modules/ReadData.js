@@ -40,6 +40,7 @@ define([
                     }
 
                     dataSet.data = data;
+                    dataSet.dataLoaded = true;
                     readComplete.resolve();
                 });
             }
@@ -52,12 +53,13 @@ define([
 
                     // TODO: Extra processing will be needed to get JSON data to be in the same form as CSV data.
                     dataSet.data = data;
+                    dataSet.dataLoaded = true;
                     readComplete.resolve();
                 });
             }
             else {
                 // Invalid file type.
-                return;
+                readComplete.reject();
             }
 
             return readComplete.promise();

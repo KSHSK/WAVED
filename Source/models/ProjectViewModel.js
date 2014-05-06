@@ -228,16 +228,13 @@ define([
             // Clear array.
             this._dataSets.length = 0;
 
-            var newDataSets = $.each(state.dataSets, function(itemIndex, itemState) {
+            $.each(state.dataSets, function(itemIndex, itemState) {
                 var dataSet;
 
                 if (itemState.type === DataSet.getType()) {
                     dataSet = new DataSet(itemState);
                 }
                 else if (itemState.type === DataSubset.getType()) {
-                    // Get the parent object from the name.
-                    itemState.parent = self.getDataSet(itemState.parent);
-
                     dataSet = new DataSubset(itemState);
                 }
                 else {
@@ -247,13 +244,25 @@ define([
 
                 self.addDataSet(dataSet);
             });
+
+
+            // Update DataSubset parents.
+            // Must be done after all DataSets are loaded in case the DataSubset shows up before its parent.
+            $.each(self._dataSets, function(index, dataSet) {
+                if (dataSet.type === DataSubset.getType()) {
+                    // Get the parent object from the name.
+                    dataSet.setState({
+                        parent: self.getDataSet(dataSet.parent)
+                    });
+                }
+            });
         }
 
         if (defined(state.widgets)) {
-            // Clear array except for Workspace.
+            // Clear array.
             this._widgets.length = 0;
 
-            var newWidgets = $.each(state.widgets, function(itemIndex, itemState) {
+            $.each(state.widgets, function(itemIndex, itemState) {
                 for (var index = 0; index < availableWidgets.length; index++) {
                     var widgetType = availableWidgets[index];
                     if (itemState.type === widgetType.o.getViewModelType()) {
@@ -268,7 +277,7 @@ define([
             // Clear array.
             this._actions.length = 0;
 
-            var newActions = $.each(state.actions, function(itemIndex, itemState) {
+            $.each(state.actions, function(itemIndex, itemState) {
                 var action;
 
                 if (itemState.type === PropertyAction.getType()) {
@@ -291,7 +300,7 @@ define([
             // Clear array.
             this._events.length = 0;
 
-            var newEvents = $.each(state.events, function(itemIndex, itemState) {
+            $.each(state.events, function(itemIndex, itemState) {
                 itemState.triggeringWidget = self.getWidget(itemState.triggeringWidget);
                 // TODO: Trigger?
                 var actions = [];

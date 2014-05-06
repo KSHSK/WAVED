@@ -2,6 +2,7 @@ define([
         'WAVEDViewModel',
         './UniqueTracker',
         './HistoryMonitor',
+        'models/Data/DataSet',
         'models/Data/DataSubset',
         'models/Data/Condition',
         'util/defined',
@@ -12,6 +13,7 @@ define([
         WAVEDViewModel,
         UniqueTracker,
         HistoryMonitor,
+        DataSet,
         DataSubset,
         Condition,
         defined,
@@ -57,21 +59,22 @@ define([
                     return;
                 }
 
-                if (!UniqueTracker.isValueUnique(DataSubset.getUniqueNameNamespace(),
+                if (!UniqueTracker.isValueUnique(DataSet.getUniqueNameNamespace(),
                     viewModel.dataSubsetEditorName.value)) {
 
                     displayMessage('The name "' + viewModel.dataSubsetEditorName.value + '" is already in use.');
                     return;
                 }
-//
-//                var dataSubset = new DataSubset({
-//                    name: viewModel.selectedDataSubsetName.value,
-//                    dataSubsetType: viewModel.selectedDataSubsetType,
-//                    triggeringWidget: viewModel.dataSubsetEditorTriggeringWidget,
-//                    trigger: $('#dataSubset-trigger-select').prop('selectedIndex'),
-//                    actions: viewModel.selectedDataSubsetActions
-//                });
-//                viewModel.currentProject.addDataSubset(dataSubset);
+
+                var dataSubset = new DataSubset({
+                    name: viewModel.dataSubsetEditorName.value,
+                    parent: viewModel.dataSubsetEditorDataSource,
+                    query: {
+                        conditions: viewModel.dataSubsetEditorConditions
+                    }
+                });
+
+                viewModel.currentProject.addDataSet(dataSubset);
 
                 dataSubsetDialog.dialog('close');
             };
@@ -83,36 +86,36 @@ define([
             openDialog(saveCallback, cancelCallback);
         },
         editDataSubset: function(viewModel) {
+            var self = this;
+
             if (!defined(viewModel.selectedDataSubset)) {
                 return;
             }
 
-            var self = this;
             self.resetDataSubsetEditor(viewModel);
 
-            viewModel.selectedDataSubsetName.value = viewModel.selectedDataSubset.name;
-            viewModel.selectedDataSubsetType = viewModel.selectedDataSubset.dataSubsetType;
-            viewModel.dataSubsetEditorTriggeringWidget = viewModel.selectedDataSubset.triggeringWidget;
-            viewModel.dataSubsetEditorTrigger = viewModel.selectedDataSubset.trigger;
+            viewModel.dataSubsetEditorName.value = viewModel.selectedDataSubset.name;
+            viewModel.dataSubsetEditorDataSource = viewModel.selectedDataSubset.parent;
 
-            // Make a shallow copy of the array so that it's not referencing the same object.
-            viewModel.selectedDataSubsetActions = viewModel.selectedDataSubset.actions.slice(0);
+            // Make a deep copy of the array so that it's not referencing the same object.
+            viewModel.dataSubsetEditorConditions.length = 0;
+            viewModel.selectedDataSubset.query.conditions.forEach(function(condition) {
+                viewModel.dataSubsetEditorConditions.push(new Condition(condition.getState()));
+            });
 
             var saveCallback = function() {
                 if (self.hasErrors(viewModel)) {
                     return;
                 }
 
-//                if (!UniqueTracker.isValueUnique(DataSubset.getUniqueNameNamespace(),
-//                    viewModel.selectedDataSubsetName.value, viewModel.selectedDataSubset)) {
-//
-//                    displayMessage('The name "' + viewModel.selectedDataSubsetName.value + '" is already in use.');
-//                    return;
-//                }
-//
-//                viewModel.selectedDataSubset.unregister();
-//                self.updateEditChanges(viewModel);
-//                viewModel.selectedDataSubset.register();
+                if (!UniqueTracker.isValueUnique(DataSet.getUniqueNameNamespace(),
+                    viewModel.dataSubsetEditorName.value, viewModel.selectedDataSubset)) {
+
+                    displayMessage('The name "' + viewModel.dataSubsetEditorName.value + '" is already in use.');
+                    return;
+                }
+
+                self.updateEditChanges(viewModel);
 
                 dataSubsetDialog.dialog('close');
             };
@@ -127,31 +130,31 @@ define([
             var dataSubset = viewModel.selectedDataSubset;
 
             var oldName = dataSubset.name;
-            var oldDataSubsetType = dataSubset.dataSubsetType;
-            var oldTriggeringWidget = dataSubset.triggeringWidget;
-            var oldTrigger = dataSubset.trigger;
-            var oldActions = dataSubset.actions;
+            var oldParent = dataSubset.parent;
+            var oldConditions = dataSubset.query.conditions;
 
             function undoChange() {
-                dataSubset.name = oldName;
-                dataSubset.dataSubsetType = oldDataSubsetType;
-                dataSubset.triggeringWidget = oldTriggeringWidget;
-                dataSubset.trigger = oldTrigger;
-                dataSubset.actions = oldActions;
+                dataSubset.setState({
+                    name: oldName,
+                    parent: oldParent,
+                    query: {
+                        conditions: oldConditions
+                    }
+                });
             }
 
-            var newName = viewModel.selectedDataSubsetName.value;
-            var newDataSubsetType = viewModel.selectedDataSubsetType;
-            var newTriggeringWidget = viewModel.dataSubsetEditorTriggeringWidget;
-            var newTrigger = viewModel.dataSubsetEditorTrigger;
-            var newActions = viewModel.selectedDataSubsetActions;
+            var newName = viewModel.dataSubsetEditorName.value;
+            var newParent = viewModel.dataSubsetEditorDataSource;
+            var newConditions = viewModel.dataSubsetEditorConditions;
 
             function executeChange() {
-                dataSubset.name = newName;
-                dataSubset.dataSubsetType = newDataSubsetType;
-                dataSubset.triggeringWidget = newTriggeringWidget;
-                dataSubset.trigger = newTrigger;
-                dataSubset.actions = newActions;
+                dataSubset.setState({
+                    name: newName,
+                    parent: newParent,
+                    query: {
+                        conditions: newConditions
+                    }
+                });
             }
 
             var historyMonitor = HistoryMonitor.getInstance();

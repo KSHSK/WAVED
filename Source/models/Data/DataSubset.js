@@ -33,6 +33,8 @@ define([
 
     DataSubset.prototype = Object.create(DataSet.prototype);
 
+    DataSubset.prototype.skipSubscribe = DataSet.prototype.skipSubscribe.concat(['_queryData']);
+
     DataSubset.prototype.getState = function() {
         var state = DataSet.prototype.getState.call(this);
 
@@ -48,6 +50,7 @@ define([
 
         if (defined(state.parent)) {
             this.parent = state.parent;
+            this.executeQuery();
         }
 
         if (defined(state.query)) {
@@ -57,10 +60,35 @@ define([
     };
 
     DataSubset.prototype.executeQuery = function() {
-        var data = this.parent.data;
+        var self = this;
 
-        // TODO: Run query
-        this._queryData = data;
+        if (!(self.parent instanceof DataSet)) {
+            // When loaded from state, the parent will initially be a String, for the name of the parent.
+            return;
+        }
+
+        // Function to run the query.
+        var localExecuteQuery = function() {
+            var data = self.parent.data;
+
+            // TODO: Run query
+            self._queryData = data;
+        };
+
+        // Run the query or set interval if needed.
+        if (self.parent.dataLoaded) {
+            localExecuteQuery();
+        }
+        else {
+            var interval = setInterval(function() {
+                if (self.parent.dataLoaded) {
+                    localExecuteQuery();
+                }
+
+                clearInterval(interval);
+            }, 100);
+        }
+
     };
 
     Object.defineProperties(DataSubset.prototype, {
@@ -85,6 +113,14 @@ define([
         data: {
             get: function() {
                 return this._queryData;
+            }
+        },
+        dataFields: {
+            get: function() {
+                return this.parent.dataFields;
+            },
+            set: function(){
+                // Do nothing.
             }
         },
         query: {
