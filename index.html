@@ -484,23 +484,58 @@
     </div>
     
     <div id="data-subset-editor-dialog" title="Data Subset Editor" class="dialog">
-        <div>
-            <label class="required" for="data-subset-name">Subset Name: </label>
-            <input id="data-subset-name" type="text" data-bind="value: dataSubsetEditorName.value, valueUpdate: 'keyup'"/>
-            <div class="error" data-bind="visible: dataSubsetEditorName.error, html: dataSubsetEditorName.message"></div>
-        </div>
-        <div>
-            <label class="required" for="data-subset-data-source">Source: </label>
-            <select class="inline" 
-                            id="data-subset-data-source" 
-                            data-bind="options: currentProject.unmarkedProperDataSets, 
-                                optionsText: function(item) {
-                                   return item.displayName;
-                                },
-                                value: dataSubsetEditorDataSource">
+        <div class="table center">
+            <div class="table-row">
+                <div class="table-cell">
+                    <label class="required" for="data-subset-name">Subset Name: </label>
+                    <input id="data-subset-name" type="text" data-bind="value: dataSubsetEditorName.value, valueUpdate: 'keyup'"/>
+                </div>
+                <div class="table-cell">
+                    <label class="required" for="data-subset-data-source">Source: </label>
+                    <select class="inline" 
+                                    id="data-subset-data-source" 
+                                    data-bind="options: currentProject.unmarkedProperDataSets, 
+                                        optionsText: function(item) {
+                                           return item.displayName;
+                                        },
+                                        value: dataSubsetEditorDataSource">
                     </select>
-            <div class="error" data-bind="visible: dataSubsetEditorDataSourceError">Must select a Data Source</div>
+                </div>
+            </div>
+
+            <div class="table-row">
+                <div class="error table-cell" data-bind="css: {invisible: !dataSubsetEditorName.error}, html: dataSubsetEditorName.message"></div>
+                <div class="error table-cell" data-bind="css: {invisible: !dataSubsetEditorDataSourceError}">Must select a Data Source</div>
+            </div>
+        </div>  
+        <!-- ko if: typeof dataSubsetEditorDataSource !== 'undefined' -->
+        <div class="center" data-bind="foreach: dataSubsetEditorConditions">
+            <hr/>
+            <div class="inline">
+                <label class="padding5">Column: 
+                    <select class="inline" 
+                            data-bind="options: $parent.dataSubsetEditorDataSource.dataFields, value: $data.field">
+                    </select>
+                </label>
+                <label class="padding5">Comparison: 
+                    <select class="inline" 
+                            data-bind="options: $parent.comparisonOperators, value: $data.comparisonOperator">
+                    </select>
+                </label>
+                <label class="padding5">Value: 
+                    <input type="text" data-bind="value: $data.value, valueUpdate: 'keyup'"/>
+                </label>
+            </div>
+            <hr/>
+            <div class="inline">
+                <label>Operator: 
+                    <select class="inline" 
+                            data-bind="options: $parent.logicalOperators, value: $data.logicalOperator">
+                    </select>
+                </label>
+            </div>
         </div>
+        <!-- /ko -->
     </div>
     
     <div id="unsaved-changes-dialog" title="Unsaved Changes" class="dialog">

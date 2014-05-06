@@ -6,8 +6,8 @@ define([], function(){
         LESS_THAN_OR_EQUAL: '<=',
         GREATER_THAN: '>',
         GREATER_THAN_OR_EQUAL: '>=',
-        EQUAL: '===',
-        NOT_EQUAL: '!=='
+        EQUAL: '==',
+        NOT_EQUAL: '!='
     };
 
     return ComparisonOperator;
