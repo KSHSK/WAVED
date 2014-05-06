@@ -1,7 +1,7 @@
 define([], function(){
     'use strict';
 
-    var ComparisonOperatorValue = {
+    var ComparisonOperator = {
         LESS_THAN: '<',
         LESS_THAN_OR_EQUAL: '<=',
         GREATER_THAN: '>',
@@ -10,5 +10,5 @@ define([], function(){
         NOT_EQUAL: '!=='
     };
 
-    return ComparisonOperatorValue;
+    return ComparisonOperator;
 });

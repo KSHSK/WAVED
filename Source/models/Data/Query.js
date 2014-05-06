@@ -31,8 +31,12 @@ define(['jquery',
         var self = this;
 
         if (defined(state.conditions)) {
-            state.conditions.forEach(function(conditionState) {
-                self.conditions.push(new Condition(conditionState));
+            self.conditions = $.map(state.conditions, function(conditionState) {
+                if (conditionState instanceof Condition) {
+                    return conditionState;
+                }
+
+                return new Condition(conditionState);
             });
         }
     };
