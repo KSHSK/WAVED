@@ -4,6 +4,8 @@ define(['jquery',
         'models/Action/Action',
         'models/Constants/ActionType',
         'models/Constants/EventType',
+        'models/Constants/ComparisonOperator',
+        'models/Constants/LogicalOperator',
         'models/Event/Event',
         'models/GoogleAnalytics',
         'models/ProjectViewModel',
@@ -38,6 +40,8 @@ define(['jquery',
         Action,
         ActionType,
         EventType,
+        ComparisonOperator,
+        LogicalOperator,
         Event,
         GoogleAnalytics,
         ProjectViewModel,
@@ -124,20 +128,34 @@ define(['jquery',
         }
 
         this.actionTypes = [];
-        for (var key in ActionType) {
-            this.actionTypes.push(ActionType[key]);
+        for (var actionKey in ActionType) {
+            this.actionTypes.push(ActionType[actionKey]);
         }
 
+        this.comparisonOperators = [];
+        for (var comparisonOpKey in ComparisonOperator) {
+            this.comparisonOperators.push(ComparisonOperator[comparisonOpKey]);
+        }
+
+        this.logicalOperators = [];
+        for (var logicalOpKey in LogicalOperator) {
+            this.logicalOperators.push(LogicalOperator[logicalOpKey]);
+        }
+
+        // New Project
         this.newProjectName = getNamePropertyInstance('Project Name:');
 
+        // Save Project As
         this.saveProjectAsName = getNamePropertyInstance('Project Name:');
 
+        // Load Project
         this.loadProjectName = new ArrayProperty({
             displayName: 'Project Name:',
             value: '',
             options: this.projectList
         });
 
+        // Upload Data File
         this.uploadDataName = getNamePropertyInstance('Name:');
 
         this.uploadDataFile = new StringProperty({
@@ -150,6 +168,7 @@ define(['jquery',
             errorMessage: 'Must select a file with extension CSV or JSON.'
         });
 
+        // Action Editor
         this.selectedActionName = getNamePropertyInstance('Action Name');
         this.selectedAction = undefined;
         this.selectedActionType = '';
@@ -157,6 +176,7 @@ define(['jquery',
         this.actionEditorAffectedWidgetError = false;
         this.actionEditorDataSet = undefined;
 
+        // Event Editor
         this.selectedEventName = getNamePropertyInstance('Event Name');
         this.selectedEvent = undefined;
         this.eventEditorTriggeringWidget = undefined;
@@ -165,6 +185,12 @@ define(['jquery',
         this.eventEditorTriggerError = false;
         this.selectedEventType = undefined;
         this.selectedEventActions = [];
+
+        // Data Subset Editor
+        this.dataSubsetEditorName = getNamePropertyInstance();
+        this.dataSubsetEditorDataSource = undefined;
+        this.dataSubsetEditorDataSourceError = undefined;
+        this.dataSubsetEditorConditions = [];
 
         ko.track(this);
 

@@ -3,6 +3,7 @@ define([
         './UniqueTracker',
         './HistoryMonitor',
         'models/Data/DataSubset',
+        'models/Data/Condition',
         'util/defined',
         'util/displayMessage',
         'knockout',
@@ -12,6 +13,7 @@ define([
         UniqueTracker,
         HistoryMonitor,
         DataSubset,
+        Condition,
         defined,
         displayMessage,
         ko,
@@ -23,23 +25,23 @@ define([
         dataSubsetDialog: $('#data-subset-editor-dialog'),
 
         resetDataSubsetEditor: function(viewModel) {
+            // Reset name.
+            viewModel.dataSubsetEditorName.reset();
 
+            // Unset error.
+            viewModel.dataSubsetEditorDataSourceError = false;
+
+            // One initial conditions.
+            viewModel.dataSubsetEditorConditions = [new Condition()];
         },
 
         addDataSubset: function(viewModel) {
-            viewModel.currentProject.addDataSet(new DataSubset({
-                name: 'subset',
-                parent: viewModel.currentProject.dataSets[0]
-            }));
-
-            return;
-
             var self = this;
             self.resetDataSubsetEditor(viewModel);
 
             self.dataSubsetDialog.dialog({
-                resizable: false,
-                width: 'auto',
+                minHeight: 250,
+                minWidth: 400,
                 modal: true,
                 buttons: {
                     'Save': function() {
@@ -48,20 +50,21 @@ define([
                         }
 
                         if (!UniqueTracker.isValueUnique(DataSubset.getUniqueNameNamespace(),
-                            viewModel.selectedDataSubsetName.value)) {
+                            viewModel.dataSubsetEditorName.value)) {
 
-                            displayMessage('The name "' + viewModel.selectedDataSubsetName.value + '" is already in use.');
+                            displayMessage('The name "' + viewModel.dataSubsetEditorName.value + '" is already in use.');
                             return;
                         }
+//
+//                        var dataSubset = new DataSubset({
+//                            name: viewModel.selectedDataSubsetName.value,
+//                            dataSubsetType: viewModel.selectedDataSubsetType,
+//                            triggeringWidget: viewModel.dataSubsetEditorTriggeringWidget,
+//                            trigger: $('#dataSubset-trigger-select').prop('selectedIndex'),
+//                            actions: viewModel.selectedDataSubsetActions
+//                        });
+//                        viewModel.currentProject.addDataSubset(dataSubset);
 
-                        var dataSubset = new DataSubset({
-                            name: viewModel.selectedDataSubsetName.value,
-                            dataSubsetType: viewModel.selectedDataSubsetType,
-                            triggeringWidget: viewModel.dataSubsetEditorTriggeringWidget,
-                            trigger: $('#dataSubset-trigger-select').prop('selectedIndex'),
-                            actions: viewModel.selectedDataSubsetActions
-                        });
-                        viewModel.currentProject.addDataSubset(dataSubset);
                         self.dataSubsetDialog.dialog('close');
                     },
                     'Cancel': function() {
@@ -87,8 +90,8 @@ define([
             viewModel.selectedDataSubsetActions = viewModel.selectedDataSubset.actions.slice(0);
 
             self.dataSubsetDialog.dialog({
-                resizable: false,
-                width: 'auto',
+                minHeight: 250,
+                minWidth: 400,
                 modal: true,
                 buttons: {
                     'Save': function() {
@@ -96,16 +99,16 @@ define([
                             return;
                         }
 
-                        if (!UniqueTracker.isValueUnique(DataSubset.getUniqueNameNamespace(),
-                            viewModel.selectedDataSubsetName.value, viewModel.selectedDataSubset)) {
-
-                            displayMessage('The name "' + viewModel.selectedDataSubsetName.value + '" is already in use.');
-                            return;
-                        }
-
-                        viewModel.selectedDataSubset.unregister();
-                        self.updateEditChanges(viewModel);
-                        viewModel.selectedDataSubset.register();
+//                        if (!UniqueTracker.isValueUnique(DataSubset.getUniqueNameNamespace(),
+//                            viewModel.selectedDataSubsetName.value, viewModel.selectedDataSubset)) {
+//
+//                            displayMessage('The name "' + viewModel.selectedDataSubsetName.value + '" is already in use.');
+//                            return;
+//                        }
+//
+//                        viewModel.selectedDataSubset.unregister();
+//                        self.updateEditChanges(viewModel);
+//                        viewModel.selectedDataSubset.register();
 
                         self.dataSubsetDialog.dialog('close');
                     },
@@ -154,7 +157,17 @@ define([
         hasErrors: function(viewModel) {
             var error = false;
 
+            // Check that the DataSubset name is valid.
+            if (viewModel.dataSubsetEditorName.error) {
+                viewModel.dataSubsetEditorName.message = viewModel.dataSubsetEditorName.errorMessage;
+                error = true;
+            }
 
+            // Check that a Data Source is selected.
+            if (!defined(viewModel.dataSubsetEditorDataSource)) {
+                viewModel.dataSubsetEditorDataSourceError = true;
+                error = true;
+            }
 
             return error;
         }

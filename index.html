@@ -347,7 +347,7 @@
     </div>
     
     <div id="preview-data-dialog" class="dialog">
-    <div data-bind="if: dataSetToPreview">
+        <div data-bind="if: dataSetToPreview">
             <table id="preview-data-table">
                 <thead>
                     <tr data-bind="foreach: dataSetToPreview.dataFields">
@@ -481,7 +481,26 @@
                 </div>
             </div>
         </div>
-        
+    </div>
+    
+    <div id="data-subset-editor-dialog" title="Data Subset Editor" class="dialog">
+        <div>
+            <label class="required" for="data-subset-name">Subset Name: </label>
+            <input id="data-subset-name" type="text" data-bind="value: dataSubsetEditorName.value, valueUpdate: 'keyup'"/>
+            <div class="error" data-bind="visible: dataSubsetEditorName.error, html: dataSubsetEditorName.message"></div>
+        </div>
+        <div>
+            <label class="required" for="data-subset-data-source">Source: </label>
+            <select class="inline" 
+                            id="data-subset-data-source" 
+                            data-bind="options: currentProject.unmarkedProperDataSets, 
+                                optionsText: function(item) {
+                                   return item.displayName;
+                                },
+                                value: dataSubsetEditorDataSource">
+                    </select>
+            <div class="error" data-bind="visible: dataSubsetEditorDataSourceError">Must select a Data Source</div>
+        </div>
     </div>
     
     <div id="unsaved-changes-dialog" title="Unsaved Changes" class="dialog">
