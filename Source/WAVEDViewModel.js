@@ -415,7 +415,7 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.editDataSubset = function() {
-        // TODO
+        DataSubsetHelper.editDataSubset(self);
     };
 
     WAVEDViewModel.prototype.removeSelectedDataSubset = function() {

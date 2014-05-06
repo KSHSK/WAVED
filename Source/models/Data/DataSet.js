@@ -33,6 +33,7 @@ define(['knockout',
         this._referenceCount = 0;
         this._data = [];
         this._dataFields = [];
+        this._dataLoaded = false;
 
         this.setState(state);
 
@@ -115,6 +116,8 @@ define(['knockout',
 
     DataSet.prototype.subscribed = false;
 
+    DataSet.prototype.skipSubscribe = ['_data', '_dataFields', '_dataLoaded'];
+
     DataSet.prototype.subscribeChanges = function() {
         var self = this;
         var propertyChangeSubscriber = PropertyChangeSubscriber.getInstance();
@@ -122,7 +125,7 @@ define(['knockout',
         var properties = [];
         for (var prop in this) {
             if (this.hasOwnProperty(prop)) {
-                if(prop !== '_data' && prop !== '_dataFields'){
+                if(this.skipSubscribe.indexOf(prop) === -1){
                     properties.push(prop);
                 }
             }
@@ -190,6 +193,16 @@ define(['knockout',
             },
             set: function(fields){
                 this._dataFields = fields;
+            }
+        },
+        dataLoaded: {
+            get: function() {
+                return this._dataLoaded;
+            },
+            set: function(value){
+                if (typeof value === 'boolean') {
+                    this._dataLoaded = value;
+                }
             }
         }
     });
