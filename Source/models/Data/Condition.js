@@ -11,6 +11,34 @@ define([
     ){
     'use strict';
 
+    // Prepare the comparison functions.
+    var comparisonFunctions = {};
+
+    comparisonFunctions[ComparisonOperator.EQUAL] = function(a, b) {
+        return a === b;
+    };
+
+    comparisonFunctions[ComparisonOperator.NOT_EQUAL] = function(a, b) {
+        return a !== b;
+    };
+
+    comparisonFunctions[ComparisonOperator.LESS_THAN] = function(a, b) {
+        return a < b;
+    };
+
+    comparisonFunctions[ComparisonOperator.LESS_THAN_OR_EQUAL] = function(a, b) {
+        return a <= b;
+    };
+
+    comparisonFunctions[ComparisonOperator.GREATER_THAN] = function(a, b) {
+        return a > b;
+    };
+
+    comparisonFunctions[ComparisonOperator.GREATER_THAN_OR_EQUAL] = function(a, b) {
+        return a >= b;
+    };
+
+    // Condition class.
     var Condition = function(state) {
         state = (defined(state)) ? state : {};
 
@@ -20,6 +48,20 @@ define([
         this.logicalOperator = undefined; // LogicalOperator (optional)
 
         this.setState(state);
+    };
+
+    Condition.prototype.execute = function(data) {
+        var self = this;
+        var indices = [];
+
+        data.forEach(function(row, index) {
+            var fieldValue = row[self.field];
+            if (comparisonFunctions[self.comparisonOperator](fieldValue, self.value)) {
+                indices.push(index);
+            }
+        });
+
+        return indices;
     };
 
     Condition.prototype.getState = function() {
