@@ -97,6 +97,8 @@ define([
             .attr('height', h2)
             .attr('width', w2)
             .attr('class', 'widget-container')
+            .style('top', '0')
+            .style('left', '0')
             .attr('id', glyph.id);
 
         glyph._dom = svg.append('g');
