@@ -90,7 +90,7 @@ define([
         properties: {
             get: function() {
                 return [this.name, this.text, this.x, this.y, this.width, this.height, this.border, this.visible,
-                this.logGoogleAnalytics];
+                this.logGoogleAnalytics, this.z, this.zIncrement, this.zDecrement];
             }
         }
     });

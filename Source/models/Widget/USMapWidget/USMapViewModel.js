@@ -448,6 +448,12 @@ define([
         this._isRendered = false;
         this._ready = true;
 
+        /*
+         * Map will always be below everything else. Must always be set to 0.
+         * This is due to a click-through issue where clicks on the map will propagate to elements underneath.
+         */
+        this.z.originalValue = 0;
+
         ko.track(this);
     };
 
@@ -514,10 +520,11 @@ define([
 
     Object.defineProperties(USMapViewModel.prototype, {
         properties: {
+            // z is not exposed here because the map should always be on the bottom
             get: function() {
-                return [this.name, this.x, this.y, this.width, this.strokeColor, this.coloring,
-                this.visible, this.logGoogleAnalytics, this.glyphList];
-             }
+                return [this.name, this.x, this.y, this.width, this.visible,
+                        this.strokeColor, this.coloring, this.logGoogleAnalytics, this.glyphList];
+            }
         }
     });
 

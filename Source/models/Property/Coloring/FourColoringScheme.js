@@ -28,7 +28,7 @@ define([
 
         this.color2 = new StringProperty({
             displayName: 'Color #2',
-            value: 'PowederBlue',
+            value: 'PowderBlue',
             onchange: state.onchange
         });
 

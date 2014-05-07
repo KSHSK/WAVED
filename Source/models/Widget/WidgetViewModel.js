@@ -4,6 +4,7 @@ define([
         'models/Property/StringProperty',
         'models/Property/NumberProperty',
         'models/Property/BooleanProperty',
+        'models/Property/ButtonProperty',
         'models/ComponentViewModel',
         'models/Event/Trigger',
         'modules/HistoryMonitor',
@@ -17,6 +18,7 @@ define([
         StringProperty,
         NumberProperty,
         BooleanProperty,
+        ButtonProperty,
         ComponentViewModel,
         Trigger,
         HistoryMonitor,
@@ -26,10 +28,9 @@ define([
         displayMessage) {
     'use strict';
 
-    var self;
     var WidgetViewModel = function(state, getDataSet) {
         ComponentViewModel.call(this, state);
-        self = this;
+        var self = this;
 
         this.getDataSetByName = function(dataSetName){
             return getDataSet(dataSetName);
@@ -88,7 +89,7 @@ define([
     Object.defineProperties(WidgetViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.x, this.y, this.width, this.height, this.visible, this.logGoogleAnalytics];
+                return [this.name, this.x, this.y, this.z, this.zIncrement, this.zDecrement, this.width, this.height, this.visible, this.logGoogleAnalytics];
             }
         },
         boundData: {
@@ -138,9 +139,13 @@ define([
             this.y.originalValue = state.y.value;
         }
 
+        if (defined(state.elements)) {
+            this._elementNames = state.elements;
+        }
+
         if (defined(state.boundData)) {
             for(var index=0; index < state.boundData.length; index++){
-                var dataSet = self.getDataSetByName(state.boundData[index].name);
+                var dataSet = this.getDataSetByName(state.boundData[index].name);
                 if(dataSet !== null){
                     this._boundData.push(dataSet);
                 }
