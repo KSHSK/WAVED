@@ -28,6 +28,7 @@ define([
     var openDialog = function(saveCallback, cancelCallback) {
         dataSubsetDialog.dialog({
             minHeight: 250,
+            height: 350,
             minWidth: 400,
             width: 650,
             modal: true,
@@ -48,6 +49,8 @@ define([
 
             // One initial conditions.
             viewModel.dataSubsetEditorConditions = [new Condition()];
+
+            viewModel.dataSubsetEditorConditionCount = 1;
         },
 
         addDataSubset: function(viewModel) {
@@ -66,11 +69,12 @@ define([
                     return;
                 }
 
+                var limit = viewModel.dataSubsetEditorConditionCount;
                 var dataSubset = new DataSubset({
                     name: viewModel.dataSubsetEditorName.value,
                     parent: viewModel.dataSubsetEditorDataSource,
                     query: {
-                        conditions: viewModel.dataSubsetEditorConditions
+                        conditions: viewModel.dataSubsetEditorConditions.slice(0, limit)
                     }
                 });
 
@@ -102,6 +106,8 @@ define([
             viewModel.selectedDataSubset.query.conditions.forEach(function(condition) {
                 viewModel.dataSubsetEditorConditions.push(new Condition(condition.getState()));
             });
+
+            viewModel.dataSubsetEditorConditionCount = viewModel.dataSubsetEditorConditions.length;
 
             var saveCallback = function() {
                 if (self.hasErrors(viewModel)) {
@@ -145,7 +151,9 @@ define([
 
             var newName = viewModel.dataSubsetEditorName.value;
             var newParent = viewModel.dataSubsetEditorDataSource;
-            var newConditions = viewModel.dataSubsetEditorConditions;
+
+            var limit = viewModel.dataSubsetEditorConditionCount;
+            var newConditions = viewModel.dataSubsetEditorConditions.slice(0, limit);
 
             function executeChange() {
                 dataSubset.setState({
@@ -178,8 +186,39 @@ define([
             }
 
             return error;
-        }
+        },
+        dataSubsetConitionChange: function(viewModel, index) {
+            var currentCondition = viewModel.dataSubsetEditorConditions[index];
 
+            if (defined(currentCondition.logicalOperator)) {
+                // Only move to next condition if the logical operator is defined.
+                // This means that AND or OR has been selected.
+
+                if (index === viewModel.dataSubsetEditorConditions.length - 1) {
+                    // Reached limit, so add new condition.
+                    viewModel.dataSubsetEditorConditions.push(new Condition());
+                    viewModel.dataSubsetEditorConditionCount++;
+                }
+                else {
+                    // Display all conditions until an undefined logical operator is found.
+                    for (var i = index; i < viewModel.dataSubsetEditorConditions.length; i++) {
+                        var condition = viewModel.dataSubsetEditorConditions[i];
+
+                        if (!defined(condition.logicalOperator)) {
+                            break;
+                        }
+
+                        viewModel.dataSubsetEditorConditionCount++;
+                    }
+                }
+            }
+            else {
+                if (index < viewModel.dataSubsetEditorConditionCount - 1) {
+                    // Hide conditions that aren't needed anymore.
+                    viewModel.dataSubsetEditorConditionCount = index + 1;
+                }
+            }
+        }
     };
 
     return DataSubsetHelper;

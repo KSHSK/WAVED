@@ -510,6 +510,7 @@
         </div>  
         <!-- ko if: typeof dataSubsetEditorDataSource !== 'undefined' -->
         <div class="center" data-bind="foreach: dataSubsetEditorConditions">
+            <!-- ko if: $index() < $parent.dataSubsetEditorConditionCount -->
             <hr/>
             <div class="inline">
                 <label class="padding5">Column: 
@@ -527,13 +528,19 @@
                 </label>
             </div>
             <hr/>
+
             <div class="inline">
                 <label>Operator: 
                     <select class="inline" 
-                            data-bind="options: $parent.logicalOperators, value: $data.logicalOperator">
+                            data-bind="options: $parent.logicalOperators,
+                                       optionsCaption: 'END QUERY',
+                                       event: {change: $parent.dataSubsetConitionChange.bind($parent, $index())},
+                                       value: $data.logicalOperator
+                                       ">
                     </select>
                 </label>
             </div>
+            <!-- /ko -->
         </div>
         <!-- /ko -->
     </div>

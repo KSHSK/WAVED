@@ -15,9 +15,9 @@ define([
         state = (defined(state)) ? state : {};
 
         this.field = '';
-        this.comparisonOperator = ''; // ComparisonOperator
+        this.comparisonOperator = undefined; // ComparisonOperator
         this.value = '';
-        this.logicalOperator = ''; // LogicalOperator (optional)
+        this.logicalOperator = undefined; // LogicalOperator (optional)
 
         this.setState(state);
     };
