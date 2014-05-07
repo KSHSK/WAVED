@@ -75,7 +75,7 @@ define([
         properties: {
             get: function() {
                 return [this.name, this.label, this.x, this.y, this.width, this.height, this.visible,
-                this.logGoogleAnalytics];
+                this.logGoogleAnalytics, this.z, this.zIncrement, this.zDecrement];
             }
         }
     });
