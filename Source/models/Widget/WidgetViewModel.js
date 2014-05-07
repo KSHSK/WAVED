@@ -6,6 +6,7 @@ define([
         'models/Property/BooleanProperty',
         'models/Property/ButtonProperty',
         'models/ComponentViewModel',
+        'models/Event/Trigger',
         'modules/HistoryMonitor',
         'util/defined',
         'util/defaultValue',
@@ -19,6 +20,7 @@ define([
         BooleanProperty,
         ButtonProperty,
         ComponentViewModel,
+        Trigger,
         HistoryMonitor,
         defined,
         defaultValue,
@@ -79,7 +81,7 @@ define([
         });
 
         this._boundData = []; // String[]
-        this._triggers = []; // Trigger[]
+        this._trigger = new Trigger();
     };
 
     WidgetViewModel.prototype = Object.create(ComponentViewModel.prototype);
@@ -95,9 +97,9 @@ define([
                 return this._boundData;
             }
         },
-        triggers: {
+        trigger: {
             get: function() {
-                return this._triggers;
+                return this._trigger;
             }
         }
     });
@@ -149,14 +151,6 @@ define([
                 }
             }
         }
-    };
-
-    WidgetViewModel.prototype.getTriggers = function() {
-        return this._triggers;
-    };
-
-    WidgetViewModel.prototype.addTrigger = function(trigger) {
-        this._triggers.push(trigger);
     };
 
     WidgetViewModel.prototype.boundDataIndex = function(dataSet) {
