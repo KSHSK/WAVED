@@ -193,6 +193,7 @@ define(['jquery',
         this.dataSubsetEditorDataSource = undefined;
         this.dataSubsetEditorDataSourceError = undefined;
         this.dataSubsetEditorConditions = [];
+        this.dataSubsetEditorConditionCount = 0;
 
         ko.track(this);
 
@@ -406,7 +407,7 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.addDataSubset = function() {
-        if (this.currentProject.unmarkedDataSets.length === 0) {
+        if (self.currentProject.unmarkedDataSets.length === 0) {
             displayMessage('Must upload a Data Source before creating a Data Subset.');
             return;
         }
@@ -420,6 +421,12 @@ define(['jquery',
 
     WAVEDViewModel.prototype.removeSelectedDataSubset = function() {
         this.currentProject.removeDataSet(this.selectedDataSubset);
+    };
+
+    WAVEDViewModel.prototype.dataSubsetConitionChange = function(index) {
+        setTimeout(function() {
+            DataSubsetHelper.dataSubsetConitionChange(self, index);
+        }, 0);
     };
 
     WAVEDViewModel.prototype.addAction = function() {
