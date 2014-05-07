@@ -25,13 +25,19 @@ define([
 
     var dataSubsetDialog = $('#data-subset-editor-dialog');
 
+    // Setup the dialog.
+    dataSubsetDialog.dialog({
+        minHeight: 250,
+        height: 350,
+        minWidth: 400,
+        width: 650,
+        modal: true,
+        autoOpen: false
+    });
+
     var openDialog = function(saveCallback, cancelCallback) {
         dataSubsetDialog.dialog({
-            minHeight: 250,
-            height: 350,
-            minWidth: 400,
-            width: 650,
-            modal: true,
+            autoOpen: true,
             buttons: {
                 'Save': saveCallback,
                 'Cancel': cancelCallback

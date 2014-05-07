@@ -48,13 +48,19 @@ define([
     DataSubset.prototype.setState = function(state) {
         DataSet.prototype.setState.call(this, state);
 
+        var shouldExecute = false;
+
         if (defined(state.parent)) {
             this.parent = state.parent;
-            this.executeQuery();
+            shouldExecute = true;
         }
 
         if (defined(state.query)) {
             this.query.setState(state.query);
+            shouldExecute = true;
+        }
+
+        if (shouldExecute) {
             this.executeQuery();
         }
     };
@@ -71,8 +77,8 @@ define([
         var localExecuteQuery = function() {
             var data = self.parent.data;
 
-            // TODO: Run query
-            self._queryData = data;
+            // Run query
+            self._queryData = self.query.execute(data);
         };
 
         // Run the query or set interval if needed.
