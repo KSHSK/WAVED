@@ -450,6 +450,10 @@ define(['jquery',
         $('#accordion').accordion('option', 'active', projectTreePanelPosition);
     };
 
+    WAVEDViewModel.prototype.actionDialogHasErrors = function() {
+        return ActionHelper.hasErrors(self);
+    };
+
     Object.defineProperties(WAVEDViewModel.prototype, {
         dirty: {
             get: function() {
