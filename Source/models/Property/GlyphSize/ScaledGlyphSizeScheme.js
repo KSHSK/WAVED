@@ -96,20 +96,20 @@ define([
         }
     });
 
-    ScaledGlyphSizeScheme.prototype.setState = function(state, viewModel){
+    ScaledGlyphSizeScheme.prototype.setState = function(state, viewModel) {
         var self = this;
 
         // Subscribe to the value of dataSet in order to automatically update dataField's options
-        subscribeObservable(self.dataSet, '_originalValue', function(newValue){
+        subscribeObservable(self.dataSet, '_originalValue', function(newValue) {
             var changeFunction = function() {
                 if(defined(newValue)){
-                    if(defined(newValue.data)){
+                    if(newValue.dataLoaded) {
                         self.dataField.options = newValue.dataFields;
                     }
                     else {
                         // Keep trying until data is ready, as long as data is a defined object.
-                        var interval = setInterval(function(){
-                            if(defined(newValue.data)){
+                        var interval = setInterval(function() {
+                            if(newValue.dataLoaded) {
                                 self.dataField.options = newValue.dataFields;
                                 clearInterval(interval);
                             }
@@ -126,16 +126,16 @@ define([
             historyMonitor.executeAmendHistory(changeFunction);
         });
 
-        subscribeObservable(self.dataSet, '_displayValue', function(newValue){
+        subscribeObservable(self.dataSet, '_displayValue', function(newValue) {
             var changeFunction = function() {
                 if(defined(newValue)){
-                    if(defined(newValue.data)){
+                    if(newValue.dataLoaded) {
                         self.dataField.options = newValue.dataFields;
                     }
                     else {
                         // Keep trying until data is ready, as long as data is a defined object.
-                        var interval = setInterval(function(){
-                            if(defined(newValue.data)){
+                        var interval = setInterval(function() {
+                            if(newValue.dataLoaded) {
                                 self.dataField.options = newValue.dataFields;
                                 clearInterval(interval);
                             }
