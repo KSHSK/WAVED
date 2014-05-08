@@ -300,7 +300,7 @@ define([
     Object.defineProperties(GlyphViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.dataSet, this.color, this.opacity, this.size, this.latitude, this.longitude, this.visible,
+                return [this.name, this.dataSet, this.latitude, this.longitude, this.color, this.opacity, this.size, this.visible,
                 this.logGoogleAnalytics];
             }
         },
