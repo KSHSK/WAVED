@@ -17,10 +17,11 @@ try {
         return;
     }
 
-    // Set project variables.
-    $returnValue["projectName"] = $projectName;
-    $returnValue["projectState"] = getProjectState($projectName);
-    $returnValue["dataFolder"] = getDataFolder($projectName);
+    // Set project variables, note that the name may have changed cases.
+    $project = getProject($projectName);
+    $returnValue["projectName"] = $project->getName();
+    $returnValue["projectState"] = $project->getState();
+    $returnValue["dataFolder"] = getDataFolder($project->getName());
 
     reportReturnValue($returnValue);
 }

@@ -58,7 +58,7 @@ define([
         ['Florida', 'Hawaii', 'Iowa', 'Maryland', 'New Hampshire', 'New York', 'North Dakota', 'Ohio', 'Oklahoma', 'South Carolina', 'Tennessee', 'Utah', 'Washington']
     ];
 
-    var DEFAULT_MAP_COLOR = '#C0C0C0';
+    var DEFAULT_MAP_COLOR = 'LightGrey';
 
     function getElement(viewModel){
         return d3.select('#' + viewModel.id);
@@ -78,6 +78,26 @@ define([
         }
     }
 
+    var addStateDataToTrigger = function(viewModel, d) {
+        viewModel._trigger.addData('state', d.properties.name);
+
+        // Iterate through each bound DataSet and add data values to the trigger
+        // only for the state matching the specified name.
+        for (var i = 0; i < viewModel._boundData.length; i++) {
+            var data = viewModel._boundData[i].data;
+            for (var j = 0; j < data.length; j++) {
+                for (var key in data[j]) {
+                    if (data[j][key] === d.properties.name) {
+                        for (var k in data[j]) {
+                            viewModel._trigger.addData(viewModel._boundData[i].name, k, data[j][k]);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    };
+
     function renderMap (viewModel) {
         if (viewModel._ready) {
             var w = $('#waved-workspace').width();
@@ -92,11 +112,9 @@ define([
             var svg = getElement(viewModel)
                 .append('svg')
                 .attr('height', h2)
-                .attr('width', w2)
-                .attr('class', 'widget-container');
+                .attr('width', w2);
             viewModel._svg = svg;
-            viewModel._states = svg.append('g')
-                .attr('pointer-events', 'none');
+            viewModel._states = svg.append('g');
             var statesDataPath = ReadData.getFilePath(STATES_DATA_FILE);
             d3.json(statesDataPath, function(json) {
                 viewModel._states.selectAll('path')
@@ -107,6 +125,18 @@ define([
                     .attr('stroke', 'white')
                     .style('fill', function(d) {
                         return viewModel.coloring.value;
+                    })
+                    .on('mouseover', function(d) {
+                        addStateDataToTrigger(viewModel, d);
+                    })
+                    .on('mousemove', function(d) {
+                        addStateDataToTrigger(viewModel, d);
+                    })
+                    .on('mouseout', function(d) {
+                        addStateDataToTrigger(viewModel, d);
+                    })
+                    .on('click', function(d) {
+                        addStateDataToTrigger(viewModel, d);
                     });
                 viewModel._isRendered = true;
                 viewModel.updateSvg();
@@ -128,10 +158,11 @@ define([
             return viewModel.strokeColor.value;
         });
 
+        // Every time a color is used here, it should be converted toLowerCase() to be consistent across the board
         switch(coloringScheme.getType()){
             case ColoringSchemeType.SOLID_COLORING:
                 path.style('fill', function(d) {
-                    return defined(coloringScheme.color.value) ? coloringScheme.color.value : DEFAULT_MAP_COLOR;
+                    return defined(coloringScheme.color.value) ? coloringScheme.color.value.toLowerCase() : DEFAULT_MAP_COLOR.toLowerCase();
                 });
                 break;
             case ColoringSchemeType.FOUR_COLORING:
@@ -139,7 +170,7 @@ define([
                     var stateName = d.properties.name;
                     for(var i=0; i < fourColorStateGroupings.length; i++){
                         if(fourColorStateGroupings[i].indexOf(stateName) !== -1){
-                            return coloringScheme.getColorArray()[i];
+                            return coloringScheme.getColorArray()[i].toLowerCase();
                         }
                     }
                 });
@@ -155,7 +186,7 @@ define([
                 // If either a dataSet or dataField isn't selected, break
                 if(!defined(coloringScheme.dataField.value) || !defined(coloringScheme.dataSet.value)){
                     path.style('fill', function(d){
-                        return DEFAULT_MAP_COLOR;
+                        return DEFAULT_MAP_COLOR.toLowerCase();
                     });
                     break;
                 }
@@ -177,12 +208,13 @@ define([
                 // Default the map to black when we can't extract an actual min or max (the field is not numeric)
                 if(!defined(min) || !defined(max)){
                     path.style('fill', function(d){
-                        return DEFAULT_MAP_COLOR;
+                        return DEFAULT_MAP_COLOR.toLowerCase();
                     });
                 }
 
                 // Set up the gradient function
-                var gradient = d3.scale.linear().domain([min, max]).range([coloringScheme.startColor.value, coloringScheme.endColor.value]);
+                // Color names must be lowercase or this won't work due to the range function not liking caps
+                var gradient = d3.scale.linear().domain([min, max]).range([coloringScheme.startColor.value.toLowerCase(), coloringScheme.endColor.value.toLowerCase()]);
                 path.style('fill', function(d) {
                     var stateName = d.properties.name;
                     var keyName = coloringScheme.keyField.value;
@@ -359,7 +391,7 @@ define([
         // Default to black strokes
         this.strokeColor = new StringProperty({
             displayName: 'Stroke Color',
-            value: '#000000',
+            value: 'Black',
             onchange: function() {
                 updateColoring(self);
             }
@@ -425,6 +457,12 @@ define([
 
         this._isRendered = false;
         this._ready = true;
+
+        /*
+         * Map will always be below everything else. Must always be set to 0.
+         * This is due to a click-through issue where clicks on the map will propagate to elements underneath.
+         */
+        this.z.originalValue = 0;
 
         ko.track(this);
     };
@@ -492,10 +530,11 @@ define([
 
     Object.defineProperties(USMapViewModel.prototype, {
         properties: {
+            // z is not exposed here because the map should always be on the bottom
             get: function() {
-                return [this.name, this.x, this.y, this.width, this.strokeColor, this.coloring,
-                this.visible, this.logGoogleAnalytics, this.glyphList];
-             }
+                return [this.name, this.x, this.y, this.width, this.visible,
+                        this.strokeColor, this.coloring, this.logGoogleAnalytics, this.glyphList];
+            }
         },
         id: {
             get: function() {

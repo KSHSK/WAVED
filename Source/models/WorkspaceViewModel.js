@@ -51,6 +51,9 @@ define([
             value: 'White'
         });
 
+        // Override so workspace is always on the bottom
+        this.z.originalValue = 0;
+
         this.setState(state);
 
         ko.track(this);

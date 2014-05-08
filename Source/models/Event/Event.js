@@ -33,27 +33,37 @@ define([
 
         // TODO: Validation, etc
         this._name = '';
-        this.eventType = ''; // EventType
-        this.riggeringWidget = {}; // WidgetViewModel
-        this.trigger = {}; // Trigger
+        this._eventType = ''; // EventType
+        this._triggeringWidget = {}; // WidgetViewModel
         this.actions = []; // Action[]
-
-        this.setState(state);
 
         this.applyActions = function() {
             for (var i = 0; i < self.actions.length; i++) {
-                // TODO: pass in information from trigger as a param?
-                self.actions[i].apply();
+                self.actions[i].apply(self._triggeringWidget.viewModel.trigger.data);
             }
         };
 
+        this.fireEvent = function(event) {
+            var workspace = $('#waved-workspace');
+            self._triggeringWidget.viewModel.trigger.addData('x', 100 * (event.pageX - workspace.offset().left) / workspace.width());
+            self._triggeringWidget.viewModel.trigger.addData('y', 100 * (event.pageY - workspace.offset().top) / workspace.height());
+
+            self.applyActions();
+        };
+
         this.register = function() {
-            $(self._trigger.domElement).on(EventType[self._eventType], self.applyActions);
+            if (defined(self._triggeringWidget)) {
+                $(self._triggeringWidget.viewModel.trigger.domElement).on(EventType[self._eventType], self.fireEvent);
+            }
         };
 
         this.unregister = function() {
-            $(self._trigger.domElement).off(EventType[self._eventType], self.applyActions);
+            if (defined(self._triggeringWidget)) {
+                $(self._triggeringWidget.viewModel.trigger.domElement).off(EventType[self._eventType], self.fireEvent);
+            }
         };
+
+        this.setState(state);
 
         ko.track(this);
 
@@ -75,6 +85,26 @@ define([
                     this._name = value;
                 }
             }
+        },
+        eventType: {
+            get: function() {
+                return this._eventType;
+            },
+            set: function(value) {
+                this.unregister();
+                this._eventType = value;
+                this.register();
+            }
+        },
+        triggeringWidget: {
+            get: function() {
+                return this._triggeringWidget;
+            },
+            set: function(value) {
+                this.unregister();
+                this._triggeringWidget = value;
+                this.register();
+            }
         }
     });
 
@@ -91,10 +121,6 @@ define([
             this._triggeringWidget = state.triggeringWidget;
         }
 
-        if (defined(state.trigger)){
-            this._trigger = this._triggeringWidget.viewModel.triggers[state.trigger];
-        }
-
         if (defined(state.actions)){
             this._actions = state.actions;
         }
@@ -105,7 +131,6 @@ define([
             'name': this._name,
             'eventType': this._eventType,
             'triggeringWidget': this._triggeringWidget.viewModel.name.value,
-            'trigger': this._triggeringWidget.viewModel.triggers.indexOf(this._trigger),
             'actions': $.map(this._actions, function(action) {
                 return action.name;
             })

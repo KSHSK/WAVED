@@ -38,7 +38,7 @@ define([
             for (i = 0; i < project.events.length; i++) {
                 var event = project.events[i];
 
-                if (event.triggeringComponent === widget) {
+                if (event.triggeringWidget === widget) {
                     message = 'Cannot delete this widget since it is used by event "' + event.name + '"';
                     return {
                         allowed: false,
