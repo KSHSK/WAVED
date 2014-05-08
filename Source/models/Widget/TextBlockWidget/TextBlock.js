@@ -24,9 +24,7 @@ define([
         var textBlock = this.newWidgetContainer();
         textBlock.attr('data-bind', 'template: {name: \'' + this._templateName + '\'}');
 
-        viewModel.addTrigger(new Trigger('TextBlock', function() {
-            return textBlock;
-        }));
+        viewModel.trigger.domElement = textBlock;
 
         this._domElement = textBlock;
         this.viewModel = viewModel;

@@ -31,10 +31,16 @@ define([
                 return this._originalValue;
             },
             set: function(value) {
+                var templateRegex = /{{[\w]+}}/g;
                 if (!isNaN(Number(value)) && this.isValidValue(value)) {
                     this.error = false;
                     this.message = '';
                     this._originalValue = Number(value);
+                }
+                else if (templateRegex.test(value)) {
+                    this.error = false;
+                    this.message = '';
+                    this._originalValue = value;
                 }
                 else {
                     this.error = true;
@@ -47,10 +53,16 @@ define([
                 return this._value;
             },
             set: function(value) {
+                var templateRegex = /{{[\w]+}}/g;
                 if (!isNaN(Number(value)) && this.isValidValue(value)) {
                     this.error = false;
                     this.message = '';
                     this._value = Number(value);
+                }
+                else if (templateRegex.test(value)) {
+                    this.error = false;
+                    this.message = '';
+                    this._value = value;
                 }
                 else {
                     this.error = true;
@@ -63,10 +75,16 @@ define([
                 return this._displayValue;
             },
             set: function(value) {
+                var templateRegex = /{{[\w]+}}/g;
                 if (!isNaN(Number(value)) && this.isValidValue(value)) {
                     this.error = false;
                     this.message = '';
                     this._displayValue = Number(value);
+                }
+                else if (templateRegex.test(value)) {
+                    this.error = false;
+                    this.message = '';
+                    this._displayValue = value;
                 }
                 else {
                     this.error = true;
