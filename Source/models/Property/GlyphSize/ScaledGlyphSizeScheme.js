@@ -56,14 +56,16 @@ define([
         this.dataField = new ArrayProperty(dataFieldOptions);
 
         // Allows for deselection
-        var isValidValue = function(value){
-           var undef = (value === undefined);
-           var validSelection = true;
-           if (defined(this._options) && this._options.length > 0) {
-               validSelection = (this._options.indexOf(value) !== -1);
-           }
+        var isValidValue = function(value) {
+            if (value === undefined) {
+                return true;
+            }
 
-           return !undef && validSelection;
+            if (defined(this._options) && this._options.length > 0) {
+                return (this.options.indexOf(value) !== -1);
+            }
+
+            return true;
         };
 
         this.dataSet.isValidValue = isValidValue;
@@ -131,6 +133,7 @@ define([
             var changeFunction = function() {
                 if(defined(newValue)){
                     if(newValue.dataLoaded) {
+                        self.dataField.displayValue = undefined;
                         self.dataField.options = newValue.dataFields;
                     }
                     else {
@@ -144,8 +147,8 @@ define([
                     }
                 }
                 else{
-                    self.dataField.options = [];
                     self.dataField.displayValue = undefined; // Reset the dataField selection
+                    self.dataField.options = [];
                 }
             };
 
