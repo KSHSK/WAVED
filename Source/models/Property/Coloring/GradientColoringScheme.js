@@ -150,9 +150,15 @@ define([
                          * allow the field to reset itself correctly. Settings options first leads
                          * to the field looking blank even though the default option is selected
                          */
-                        self.dataField.originalValue = undefined;
+
+                        if (newValue.dataFields.indexOf(self.dataField.originalValue) === -1) {
+                            self.dataField.originalValue = undefined;
+                        }
                         self.dataField.options = newValue.dataFields;
-                        self.keyField.originalValue = undefined;
+
+                        if (newValue.dataFields.indexOf(self.keyField.originalValue) === -1) {
+                            self.keyField.originalValue = undefined;
+                        }
                         self.keyField.options = newValue.dataFields;
                     }
                     else {

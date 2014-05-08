@@ -133,8 +133,13 @@ define([
             var changeFunction = function() {
                 if(defined(newValue)){
                     if(newValue.dataLoaded) {
-                        self.dataField.displayValue = undefined;
-                        self.dataField.options = newValue.dataFields;
+                        if (newValue.dataFields.indexOf(self.dataField.displayValue) === -1) {
+                            self.dataField.displayValue = undefined;
+                        }
+
+                        if (self.dataField.options !== newValue.dataFields) {
+                            self.dataField.options = newValue.dataFields;
+                        }
                     }
                     else {
                         // Keep trying until data is ready, as long as data is a defined object.
