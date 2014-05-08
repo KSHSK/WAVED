@@ -421,9 +421,9 @@ define(['jquery',
         this.currentProject.removeDataSet(this.selectedDataSubset);
     };
 
-    WAVEDViewModel.prototype.dataSubsetConitionChange = function(index) {
+    WAVEDViewModel.prototype.dataSubsetConditionChange = function(index) {
         setTimeout(function() {
-            DataSubsetHelper.dataSubsetConitionChange(self, index);
+            DataSubsetHelper.dataSubsetConditionChange(self, index);
         }, 0);
     };
 
