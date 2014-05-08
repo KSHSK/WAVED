@@ -28,7 +28,7 @@ define([
     // Setup the dialog.
     dataSubsetDialog.dialog({
         minHeight: 250,
-        height: 350,
+        height: 375,
         minWidth: 400,
         width: 650,
         modal: true,
@@ -193,7 +193,7 @@ define([
 
             return error;
         },
-        dataSubsetConitionChange: function(viewModel, index) {
+        dataSubsetConditionChange: function(viewModel, index) {
             var currentCondition = viewModel.dataSubsetEditorConditions[index];
 
             if (defined(currentCondition.logicalOperator)) {

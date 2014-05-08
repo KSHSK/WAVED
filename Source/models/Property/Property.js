@@ -1,9 +1,11 @@
 define(['knockout',
         'util/defined',
+        'util/defaultValue',
         'util/subscribeObservable'
     ],function(
         ko,
         defined,
+        defaultValue,
         subscribeObservable){
     'use strict';
 
@@ -15,7 +17,8 @@ define(['knockout',
         this._originalValue = undefined;
         this._value = undefined; // Type determined by subclasses.
         this._displayValue = undefined;
-        this.visible = true;
+
+        this.visible = defaultValue(options.visible, true);
         this.onchange = options.onchange;
         this.ondisplaychange = options.ondisplaychange;
 
@@ -32,10 +35,6 @@ define(['knockout',
             this.isValidValue = function(value) {
                 return true;
             };
-        }
-
-        if(defined(options.visible)){
-            this.visible = options.visible;
         }
 
         this.setState(options);

@@ -153,6 +153,7 @@ define([
         });
 
         // Properly unset the dataSet value when the options disappear (when the bound data is unbound)
+        // This should never happen since unbinding cannot be done when the dataSet is in use.
         subscribeObservable(self.dataSet, '_options', function(newValue){
             if(defined(self.dataSet.value) && (newValue.indexOf(self.dataSet.value) === -1)){
                     self.dataSet.orignalValue = undefined;

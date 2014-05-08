@@ -56,6 +56,10 @@ textarea:disabled {
 	padding: 15px;
 }
 
+.padding-vertical5 {
+    padding: 5px 0px;
+}
+
 .marginBottom10 {
 	margin-bottom: 10px;
 }
