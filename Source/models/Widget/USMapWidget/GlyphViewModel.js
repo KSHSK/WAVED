@@ -88,7 +88,8 @@ define([
             }
         })
         .style('fill', glyph.color.value)
-        .style('opacity', glyph.opacity.value/100);
+        .style('opacity', glyph.opacity.value/100)
+        .style('z-index', glyph.z.value);
     }
 
     function addGlyph(glyph, id) {
@@ -103,6 +104,8 @@ define([
             .attr('height', h2)
             .attr('width', w2)
             .attr('class', 'widget-container')
+            .style('top', '0')
+            .style('left', '0')
             .attr('id', glyph.id);
 
         glyph._dom = svg.append('g');
@@ -187,6 +190,9 @@ define([
         this.setState(state);
         this.id = this.name.value;
         this._dom = undefined;
+
+        // USMapViewModel is set at 0, Glyphs sit on top of the map, don't let anything slip between them
+        this.z.originalValue = 1;
 
         this.add = function() {
             if(self.dataSet.value.dataLoaded) {
