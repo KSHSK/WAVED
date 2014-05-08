@@ -89,9 +89,8 @@ define([
             var interval = setInterval(function() {
                 if (self.parent.dataLoaded) {
                     localExecuteQuery();
+                    clearInterval(interval);
                 }
-
-                clearInterval(interval);
             }, 100);
         }
 
