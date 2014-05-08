@@ -39,7 +39,8 @@ define([
             options: [],
             getOptionText: function(value){
                 return value.displayName;
-            }
+            },
+            visible: false
         };
         this.dataSet = new ArrayProperty(dataSetOptions);
 

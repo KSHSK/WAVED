@@ -171,6 +171,10 @@ define([
         this.dataSet.ondisplaychange = function(newValue) {
             self.latitude.options = newValue.dataFields;
             self.longitude.options = newValue.dataFields;
+
+            // Update scaled size glyphs
+            self.size.scaledGlyphSize.dataSet.value = newValue;
+            self.size.scaledGlyphSize.dataField.options = newValue.dataFields;
         };
 
         // The subscription for the current dataSet's '_data' property.

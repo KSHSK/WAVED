@@ -231,15 +231,15 @@ define([
         }
     }
 
-    function removeGlyph(options, value) {
-        value.remove();
-        UniqueTracker.removeItem(ComponentViewModel.getUniqueNameNamespace(), value);
-        options.splice(options.indexOf(value), 1);
+    function removeGlyph(options, glyph) {
+        glyph.remove();
+        UniqueTracker.removeItem(ComponentViewModel.getUniqueNameNamespace(), glyph);
+        options.splice(options.indexOf(glyph), 1);
     }
 
-    function addGlyph(options, value, index) {
+    function addGlyph(options, glyph, index) {
         var success = UniqueTracker.addValueIfUnique(ComponentViewModel.getUniqueNameNamespace(),
-            value.name.value, value);
+            glyph.name.value, glyph);
 
         if (!success) {
             console.log('New Component name was not unique.');
@@ -247,28 +247,31 @@ define([
         }
 
         if (defined(index)) {
-            options.splice(index, 0, value);
+            options.splice(index, 0, glyph);
         } else {
-            options.push(value);
+            options.push(glyph);
         }
 
-        value.add();
+        glyph.add();
     }
 
-    function addSuccess(options, value) {
-        options.push(value);
+    function addSuccess(options, glyph) {
+        options.push(glyph);
         //set lat lon first for validation reasons
         //TODO: look into why subscription isn't working for array property
-        value.latitude.originalValue = value.latitude.displayValue;
-        value.latitude.value = value.latitude.displayValue;
-        value.longitude.originalValue = value.longitude.displayValue;
-        value.longitude.value = value.longitude.displayValue;
+        glyph.latitude.originalValue = glyph.latitude.displayValue;
+        glyph.latitude.value = glyph.latitude.displayValue;
+        glyph.longitude.originalValue = glyph.longitude.displayValue;
+        glyph.longitude.value = glyph.longitude.displayValue;
 
-        for (var i = 0; i < value.properties.length; i++) {
-            var property = value.properties[i];
+        // Reversed to get GlyphSizeSelectionProperty (its scaled size dataField) before dataSet is changed.
+        for (var i = glyph.properties.length - 1; i >= 0; i--) {
+            var property = glyph.properties[i];
             property._originalValue = property._displayValue;
+
             if (property instanceof GlyphSizeSelectionProperty){
                 var p = property.value.properties;
+
                 // Reversed to get dataField before dataSet for scaled size
                 for (var j = p.length - 1; j >= 0 ; j--) {
                     p[j].originalValue = p[j].displayValue;
@@ -276,68 +279,72 @@ define([
                 }
             }
         }
-        value.add();
+        glyph.add();
 
         var historyMonitor = HistoryMonitor.getInstance();
 
         // Undo by removing the item.
         historyMonitor.addUndoChange(function() {
-            removeGlyph(options, value);
+            removeGlyph(options, glyph);
         });
 
         // Redo by readding the item.
         historyMonitor.addRedoChange(function() {
-            addGlyph(options, value);
+            addGlyph(options, glyph);
         });
     }
 
-    function editSuccess(value) {
-        var originalState = value.getState();
+    function editSuccess(glyph) {
+        var originalState = glyph.getState();
 
-        value.latitude.originalValue = value.latitude.displayValue;
-        value.latitude.value = value.latitude.displayValue;
-        value.longitude.originalValue = value.longitude.displayValue;
-        value.longitude.value = value.longitude.displayValue;
+        glyph.latitude.originalValue = glyph.latitude.displayValue;
+        glyph.latitude.value = glyph.latitude.displayValue;
+        glyph.longitude.originalValue = glyph.longitude.displayValue;
+        glyph.longitude.value = glyph.longitude.displayValue;
 
-        for (var i = 0; i < value.properties.length; i++) {
-            var property = value.properties[i];
+        // Reversed to get GlyphSizeSelectionProperty (its scaled size dataField) before dataSet is changed.
+        for (var i = glyph.properties.length - 1; i >= 0; i--) {
+            var property = glyph.properties[i];
             property._originalValue = property._displayValue;
+
             if (property instanceof GlyphSizeSelectionProperty){
                 var p = property.value.properties;
+
+                // Reversed to get dataField before dataSet for scaled size
                 for (var j = p.length - 1; j >= 0 ; j--) {
                     p[j].originalValue = p[j].displayValue;
                     p[j].value = p[j].displayValue;
                 }
             }
         }
-        value.edit();
-        var newState = value.getState();
+        glyph.edit();
+        var newState = glyph.getState();
 
         var historyMonitor = HistoryMonitor.getInstance();
 
         historyMonitor.addUndoChange(function() {
-            value.setState(originalState);
-            value.latitude.options = value.dataSet.value.dataFields;
-            value.longitude.options = value.dataSet.value.dataFields;
-            value.latitude.value = originalState.latitude.value;
-            value.longitude.value = originalState.longitude.value;
-            value.edit();
+            glyph.setState(originalState);
+            glyph.latitude.options = glyph.dataSet.value.dataFields;
+            glyph.longitude.options = glyph.dataSet.value.dataFields;
+            glyph.latitude.value = originalState.latitude.value;
+            glyph.longitude.value = originalState.longitude.value;
+            glyph.edit();
         });
 
         historyMonitor.addRedoChange(function() {
-            value.setState(newState);
-            value.latitude.options = value.dataSet.value.dataFields;
-            value.longitude.options = value.dataSet.value.dataFields;
-            value.latitude.value = newState.latitude.value;
-            value.longitude.value = newState.longitude.value;
-            value.edit();
+            glyph.setState(newState);
+            glyph.latitude.options = glyph.dataSet.value.dataFields;
+            glyph.longitude.options = glyph.dataSet.value.dataFields;
+            glyph.latitude.value = newState.latitude.value;
+            glyph.longitude.value = newState.longitude.value;
+            glyph.edit();
        });
     }
 
-    function  editFailure(value) {
-        for (var i = 0; i < value.properties.length; i++) {
-            var property = value.properties[i];
-            property.displayValue = value.properties[i].originalValue;
+    function  editFailure(glyph) {
+        for (var i = 0; i < glyph.properties.length; i++) {
+            var property = glyph.properties[i];
+            property.displayValue = glyph.properties[i].originalValue;
             if (property instanceof GlyphSizeSelectionProperty){
                 var p = property.value.properties;
                 for (var j = p.length - 1; j >= 0 ; j--) {
