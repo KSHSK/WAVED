@@ -15,9 +15,6 @@ define([
         this._query = new Query(); // Query
         this._parent = undefined; // DataSet
 
-        // The resultant data after running the query.
-        this._queryData = [];
-
         // Call super after variables are defined, because DataSet will call setState.
         DataSet.call(this, state);
 
@@ -32,8 +29,6 @@ define([
     };
 
     DataSubset.prototype = Object.create(DataSet.prototype);
-
-    DataSubset.prototype.skipSubscribe = DataSet.prototype.skipSubscribe.concat(['_queryData']);
 
     DataSubset.prototype.getState = function() {
         var state = DataSet.prototype.getState.call(this);
@@ -78,7 +73,9 @@ define([
             var data = self.parent.data;
 
             // Run query
-            self._queryData = self.query.execute(data);
+            self._data = self.query.execute(data);
+
+            self.dataLoaded = true;
         };
 
         // Run the query or set interval if needed.
@@ -113,11 +110,6 @@ define([
         displayName: {
             get: function() {
                 return this.name + ' : ' + this.parent.name;
-            }
-        },
-        data: {
-            get: function() {
-                return this._queryData;
             }
         },
         dataFields: {

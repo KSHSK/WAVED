@@ -9,6 +9,7 @@ define([
         'modules/UniqueTracker',
         'util/defined',
         'util/createValidator',
+        'util/subscribeObservable',
         'knockout',
         'd3',
         'jquery'
@@ -23,6 +24,7 @@ define([
         UniqueTracker,
         defined,
         createValidator,
+        subscribeObservable,
         ko,
         d3,
         $) {
@@ -33,7 +35,7 @@ define([
         .range([2,10])
         .clamp(true);
 
-    function getElement(viewModel){
+    function getElement(viewModel) {
         return d3.select('#' + viewModel.id);
     }
 
@@ -46,6 +48,10 @@ define([
     }
 
     function editGlyph(glyph) {
+        if (!defined(glyph._dom)) {
+            return;
+        }
+
         if (!glyph.visible.value) {
             glyph._dom.attr('class', 'hide');
             return;
@@ -158,23 +164,39 @@ define([
             options: []
         });
 
-        this.dataSet.ondisplaychange = function(newValue){
+        // Change the data field options.
+        this.dataSet.ondisplaychange = function(newValue) {
             self.latitude.options = newValue.dataFields;
             self.longitude.options = newValue.dataFields;
         };
+
+        // The subscription for the current dataSet's '_data' property.
+        this.dataSetSubscription = undefined;
+
+        this.dataSet.onchange = function(newValue) {
+            if (defined(self.dataSetSubscription)) {
+                self.dataSetSubscription.dispose();
+            }
+
+            // Need to update the glyphs if dataSet's '_data' property has changed.
+            subscribeObservable(self.dataSet.value, '_data', function() {
+                editGlyph(self);
+            });
+        };
+
         this.setState(state);
         this.id = this.name.value;
         this._dom = undefined;
 
         this.add = function() {
-            if(defined(self.dataSet.value.data)){
+            if(self.dataSet.value.dataLoaded) {
                 addGlyph(self);
             }
             else {
                 // Keep trying until data is ready, as long as data is a defined object.
                 // Needed for on load
-                var interval = setInterval(function(){
-                    if(defined(self.dataSet.value.data)){
+                var interval = setInterval(function() {
+                    if(self.dataSet.value.dataLoaded) {
                         addGlyph(self);
                         clearInterval(interval);
                     }
@@ -183,14 +205,14 @@ define([
         };
 
         this.edit = function() {
-            if(defined(self.dataSet.value.data)){
+            if(self.dataSet.value.dataLoaded) {
                 editGlyph(self);
             }
             else {
                 // Keep trying until data is ready, as long as data is a defined object.
                 // Needed for on load
-                var interval = setInterval(function(){
-                    if(defined(self.dataSet.value.data)){
+                var interval = setInterval(function() {
+                    if(self.dataSet.value.dataLoaded) {
                         editGlyph(self);
                         clearInterval(interval);
                     }
@@ -235,8 +257,8 @@ define([
         ComponentViewModel.prototype.setState.call(this, state);
         var self = this;
         if (defined(state.dataSet)) {
-            this.boundData.forEach(function(entry){
-                if(defined(state.dataSet) && (state.dataSet === entry.name)){
+            this.boundData.forEach(function(entry) {
+                if(defined(state.dataSet) && (state.dataSet === entry.name)) {
                     self.dataSet.originalValue = entry;
                 }
             });
