@@ -45,7 +45,7 @@ define([
         this.dataSet = new ArrayProperty(dataSetOptions);
 
         var dataFieldOptions = {
-            displayName: 'Data Field',
+            displayName: 'Scaling Field',
             value: undefined,
             options: [],
             getOptionText: function(value){
