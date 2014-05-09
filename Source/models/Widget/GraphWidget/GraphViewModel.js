@@ -39,7 +39,7 @@ define([
     Object.defineProperties(GraphViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.x, this.y, this.width, this.height, this.visible, this.logGoogleAnalytics,
+                return [this.name, this.x, this.y, this.z, this.zIncrement, this.zDecrement, this.width, this.height, this.visible, this.logGoogleAnalytics,
                 this.title, this.dataSet, this.xAxisLabel, this.yAxisLabel, this.xAxisDataField, this.yAxisDataField];
             }
         }

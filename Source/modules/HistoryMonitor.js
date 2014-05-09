@@ -40,7 +40,7 @@ define(['knockout',
      * This can be useful for undo/redo being called, so that undone changes aren't added as new changes.
      * @param functionToExecute
      */
-    HistoryMonitor.prototype.executeIgnoreHistory = function(functionToExecute) {
+    HistoryMonitor.prototype.executeIgnoreHistory = function(functionToExecute, arg) {
         if (typeof functionToExecute !== 'function') {
             console.log('Must be a function.');
             return;
@@ -49,7 +49,7 @@ define(['knockout',
         var previousState = undoRedoSubscriptionPaused;
 
         undoRedoSubscriptionPaused = true;
-        functionToExecute();
+        functionToExecute(arg);
         undoRedoSubscriptionPaused = previousState;
     };
 

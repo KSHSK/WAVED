@@ -24,9 +24,6 @@ define([
 
         resetEventEditor: function(viewModel) {
             viewModel.eventEditorTriggeringWidget = undefined;
-            viewModel.eventEditorTriggeringWidgetError = false;
-            viewModel.eventEditorTrigger = undefined;
-            viewModel.eventEditorTriggerError = false;
             viewModel.selectedEventType = undefined;
             viewModel.selectedEventName.reset();
             viewModel.selectedEventActions = [];
@@ -56,7 +53,6 @@ define([
                             name: viewModel.selectedEventName.value,
                             eventType: viewModel.selectedEventType,
                             triggeringWidget: viewModel.eventEditorTriggeringWidget,
-                            trigger: $('#event-trigger-select').prop('selectedIndex'),
                             actions: viewModel.selectedEventActions
                         });
                         viewModel.currentProject.addEvent(event);
@@ -79,7 +75,6 @@ define([
             viewModel.selectedEventName.value = viewModel.selectedEvent.name;
             viewModel.selectedEventType = viewModel.selectedEvent.eventType;
             viewModel.eventEditorTriggeringWidget = viewModel.selectedEvent.triggeringWidget;
-            viewModel.eventEditorTrigger = viewModel.selectedEvent.trigger;
 
             // Make a shallow copy of the array so that it's not referencing the same object.
             viewModel.selectedEventActions = viewModel.selectedEvent.actions.slice(0);
@@ -101,9 +96,7 @@ define([
                             return;
                         }
 
-                        viewModel.selectedEvent.unregister();
                         self.updateEditChanges(viewModel);
-                        viewModel.selectedEvent.register();
 
                         self.eventDialog.dialog('close');
                     },
@@ -119,28 +112,24 @@ define([
             var oldName = event.name;
             var oldEventType = event.eventType;
             var oldTriggeringWidget = event.triggeringWidget;
-            var oldTrigger = event.trigger;
             var oldActions = event.actions;
 
             function undoChange() {
                 event.name = oldName;
                 event.eventType = oldEventType;
                 event.triggeringWidget = oldTriggeringWidget;
-                event.trigger = oldTrigger;
                 event.actions = oldActions;
             }
 
             var newName = viewModel.selectedEventName.value;
             var newEventType = viewModel.selectedEventType;
             var newTriggeringWidget = viewModel.eventEditorTriggeringWidget;
-            var newTrigger = viewModel.eventEditorTrigger;
             var newActions = viewModel.selectedEventActions;
 
             function executeChange() {
                 event.name = newName;
                 event.eventType = newEventType;
                 event.triggeringWidget = newTriggeringWidget;
-                event.trigger = newTrigger;
                 event.actions = newActions;
             }
 
@@ -161,12 +150,6 @@ define([
             // Check that a triggering widget is selected.
             if (!defined(viewModel.eventEditorTriggeringWidget)) {
                 viewModel.eventEditorTriggeringWidgetError = true;
-                error = true;
-            }
-
-            // Check that a trigger is selected.
-            if (!defined(viewModel.eventEditorTrigger)) {
-                viewModel.eventEditorTriggerError = true;
                 error = true;
             }
 
