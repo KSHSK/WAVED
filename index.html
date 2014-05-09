@@ -62,14 +62,14 @@
                         data-bind="visible: currentProject.name">
                         <li><span class="tree-folder-icon"></span><a
                             class="tree-row"
-                            data-bind="css: {'tree-row-selected': isSelectedInProjectTree(projectTree.SelectedTypeEnum.PROJECT, currentProject.name) },text: currentProject.name, click: function() { selectInProjectTree(projectTree.SelectedTypeEnum.PROJECT, currentProject.name) }"></a>
+                            data-bind="css: {'tree-row-selected': isSelectedInProjectTree(SelectedType.PROJECT, currentProject.name) },text: currentProject.name, click: function() { selectInProjectTree(SelectedType.PROJECT, currentProject.name) }"></a>
                             <ul>
                                 <li><span class="tree-folder-icon"></span>Components
                                     <ul
                                         data-bind="foreach: currentProject.components">
-                                        <li data-bind="css: {'tree-row-selected': $parent.isSelectedInProjectTree($parent.projectTree.SelectedTypeEnum.COMPONENT, $data) }">
+                                        <li data-bind="css: {'tree-row-selected': $parent.isSelectedInProjectTree($parent.SelectedType.COMPONENT, $data) }">
                                             <span class="tree-gear-icon"></span><a class="tree-row"
-                                            data-bind="text: $data.viewModel.name.value, click: function(data) { $parent.selectInProjectTree($parent.projectTree.SelectedTypeEnum.COMPONENT, $data) }"></a>
+                                            data-bind="text: $data.viewModel.name.value, click: function(data) { $parent.selectInProjectTree($parent.SelectedType.COMPONENT, $data) }"></a>
                                             <!-- TODO: Elements -->
                                         </li>
                                     </ul>
@@ -77,27 +77,27 @@
                                 <li><span class="tree-folder-icon"></span>Data
                                     <ul
                                         data-bind="foreach: currentProject.unmarkedDataSets">
-                                        <li data-bind="css: {'tree-row-selected': $parent.isSelectedInProjectTree($parent.projectTree.SelectedTypeEnum.DATA, $data) }">
+                                        <li data-bind="css: {'tree-row-selected': $parent.isSelectedInProjectTree($parent.SelectedType.DATA, $data) }">
                                             <span class="tree-gear-icon"></span><a class="tree-row"
-                                            data-bind="text: $data.name, click: function(data) { $parent.selectInProjectTree($parent.projectTree.SelectedTypeEnum.DATA, $data) }"></a>
+                                            data-bind="text: $data.name, click: function(data) { $parent.selectInProjectTree($parent.SelectedType.DATA, $data) }"></a>
                                         </li>
                                     </ul>
                                 </li>
                                 <li><span class="tree-folder-icon"></span>Actions
                                     <ul
                                         data-bind="foreach: currentProject.actions">
-                                        <li data-bind="css: {'tree-row-selected': $parent.isSelectedInProjectTree($parent.projectTree.SelectedTypeEnum.ACTION, $data) }">
+                                        <li data-bind="css: {'tree-row-selected': $parent.isSelectedInProjectTree($parent.SelectedType.ACTION, $data) }">
                                             <span class="tree-gear-icon"></span><a class="tree-row"
-                                            data-bind="text: $data.name, click: function(data) { $parent.selectInProjectTree($parent.projectTree.SelectedTypeEnum.ACTION, data) }"></a>
+                                            data-bind="text: $data.name, click: function(data) { $parent.selectInProjectTree($parent.SelectedType.ACTION, data) }"></a>
                                         </li>
                                     </ul>
                                 </li>
                                 <li><span class="tree-folder-icon"></span>Events
                                     <ul
                                         data-bind="foreach: currentProject.events">
-                                        <li data-bind="css: {'tree-row-selected': $parent.isSelectedInProjectTree($parent.projectTree.SelectedTypeEnum.EVENT, $data) }">
+                                        <li data-bind="css: {'tree-row-selected': $parent.isSelectedInProjectTree($parent.SelectedType.EVENT, $data) }">
                                             <span class="tree-gear-icon"></span><a class="tree-row"
-                                            data-bind="text: $data.name, click: function(data) { $parent.selectInProjectTree($parent.projectTree.SelectedTypeEnum.EVENT, data) }"></a>
+                                            data-bind="text: $data.name, click: function(data) { $parent.selectInProjectTree($parent.SelectedType.EVENT, data) }"></a>
                                         </li>
                                     </ul>
                                 </li>

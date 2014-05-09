@@ -4,6 +4,7 @@ define(['jquery',
         'models/Constants/ActionType',
         'models/Action/Action',
         'models/Constants/EventType',
+        'models/Constants/selectedType',
         'models/ComponentRecord',
         'models/Event/Event',
         'models/GoogleAnalytics',
@@ -38,6 +39,7 @@ define(['jquery',
         ActionType,
         Action,
         EventType,
+        SelectedType,
         ComponentRecord,
         Event,
         GoogleAnalytics,
@@ -83,9 +85,11 @@ define(['jquery',
         this.disableOpeningPropertiesPanel = false;
 
         this._projectList = [];
-        this._selectedComponent = '';
-        this._selectedDataSet = '';
-        this._selectedBoundData = '';
+        this.selectedComponent = '';
+        this.selectedDataSet = '';
+        this.selectedBoundData = '';
+
+        this.SelectedType = SelectedType;
 
         // Create the HistoryMonitor singleton that everything else will use.
         this.historyMonitor = new HistoryMonitor(this.setUndoNewChangeFunction, this.setRedoPreviousChangeFunction,
@@ -420,7 +424,7 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.isWorkspaceSelectedInProjectTree = function() {
-        var selected =  self.isSelectedInProjectTree(self.projectTree.SelectedTypeEnum.COMPONENT, self.currentProject.workspace);
+        var selected =  self.isSelectedInProjectTree(SelectedType.COMPONENT, self.currentProject.workspace);
 
         if (selected) {
             // Remove the hover/focus look when the workspace is selected, since the button will be disabled.
