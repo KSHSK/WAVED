@@ -60,7 +60,7 @@ define([
 
                             var basename = viewModel.uploadDataFile.value.split(new RegExp('(\\\\|/)')).pop();
                             var dataSet = viewModel.currentProject.getDataSetByFilename(basename);
-                            if (dataSet && dataSet.isMarkedForDeletion)
+                            if (dataSet && dataSet.isMarkedForDeletion())
                             {
                                 displayMessage('The project must be reloaded to reuse this filename.');
                                 return;
