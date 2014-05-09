@@ -32,7 +32,7 @@ define([
         ComponentViewModel.call(this, state);
         var self = this;
 
-        this.getDataSetByName = function(dataSetName){ // Does this have to be in the constructor?
+        this.getDataSetByName = function(dataSetName){
             return getDataSet(dataSetName);
         };
 

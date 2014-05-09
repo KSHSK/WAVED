@@ -1,6 +1,6 @@
 define(['knockout',
         'util/defined',
-        'models/SelectedType'
+        'models/Constants/SelectedType'
     ],function(
         ko,
         defined,
