@@ -118,9 +118,9 @@ define([
         var self = this;
 
         return {
-            'name': this._name,
+            'name': this.name,
             'workspace': this._workspace.getState(),
-            'analytics': this._googleAnalytics.getState(),
+            'analytics': this.googleAnalytics.getState(),
             'widgets': $.map(this._widgets, function(item) {
                 // Skip workspace.
                 if (item === self._workspace) {
@@ -142,9 +142,9 @@ define([
     };
 
     ProjectViewModel.prototype.resetProject = function() {
-        this._name = '';
+        this.name = '';
         this._workspace.resetWorkspace();
-        this._googleAnalytics.resetGoogleAnalytics();
+        this.googleAnalytics.resetGoogleAnalytics();
 
         if (this._dataSets.length > 0) {
             this._dataSets.length = 0;
@@ -180,11 +180,11 @@ define([
         var self = this;
 
         if (defined(state.name)) {
-            this._name = state.name;
+            this.name = state.name;
         }
 
         if (defined(state.analytics)) {
-            this._googleAnalytics.setState(state.analytics);
+            this.googleAnalytics.setState(state.analytics);
         }
 
         if (defined(state.workspace)) {
@@ -224,8 +224,8 @@ define([
             var newWidgets = $.each(state.widgets, function(itemIndex, itemState) {
                 for (var index = 0; index < availableWidgets.length; index++) {
                     var widgetType = availableWidgets[index];
-                    if (itemState.type === widgetType.o.getViewModelType()) {
-                        var widget =  new widgetType.o(itemState, self.getDataSet.bind(self));
+                    if (itemState.type === widgetType.component.getViewModelType()) {
+                        var widget =  new widgetType.component(itemState, self.getDataSet.bind(self));
                         self.addWidget(widget);
                     }
                 }
@@ -626,7 +626,7 @@ define([
     };
 
     ProjectViewModel.prototype.subscribeNameChange = function() {
-        ko.getObservable(this, '_name').subscribe(function(newValue) {
+        ko.getObservable(this, 'name').subscribe(function(newValue) {
             // Set the URL to use the new project name.
             updateQueryByName('project', newValue);
         });

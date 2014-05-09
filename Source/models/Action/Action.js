@@ -55,18 +55,18 @@ define(['jquery',
 
         // TODO: Does this need to be different for Property/Query Actions?
         if (defined(state.target)) {
-            this._target = state.target;
+            this.target = state.target;
         }
 
         if (defined(state.applyAutomatically)) {
-            this._applyAutomatically = state.applyAutomatically;
+            this.applyAutomatically = state.applyAutomatically;
         }
     };
 
     Action.prototype.getState = function() {
         return {
             'name': this._name,
-            'applyAutomatically': this._applyAutomatically
+            'applyAutomatically': this.applyAutomatically
         };
     };
 

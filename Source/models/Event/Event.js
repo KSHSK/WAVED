@@ -122,7 +122,7 @@ define([
         }
 
         if (defined(state.actions)){
-            this._actions = state.actions;
+            this.actions = state.actions;
         }
     };
 
@@ -131,7 +131,7 @@ define([
             'name': this._name,
             'eventType': this._eventType,
             'triggeringWidget': this._triggeringWidget.viewModel.name.value,
-            'actions': $.map(this._actions, function(action) {
+            'actions': $.map(this.actions, function(action) {
                 return action.name;
             })
         };

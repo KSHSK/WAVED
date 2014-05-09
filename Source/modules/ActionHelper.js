@@ -27,7 +27,6 @@ define([
 
     var actionDialog = $('#action-editor-dialog');
 
-
     function resetActionEditor(viewModel) {
         // Reset name.
         viewModel.selectedActionName.reset();
@@ -82,7 +81,7 @@ define([
 
         var actionValues = {};
 
-        for (var property in viewModel.actionEditorAffectedWidget.viewModel) {
+        for ( var property in viewModel.actionEditorAffectedWidget.viewModel) {
             var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
             if (propertyIndex > -1) {
                 if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
@@ -249,7 +248,6 @@ define([
             });
         }
     };
-
 
     return ActionHelper;
 });

@@ -19,10 +19,10 @@ define([
         Action.call(this, state);
 
         // TODO: Validation, etc
-        // TODO: target visibility conflicts with Action _target visibility, issue?
-        this._target = state.target; // DataSubset
+        // TODO: target visibility conflicts with Action target visibility, issue?
+        this.target = state.target; // DataSubset
         // TODO: Rename this to something that makes more sense.
-        this._newValues = state.newValues; // QueryNode
+        this.newValues = state.newValues; // QueryNode
 
         ko.track(this);
     };
@@ -53,7 +53,7 @@ define([
     QueryAction.prototype.getState = function() {
         var state = Action.prototype.getState.call(this);
         state.type = QueryAction.getType();
-        state.target = this._target.viewModel.name.value;
+        state.target = this.target.viewModel.name.value;
         return state;
     };
 

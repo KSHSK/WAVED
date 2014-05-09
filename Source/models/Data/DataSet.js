@@ -82,7 +82,7 @@ define(['knockout',
     };
 
     DataSet.prototype.getNameAndFilename = function() {
-        return this._name + ' : ' + this._filename;
+        return this._name + ' : ' + this.filename;
     };
 
     DataSet.prototype.getState = function() {
@@ -105,14 +105,14 @@ define(['knockout',
         }
 
         if (defined(state.filename)) {
-            this._filename = state.filename;
+            this.filename = state.filename;
 
             if (!this.isMarkedForDeletion()) {
                 // Populate the dataFields array once readData() is done
                 $.when(ReadData.readData(this)).done(function(){
                     var values = d3.values(self._data)[0];
                     if(defined(values)){
-                        self._dataFields = Object.keys(values);
+                        self.dataFields = Object.keys(values);
                     }
                 });
             }
@@ -126,7 +126,7 @@ define(['knockout',
         var properties = [];
         for (var prop in this) {
             if (this.hasOwnProperty(prop)) {
-                if(prop !== '_data' && prop !== '_dataFields'){
+                if(prop !== '_data' && prop !== 'dataFields'){
                     properties.push(prop);
                 }
             }

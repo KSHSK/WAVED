@@ -26,6 +26,8 @@ define([
         ComponentViewModel.call(this, state);
         state = defined(state) ? state : {};
 
+        this.name.value = 'Workspace';
+
         // Set width
         this.width = new NumberProperty({
             displayName: 'Width',

@@ -113,12 +113,12 @@ define(['jquery',
             new ComponentRecord({
                 name: 'Text Block',
                 icon: TextBlock.iconLocation(),
-                o: TextBlock
+                component: TextBlock
             }),
             new ComponentRecord({
                 name: 'US Map',
                 icon: USMap.iconLocation(),
-                o: USMap
+                component: USMap
             })
         ];
 
@@ -439,9 +439,9 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.addNewWidget = function(w) {
-        var widget = new w.o();
+        var widget = new w.component();
         self._currentProject.addWidget(widget);
-        self._selectedComponent = widget;
+        self.selectedComponent = widget;
 
         self.openPropertiesPanel();
     };

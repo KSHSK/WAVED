@@ -21,62 +21,62 @@ define([
 
     var eventDialog = $('#event-editor-dialog');
 
-	function resetEventEditor(viewModel) {
-		viewModel.eventEditorTriggeringWidget = undefined;
-		viewModel.selectedEventType = undefined;
-		viewModel.selectedEventName.reset();
-		viewModel.selectedEventActions = [];
-	}
-
-    function updateEditChanges(viewModel) {
-		var event = viewModel.selectedEvent;
-
-		var oldName = event.name;
-		var oldEventType = event.eventType;
-		var oldTriggeringWidget = event.triggeringWidget;
-		var oldActions = event.actions;
-
-		function undoChange() {
-			event.name = oldName;
-			event.eventType = oldEventType;
-			event.triggeringWidget = oldTriggeringWidget;
-			event.actions = oldActions;
-		}
-
-		var newName = viewModel.selectedEventName.value;
-		var newEventType = viewModel.selectedEventType;
-		var newTriggeringWidget = viewModel.eventEditorTriggeringWidget;
-		var newActions = viewModel.selectedEventActions;
-
-		function executeChange() {
-			event.name = newName;
-			event.eventType = newEventType;
-			event.triggeringWidget = newTriggeringWidget;
-			event.actions = newActions;
-		}
-
-		var historyMonitor = HistoryMonitor.getInstance();
-		historyMonitor.addChanges(undoChange, executeChange);
-
-		historyMonitor.executeIgnoreHistory(executeChange);
+    function resetEventEditor (viewModel) {
+        viewModel.eventEditorTriggeringWidget = undefined;
+        viewModel.selectedEventType = undefined;
+        viewModel.selectedEventName.reset();
+        viewModel.selectedEventActions = [];
     }
 
-    function hasErrors(viewModel) {
-		var error = false;
+    function updateEditChanges (viewModel) {
+        var event = viewModel.selectedEvent;
 
-		// Check that the event name is valid.
-		if (viewModel.selectedEventName.error) {
-			viewModel.selectedEventName.message = viewModel.selectedEventName.errorMessage;
-			error = true;
-		}
+        var oldName = event.name;
+        var oldEventType = event.eventType;
+        var oldTriggeringWidget = event.triggeringWidget;
+        var oldActions = event.actions;
 
-		// Check that a triggering widget is selected.
-		if (!defined(viewModel.eventEditorTriggeringWidget)) {
-			viewModel.eventEditorTriggeringWidgetError = true;
-			error = true;
-		}
+        function undoChange() {
+            event.name = oldName;
+            event.eventType = oldEventType;
+            event.triggeringWidget = oldTriggeringWidget;
+            event.actions = oldActions;
+        }
 
-		return error;
+        var newName = viewModel.selectedEventName.value;
+        var newEventType = viewModel.selectedEventType;
+        var newTriggeringWidget = viewModel.eventEditorTriggeringWidget;
+        var newActions = viewModel.selectedEventActions;
+
+        function executeChange() {
+            event.name = newName;
+            event.eventType = newEventType;
+            event.triggeringWidget = newTriggeringWidget;
+            event.actions = newActions;
+        }
+
+        var historyMonitor = HistoryMonitor.getInstance();
+        historyMonitor.addChanges(undoChange, executeChange);
+
+        historyMonitor.executeIgnoreHistory(executeChange);
+    }
+
+    function hasErrors (viewModel) {
+        var error = false;
+
+        // Check that the event name is valid.
+        if (viewModel.selectedEventName.error) {
+            viewModel.selectedEventName.message = viewModel.selectedEventName.errorMessage;
+            error = true;
+        }
+
+        // Check that a triggering widget is selected.
+        if (!defined(viewModel.eventEditorTriggeringWidget)) {
+            viewModel.eventEditorTriggeringWidgetError = true;
+            error = true;
+        }
+
+        return error;
     }
 
     var EventHelper = {

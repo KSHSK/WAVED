@@ -1,4 +1,3 @@
-
 define(['knockout',
         'util/defined',
         'util/subscribeObservable'
@@ -124,6 +123,14 @@ define(['knockout',
         this._originalValue = value;
         this._displayValue = value;
         this._error = !this.isValidValue(this._value);
+    };
+
+    Property.prototype.getValue = function() {
+        // Abstract method
+    };
+
+    Property.prototype.setValue = function(value) {
+        // Abstract method
     };
 
     /**

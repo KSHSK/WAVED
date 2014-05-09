@@ -364,7 +364,7 @@ define([
         var namespace = ComponentViewModel.getUniqueNameNamespace();
         this._id = UniqueTracker.getDefaultUniqueValue(namespace, USMapViewModel.getType(), this);
         if (!defined(state.name)) {
-            this.name.originalValue = this._id;
+            this.name.originalValue = this.id;
         }
         this.glyphs = [];
 

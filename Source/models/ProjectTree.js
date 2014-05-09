@@ -17,7 +17,7 @@ define(['knockout',
     };
 
     ProjectTree.prototype.tryToDeleteSelected = function(wavedViewModel) {
-        switch (self._selectedType) {
+        switch (self.selectedType) {
             case SelectedType.PROJECT:
                 return wavedViewModel.tryToDeleteProject();
             case SelectedType.COMPONENT:
