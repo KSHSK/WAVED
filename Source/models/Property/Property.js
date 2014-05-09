@@ -126,6 +126,13 @@ define(['knockout',
         this._error = !this.isValidValue(this._value);
     };
 
+    /**
+     * @param valueType 'originalValue' or 'value' or 'displayValue'
+     */
+    Property.prototype.displayErrorMessage = function(valueType) {
+        this.message = this.errorMessage;
+    };
+
     Property.prototype.isValidValue = function() {
         // TODO: Abstract method
     };

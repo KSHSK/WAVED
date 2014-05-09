@@ -36,6 +36,7 @@ define([
         var dataSetOptions = {
             displayName: 'Data Set',
             value: undefined,
+            errorMessage: '',
             options: [],
             getOptionText: function(value){
                 return value.displayName;
@@ -47,29 +48,13 @@ define([
         var dataFieldOptions = {
             displayName: 'Scaling Field',
             value: undefined,
+            errorMessage: 'Value is required.',
             options: [],
             getOptionText: function(value){
                 return value;
             }
         };
-
         this.dataField = new ArrayProperty(dataFieldOptions);
-
-        // Allows for deselection
-        var isValidValue = function(value) {
-            if (value === undefined) {
-                return true;
-            }
-
-            if (defined(this._options) && this._options.length > 0) {
-                return (this.options.indexOf(value) !== -1);
-            }
-
-            return true;
-        };
-
-        this.dataSet.isValidValue = isValidValue;
-        this.dataField.isValidValue = isValidValue;
 
         ko.track(this);
 
