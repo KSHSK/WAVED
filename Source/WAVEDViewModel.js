@@ -454,6 +454,10 @@ define(['jquery',
         return ActionHelper.hasErrors(self);
     };
 
+    WAVEDViewModel.prototype.eventDialogHasErrors = function() {
+        return EventHelper.hasErrors(self);
+    };
+
     Object.defineProperties(WAVEDViewModel.prototype, {
         dirty: {
             get: function() {

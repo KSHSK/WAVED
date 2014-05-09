@@ -39,6 +39,12 @@ define([
                 resizable: false,
                 width: 'auto',
                 modal: true,
+                open: function() {
+                    var save = $('.ui-dialog-buttonset button', $(this).parent()).first();
+                    save.attr('data-bind', 'disable: eventDialogHasErrors(),' +
+                        'css: {"ui-state-disabled": eventDialogHasErrors()}');
+                    ko.applyBindings(viewModel, save[0]);
+                },
                 buttons: {
                     'Save': function() {
                         if (self.hasErrors(viewModel)) {
@@ -154,7 +160,6 @@ define([
 
             // Check that the event name is valid.
             if (viewModel.selectedEventName.error) {
-                viewModel.selectedEventName.message = viewModel.selectedEventName.errorMessage;
                 error = true;
             }
 
