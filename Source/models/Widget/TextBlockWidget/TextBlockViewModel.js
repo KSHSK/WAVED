@@ -84,6 +84,18 @@ define([
             value: false
         });
 
+        // Underline
+        this.textUnderline = new BooleanProperty({
+            displayName: 'Underline Text',
+            value: false
+        });
+
+        // Italics
+        this.textItalic = new BooleanProperty({
+            displayName: 'Italicize Text',
+            value: false
+        });
+
         // Background Color
         this.backgroundColor = new StringProperty({
             displayName: 'Background Color',
@@ -141,6 +153,8 @@ define([
         state.textAlign = this.textAlign.getState();
         state.textColor = this.textColor.getState();
         state.textWeight = this.textWeight.getState();
+        state.textUnderline = this.textUnderline.getState();
+        state.textItalic = this.textItalic.getState();
         state.backgroundColor = this.backgroundColor.getState();
         state.border = this.border.getState();
         state.borderColor = this.borderColor.getState();
@@ -172,6 +186,14 @@ define([
             this.textWeight.originalValue = state.textWeight.value;
         }
 
+        if (defined(state.textUnderline)) {
+            this.textUnderline.originalValue = state.textUnderline.value;
+        }
+
+        if (defined(state.textItalic)) {
+            this.textItalic.originalValue = state.textItalic.value;
+        }
+
         if (defined(state.backgroundColor)) {
             this.backgroundColor.originalValue = state.backgroundColor.value;
         }
@@ -193,8 +215,9 @@ define([
         properties: {
             get: function() {
                 return [this.name, this.text, this.textSize, this.x, this.y, this.width, this.height, this.textColor,
-                this.textAlign, this.textWeight, this.backgroundColor, this.border, this.borderColor,
-                this.borderRadius, this.visible, this.logGoogleAnalytics, this.z, this.zIncrement, this.zDecrement];
+                this.textAlign, this.textWeight, this.textUnderline, this.textItalic, this.backgroundColor,
+                this.border, this.borderColor, this.borderRadius, this.visible, this.logGoogleAnalytics, this.z,
+                this.zIncrement, this.zDecrement];
             }
         }
     });

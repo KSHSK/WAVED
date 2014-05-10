@@ -1,6 +1,9 @@
 <textarea class="widget" disabled data-bind="text:text.value,
     style:{fontSize: textSize.value + 'px', textAlign: textAlign.value, color: textColor.value,
-    fontWeight: (textWeight.value === true) ? 'bold' : 'normal', left: x.value + '%', top: y.value + '%',
+    fontWeight: (textWeight.value === true) ? 'bold' : 'normal',
+    textDecoration: (textUnderline.value === true) ? 'underline' : 'none',
+    fontStyle: (textItalic.value === true) ? 'italic' : 'normal',
+    left: x.value + '%', top: y.value + '%',
     backgroundColor: backgroundColor.value, border: border.value + 'px solid ' + borderColor.value,
     borderRadius: borderRadius.value + 'px', height: height.value + '%', width: width.value + '%', zIndex: z.value},
     visible: visible.value" style="position: relative; display: block; overflow: hidden; padding: 3px;">
