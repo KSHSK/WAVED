@@ -57,25 +57,27 @@ define([
                 height: 250,
                 width: 400,
                 modal: true,
-                open: function() {
-                    var create = $('.ui-dialog-buttonset button', $(this).parent()).first();
-                    create.attr('data-bind', 'disable: newProjectDialogHasErrors(),' +
-                        'css: {"ui-state-disabled": newProjectDialogHasErrors()}');
-                    ko.applyBindings(viewModel, create[0]);
-                },
                 buttons: {
-                    'Create Project': function() {
-                        var value = viewModel.newProjectName.value;
+                    'Create Project': {
+                        text: 'Create Project',
+                        click: function() {
+                            var value = viewModel.newProjectName.value;
 
-                        if (!viewModel.newProjectName.error) {
-                            self.createNewProject(projectCreated, viewModel);
-                            $.when(projectCreated).done(function() {
-                                createNewProjectDialog.dialog('close');
-                            });
-                        }
-                        else {
-                            viewModel.newProjectName.message = viewModel.newProjectName.errorMessage;
-                        }
+                            if (!viewModel.newProjectName.error) {
+                                self.createNewProject(projectCreated, viewModel);
+                                $.when(projectCreated).done(function() {
+                                    createNewProjectDialog.dialog('close');
+                                });
+                            }
+                            else {
+                                viewModel.newProjectName.message = viewModel.newProjectName.errorMessage;
+                            }
+                        },
+                        create: function() {
+                            $(this).attr('data-bind', 'disable: newProjectDialogHasErrors(),' +
+                                'css: {"ui-state-disabled": newProjectDialogHasErrors()}');
+                            ko.applyBindings(viewModel, this);
+                        },
                     },
                     'Cancel': function() {
                         createNewProjectDialog.dialog('close');
