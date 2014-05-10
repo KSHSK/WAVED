@@ -90,12 +90,6 @@ define([
             value: false
         });
 
-        // Italics
-        this.textItalic = new BooleanProperty({
-            displayName: 'Italicize Text',
-            value: false
-        });
-
         // Background Color
         this.backgroundColor = new StringProperty({
             displayName: 'Background Color',
@@ -144,7 +138,6 @@ define([
         state.textColor = this.textColor.getState();
         state.textWeight = this.textWeight.getState();
         state.textUnderline = this.textUnderline.getState();
-        state.textItalic = this.textItalic.getState();
         state.backgroundColor = this.backgroundColor.getState();
         state.border = this.border.getState();
         state.borderColor = this.borderColor.getState();
@@ -179,10 +172,6 @@ define([
             this.textUnderline.setState(state.textUnderline);
         }
 
-        if (defined(state.textItalic)) {
-            this.textItalic.setState(state.textItalic);
-        }
-
         if (defined(state.backgroundColor)) {
             this.backgroundColor.setState(state.backgroundColor);
         }
@@ -200,9 +189,8 @@ define([
         properties: {
             get: function() {
                 return [this.name, this.text, this.textSize, this.x, this.y, this.width, this.height, this.textColor,
-                this.textAlign, this.textWeight, this.textUnderline, this.textItalic, this.backgroundColor,
-                this.border, this.borderColor, this.visible, this.logGoogleAnalytics, this.z,
-                this.zIncrement, this.zDecrement];
+                this.textAlign, this.textWeight, this.textUnderline, this.backgroundColor, this.border,
+                this.borderColor, this.visible, this.logGoogleAnalytics, this.z, this.zIncrement, this.zDecrement];
             }
         }
     });
