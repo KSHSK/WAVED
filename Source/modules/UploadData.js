@@ -66,7 +66,7 @@ define([
                             if (dataSet)
                             {
                                 if (dataSet.isMarkedForDeletion()) {
-                                    displayMessage('The project must be reloaded to reuse this filename.');
+                                    displayMessage('The project must be saved and reloaded to reuse this filename.');
                                 }
                                 else {
                                     viewModel.uploadDataFile.error = true;
