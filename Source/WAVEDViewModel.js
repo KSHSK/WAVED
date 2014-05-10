@@ -141,7 +141,7 @@ define(['jquery',
                 minLength: 1,
                 regex: new RegExp('.(csv|json)$', 'i')
             }),
-            errorMessage: 'Must select a file with extension CSV or JSON.'
+            errorMessage: 'Must select a unique file with extension CSV or JSON.'
         });
 
         this.selectedActionName = getNamePropertyInstance('Action Name');
