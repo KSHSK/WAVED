@@ -458,6 +458,10 @@ define(['jquery',
         return LoadProject.hasErrors(self);
     };
 
+    WAVEDViewModel.prototype.saveProjectAsDialogHasErrors = function() {
+        return SaveProject.hasErrors(self);
+    };
+
     WAVEDViewModel.prototype.actionDialogHasErrors = function() {
         return ActionHelper.hasErrors(self);
     };
