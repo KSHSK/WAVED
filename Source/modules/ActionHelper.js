@@ -67,46 +67,48 @@ define([
                 resizable: false,
                 width: 'auto',
                 modal: true,
-                open: function() {
-                    var save = $('.ui-dialog-buttonset button', $(this).parent()).first();
-                    save.attr('data-bind', 'disable: actionDialogHasErrors(),' +
-                        'css: {"ui-state-disabled": actionDialogHasErrors()}');
-                    ko.applyBindings(viewModel, save[0]);
-                },
                 buttons: {
-                    'Save': function() {
-                        if (self.hasErrors(viewModel)) {
-                            return;
-                        }
+                    'Save': {
+                        text: 'Save',
+                        click: function() {
+                            if (self.hasErrors(viewModel)) {
+                                return;
+                            }
 
-                        if (!UniqueTracker.isValueUnique(Action.getUniqueNameNamespace(),
-                            viewModel.selectedActionName.value)) {
+                            if (!UniqueTracker.isValueUnique(Action.getUniqueNameNamespace(),
+                                viewModel.selectedActionName.value)) {
 
-                            displayMessage('The name "' + viewModel.selectedActionName.value + '" is already in use.');
-                            return;
-                        }
+                                displayMessage('The name "' + viewModel.selectedActionName.value + '" is already in use.');
+                                return;
+                            }
 
-                        var actionValues = {};
-                        var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
-                        for (var property in viewModel.actionEditorAffectedWidget.viewModel) {
-                            var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
-                            if (propertyIndex > -1) {
-                                if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
-                                    actionValues[property] = properties[propertyIndex].displayValue;
+                            var actionValues = {};
+                            var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
+                            for (var property in viewModel.actionEditorAffectedWidget.viewModel) {
+                                var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
+                                if (propertyIndex > -1) {
+                                    if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
+                                        actionValues[property] = properties[propertyIndex].displayValue;
+                                    }
                                 }
                             }
-                        }
 
-                        // TODO: Handle QueryAction
-                        var action = new PropertyAction({
-                            name: viewModel.selectedActionName.value,
-                            target: viewModel.actionEditorAffectedWidget,
-                            newValues: actionValues,
-                            applyAutomatically: $('#actionApplyAutomatically').is(':checked')
-                        });
+                            // TODO: Handle QueryAction
+                            var action = new PropertyAction({
+                                name: viewModel.selectedActionName.value,
+                                target: viewModel.actionEditorAffectedWidget,
+                                newValues: actionValues,
+                                applyAutomatically: $('#actionApplyAutomatically').is(':checked')
+                            });
 
-                        viewModel.currentProject.addAction(action);
-                        self.closeActionDialog(viewModel);
+                            viewModel.currentProject.addAction(action);
+                            self.closeActionDialog(viewModel);
+                        },
+                        create: function() {
+                            $(this).attr('data-bind', 'disable: actionDialogHasErrors(),' +
+                                'css: {"ui-state-disabled": actionDialogHasErrors()}');
+                            ko.applyBindings(viewModel, this);
+                        },
                     },
                     'Cancel': function() {
                         self.closeActionDialog(viewModel);
