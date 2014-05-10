@@ -450,6 +450,10 @@ define(['jquery',
         $('#accordion').accordion('option', 'active', projectTreePanelPosition);
     };
 
+    WAVEDViewModel.prototype.newProjectDialogHasErrors = function() {
+        return NewProject.hasErrors(self);
+    };
+
     WAVEDViewModel.prototype.actionDialogHasErrors = function() {
         return ActionHelper.hasErrors(self);
     };
