@@ -480,10 +480,16 @@
             <div class="table-row">
                 <div class="table-cell">
                     <label class="required" for="data-subset-name">Subset Name: </label>
-                    <input id="data-subset-name" type="text" data-bind="value: dataSubsetEditorName.value, valueUpdate: 'keyup'"/>
                 </div>
                 <div class="table-cell">
                     <label class="required" for="data-subset-data-source">Source: </label>
+                </div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell">
+                    <input id="data-subset-name" type="text" data-bind="value: dataSubsetEditorName.value, valueUpdate: 'keyup'"/>
+                </div>
+                <div class="table-cell">
                     <select class="inline" 
                                     id="data-subset-data-source" 
                                     data-bind="options: currentProject.unmarkedProperDataSets, 
@@ -504,33 +510,41 @@
         <div class="center" data-bind="foreach: dataSubsetEditorConditions">
             <!-- ko if: $index() < $parent.dataSubsetEditorConditionCount -->
             <hr/>
-            <div class="inline padding-vertical5">
-                <label class="padding5">Column: 
-                    <select class="inline" 
-                            data-bind="options: $parent.dataSubsetEditorDataSource.dataFields, value: $data.field">
-                    </select>
-                </label>
-                <label class="padding5">Comparison: 
-                    <select class="inline" 
-                            data-bind="options: $parent.comparisonOperators, value: $data.comparisonOperator">
-                    </select>
-                </label>
-                <label class="padding5">Value: 
-                    <input type="text" data-bind="value: $data.value, valueUpdate: 'keyup'"/>
-                </label>
+            <div class="table">
+                <div class="table-row">
+                    <label class="table-cell padding5">Column:</label>
+                    <label class="table-cell padding5">Comparison:</label>
+                    <label class="table-cell padding5">Value:</label>
+                </div>
+                <div class="padding-vertical5 table-row">
+                    <div class="table-cell">
+                        <select data-bind="options: $parent.dataSubsetEditorDataSource.dataFields, value: $data.field"></select>
+                    </div>
+                    <div class="table-cell">
+                        <select data-bind="options: $parent.comparisonOperators, value: $data.comparisonOperator"></select>
+                    </div>
+                    <div class="table-cell">
+                        <input type="text" data-bind="value: $data.value, valueUpdate: 'keyup'"/>
+                    </div>
+                </div>
             </div>
+            
             <hr/>
-
-            <div class="inline padding-vertical5">
-                <label>Operator: 
-                    <select class="inline" 
-                            data-bind="options: $parent.logicalOperators,
-                                       optionsCaption: 'END QUERY',
-                                       event: {change: $parent.dataSubsetConditionChange.bind($parent, $index())},
-                                       value: $data.logicalOperator
-                                       ">
-                    </select>
-                </label>
+            <div class="table">
+                <div class="table-row">
+                    <div class="table-cell padding5">
+                        <label>Operator:</label>
+                    </div>
+                </div>
+                <div class="padding-vertical5 table-row">
+                    <div class="table-cell">
+                        <select data-bind="options: $parent.logicalOperators,
+                                           optionsCaption: 'END QUERY',
+                                           event: {change: $parent.dataSubsetConditionChange.bind($parent, $index())},
+                                           value: $data.logicalOperator">
+                        </select>
+                    </div>
+                </div>
             </div>
             <!-- /ko -->
         </div>
