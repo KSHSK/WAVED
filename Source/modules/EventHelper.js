@@ -39,34 +39,36 @@ define([
                 resizable: false,
                 width: 'auto',
                 modal: true,
-                open: function() {
-                    var save = $('.ui-dialog-buttonset button', $(this).parent()).first();
-                    save.attr('data-bind', 'disable: eventDialogHasErrors(),' +
-                        'css: {"ui-state-disabled": eventDialogHasErrors()}');
-                    ko.applyBindings(viewModel, save[0]);
-                },
                 buttons: {
-                    'Save': function() {
-                        if (self.hasErrors(viewModel)) {
-                            return;
-                        }
+                    'Save': {
+                        text: 'Save',
+                        click:  function() {
+                            if (self.hasErrors(viewModel)) {
+                                return;
+                            }
 
-                        if (!UniqueTracker.isValueUnique(Event.getUniqueNameNamespace(),
-                            viewModel.selectedEventName.value)) {
+                            if (!UniqueTracker.isValueUnique(Event.getUniqueNameNamespace(),
+                                viewModel.selectedEventName.value)) {
 
-                            displayMessage('The name "' + viewModel.selectedEventName.value + '" is already in use.');
-                            return;
-                        }
+                                displayMessage('The name "' + viewModel.selectedEventName.value + '" is already in use.');
+                                return;
+                            }
 
-                        var event = new Event({
-                            name: viewModel.selectedEventName.value,
-                            eventType: viewModel.selectedEventType,
-                            triggeringWidget: viewModel.eventEditorTriggeringWidget,
-                            trigger: $('#event-trigger-select').prop('selectedIndex'),
-                            actions: viewModel.selectedEventActions
-                        });
-                        viewModel.currentProject.addEvent(event);
-                        self.eventDialog.dialog('close');
+                            var event = new Event({
+                                name: viewModel.selectedEventName.value,
+                                eventType: viewModel.selectedEventType,
+                                triggeringWidget: viewModel.eventEditorTriggeringWidget,
+                                trigger: $('#event-trigger-select').prop('selectedIndex'),
+                                actions: viewModel.selectedEventActions
+                            });
+                            viewModel.currentProject.addEvent(event);
+                            self.eventDialog.dialog('close');
+                        },
+                        create: function() {
+                            $(this).attr('data-bind', 'disable: eventDialogHasErrors(),' +
+                                'css: {"ui-state-disabled": eventDialogHasErrors()}');
+                            ko.applyBindings(viewModel, this);
+                        },
                     },
                     'Cancel': function() {
                         self.eventDialog.dialog('close');
