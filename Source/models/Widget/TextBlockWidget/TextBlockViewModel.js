@@ -58,18 +58,8 @@ define([
             displayName: 'Text Align',
             value: 'Left',
             options: ['Left', 'Center', 'Right'],
-            errorMessage: 'Value is required.',
-            validValue: function(value) {
-                if (value === undefined) {
-                    return true;
-                }
-
-                if (defined(this._options) && this._options.length > 0) {
-                    return (this.options.indexOf(value) !== -1);
-                }
-
-                return true;
-            }
+            optionsCaption: null,
+            errorMessage: 'Value is required.'
         });
 
         // Text Color
