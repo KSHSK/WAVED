@@ -68,6 +68,26 @@ define([
         }
     }
 
+    var addStateDataToTrigger = function(viewModel, d) {
+        viewModel._trigger.addData('state', d.properties.name);
+
+        // Iterate through each bound DataSet and add data values to the trigger
+        // only for the state matching the specified name.
+        for (var i = 0; i < viewModel._boundData.length; i++) {
+            var data = viewModel._boundData[i].data;
+            for (var j = 0; j < data.length; j++) {
+                for (var key in data[j]) {
+                    if (data[j][key] === d.properties.name) {
+                        for (var k in data[j]) {
+                            viewModel._trigger.addData(viewModel._boundData[i].name, k, data[j][k]);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    };
+
     function renderMap (viewModel) {
         if (viewModel._ready) {
             var w = $('#waved-workspace').width();
@@ -82,11 +102,9 @@ define([
             var svg = getElement(viewModel)
                 .append('svg')
                 .attr('height', h2)
-                .attr('width', w2)
-                .attr('class', 'widget-container');
+                .attr('width', w2);
             viewModel._svg = svg;
-            viewModel._states = svg.append('g')
-                .attr('pointer-events', 'none');
+            viewModel._states = svg.append('g');
             var statesDataPath = ReadData.getFilePath(STATES_DATA_FILE);
             d3.json(statesDataPath, function(json) {
                 viewModel._states.selectAll('path')
@@ -97,6 +115,18 @@ define([
                     .attr('stroke', 'white')
                     .style('fill', function(d) {
                         return viewModel.coloring.value;
+                    })
+                    .on('mouseover', function(d) {
+                        addStateDataToTrigger(viewModel, d);
+                    })
+                    .on('mousemove', function(d) {
+                        addStateDataToTrigger(viewModel, d);
+                    })
+                    .on('mouseout', function(d) {
+                        addStateDataToTrigger(viewModel, d);
+                    })
+                    .on('click', function(d) {
+                        addStateDataToTrigger(viewModel, d);
                     });
                 viewModel._isRendered = true;
                 viewModel.updateSvg();
@@ -418,6 +448,12 @@ define([
         this._isRendered = false;
         this._ready = true;
 
+        /*
+         * Map will always be below everything else. Must always be set to 0.
+         * This is due to a click-through issue where clicks on the map will propagate to elements underneath.
+         */
+        this.z.originalValue = 0;
+
         ko.track(this);
     };
 
@@ -484,10 +520,11 @@ define([
 
     Object.defineProperties(USMapViewModel.prototype, {
         properties: {
+            // z is not exposed here because the map should always be on the bottom
             get: function() {
-                return [this.name, this.x, this.y, this.width, this.strokeColor, this.coloring,
-                this.visible, this.logGoogleAnalytics, this.glyphList];
-             }
+                return [this.name, this.x, this.y, this.width, this.visible,
+                        this.strokeColor, this.coloring, this.logGoogleAnalytics, this.glyphList];
+            }
         }
     });
 
