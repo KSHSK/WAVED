@@ -470,6 +470,10 @@ define(['jquery',
         return EventHelper.hasErrors(self);
     };
 
+    WAVEDViewModel.prototype.uploadDataDialogHasErrors = function() {
+        return UploadData.hasErrors(self);
+    };
+
     Object.defineProperties(WAVEDViewModel.prototype, {
         dirty: {
             get: function() {
