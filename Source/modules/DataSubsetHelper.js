@@ -30,7 +30,7 @@ define([
         minHeight: 250,
         height: 375,
         minWidth: 400,
-        width: 650,
+        width: 550,
         modal: true,
         autoOpen: false
     });
