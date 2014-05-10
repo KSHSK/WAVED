@@ -104,7 +104,7 @@ define([
 
         // Border Size
         this.border = new NumberProperty({
-            displayName: 'Border Size',
+            displayName: 'Border Size (px)',
             value: 1,
             validValue: createValidator({
                 min: 0
