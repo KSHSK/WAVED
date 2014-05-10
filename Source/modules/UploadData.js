@@ -7,14 +7,16 @@ define([
         './SaveProject',
         './UniqueTracker',
         'models/Data/DataSet',
-        'util/displayMessage'
+        'util/displayMessage',
+        'knockout',
     ], function(
         $,
         WAVEDViewModel,
         SaveProject,
         UniqueTracker,
         DataSet,
-        displayMessage) {
+        displayMessage,
+        ko) {
     'use strict';
 
     var UploadData = {
@@ -70,13 +72,22 @@ define([
                             $.when(dataUploaded).done(function() {
                                 self.uploadDataDialog.dialog('close');
                             });
-                        }
+                        },
+                        create: function() {
+                            $(this).attr('data-bind', 'disable: uploadDataDialogHasErrors(),' +
+                                'css: {"ui-state-disabled": uploadDataDialogHasErrors()}');
+                            ko.applyBindings(viewModel, this);
+                        },
                     },
                     'Cancel': function() {
                         self.uploadDataDialog.dialog('close');
                     }
                 }
             });
+        },
+
+        hasErrors: function(viewModel) {
+            return viewModel.uploadDataName.error || viewModel.uploadDataFile.error;
         },
 
         uploadData: function(dataUploaded, viewModel){
