@@ -70,6 +70,7 @@ define([
                 buttons: {
                     'Save': {
                         text: 'Save',
+                        'data-bind': 'jQueryDisable: actionDialogHasErrors()',
                         click: function() {
                             if (self.hasErrors(viewModel)) {
                                 return;
@@ -105,8 +106,6 @@ define([
                             self.closeActionDialog(viewModel);
                         },
                         create: function() {
-                            $(this).attr('data-bind', 'disable: actionDialogHasErrors(),' +
-                                'css: {"ui-state-disabled": actionDialogHasErrors()}');
                             ko.applyBindings(viewModel, this);
                         },
                     },

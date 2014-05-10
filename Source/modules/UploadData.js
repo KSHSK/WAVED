@@ -46,6 +46,7 @@ define([
                     'Upload': {
                         text: 'Upload',
                         'class': 'submit-button',
+                        'data-bind': 'jQueryDisable: uploadDataDialogHasErrors()',
                         click: function() {
                             if (viewModel.uploadDataName.error || viewModel.uploadDataFile.error) {
                                 viewModel.uploadDataName.message = viewModel.uploadDataName.errorMessage;
@@ -81,8 +82,6 @@ define([
                             });
                         },
                         create: function() {
-                            $(this).attr('data-bind', 'disable: uploadDataDialogHasErrors(),' +
-                                'css: {"ui-state-disabled": uploadDataDialogHasErrors()}');
                             ko.applyBindings(viewModel, this);
                         },
                     },

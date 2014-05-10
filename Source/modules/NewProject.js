@@ -60,6 +60,7 @@ define([
                 buttons: {
                     'Create Project': {
                         text: 'Create Project',
+                        'data-bind': 'jQueryDisable: newProjectDialogHasErrors()',
                         click: function() {
                             var value = viewModel.newProjectName.value;
 
@@ -74,8 +75,6 @@ define([
                             }
                         },
                         create: function() {
-                            $(this).attr('data-bind', 'disable: newProjectDialogHasErrors(),' +
-                                'css: {"ui-state-disabled": newProjectDialogHasErrors()}');
                             ko.applyBindings(viewModel, this);
                         },
                     },

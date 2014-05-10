@@ -39,6 +39,7 @@ define([
                 buttons: {
                     'Save': {
                         text: 'Save',
+                        'data-bind': 'jQueryDisable: eventDialogHasErrors()',
                         click:  function() {
                             if (self.hasErrors(viewModel)) {
                                 return;
@@ -61,8 +62,6 @@ define([
                             self.eventDialog.dialog('close');
                         },
                         create: function() {
-                            $(this).attr('data-bind', 'disable: eventDialogHasErrors(),' +
-                                'css: {"ui-state-disabled": eventDialogHasErrors()}');
                             ko.applyBindings(viewModel, this);
                         },
                     },

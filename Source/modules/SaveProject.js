@@ -34,6 +34,7 @@ define([
                 buttons: {
                     'Save': {
                         text: 'Save',
+                        'data-bind': 'jQueryDisable: saveProjectAsDialogHasErrors()',
                         click:  function() {
                             if (!viewModel.saveProjectAsName.error) {
                                 self.saveProjectAs(projectSaved, viewModel);
@@ -46,8 +47,6 @@ define([
                             }
                         },
                         create: function() {
-                            $(this).attr('data-bind', 'disable: saveProjectAsDialogHasErrors(),' +
-                                'css: {"ui-state-disabled": saveProjectAsDialogHasErrors()}');
                             ko.applyBindings(viewModel, this);
                         },
                     },
