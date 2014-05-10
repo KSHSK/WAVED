@@ -118,6 +118,7 @@ define([
                     'Load Project': {
                         text: 'Load Project',
                         'class': 'submit-button',
+                        'data-bind': 'jQueryDisable: loadProjectDialogHasErrors()',
                         click: function() {
                             var projectName = viewModel.loadProjectName.value;
 
@@ -128,8 +129,6 @@ define([
                             });
                         },
                         create: function() {
-                            $(this).attr('data-bind', 'disable: loadProjectDialogHasErrors(),' +
-                                'css: {"ui-state-disabled": loadProjectDialogHasErrors()}');
                             ko.applyBindings(viewModel, this);
                         },
                     },
