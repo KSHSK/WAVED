@@ -4,6 +4,8 @@ define([
         'models/Widget/WidgetViewModel',
         'models/Property/StringProperty',
         'models/Property/NumberProperty',
+        'models/Property/ArrayProperty',
+        'models/Property/BooleanProperty',
         'modules/UniqueTracker',
         'util/defined',
         'util/createValidator'
@@ -13,6 +15,8 @@ define([
         WidgetViewModel,
         StringProperty,
         NumberProperty,
+        ArrayProperty,
+        BooleanProperty,
         UniqueTracker,
         defined,
         createValidator){
@@ -27,7 +31,7 @@ define([
             this.name.originalValue = UniqueTracker.getDefaultUniqueValue(namespace, TextBlockViewModel.getType(), this);
         }
 
-        // Set label
+        // Text
         this.text = new StringProperty({
             displayName: 'Text',
             value: '',
@@ -39,9 +43,73 @@ define([
             errorMessage: 'Must be between 0 and 500 characters'
         });
 
+        // Text Size
+        this.textSize = new NumberProperty({
+            displayName: 'Text Size (px)',
+            value: 12,
+            validValue: createValidator({
+                min: 1
+            }),
+            errorMessage: 'Value must be greater than 0.'
+        });
+
+        // Text Align
+        this.textAlign = new ArrayProperty({
+            displayName: 'Text Align',
+            value: 'Left',
+            options: ['Left', 'Center', 'Right'],
+            errorMessage: 'Value is required.',
+            validValue: function(value) {
+                if (value === undefined) {
+                    return true;
+                }
+
+                if (defined(this._options) && this._options.length > 0) {
+                    return (this.options.indexOf(value) !== -1);
+                }
+
+                return true;
+            }
+        });
+
+        // Text Color
+        this.textColor = new StringProperty({
+            displayName: 'Text Color',
+            value: 'Black'
+        });
+
+        // Bold
+        this.textWeight = new BooleanProperty({
+            displayName: 'Bold Text',
+            value: false
+        });
+
+        // Background Color
+        this.backgroundColor = new StringProperty({
+            displayName: 'Background Color',
+            value: 'White'
+        });
+
+        // Border Size
         this.border = new NumberProperty({
-            displayName: 'Border',
+            displayName: 'Border Size',
             value: 1,
+            validValue: createValidator({
+                min: 0
+            }),
+            errorMessage: 'Value must be a positive number'
+        });
+
+        // Border Color
+        this.borderColor = new StringProperty({
+            displayName: 'Border Color',
+            value: 'Black'
+        });
+
+        // Background Color
+        this.borderRadius = new NumberProperty({
+            displayName: 'Border Radius (px)',
+            value: 5,
             validValue: createValidator({
                 min: 0
             }),
@@ -60,7 +128,6 @@ define([
      * Static method that returns the type String for this class.
      */
     TextBlockViewModel.getType = function() {
-        //TODO: Update this in the DD.
         return 'TextBlock';
     };
 
@@ -70,7 +137,14 @@ define([
         var state = WidgetViewModel.prototype.getState.call(this);
         state.type = TextBlockViewModel.getType();
         state.text = this.text.getState();
+        state.textSize = this.textSize.getState();
+        state.textAlign = this.textAlign.getState();
+        state.textColor = this.textColor.getState();
+        state.textWeight = this.textWeight.getState();
+        state.backgroundColor = this.backgroundColor.getState();
         state.border = this.border.getState();
+        state.borderColor = this.borderColor.getState();
+        state.borderRadius = this.borderRadius.getState();
 
         return state;
     };
@@ -81,16 +155,46 @@ define([
         if (defined(state.text)) {
             this.text.originalValue = state.text.value;
         }
+
+        if (defined(state.textSize)) {
+            this.textSize.originalValue = state.textSize.value;
+        }
+
+        if (defined(state.textAlign)) {
+            this.textAlign.originalValue = state.textAlign.value;
+        }
+
+        if (defined(state.textColor)) {
+            this.textColor.originalValue = state.textColor.value;
+        }
+
+        if (defined(state.textWeight)) {
+            this.textWeight.originalValue = state.textWeight.value;
+        }
+
+        if (defined(state.backgroundColor)) {
+            this.backgroundColor.originalValue = state.backgroundColor.value;
+        }
+
         if (defined(state.border)) {
             this.border.originalValue = state.border.value;
+        }
+
+        if (defined(state.borderColor)) {
+            this.borderColor.originalValue = state.borderColor.value;
+        }
+
+        if (defined(state.borderRadius)) {
+            this.borderRadius.originalValue = state.borderRadius.value;
         }
     };
 
     Object.defineProperties(TextBlockViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.text, this.x, this.y, this.width, this.height, this.border, this.visible,
-                this.logGoogleAnalytics, this.z, this.zIncrement, this.zDecrement];
+                return [this.name, this.text, this.textSize, this.x, this.y, this.width, this.height, this.textColor,
+                this.textAlign, this.textWeight, this.backgroundColor, this.border, this.borderColor,
+                this.borderRadius, this.visible, this.logGoogleAnalytics, this.z, this.zIncrement, this.zDecrement];
             }
         }
     });
