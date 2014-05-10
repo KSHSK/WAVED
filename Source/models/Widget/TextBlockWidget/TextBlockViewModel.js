@@ -118,16 +118,6 @@ define([
             value: 'Black'
         });
 
-        // Background Color
-        this.borderRadius = new NumberProperty({
-            displayName: 'Border Radius (px)',
-            value: 5,
-            validValue: createValidator({
-                min: 0
-            }),
-            errorMessage: 'Value must be a positive number'
-        });
-
         this.height.originalValue = 5;
         this.width.originalValue = 15;
 
@@ -158,7 +148,6 @@ define([
         state.backgroundColor = this.backgroundColor.getState();
         state.border = this.border.getState();
         state.borderColor = this.borderColor.getState();
-        state.borderRadius = this.borderRadius.getState();
 
         return state;
     };
@@ -167,47 +156,43 @@ define([
         WidgetViewModel.prototype.setState.call(this, state);
 
         if (defined(state.text)) {
-            this.text.originalValue = state.text.value;
+            this.text.setState(state.text);
         }
 
         if (defined(state.textSize)) {
-            this.textSize.originalValue = state.textSize.value;
+            this.textSize.setState(state.textSize);
         }
 
         if (defined(state.textAlign)) {
-            this.textAlign.originalValue = state.textAlign.value;
+            this.textAlign.setState(state.textAlign);
         }
 
         if (defined(state.textColor)) {
-            this.textColor.originalValue = state.textColor.value;
+            this.textColor.setState(state.textColor);
         }
 
         if (defined(state.textWeight)) {
-            this.textWeight.originalValue = state.textWeight.value;
+            this.textWeight.setState(state.textWeight);
         }
 
         if (defined(state.textUnderline)) {
-            this.textUnderline.originalValue = state.textUnderline.value;
+            this.textUnderline.setState(state.textUnderline);
         }
 
         if (defined(state.textItalic)) {
-            this.textItalic.originalValue = state.textItalic.value;
+            this.textItalic.setState(state.textItalic);
         }
 
         if (defined(state.backgroundColor)) {
-            this.backgroundColor.originalValue = state.backgroundColor.value;
+            this.backgroundColor.setState(state.backgroundColor);
         }
 
         if (defined(state.border)) {
-            this.border.originalValue = state.border.value;
+            this.border.setState(state.border);
         }
 
         if (defined(state.borderColor)) {
-            this.borderColor.originalValue = state.borderColor.value;
-        }
-
-        if (defined(state.borderRadius)) {
-            this.borderRadius.originalValue = state.borderRadius.value;
+            this.borderColor.setState(state.borderColor);
         }
     };
 
@@ -216,7 +201,7 @@ define([
             get: function() {
                 return [this.name, this.text, this.textSize, this.x, this.y, this.width, this.height, this.textColor,
                 this.textAlign, this.textWeight, this.textUnderline, this.textItalic, this.backgroundColor,
-                this.border, this.borderColor, this.borderRadius, this.visible, this.logGoogleAnalytics, this.z,
+                this.border, this.borderColor, this.visible, this.logGoogleAnalytics, this.z,
                 this.zIncrement, this.zDecrement];
             }
         }
