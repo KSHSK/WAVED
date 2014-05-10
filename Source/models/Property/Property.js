@@ -15,6 +15,7 @@ define(['knockout',
         this._originalValue = undefined;
         this._value = undefined; // Type determined by subclasses.
         this._displayValue = undefined;
+        this.visible = true;
         this.onchange = options.onchange;
         this.ondisplaychange = options.ondisplaychange;
 
@@ -31,6 +32,10 @@ define(['knockout',
             this.isValidValue = function(value) {
                 return true;
             };
+        }
+
+        if(defined(options.visible)){
+            this.visible = options.visible;
         }
 
         this.setState(options);

@@ -1,5 +1,5 @@
 <div>
-    <span data-bind="text:displayName"></span>
-    <textarea type="text" rows="4" cols="28" data-bind="value:originalValue"></textarea>
+    <span data-bind="text:displayName, visible: visible"></span>
+    <textarea type="text" rows="4" cols="28" data-bind="value:originalValue, visible: visible"></textarea>
     <div class="error" data-bind="visible: error, html: message"></div>
 </div>
