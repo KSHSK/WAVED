@@ -4,10 +4,12 @@
 define([
         'd3',
         'jquery',
+        'util/defined',
         'util/displayMessage'
     ], function(
         d3,
         $,
+        defined,
         displayMessage) {
     'use strict';
 
@@ -30,6 +32,14 @@ define([
         readData: function(dataSet) {
             var readComplete = $.Deferred();
 
+            // Get Data Fields when the data has been loaded.
+            $.when(readComplete).done(function() {
+                var values = d3.values(dataSet.data)[0];
+                    if(defined(values)){
+                        dataSet.dataFields = Object.keys(values);
+                    }
+            });
+
             var path = this.getFilePath(dataSet.filename);
 
             if (this.endsWithInsensitive(path, '.csv')) {
@@ -40,8 +50,8 @@ define([
                     }
 
                     dataSet.data = data;
-                    dataSet.dataLoaded = true;
                     readComplete.resolve();
+                    dataSet._dataLoaded.resolve();
                 });
             }
             else if (this.endsWithInsensitive(path, '.json')) {
@@ -53,8 +63,8 @@ define([
 
                     // TODO: Extra processing will be needed to get JSON data to be in the same form as CSV data.
                     dataSet.data = data;
-                    dataSet.dataLoaded = true;
                     readComplete.resolve();
+                    dataSet._dataLoaded.resolve();
                 });
             }
             else {

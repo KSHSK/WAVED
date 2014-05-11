@@ -181,50 +181,42 @@ define([
                     break;
                 }
 
-                // Wait until data is available
-                if(!defined(coloringScheme.dataSet.value.data)){
-                    var interval = setInterval(function(){
-                        if(defined(coloringScheme.dataSet.value.data)){
-                            clearInterval(interval);
-                        }
-                    }, 100);
-                }
+                coloringScheme.dataSet.value.executeWhenDataLoaded(function() {
+                 // Find the min and max values for the dataField we're using to scale the gradient
+                    var dataField = coloringScheme.dataField.value;
+                    var min = d3.min(coloringScheme.dataSet.value.data, function(d) { return +d[dataField]; });
+                    var max = d3.max(coloringScheme.dataSet.value.data, function(d) { return +d[dataField]; });
 
-                // Find the min and max values for the dataField we're using to scale the gradient
-                var dataField = coloringScheme.dataField.value;
-                var min = d3.min(coloringScheme.dataSet.value.data, function(d) { return +d[dataField]; });
-                var max = d3.max(coloringScheme.dataSet.value.data, function(d) { return +d[dataField]; });
-
-                // Default the map to black when we can't extract an actual min or max (the field is not numeric)
-                if(!defined(min) || !defined(max)){
-                    path.style('fill', function(d){
-                        return viewModel.DEFAULT_MAP_COLOR.toLowerCase();
-                    });
-                }
-
-                // Set up the gradient function
-                // Color names must be lowercase or this won't work due to the range function not liking caps
-                var gradient = d3.scale.linear().domain([min, max]).range([coloringScheme.startColor.value.toLowerCase(), coloringScheme.endColor.value.toLowerCase()]);
-                path.style('fill', function(d) {
-                    var stateName = d.properties.name;
-                    var keyName = coloringScheme.keyField.value;
-
-                    if(!defined(keyName)){
-                        return viewModel.DEFAULT_MAP_COLOR;
+                    // Default the map to black when we can't extract an actual min or max (the field is not numeric)
+                    if(!defined(min) || !defined(max)){
+                        path.style('fill', function(d){
+                            return viewModel.DEFAULT_MAP_COLOR.toLowerCase();
+                        });
                     }
 
-                    for(var i=0; i<coloringScheme.dataSet.value.data.length; i++){
-                        if(coloringScheme.dataSet.value.data[i][keyName] === stateName){
-                            return gradient(coloringScheme.dataSet.value.data[i][dataField]);
-                        }
+                    // Set up the gradient function
+                    // Color names must be lowercase or this won't work due to the range function not liking caps
+                    var gradient = d3.scale.linear().domain([min, max]).range([coloringScheme.startColor.value.toLowerCase(), coloringScheme.endColor.value.toLowerCase()]);
+                    path.style('fill', function(d) {
+                        var stateName = d.properties.name;
+                        var keyName = coloringScheme.keyField.value;
 
-                        // Didn't find any matches
-                        if(i === coloringScheme.dataSet.value.data.length-1){
+                        if(!defined(keyName)){
                             return viewModel.DEFAULT_MAP_COLOR;
                         }
-                    }
-                });
 
+                        for(var i=0; i<coloringScheme.dataSet.value.data.length; i++){
+                            if(coloringScheme.dataSet.value.data[i][keyName] === stateName){
+                                return gradient(coloringScheme.dataSet.value.data[i][dataField]);
+                            }
+
+                            // Didn't find any matches
+                            if(i === coloringScheme.dataSet.value.data.length-1){
+                                return viewModel.DEFAULT_MAP_COLOR;
+                            }
+                        }
+                    });
+                });
                 break;
             default:
                 break;
