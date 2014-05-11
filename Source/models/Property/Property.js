@@ -125,14 +125,6 @@ define(['knockout',
         this._error = !this.isValidValue(this._value);
     };
 
-    Property.prototype.getValue = function() {
-        // Abstract method
-    };
-
-    Property.prototype.setValue = function(value) {
-        // Abstract method
-    };
-
     /**
      * Return any objects in a Property that are Properties or may contain Properties
      */
