@@ -26,6 +26,7 @@ define(['jquery',
         'modules/UniqueTracker',
         'models/Widget/TextBlockWidget/TextBlock',
         'models/Widget/USMapWidget/USMap',
+        'util/getBasename',
         'util/defined',
         'util/defaultValue',
         'util/createValidator',
@@ -59,6 +60,7 @@ define(['jquery',
         UniqueTracker,
         TextBlock,
         USMap,
+        getBasename,
         defined,
         defaultValue,
         createValidator,
@@ -142,6 +144,17 @@ define(['jquery',
                 regex: new RegExp('.(csv|json)$', 'i')
             }),
             errorMessage: 'Must select a file with extension CSV or JSON.'
+        });
+
+        var filenameInvalidCharRegex = new RegExp('[^a-zA-Z0-9_\\- ]', 'g');
+
+        // Update the upload data name based on the filename.
+        subscribeObservable(self.uploadDataFile, '_value', function(newFilename) {
+            if (newFilename !== '') {
+                var originalName = getBasename(newFilename).split('.')[0];
+                var validName = originalName.replace(filenameInvalidCharRegex, '');
+                self.uploadDataName.value = validName;
+            }
         });
 
         this.selectedActionName = getNamePropertyInstance('Action Name');
