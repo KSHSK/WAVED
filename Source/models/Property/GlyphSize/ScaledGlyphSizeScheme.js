@@ -87,18 +87,29 @@ define([
     ScaledGlyphSizeScheme.prototype.setState = function(state, viewModel) {
         var self = this;
 
+        var firstTimeLoaded = true;
+
         // Subscribe to the value of dataSet in order to automatically update dataField's options
         subscribeObservable(self.dataSet, '_originalValue', function(newValue) {
             var changeFunction = function() {
                 if(defined(newValue)){
                     if(newValue.dataLoaded) {
                         self.dataField.options = newValue.dataFields;
+                        if (firstTimeLoaded) {
+                            self.dataField.originalValue = state.dataField;
+                            firstTimeLoaded = false;
+                        }
                     }
                     else {
                         // Keep trying until data is ready, as long as data is a defined object.
                         var interval = setInterval(function() {
                             if(newValue.dataLoaded) {
                                 self.dataField.options = newValue.dataFields;
+                                if (firstTimeLoaded) {
+                                    self.dataField.originalValue = state.dataField;
+                                    firstTimeLoaded = false;
+                                }
+
                                 clearInterval(interval);
                             }
                         }, 100);
