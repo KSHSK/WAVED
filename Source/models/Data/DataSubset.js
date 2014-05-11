@@ -75,22 +75,10 @@ define([
             // Run query
             self._data = self.query.execute(data);
 
-            self.dataLoaded = true;
+            self._dataLoaded.resolve();
         };
 
-        // Run the query or set interval if needed.
-        if (self.parent.dataLoaded) {
-            localExecuteQuery();
-        }
-        else {
-            var interval = setInterval(function() {
-                if (self.parent.dataLoaded) {
-                    localExecuteQuery();
-                    clearInterval(interval);
-                }
-            }, 100);
-        }
-
+        self.parent.executeWhenDataLoaded(localExecuteQuery);
     };
 
     Object.defineProperties(DataSubset.prototype, {

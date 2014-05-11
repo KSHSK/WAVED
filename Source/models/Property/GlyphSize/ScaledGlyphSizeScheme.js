@@ -92,28 +92,14 @@ define([
         // Subscribe to the value of dataSet in order to automatically update dataField's options
         subscribeObservable(self.dataSet, '_originalValue', function(newValue) {
             var changeFunction = function() {
-                if(defined(newValue)){
-                    if(newValue.dataLoaded) {
+                if(defined(newValue) && newValue !== ''){
+                    newValue.executeWhenDataLoaded(function() {
                         self.dataField.options = newValue.dataFields;
                         if (firstTimeLoaded) {
                             self.dataField.originalValue = state.dataField;
                             firstTimeLoaded = false;
                         }
-                    }
-                    else {
-                        // Keep trying until data is ready, as long as data is a defined object.
-                        var interval = setInterval(function() {
-                            if(newValue.dataLoaded) {
-                                self.dataField.options = newValue.dataFields;
-                                if (firstTimeLoaded) {
-                                    self.dataField.originalValue = state.dataField;
-                                    firstTimeLoaded = false;
-                                }
-
-                                clearInterval(interval);
-                            }
-                        }, 100);
-                    }
+                    });
                 }
                 else{
                     self.dataField.options = [];
@@ -127,25 +113,12 @@ define([
 
         subscribeObservable(self.dataSet, '_displayValue', function(newValue) {
             var changeFunction = function() {
-                if(defined(newValue)){
-                    if(newValue.dataLoaded) {
-                        if (newValue.dataFields.indexOf(self.dataField.displayValue) === -1) {
-                            self.dataField.displayValue = undefined;
-                        }
-
+                if(defined(newValue) && newValue !== ''){
+                    newValue.executeWhenDataLoaded(function() {
                         if (self.dataField.options !== newValue.dataFields) {
                             self.dataField.options = newValue.dataFields;
                         }
-                    }
-                    else {
-                        // Keep trying until data is ready, as long as data is a defined object.
-                        var interval = setInterval(function() {
-                            if(newValue.dataLoaded) {
-                                self.dataField.options = newValue.dataFields;
-                                clearInterval(interval);
-                            }
-                        }, 100);
-                    }
+                    });
                 }
                 else{
                     self.dataField.displayValue = undefined; // Reset the dataField selection

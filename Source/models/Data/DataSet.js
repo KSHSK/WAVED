@@ -33,7 +33,7 @@ define(['knockout',
         this._referenceCount = 0;
         this._data = [];
         this._dataFields = [];
-        this._dataLoaded = false;
+        this._dataLoaded = new $.Deferred();
 
         this.setState(state);
 
@@ -80,6 +80,21 @@ define(['knockout',
         return (this._referenceCount === MARKED_FOR_DELETION);
     };
 
+    /**
+     * Runs the given function when the data has been loaded.
+     *
+     * @param whenLoadedFunction
+     *            The function to run when this.dataLoaded is resolved.
+     */
+    DataSet.prototype.executeWhenDataLoaded = function(whenLoadedFunction) {
+        if (this.dataLoaded.state() === 'resolved') {
+            whenLoadedFunction();
+        }
+        else {
+            $.when(this.dataLoaded).done(whenLoadedFunction);
+        }
+    };
+
     DataSet.prototype.getState = function() {
         return {
             type: DataSet.getType(),
@@ -103,13 +118,7 @@ define(['knockout',
             this._filename = state.filename;
 
             if (!this.isMarkedForDeletion()) {
-                // Populate the dataFields array once readData() is done
-                $.when(ReadData.readData(this)).done(function(){
-                    var values = d3.values(self._data)[0];
-                    if(defined(values)){
-                        self._dataFields = Object.keys(values);
-                    }
-                });
+                ReadData.readData(this);
             }
         }
     };
@@ -197,12 +206,7 @@ define(['knockout',
         },
         dataLoaded: {
             get: function() {
-                return this._dataLoaded;
-            },
-            set: function(value){
-                if (typeof value === 'boolean') {
-                    this._dataLoaded = value;
-                }
+                return this._dataLoaded.promise();
             }
         }
     });

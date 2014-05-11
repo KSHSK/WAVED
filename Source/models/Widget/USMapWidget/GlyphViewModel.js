@@ -208,36 +208,15 @@ define([
         this.z.originalValue = 1;
 
         this.add = function() {
-            if(self.dataSet.value.dataLoaded) {
+            self.dataSet.value.executeWhenDataLoaded(function() {
                 addGlyph(self);
-            }
-            else {
-                // Keep trying until data is ready, as long as data is a defined object.
-                // Needed for on load
-                var interval = setInterval(function() {
-                    if(self.dataSet.value.dataLoaded) {
-                        addGlyph(self);
-                        clearInterval(interval);
-                    }
-                }, 100);
-            }
+            });
         };
 
         this.edit = function() {
-            if(self.dataSet.value.dataLoaded) {
+            self.dataSet.value.executeWhenDataLoaded(function() {
                 editGlyph(self);
-            }
-            else {
-                // Keep trying until data is ready, as long as data is a defined object.
-                // Needed for on load
-                var interval = setInterval(function() {
-                    if(self.dataSet.value.dataLoaded) {
-                        editGlyph(self);
-                        clearInterval(interval);
-                    }
-                }, 100);
-            }
-
+            });
         };
 
         this.remove = function() {
