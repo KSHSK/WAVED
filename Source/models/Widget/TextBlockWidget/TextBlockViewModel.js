@@ -178,8 +178,8 @@ define([
     Object.defineProperties(TextBlockViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.text, this.textSize, this.x, this.y, this.width, this.height, this.textColor,
-                this.textAlign, this.textWeight, this.textUnderline, this.backgroundColor, this.border,
+                return [this.name, this.text, this.textSize, this.textColor, this.textAlign, this.textWeight,
+                this.textUnderline, this.x, this.y, this.width, this.height, this.backgroundColor, this.border,
                 this.borderColor, this.visible, this.logGoogleAnalytics, this.z, this.zIncrement, this.zDecrement];
             }
         }
