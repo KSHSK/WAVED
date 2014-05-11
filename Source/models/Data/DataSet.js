@@ -31,7 +31,7 @@ define(['knockout',
         this._name = '';
         this.filename = '';
         this._referenceCount = 0;
-        this.dataFields = [];
+        this._dataFields = [];
         this._data = undefined;
 
         this.setState(state);
@@ -106,16 +106,6 @@ define(['knockout',
 
         if (defined(state.filename)) {
             this.filename = state.filename;
-
-            if (!this.isMarkedForDeletion()) {
-                // Populate the dataFields array once readData() is done
-                $.when(ReadData.readData(this)).done(function(){
-                    var values = d3.values(self._data)[0];
-                    if(defined(values)){
-                        self.dataFields = Object.keys(values);
-                    }
-                });
-            }
         }
     };
 
@@ -160,9 +150,15 @@ define(['knockout',
                 return this._data;
             },
             set: function(data) {
-                if (typeof data === 'object') {
+                if (Array.isArray(data)) {
                     this._data = data;
+                    this._dataFields = Object.keys(data);
                 }
+            }
+        },
+        dataFields: {
+            get: function() {
+                return this._dataFields;
             }
         },
         referenceCount: {
