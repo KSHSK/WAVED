@@ -32,14 +32,6 @@ define([
         readData: function(dataSet) {
             var readComplete = $.Deferred();
 
-            // Get Data Fields when the data has been loaded.
-            $.when(readComplete).done(function() {
-                var values = d3.values(dataSet.data)[0];
-                    if(defined(values)){
-                        dataSet.dataFields = Object.keys(values);
-                    }
-            });
-
             var path = this.getFilePath(dataSet.filename);
 
             if (this.endsWithInsensitive(path, '.csv')) {
