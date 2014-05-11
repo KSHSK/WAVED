@@ -87,6 +87,8 @@ define(['knockout',
      *            The function to run when this.dataLoaded is resolved.
      */
     DataSet.prototype.executeWhenDataLoaded = function(whenLoadedFunction) {
+        // Runs the given function directly if dataLoaded is resolved, so that when changes are made by the user,
+        // they will be properly added to history. $.when is needed so that the given function is run on load.
         if (this.dataLoaded.state() === 'resolved') {
             whenLoadedFunction();
         }
