@@ -190,6 +190,12 @@ define(['knockout',
             set: function(data) {
                 if (typeof data === 'object') {
                     this._data = data;
+
+                    // Set dataFields.
+                    var values = d3.values(data)[0];
+                    if(defined(values)){
+                        this._dataFields = Object.keys(values);
+                    }
                 }
             }
         },
@@ -201,9 +207,6 @@ define(['knockout',
         dataFields: {
             get: function() {
                 return this._dataFields;
-            },
-            set: function(fields){
-                this._dataFields = fields;
             }
         },
         dataLoaded: {
