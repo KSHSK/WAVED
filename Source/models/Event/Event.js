@@ -35,7 +35,7 @@ define([
         this._name = '';
         this._eventType = ''; // EventType
         this._triggeringWidget = {}; // WidgetViewModel
-        this._actions = []; // Action[]
+        this.actions = []; // Action[]
 
         this.applyActions = function() {
             for (var i = 0; i < self.actions.length; i++) {
@@ -66,6 +66,8 @@ define([
         this.setState(state);
 
         ko.track(this);
+
+        this.subscribed = false;
     };
 
     Event.getUniqueNameNamespace = function() {
@@ -103,14 +105,6 @@ define([
                 this._triggeringWidget = value;
                 this.register();
             }
-        },
-        actions: {
-            get: function() {
-                return this._actions;
-            },
-            set: function(value) {
-                this._actions = value;
-            }
         }
     });
 
@@ -128,7 +122,7 @@ define([
         }
 
         if (defined(state.actions)){
-            this._actions = state.actions;
+            this.actions = state.actions;
         }
     };
 
@@ -137,13 +131,11 @@ define([
             'name': this._name,
             'eventType': this._eventType,
             'triggeringWidget': this._triggeringWidget.viewModel.name.value,
-            'actions': $.map(this._actions, function(action) {
+            'actions': $.map(this.actions, function(action) {
                 return action.name;
             })
         };
     };
-
-    Event.prototype.subscribed = false;
 
     Event.prototype.subscribeChanges = function() {
         var self = this;

@@ -29,13 +29,16 @@ define(['knockout',
         state = defined(state) ? state : {};
 
         this._name = '';
-        this._filename = '';
+        this.filename = '';
         this._referenceCount = 0;
         this._dataFields = [];
+        this._data = undefined;
 
         this.setState(state);
 
         ko.track(this);
+
+        this.subscribed = false;
     };
 
     /**
@@ -79,7 +82,7 @@ define(['knockout',
     };
 
     DataSet.prototype.getNameAndFilename = function() {
-        return this._name + ' : ' + this._filename;
+        return this._name + ' : ' + this.filename;
     };
 
     DataSet.prototype.getState = function() {
@@ -102,21 +105,9 @@ define(['knockout',
         }
 
         if (defined(state.filename)) {
-            this._filename = state.filename;
-
-            if (!this.isMarkedForDeletion()) {
-                // Populate the dataFields array once readData() is done
-                $.when(ReadData.readData(this)).done(function(){
-                    var values = d3.values(self._data)[0];
-                    if(defined(values)){
-                        self._dataFields = Object.keys(values);
-                    }
-                });
-            }
+            this.filename = state.filename;
         }
     };
-
-    DataSet.prototype.subscribed = false;
 
     DataSet.prototype.subscribeChanges = function() {
         var self = this;
@@ -125,7 +116,7 @@ define(['knockout',
         var properties = [];
         for (var prop in this) {
             if (this.hasOwnProperty(prop)) {
-                if(prop !== '_data' && prop !== '_dataFields'){
+                if(prop !== '_data' && prop !== 'dataFields'){
                     properties.push(prop);
                 }
             }
@@ -154,35 +145,25 @@ define(['knockout',
                 }
             }
         },
-        filename: {
-            get: function() {
-                return this._filename;
-            },
-            set: function(value) {
-                this._filename = value;
-            }
-        },
         data: {
             get: function() {
                 return this._data;
             },
             set: function(data) {
-                if (typeof data === 'object') {
+                if (Array.isArray(data)) {
                     this._data = data;
+                    this._dataFields = Object.keys(data);
                 }
-            }
-        },
-        referenceCount: {
-            get: function() {
-                return this._referenceCount;
             }
         },
         dataFields: {
             get: function() {
                 return this._dataFields;
-            },
-            set: function(fields){
-                this._dataFields = fields;
+            }
+        },
+        referenceCount: {
+            get: function() {
+                return this._referenceCount;
             }
         }
     });

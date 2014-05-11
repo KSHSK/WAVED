@@ -22,10 +22,12 @@ define(['jquery',
         state = defined(state) ? state : {};
 
         this._name = '';
-        this._target = undefined;
-        this._applyAutomatically  = false;
+        this.target = undefined;
+        this.applyAutomatically  = false;
 
         ko.track(this);
+
+        this.subscribed = false;
     };
 
     Action.getUniqueNameNamespace = function() {
@@ -43,23 +45,6 @@ define(['jquery',
                     this._name = value;
                 }
             }
-        },
-        // TODO: These not in the DD, should be required
-        target: {
-            get: function() {
-                return this._target;
-            },
-            set: function(target) {
-                this._target = target;
-            }
-        },
-        applyAutomatically: {
-            get: function() {
-                return this._applyAutomatically;
-            },
-            set: function(value) {
-                this._applyAutomatically = value;
-            }
         }
     });
 
@@ -70,22 +55,20 @@ define(['jquery',
 
         // TODO: Does this need to be different for Property/Query Actions?
         if (defined(state.target)) {
-            this._target = state.target;
+            this.target = state.target;
         }
 
         if (defined(state.applyAutomatically)) {
-            this._applyAutomatically = state.applyAutomatically;
+            this.applyAutomatically = state.applyAutomatically;
         }
     };
 
     Action.prototype.getState = function() {
         return {
             'name': this._name,
-            'applyAutomatically': this._applyAutomatically
+            'applyAutomatically': this.applyAutomatically
         };
     };
-
-    Action.prototype.subscribed = false;
 
     Action.prototype.subscribeChanges = function() {
         var self = this;

@@ -10,7 +10,7 @@
     ], function (
         require,
         WAVED,
-        WelcomeModule,
+        Welcome,
         ko,
         $,
         DataTables,
@@ -21,7 +21,7 @@
     require(['../ThirdParty/domReady!', 'koExternalTemplateEngine'], function(document) {
         setupUI();
         displayPage();
-        WelcomeModule.start(WAVED.viewModel);
+        Welcome.start(WAVED.viewModel);
     });
 
     function setupUI() {
@@ -66,7 +66,7 @@
 
             // Deleting the current project requires the Welcome Dialog
             if (WAVED.viewModel.currentProject.name === fullData.name) {
-                fnDeleteDone =  WelcomeModule.openLoadDialog.bind(WelcomeModule, WAVED.viewModel);
+                fnDeleteDone =  Welcome.openLoadDialog.bind(Welcome, WAVED.viewModel);
                 cleanUp = true;
             }
             // Otherwise just refresh the project list
@@ -76,7 +76,7 @@
 
             button.click(function() {
                 // Move welcome dialog back in case we open it
-                WelcomeModule.zIndex(99);
+                Welcome.zIndex(99);
 
                 // Delete selected project
                 var projectDeleted = DeleteProject.tryToDeleteProject(WAVED.viewModel, fullData.name, cleanUp);

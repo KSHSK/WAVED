@@ -19,7 +19,7 @@ define([
         var self = this;
         Action.call(this, state);
 
-        this._newValues = {};
+        this.newValues = {};
 
         this.apply = function(data) {
             var historyMonitor = HistoryMonitor.getInstance();
@@ -37,12 +37,12 @@ define([
                     return matches;
                 }
 
-                for (var key in self._newValues) {
-                    var templates = getTemplateMatches(self._newValues[key]);
+                for (var key in self.newValues) {
+                    var templates = getTemplateMatches(self.newValues[key]);
                     if (templates.length > 0) {
-                        var temp = self._newValues[key];
-                        if (typeof self._target.viewModel[key].value === 'number') {
-                            temp = self._newValues[key].toString();
+                        var temp = self.newValues[key];
+                        if (typeof self.target.viewModel[key].value === 'number') {
+                            temp = self.newValues[key].toString();
                         }
 
                         for (var i = 0; i < templates.length; i++) {
@@ -58,13 +58,13 @@ define([
                             }
                         }
 
-                        if (typeof self._target.viewModel[key].value === 'number') {
-                            self._target.viewModel[key].value = parseFloat(temp);
+                        if (typeof self.target.viewModel[key].value === 'number') {
+                            self.target.viewModel[key].value = parseFloat(temp);
                         } else {
-                            self._target.viewModel[key].value = temp;
+                            self.target.viewModel[key].value = temp;
                         }
                     } else {
-                        self._target.viewModel[key].value = self._newValues[key];
+                        self.target.viewModel[key].value = self.newValues[key];
                     }
                 }
             };
@@ -75,7 +75,7 @@ define([
 
         this.setState(state);
         // TODO: Validation, etc
-        // TODO: target visibility conflicts with Action _target visibility, issue?
+        // TODO: target visibility conflicts with Action target visibility, issue?
         // TODO: Make private in order to do type checking, validation, etc? Update DD with decision
         this.target = state.target;
 
@@ -94,25 +94,14 @@ define([
 
     PropertyAction.prototype = Object.create(Action.prototype);
 
-    Object.defineProperties(PropertyAction.prototype, {
-        newValues: {
-            get: function() {
-                return this._newValues;
-            },
-            set: function(newValues) {
-                this._newValues = newValues;
-            }
-        }
-    });
-
     PropertyAction.prototype.setState = function(state) {
         Action.prototype.setState.call(this, state);
 
         if (defined(state.newValues)) {
-            this._newValues = state.newValues;
+            this.newValues = state.newValues;
         }
 
-        if (this._applyAutomatically) {
+        if (this.applyAutomatically) {
             this.apply();
         }
     };
@@ -120,8 +109,8 @@ define([
     PropertyAction.prototype.getState = function() {
         var state = Action.prototype.getState.call(this);
         state.type = PropertyAction.getType();
-        state.target = this._target.viewModel.name.value;
-        state.newValues = this._newValues;
+        state.target = this.target.viewModel.name.value;
+        state.newValues = this.newValues;
         return state;
     };
 

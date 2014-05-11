@@ -12,6 +12,7 @@ define(['knockout',
 
         // TODO: Validation, etc
         this._templateName = undefined; // PropertyTemplateName, defined by subclasses.
+        this._displayTemplateName = undefined;
         this._originalValue = undefined;
         this._value = undefined; // Type determined by subclasses.
         this._displayValue = undefined;
@@ -76,9 +77,6 @@ define(['knockout',
         templateName: {
             get: function() {
                 return this._templateName;
-            },
-            set: function(templateName) {
-                this._templateName = templateName;
             }
         },
         displayTemplateName: {
@@ -125,18 +123,6 @@ define(['knockout',
         this._originalValue = value;
         this._displayValue = value;
         this._error = !this.isValidValue(this._value);
-    };
-
-    Property.prototype.isValidValue = function() {
-        // TODO: Abstract method
-    };
-
-    Property.prototype.getValue = function() {
-        // TODO: Abstract method
-    };
-
-    Property.prototype.setValue = function(value) {
-        // TODO: Abstract method
     };
 
     /**

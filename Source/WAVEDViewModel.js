@@ -4,6 +4,8 @@ define(['jquery',
         'models/Constants/ActionType',
         'models/Action/Action',
         'models/Constants/EventType',
+        'models/Constants/SelectedType',
+        'models/ComponentRecord',
         'models/Event/Event',
         'models/GoogleAnalytics',
         'models/ProjectViewModel',
@@ -37,6 +39,8 @@ define(['jquery',
         ActionType,
         Action,
         EventType,
+        SelectedType,
+        ComponentRecord,
         Event,
         GoogleAnalytics,
         ProjectViewModel,
@@ -81,9 +85,11 @@ define(['jquery',
         this.disableOpeningPropertiesPanel = false;
 
         this._projectList = [];
-        this._selectedComponent = '';
-        this._selectedDataSet = '';
-        this._selectedBoundData = '';
+        this.selectedComponent = '';
+        this.selectedDataSet = '';
+        this.selectedBoundData = '';
+
+        this.SelectedType = SelectedType;
 
         // Create the HistoryMonitor singleton that everything else will use.
         this.historyMonitor = new HistoryMonitor(this.setUndoNewChangeFunction, this.setRedoPreviousChangeFunction,
@@ -98,19 +104,23 @@ define(['jquery',
 
         this._projectTree = new ProjectTree();
 
-        this._availableWidgets = [{
-            name: 'Button',
-            icon: Button.iconLocation(),
-            o: Button
-        }, {
-            name: 'Text Block',
-            icon: TextBlock.iconLocation(),
-            o: TextBlock
-        }, {
-            name: 'US Map',
-            icon: USMap.iconLocation(),
-            o: USMap
-        }];
+        this._availableWidgets = [
+            new ComponentRecord({
+                name: 'Button',
+                icon: Button.iconLocation(),
+                component: Button
+            }),
+            new ComponentRecord({
+                name: 'Text Block',
+                icon: TextBlock.iconLocation(),
+                component: TextBlock
+            }),
+            new ComponentRecord({
+                name: 'US Map',
+                icon: USMap.iconLocation(),
+                component: USMap
+            })
+        ];
 
         this.eventTypes = [];
         for (var eventType in EventType) {
@@ -414,7 +424,7 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.isWorkspaceSelectedInProjectTree = function() {
-        var selected =  self.isSelectedInProjectTree(self.projectTree.SelectedTypeEnum.COMPONENT, self.currentProject.workspace);
+        var selected =  self.isSelectedInProjectTree(SelectedType.COMPONENT, self.currentProject.workspace);
 
         if (selected) {
             // Remove the hover/focus look when the workspace is selected, since the button will be disabled.
@@ -429,9 +439,9 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.addNewWidget = function(w) {
-        var widget = new w.o();
+        var widget = new w.component();
         self._currentProject.addWidget(widget);
-        self._selectedComponent = widget;
+        self.selectedComponent = widget;
 
         self.openPropertiesPanel();
     };
@@ -472,30 +482,6 @@ define(['jquery',
         availableWidgets: {
             get: function() {
                 return this._availableWidgets;
-            }
-        },
-        selectedComponent: {
-            get: function() {
-                return this._selectedComponent;
-            },
-            set: function(value) {
-                this._selectedComponent = value;
-            }
-        },
-        selectedDataSet: {
-            get: function() {
-                return this._selectedDataSet;
-            },
-            set: function(value) {
-                this._selectedDataSet = value;
-            }
-        },
-        selectedBoundData: {
-            get: function() {
-                return this._selectedBoundData;
-            },
-            set: function(value) {
-                this._selectedBoundData = value;
             }
         },
         availableDataForBinding: {

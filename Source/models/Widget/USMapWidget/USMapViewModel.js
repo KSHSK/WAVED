@@ -50,6 +50,16 @@ define([
     'use strict';
     var STATES_DATA_FILE = 'states.json';
 
+    // Groupings of states so that no adjacent states are colored the same when using four-coloring scheme
+    var fourColorStateGroupings = [
+        ['Alaska', 'Alabama', 'Arkansas', 'Connecticut', 'Delaware', 'Illinois', 'Maine', 'Michigan', 'Minnesota', 'Montana', 'Nebraska', 'New Mexico', 'Nevada', 'Virginia'],
+        ['Arizona', 'District of Columbia', 'Kansas', 'Kentucky', 'Mississippi', 'North Carolina', 'Oregon', 'Pennsylvania', 'Rhode Island', 'Texas', 'Vermont', 'Wisconsin', 'Wyoming'],
+        ['California', 'Colorado', 'Georgia', 'Idaho', 'Indiana', 'Louisiana', 'Massachusetts', 'Missouri', 'New Jersey', 'South Dakota', 'West Virginia'],
+        ['Florida', 'Hawaii', 'Iowa', 'Maryland', 'New Hampshire', 'New York', 'North Dakota', 'Ohio', 'Oklahoma', 'South Carolina', 'Tennessee', 'Utah', 'Washington']
+    ];
+
+    var DEFAULT_MAP_COLOR = 'LightGrey';
+
     function getElement(viewModel){
         return d3.select('#' + viewModel.id);
     }
@@ -152,14 +162,14 @@ define([
         switch(coloringScheme.getType()){
             case ColoringSchemeType.SOLID_COLORING:
                 path.style('fill', function(d) {
-                    return defined(coloringScheme.color.value) ? coloringScheme.color.value.toLowerCase() : viewModel.DEFAULT_MAP_COLOR.toLowerCase();
+                    return defined(coloringScheme.color.value) ? coloringScheme.color.value.toLowerCase() : DEFAULT_MAP_COLOR.toLowerCase();
                 });
                 break;
             case ColoringSchemeType.FOUR_COLORING:
                 path.style('fill', function(d) {
                     var stateName = d.properties.name;
-                    for(var i=0; i < viewModel.fourColorStateGroupings.length; i++){
-                        if(viewModel.fourColorStateGroupings[i].indexOf(stateName) !== -1){
+                    for(var i=0; i < fourColorStateGroupings.length; i++){
+                        if(fourColorStateGroupings[i].indexOf(stateName) !== -1){
                             return coloringScheme.getColorArray()[i].toLowerCase();
                         }
                     }
@@ -176,7 +186,7 @@ define([
                 // If either a dataSet or dataField isn't selected, break
                 if(!defined(coloringScheme.dataField.value) || !defined(coloringScheme.dataSet.value)){
                     path.style('fill', function(d){
-                        return viewModel.DEFAULT_MAP_COLOR.toLowerCase();
+                        return DEFAULT_MAP_COLOR.toLowerCase();
                     });
                     break;
                 }
@@ -198,7 +208,7 @@ define([
                 // Default the map to black when we can't extract an actual min or max (the field is not numeric)
                 if(!defined(min) || !defined(max)){
                     path.style('fill', function(d){
-                        return viewModel.DEFAULT_MAP_COLOR.toLowerCase();
+                        return DEFAULT_MAP_COLOR.toLowerCase();
                     });
                 }
 
@@ -210,7 +220,7 @@ define([
                     var keyName = coloringScheme.keyField.value;
 
                     if(!defined(keyName)){
-                        return viewModel.DEFAULT_MAP_COLOR;
+                        return DEFAULT_MAP_COLOR;
                     }
 
                     for(var i=0; i<coloringScheme.dataSet.value.data.length; i++){
@@ -220,7 +230,7 @@ define([
 
                         // Didn't find any matches
                         if(i === coloringScheme.dataSet.value.data.length-1){
-                            return viewModel.DEFAULT_MAP_COLOR;
+                            return DEFAULT_MAP_COLOR;
                         }
                     }
                 });
@@ -352,7 +362,7 @@ define([
         state = (defined(state)) ? state : {};
         WidgetViewModel.call(this, state, getDataSet);
         var namespace = ComponentViewModel.getUniqueNameNamespace();
-        this.id = UniqueTracker.getDefaultUniqueValue(namespace, USMapViewModel.getType(), this);
+        this._id = UniqueTracker.getDefaultUniqueValue(namespace, USMapViewModel.getType(), this);
         if (!defined(state.name)) {
             this.name.originalValue = this.id;
         }
@@ -522,21 +532,16 @@ define([
         properties: {
             // z is not exposed here because the map should always be on the bottom
             get: function() {
-                return [this.name, this.x, this.y, this.width, this.visible,
-                        this.strokeColor, this.coloring, this.logGoogleAnalytics, this.glyphList];
+                return [this.name, this.x, this.y, this.width, this.strokeColor, this.coloring,
+                        this.visible, this.logGoogleAnalytics, this.glyphList];
+            }
+        },
+        id: {
+            get: function() {
+                return this._id;
             }
         }
     });
-
-    // Groupings of states so that no adjacent states are colored the same when using four-coloring scheme
-    USMapViewModel.prototype.fourColorStateGroupings = [
-        ['Alaska', 'Alabama', 'Arkansas', 'Connecticut', 'Delaware', 'Illinois', 'Maine', 'Michigan', 'Minnesota', 'Montana', 'Nebraska', 'New Mexico', 'Nevada', 'Virginia'],
-        ['Arizona', 'District of Columbia', 'Kansas', 'Kentucky', 'Mississippi', 'North Carolina', 'Oregon', 'Pennsylvania', 'Rhode Island', 'Texas', 'Vermont', 'Wisconsin', 'Wyoming'],
-        ['California', 'Colorado', 'Georgia', 'Idaho', 'Indiana', 'Louisiana', 'Massachusetts', 'Missouri', 'New Jersey', 'South Dakota', 'West Virginia'],
-        ['Florida', 'Hawaii', 'Iowa', 'Maryland', 'New Hampshire', 'New York', 'North Dakota', 'Ohio', 'Oklahoma', 'South Carolina', 'Tennessee', 'Utah', 'Washington']
-    ];
-
-    USMapViewModel.prototype.DEFAULT_MAP_COLOR = 'LightGrey';
 
     return USMapViewModel;
 });

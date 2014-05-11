@@ -166,7 +166,7 @@ define([
             self.longitude.options = newValue.dataFields;
         };
         this.setState(state);
-        this.id = this.name.value;
+        this._id = this.name.value;
         this._dom = undefined;
 
         // USMapViewModel is set at 0, Glyphs sit on top of the map, don't let anything slip between them
@@ -278,7 +278,11 @@ define([
                 this.logGoogleAnalytics];
             }
         },
-
+        id : {
+            get : function() {
+                return this._id;
+            }
+        },
         boundData : {
             get : function() {
                 return this.parent.boundData;
