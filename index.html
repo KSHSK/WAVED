@@ -18,38 +18,28 @@
 <body>
     <div id="mainSection" class="hide-on-load">
         <div id="header-container">
-                <div class="inline bottom" id="header-logo-container">
-                    <img id="header-logo" src="images/logo/WAVED_HighRes_Color_NoText.png" ondragstart="return false;" />
+            <div class="inline bottom" id="header-logo-container">
+                <img id="header-logo" src="images/logo/WAVED_HighRes_Color_NoText.png" ondragstart="return false;" />
+            </div>
+            <div class="inline bottom">
+                <div>
+                    <span class="menu-text" id="project-name" data-bind="text: currentProject.name"></span>
+                    <span class="dirty" data-bind="visible: dirty"> (Unsaved Changes)</span>
                 </div>
-                <div class="inline bottom">
-                    <div>
-                        <span class="menu-text" id="project-name" data-bind="text: currentProject.name"></span>
-                        <span class="dirty" data-bind="visible: dirty"> (Unsaved Changes)</span>
-                    </div>
-                    
-                    <button class="inline" id="new-button" data-bind="click: tryToCreateNewProject">New</button>
-                    <button class="inline" id="load-button" data-bind="click: tryToLoadProject">Load</button>
+                
+                <button class="inline" id="new-button" data-bind="click: tryToCreateNewProject">New</button>
+                <button class="inline" id="load-button" data-bind="click: tryToLoadProject">Load</button>
 
-                    <button class="inline" id="undo-button" data-bind="click: undo, disable: !isUndoAllowed(), css: {'ui-state-disabled': !isUndoAllowed()}">Undo</button>
-                    <button class="inline" id="redo-button" data-bind="click: redo, disable: !isRedoAllowed(), css: {'ui-state-disabled': !isRedoAllowed()}">Redo</button>
+                <button class="inline" id="undo-button" data-bind="click: undo, disable: !isUndoAllowed(), css: {'ui-state-disabled': !isUndoAllowed()}">Undo</button>
+                <button class="inline" id="redo-button" data-bind="click: redo, disable: !isRedoAllowed(), css: {'ui-state-disabled': !isRedoAllowed()}">Redo</button>
+            
+                <button class="inline" id="save-button" data-bind="click: saveProject">Save</button>
+                <button class="inline" id="save-as-button" data-bind="click: tryToSaveProjectAs">Save As</button>
                 
-                    <button class="inline" id="save-button" data-bind="click: saveProject">Save</button>
-                    <button class="inline" id="save-as-button" data-bind="click: tryToSaveProjectAs">Save As</button>
-                    
-                    <button class="inline" id="export-button">Export</button>
+                <button class="inline" id="export-button">Export</button>
                 
-                    <span class="menu-text">Select: </span>
-                    <select class="inline" 
-                            id="widget-select" 
-                            data-bind="options: currentProject.components, 
-                                optionsText: function(item) {
-                                   return item.viewModel.name.value;
-                                },
-                                value: selectedComponent,
-                                event: {change: openPropertiesPanel}">
-                    </select>
-                    <button class="inline" id="refresh-button" data-bind="click: refreshWorkspace">Refresh</button>
-                </div>                
+                <button class="inline" id="refresh-button" data-bind="click: refreshWorkspace">Refresh</button>
+            </div>                
         </div>
         
         <div id="accordion-container" class="inline top">
@@ -177,7 +167,14 @@
                                 }, value: selectedEvent"></select>
                     </div>
                 </div>
-                <h3>Properties - <span data-bind="text: selectedComponent.viewModel.name.value"></span></h3>
+                <h3>Properties - <select class="inline" 
+                        id="widget-select" 
+                        data-bind="disable: true, options: currentProject.components, 
+                            optionsText: function(item) {
+                               return item.viewModel.name.value;
+                            },
+                            value: selectedComponent">
+                </select></h3>
                 <div id="properties-panel">
                     <div id="properties-panel-properties" data-bind="foreach: currentProject.components">
                         <div data-bind="foreach: $data.viewModel.properties, visible: $parent.selectedComponent == $data">
