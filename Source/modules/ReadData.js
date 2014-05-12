@@ -5,11 +5,13 @@ define([
         'd3',
         'jquery',
         'util/defined',
+        'models/Constants/MessageType',
         'util/displayMessage'
     ], function(
         d3,
         $,
         defined,
+        MessageType,
         displayMessage) {
     'use strict';
 
@@ -37,7 +39,7 @@ define([
             if (this.endsWithInsensitive(path, '.csv')) {
                 d3.csv(path, function(error, data) {
                     if (error) {
-                        displayMessage('Could not read data for ' + dataSet.name);
+                        displayMessage('Could not read data for ' + dataSet.name, MessageType.ERROR);
                         return;
                     }
 
@@ -49,7 +51,7 @@ define([
             else if (this.endsWithInsensitive(path, '.json')) {
                 d3.json(path, function(error, data) {
                     if (error) {
-                        displayMessage('Could not read data for ' + dataSet.name);
+                        displayMessage('Could not read data for ' + dataSet.name, MessageType.ERROR);
                         return;
                     }
 

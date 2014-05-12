@@ -29,6 +29,7 @@ define(['jquery',
         'modules/PropertyChangeSubscriber',
         'modules/HistoryMonitor',
         'modules/UniqueTracker',
+        'util/getBasename',
         'util/defined',
         'util/defaultValue',
         'util/displayMessage',
@@ -66,6 +67,7 @@ define(['jquery',
         PropertyChangeSubscriber,
         HistoryMonitor,
         UniqueTracker,
+        getBasename,
         defined,
         defaultValue,
         displayMessage,
@@ -168,6 +170,17 @@ define(['jquery',
                 regex: new RegExp('.(csv|json)$', 'i')
             }),
             errorMessage: 'Must select a file with extension CSV or JSON.'
+        });
+
+        var filenameInvalidCharRegex = new RegExp('[^a-zA-Z0-9_\\- ]', 'g');
+
+        // Update the upload data name based on the filename.
+        subscribeObservable(self.uploadDataFile, '_value', function(newFilename) {
+            if (newFilename !== '') {
+                var originalName = getBasename(newFilename).split('.')[0];
+                var validName = originalName.replace(filenameInvalidCharRegex, '');
+                self.uploadDataName.value = validName;
+            }
         });
 
         // Action Editor
