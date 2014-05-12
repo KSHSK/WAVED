@@ -191,6 +191,9 @@ define([
             // Setting length doesn't trigger knockout, so we must call valueHasMutated explicitly.
             ko.getObservable(this, '_events').valueHasMutated();
         }
+
+        // Reserve DataSet name 'trigger' because of how Trigger data is sent to actions.
+        UniqueTracker.addValueIfUnique(DataSet.getUniqueNameNamespace(), 'trigger', {});
     };
 
 
