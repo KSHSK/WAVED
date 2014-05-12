@@ -9,6 +9,7 @@
     <!-- CSS -->
     <link rel="stylesheet" href="ThirdParty/jquery/css/waved-theme/jquery-ui-1.10.4.custom.min.css">
     <link rel="stylesheet" href="ThirdParty/DataTables/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="ThirdParty/toastr/toastr.css">
     <link rel="stylesheet" type="text/css" href="CSS/WAVED.css">
     
     <!-- JavaScript-->
@@ -302,14 +303,14 @@
     
     <div id="upload-data-dialog" title="Upload Data" class="dialog">
         <div>
-            <label class="required" for="upload-data-name" data-bind="text: uploadDataName.displayName"></label>
-            <input id="upload-data-name" type="text" data-bind="value: uploadDataName.value, valueUpdate: 'keyup'"/>
-            <div class="error" data-bind="visible: uploadDataName.error, html: uploadDataName.message"></div>
-        </div>
-        <div>
             <label class="required" for="upload-data-file" data-bind="text: uploadDataFile.displayName"></label>
             <input id="upload-data-file" type="file" accept=".csv,.json" data-bind="value: uploadDataFile.value, valueUpdate: 'keyup'"/>
             <div class="error" data-bind="visible: uploadDataFile.error, html: uploadDataFile.message"></div>
+        </div>
+        <div>
+            <label class="required" for="upload-data-name" data-bind="text: uploadDataName.displayName"></label>
+            <input id="upload-data-name" type="text" data-bind="value: uploadDataName.value, valueUpdate: 'keyup'"/>
+            <div class="error" data-bind="visible: uploadDataName.error, html: uploadDataName.message"></div>
         </div>
     </div>
     

@@ -5,6 +5,7 @@ define([
         'util/defined',
         'util/defaultValue',
         'util/displayMessage',
+        'models/Constants/MessageType',
         'util/updateQueryByName',
         'util/subscribeObservable',
         'models/ComponentViewModel',
@@ -26,6 +27,7 @@ define([
         defined,
         defaultValue,
         displayMessage,
+        MessageType,
         updateQueryByName,
         subscribeObservable,
         ComponentViewModel,
@@ -202,6 +204,9 @@ define([
             // Setting length doesn't trigger knockout, so we must call valueHasMutated explicitly.
             ko.getObservable(this, '_events').valueHasMutated();
         }
+
+        // Reserve DataSet name 'trigger' because of how Trigger data is sent to actions.
+        UniqueTracker.addValueIfUnique(DataSet.getUniqueNameNamespace(), 'trigger', {});
     };
 
 
@@ -520,7 +525,7 @@ define([
 
         var response = DependencyChecker.allowedToDeleteWidget(widget, self);
         if (!response.allowed) {
-            displayMessage(response.message);
+            displayMessage(response.message, MessageType.WARNING);
             return false;
         }
 
@@ -597,7 +602,7 @@ define([
 
         var response = DependencyChecker.allowedToDeleteAction(action, self);
         if (!response.allowed) {
-            displayMessage(response.message);
+            displayMessage(response.message, MessageType.WARNING);
             return;
         }
 

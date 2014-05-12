@@ -19,6 +19,7 @@ define([
         'modules/HistoryMonitor',
         'util/defined',
         'util/displayMessage',
+        'models/Constants/MessageType',
         'util/subscribeObservable',
         'knockout',
         'd3',
@@ -43,6 +44,7 @@ define([
         HistoryMonitor,
         defined,
         displayMessage,
+        MessageType,
         subscribeObservable,
         ko,
         d3,
@@ -391,7 +393,7 @@ define([
             options: this.glyphs,
             add: function() {
                 if (!defined(self.boundData) || self.boundData.length === 0) {
-                    displayMessage('Must bind data to map before adding glyph');
+                    displayMessage('Must bind data to map before adding glyph', MessageType.WARNING);
                 } else {
                     var newGlyph = new GlyphViewModel({}, self);
                     var options = this.options;

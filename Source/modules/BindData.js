@@ -9,6 +9,7 @@ define([
         'models/Widget/WidgetViewModel',
         'models/Data/DataSet',
         'util/defined',
+        'models/Constants/MessageType',
         'util/displayMessage'
     ], function(
         $,
@@ -18,6 +19,7 @@ define([
         WidgetViewModel,
         DataSet,
         defined,
+        MessageType,
         displayMessage) {
     'use strict';
 
@@ -46,7 +48,7 @@ define([
                         var checked = $('.bind-data-selections:checked');
 
                         if (checked.length === 0) {
-                            displayMessage('Select data to bind or click Cancel.');
+                            displayMessage('Select data to bind or click Cancel.', MessageType.INFO);
                             return;
                         }
 
@@ -112,7 +114,7 @@ define([
 
                     var response = DependencyChecker.allowedToUnbindDataSet(dataSet, widget);
                     if (!response.allowed) {
-                        displayMessage(response.message);
+                        displayMessage(response.message, MessageType.WARNING);
                         return;
                     }
 

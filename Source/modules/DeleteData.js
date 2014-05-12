@@ -4,10 +4,12 @@
 define([
         './DependencyChecker',
         'util/displayMessage',
+        'models/Constants/MessageType',
         'jquery'
     ], function(
         DependencyChecker,
         displayMessage,
+        MessageType,
         $) {
     'use strict';
 
@@ -21,7 +23,7 @@ define([
 
             var response = DependencyChecker.allowedToDeleteDataSet(dataSet, viewModel.currentProject);
             if (!response.allowed) {
-                displayMessage(response.message);
+                displayMessage(response.message, MessageType.WARNING);
                 return;
             }
 
@@ -67,7 +69,7 @@ define([
                         viewModel.currentProject.removeDataSet(dataSet);
                     }
                     else {
-                        displayMessage(data.errorMessage);
+                        displayMessage(data.errorMessage, MessageType.ERROR);
                     }
                 }
             }).promise();
