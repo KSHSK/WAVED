@@ -6,7 +6,6 @@ define([
         'models/Action/PropertyAction',
         'models/Action/QueryAction',
         'util/defined',
-        'util/displayMessage',
         'knockout',
         'jquery'
     ],function(
@@ -17,7 +16,6 @@ define([
         PropertyAction,
         QueryAction,
         defined,
-        displayMessage,
         ko,
         $
     ){

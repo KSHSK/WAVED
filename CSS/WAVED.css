@@ -240,3 +240,8 @@ table.dataTable#project-list tr.even { background-color: white; }
 table.dataTable#project-list tr.odd td { background-color: inherit; }
 table.dataTable#project-list tr.even td { background-color: inherit; }
 table.dataTable#project-list tr.row_selected td { background-color: #aaaaaa; }
+
+
+#toast-container>div {
+    opacity: 1;
+}

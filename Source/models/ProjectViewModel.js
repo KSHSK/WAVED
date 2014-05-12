@@ -5,6 +5,7 @@ define([
         'util/defined',
         'util/defaultValue',
         'util/displayMessage',
+        'models/Constants/MessageType',
         'util/updateQueryByName',
         'util/subscribeObservable',
         'models/ComponentViewModel',
@@ -26,6 +27,7 @@ define([
         defined,
         defaultValue,
         displayMessage,
+        MessageType,
         updateQueryByName,
         subscribeObservable,
         ComponentViewModel,
@@ -472,7 +474,7 @@ define([
 
         var response = DependencyChecker.allowedToDeleteWidget(widget, self);
         if (!response.allowed) {
-            displayMessage(response.message);
+            displayMessage(response.message, MessageType.WARNING);
             return false;
         }
 
@@ -530,7 +532,7 @@ define([
 
         var response = DependencyChecker.allowedToDeleteAction(action, self);
         if (!response.allowed) {
-            displayMessage(response.message);
+            displayMessage(response.message, MessageType.WARNING);
             return;
         }
 

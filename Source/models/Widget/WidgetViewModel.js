@@ -11,6 +11,7 @@ define([
         'util/defined',
         'util/defaultValue',
         'util/createValidator',
+        'models/Constants/MessageType',
         'util/displayMessage'
     ], function(
         $,
@@ -25,6 +26,7 @@ define([
         defined,
         defaultValue,
         createValidator,
+        MessageType,
         displayMessage) {
     'use strict';
 
@@ -161,7 +163,7 @@ define([
         var self = this;
 
         if (this.boundDataIndex(dataSet) > -1) {
-            displayMessage('DataSet "' + dataSet.name + '" is already bound.');
+            displayMessage('DataSet "' + dataSet.name + '" is already bound.', MessageType.INFO);
             return;
         }
 
