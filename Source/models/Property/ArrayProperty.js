@@ -39,8 +39,16 @@ define([
             this.getOptionText = function(value){
                 return value;
             };
-        } else {
+        }
+        else {
             this.getOptionText = opts.getOptionText;
+        }
+
+        if(!defined(opts.optionsCaption)) {
+            this.optionsCaption = 'Choose an option...';
+        }
+        else {
+            this.optionsCaption = opts.optionsCaption;
         }
 
         this.setState(opts);
