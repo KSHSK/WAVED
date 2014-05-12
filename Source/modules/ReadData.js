@@ -19,7 +19,7 @@ define([
         dataFolderPath: '',
 
         getFilePath: function(filename) {
-            return this.dataFolderPath + filename;
+            return this.dataFolderPath + encodeURIComponent(filename);
         },
 
         endsWithInsensitive: function(str, suffix) {
