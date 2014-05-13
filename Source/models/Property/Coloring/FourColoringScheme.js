@@ -28,19 +28,19 @@ define([
 
         this.color2 = new StringProperty({
             displayName: 'Color #2',
-            value: 'LightBlue',
+            value: 'PowderBlue',
             onchange: state.onchange
         });
 
         this.color3 = new StringProperty({
             displayName: 'Color #3',
-            value: 'LightYellow',
+            value: 'Plum',
             onchange: state.onchange
         });
 
         this.color4 = new StringProperty({
             displayName: 'Color #4',
-            value: 'Pink',
+            value: 'Khaki',
             onchange: state.onchange
         });
 

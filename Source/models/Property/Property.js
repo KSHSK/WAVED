@@ -1,9 +1,11 @@
 define(['knockout',
         'util/defined',
+        'util/defaultValue',
         'util/subscribeObservable'
     ],function(
         ko,
         defined,
+        defaultValue,
         subscribeObservable){
     'use strict';
 
@@ -15,6 +17,8 @@ define(['knockout',
         this._originalValue = undefined;
         this._value = undefined; // Type determined by subclasses.
         this._displayValue = undefined;
+
+        this.visible = defaultValue(options.visible, true);
         this.onchange = options.onchange;
         this.ondisplaychange = options.ondisplaychange;
 
@@ -120,6 +124,13 @@ define(['knockout',
         this._originalValue = value;
         this._displayValue = value;
         this._error = !this.isValidValue(this._value);
+    };
+
+    /**
+     * @param valueType 'originalValue' or 'value' or 'displayValue'
+     */
+    Property.prototype.displayErrorMessage = function(valueType) {
+        this.message = this.errorMessage;
     };
 
     Property.prototype.isValidValue = function() {

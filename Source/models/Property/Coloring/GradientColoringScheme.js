@@ -43,7 +43,7 @@ define([
             value: undefined,
             options: [],
             getOptionText: function(value) {
-                return value.getNameAndFilename();
+                return value.displayName;
             },
             onchange: state.onchange
         });
@@ -143,28 +143,24 @@ define([
         // Subscribe to the value of dataSet in order to automatically update dataField's options
         subscribeObservable(self.dataSet, '_originalValue', function(newValue){
             var changeFunction = function() {
-                if(defined(newValue)){
-                    if(defined(newValue.data)){
+                if(defined(newValue) && newValue !== '') {
+                    newValue.executeWhenDataLoaded(function() {
                         /*
                          * Must set originalValue to undefined before altering the options to
                          * allow the field to reset itself correctly. Settings options first leads
                          * to the field looking blank even though the default option is selected
                          */
-                        self.dataField.originalValue = undefined;
+
+                        if (newValue.dataFields.indexOf(self.dataField.originalValue) === -1) {
+                            self.dataField.originalValue = undefined;
+                        }
                         self.dataField.options = newValue.dataFields;
-                        self.keyField.originalValue = undefined;
+
+                        if (newValue.dataFields.indexOf(self.keyField.originalValue) === -1) {
+                            self.keyField.originalValue = undefined;
+                        }
                         self.keyField.options = newValue.dataFields;
-                    }
-                    else {
-                        // Keep trying until data is ready, as long as data is a defined object.
-                        var interval = setInterval(function(){
-                            if(defined(newValue.data)){
-                                self.dataField.options = newValue.dataFields;
-                                self.keyField.options = newValue.dataFields;
-                                clearInterval(interval);
-                            }
-                        }, 100);
-                    }
+                    });
                 }
                 else{
                     // Must set originalValue first before resetting options

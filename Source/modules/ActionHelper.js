@@ -7,6 +7,7 @@ define([
         'models/Action/QueryAction',
         'models/Constants/ActionType',
         'util/defined',
+        'models/Constants/MessageType',
         'util/displayMessage',
         'knockout',
         'jquery'
@@ -19,6 +20,7 @@ define([
         QueryAction,
         ActionType,
         defined,
+        MessageType,
         displayMessage,
         ko,
         $
@@ -76,7 +78,7 @@ define([
                         if (!UniqueTracker.isValueUnique(Action.getUniqueNameNamespace(),
                             viewModel.selectedActionName.value)) {
 
-                            displayMessage('The name "' + viewModel.selectedActionName.value + '" is already in use.');
+                            displayMessage('The name "' + viewModel.selectedActionName.value + '" is already in use.', MessageType.WARNING);
                             return;
                         }
 
@@ -145,7 +147,7 @@ define([
                         if (!UniqueTracker.isValueUnique(Action.getUniqueNameNamespace(),
                             viewModel.selectedActionName.value, viewModel.selectedAction)) {
 
-                            displayMessage('The name "' + viewModel.selectedActionName.value + '" is already in use.');
+                            displayMessage('The name "' + viewModel.selectedActionName.value + '" is already in use.', MessageType.WARNING);
                             return;
                         }
 
