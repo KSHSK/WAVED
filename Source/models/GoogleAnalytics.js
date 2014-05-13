@@ -74,14 +74,13 @@ define([
         };
     };
 
-    // TODO: Add to DD.
     GoogleAnalytics.prototype.setState = function(state) {
         if (defined(state.uaCode)) {
-            this.uaCode.originalValue = state.uaCode.value;
+            this.uaCode.setState(state.uaCode);
         }
 
         if (defined(state.eventCategory)) {
-            this.eventCategory.originalValue = state.eventCategory.value;
+            this.eventCategory.setState(state.eventCategory);
         }
 
         if (defined(state.bound)) {
