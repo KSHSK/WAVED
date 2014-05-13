@@ -178,7 +178,7 @@ define(['jquery',
         subscribeObservable(self.uploadDataFile, '_value', function(newFilename) {
             if (newFilename !== '') {
                 var originalName = getBasename(newFilename).split('.')[0];
-                var validName = originalName.replace(filenameInvalidCharRegex, '');
+                var validName = originalName.replace(filenameInvalidCharRegex, '').substring(0, 50);
                 self.uploadDataName.value = validName;
             }
         });
