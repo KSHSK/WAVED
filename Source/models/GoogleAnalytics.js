@@ -60,8 +60,8 @@ define([
     });
 
     GoogleAnalytics.prototype.resetGoogleAnalytics = function() {
-        this.uaCode.value = '';
-        this.eventCategory.value = '';
+        this.uaCode.originalValue = '';
+        this.eventCategory.originalValue = '';
         this._bound = false;
     };
 
