@@ -20,11 +20,8 @@ define([
     var imports = {
         D3: '<script src="http://d3js.org/d3.v3.min.js"></script>',
         JQUERY: '<script src="https://code.jquery.com/jquery-1.9.1.js"></script>',
-        JQUERY_UI: '<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>',
         WAVED_CSS: '<link rel="stylesheet" type=\"text/css\" href=\"WAVED.css">',
-        WAVED_JS: '<script src="WAVED.js"></script>',
-        JQUERY_UI_STYLE: '<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">',
-        D3_TOPOJSON: '<script src="http://d3js.org/topojson.v1.min.js"></script>'
+        WAVED_JS: '<script src="WAVED.js"></script>'
     };
 
     var ExportProject = {
@@ -56,14 +53,19 @@ define([
         generateCss: function(viewModel) {
             var workspace = viewModel.currentProject.workspace;
 
-            var workspaceCss = '#waved-container {\n' +
+            var css = '#waved-container {\n' +
                                  '\twidth: ' + workspace.width.value + 'px;\n' +
                                  '\theight: ' + workspace.height.value + 'px;\n' +
                                  '\tposition: relative;\n' +
                                  '\tbackground-color: ' + workspace.color.value + ';\n' +
                                '}\n';
 
-            return workspaceCss;
+            for (var i = 0; i < viewModel.currentProject.widgets.length; i++) {
+                css += viewModel.currentProject.widgets[i].exportCss();
+                css += '\n\n';
+            }
+
+            return css;
         },
 
         generateJs: function(viewModel) {
@@ -73,9 +75,6 @@ define([
         generateHtml: function(viewModel) {
             var thirdPartyImports = imports.D3 + '\n' +
                                     imports.JQUERY + '\n' +
-                                    imports.JQUERY_UI + '\n' +
-                                    imports.JQUERY_UI_STYLE + '\n' +
-                                    imports.D3_TOPOJSON + '\n' +
                                     imports.WAVED_CSS + '\n' +
                                     imports.WAVED_JS + '\n';
 
@@ -84,9 +83,14 @@ define([
                              thirdPartyImports +
                              '</head>\n' +
                              '<body>\n' +
-                                 '\t<div id="waved-container">\n' +
-                                     // TODO: Widgets
-                                 '\t</div>\n' +
+                                 '\t<div id="waved-container">\n';
+
+            for (var i = 0; i < viewModel.currentProject.widgets.length; i++) {
+                // TODO: proper tabbing
+                htmlTemplate += viewModel.currentProject.widgets[i].exportHtml();
+            }
+
+            htmlTemplate += '\t</div>\n' +
                              '</body>\n' +
                              '</html>';
 
