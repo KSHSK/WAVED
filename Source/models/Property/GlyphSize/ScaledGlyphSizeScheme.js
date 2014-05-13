@@ -36,37 +36,25 @@ define([
         var dataSetOptions = {
             displayName: 'Data Set',
             value: undefined,
+            errorMessage: '',
             options: [],
             getOptionText: function(value){
-                return value.getNameAndFilename();
-            }
+                return value.displayName;
+            },
+            visible: false
         };
         this.dataSet = new ArrayProperty(dataSetOptions);
 
         var dataFieldOptions = {
-            displayName: 'Data Field',
+            displayName: 'Scaling Field',
             value: undefined,
+            errorMessage: 'Value is required.',
             options: [],
             getOptionText: function(value){
                 return value;
             }
         };
-
         this.dataField = new ArrayProperty(dataFieldOptions);
-
-        // Allows for deselection
-        var isValidValue = function(value){
-           var undef = (value === undefined);
-           var validSelection = true;
-           if (defined(this._options) && this._options.length > 0) {
-               validSelection = (this._options.indexOf(value) !== -1);
-           }
-
-           return !undef && validSelection;
-        };
-
-        this.dataSet.isValidValue = isValidValue;
-        this.dataField.isValidValue = isValidValue;
 
         ko.track(this);
 
@@ -96,25 +84,22 @@ define([
         }
     });
 
-    ScaledGlyphSizeScheme.prototype.setState = function(state, viewModel){
+    ScaledGlyphSizeScheme.prototype.setState = function(state, viewModel) {
         var self = this;
 
+        var firstTimeLoaded = true;
+
         // Subscribe to the value of dataSet in order to automatically update dataField's options
-        subscribeObservable(self.dataSet, '_originalValue', function(newValue){
+        subscribeObservable(self.dataSet, '_originalValue', function(newValue) {
             var changeFunction = function() {
-                if(defined(newValue)){
-                    if(defined(newValue.data)){
+                if(defined(newValue) && newValue !== ''){
+                    newValue.executeWhenDataLoaded(function() {
                         self.dataField.options = newValue.dataFields;
-                    }
-                    else {
-                        // Keep trying until data is ready, as long as data is a defined object.
-                        var interval = setInterval(function(){
-                            if(defined(newValue.data)){
-                                self.dataField.options = newValue.dataFields;
-                                clearInterval(interval);
-                            }
-                        }, 100);
-                    }
+                        if (firstTimeLoaded) {
+                            self.dataField.originalValue = state.dataField;
+                            firstTimeLoaded = false;
+                        }
+                    });
                 }
                 else{
                     self.dataField.options = [];
@@ -126,25 +111,18 @@ define([
             historyMonitor.executeAmendHistory(changeFunction);
         });
 
-        subscribeObservable(self.dataSet, '_displayValue', function(newValue){
+        subscribeObservable(self.dataSet, '_displayValue', function(newValue) {
             var changeFunction = function() {
-                if(defined(newValue)){
-                    if(defined(newValue.data)){
-                        self.dataField.options = newValue.dataFields;
-                    }
-                    else {
-                        // Keep trying until data is ready, as long as data is a defined object.
-                        var interval = setInterval(function(){
-                            if(defined(newValue.data)){
-                                self.dataField.options = newValue.dataFields;
-                                clearInterval(interval);
-                            }
-                        }, 100);
-                    }
+                if(defined(newValue) && newValue !== ''){
+                    newValue.executeWhenDataLoaded(function() {
+                        if (self.dataField.options !== newValue.dataFields) {
+                            self.dataField.options = newValue.dataFields;
+                        }
+                    });
                 }
                 else{
-                    self.dataField.options = [];
                     self.dataField.displayValue = undefined; // Reset the dataField selection
+                    self.dataField.options = [];
                 }
             };
 
@@ -153,6 +131,7 @@ define([
         });
 
         // Properly unset the dataSet value when the options disappear (when the bound data is unbound)
+        // This should never happen since unbinding cannot be done when the dataSet is in use.
         subscribeObservable(self.dataSet, '_options', function(newValue){
             if(defined(self.dataSet.value) && (newValue.indexOf(self.dataSet.value) === -1)){
                     self.dataSet.orignalValue = undefined;

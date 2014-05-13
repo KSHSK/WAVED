@@ -38,8 +38,9 @@ define([
             $('.bind-data-selections').removeAttr('checked');
 
             self.bindDataDialog.dialog({
-                resizable: false,
-                height: 250,
+                minHeight: 250,
+                height: 'auto',
+                minWidth: 400,
                 width: 400,
                 modal: true,
                 buttons: {

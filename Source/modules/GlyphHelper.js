@@ -37,7 +37,7 @@ define([
                         glyphAdded.resolve();
                         glyphDialog.dialog('close');
                     } else {
-                        glyph.displayErrors();
+                        glyph.displayErrors('displayValue');
                     }
                 },
                 'Cancel': function() {
