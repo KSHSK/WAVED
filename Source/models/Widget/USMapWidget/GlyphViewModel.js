@@ -9,6 +9,7 @@ define([
         'modules/UniqueTracker',
         'util/defined',
         'util/createValidator',
+        'util/subscribeObservable',
         'knockout',
         'd3',
         'jquery'
@@ -23,6 +24,7 @@ define([
         UniqueTracker,
         defined,
         createValidator,
+        subscribeObservable,
         ko,
         d3,
         $) {
@@ -33,7 +35,7 @@ define([
         .range([2,10])
         .clamp(true);
 
-    function getElement(viewModel){
+    function getElement(viewModel) {
         return d3.select('#' + viewModel.id);
     }
 
@@ -46,6 +48,10 @@ define([
     }
 
     function editGlyph(glyph) {
+        if (!defined(glyph._dom)) {
+            return;
+        }
+
         if (!glyph.visible.value) {
             glyph._dom.attr('class', 'hide');
             return;
@@ -124,7 +130,7 @@ define([
             errorMessage: 'Value is required.',
             options: this.parent.boundData,
             getOptionText: function(value) {
-                return value.getNameAndFilename();
+                return value.displayName;
             }
         });
         this.color = new StringProperty({
@@ -161,10 +167,39 @@ define([
             options: []
         });
 
-        this.dataSet.ondisplaychange = function(newValue){
-            self.latitude.options = newValue.dataFields;
-            self.longitude.options = newValue.dataFields;
+        // Change the data field options.
+        this.dataSet.ondisplaychange = function(newValue) {
+            if (self.latitude.options !== newValue.dataFields) {
+                self.latitude.options = newValue.dataFields;
+            }
+
+            if (self.longitude.options !== newValue.dataFields) {
+                self.longitude.options = newValue.dataFields;
+            }
+
+            // Update scaled size glyphs
+            if (self.size.scaledGlyphSize.dataSet.value !== newValue) {
+                self.size.scaledGlyphSize.dataSet.value = newValue;
+            }
+            if (self.size.scaledGlyphSize.dataField.options !== newValue.dataFields) {
+                self.size.scaledGlyphSize.dataField.options = newValue.dataFields;
+            }
         };
+
+        // The subscription for the current dataSet's '_data' property.
+        this.dataSetSubscription = undefined;
+
+        this.dataSet.onchange = function(newValue) {
+            if (defined(self.dataSetSubscription)) {
+                self.dataSetSubscription.dispose();
+            }
+
+            // Need to update the glyphs if dataSet's '_data' property has changed.
+            subscribeObservable(self.dataSet.value, '_data', function() {
+                editGlyph(self);
+            });
+        };
+
         this.setState(state);
         this.id = this.name.value;
         this._dom = undefined;
@@ -173,36 +208,15 @@ define([
         this.z.originalValue = 1;
 
         this.add = function() {
-            if(defined(self.dataSet.value.data)){
+            self.dataSet.value.executeWhenDataLoaded(function() {
                 addGlyph(self);
-            }
-            else {
-                // Keep trying until data is ready, as long as data is a defined object.
-                // Needed for on load
-                var interval = setInterval(function(){
-                    if(defined(self.dataSet.value.data)){
-                        addGlyph(self);
-                        clearInterval(interval);
-                    }
-                }, 100);
-            }
+            });
         };
 
         this.edit = function() {
-            if(defined(self.dataSet.value.data)){
+            self.dataSet.value.executeWhenDataLoaded(function() {
                 editGlyph(self);
-            }
-            else {
-                // Keep trying until data is ready, as long as data is a defined object.
-                // Needed for on load
-                var interval = setInterval(function(){
-                    if(defined(self.dataSet.value.data)){
-                        editGlyph(self);
-                        clearInterval(interval);
-                    }
-                }, 100);
-            }
-
+            });
         };
 
         this.remove = function() {
@@ -241,8 +255,8 @@ define([
         ComponentViewModel.prototype.setState.call(this, state);
         var self = this;
         if (defined(state.dataSet)) {
-            this.boundData.forEach(function(entry){
-                if(defined(state.dataSet) && (state.dataSet === entry.name)){
+            this.boundData.forEach(function(entry) {
+                if(defined(state.dataSet) && (state.dataSet === entry.name)) {
                     self.dataSet.originalValue = entry;
                 }
             });
@@ -274,7 +288,7 @@ define([
     Object.defineProperties(GlyphViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.dataSet, this.color, this.opacity, this.size, this.latitude, this.longitude, this.visible,
+                return [this.name, this.color, this.opacity, this.dataSet, this.latitude, this.longitude, this.size, this.visible,
                 this.logGoogleAnalytics];
             }
         },

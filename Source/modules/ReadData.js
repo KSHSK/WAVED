@@ -4,11 +4,13 @@
 define([
         'd3',
         'jquery',
+        'util/defined',
         'models/Constants/MessageType',
         'util/displayMessage'
     ], function(
         d3,
         $,
+        defined,
         MessageType,
         displayMessage) {
     'use strict';
@@ -43,6 +45,7 @@ define([
 
                     dataSet.data = data;
                     readComplete.resolve();
+                    dataSet._dataLoaded.resolve();
                 });
             }
             else if (this.endsWithInsensitive(path, '.json')) {
@@ -55,11 +58,12 @@ define([
                     // TODO: Extra processing will be needed to get JSON data to be in the same form as CSV data.
                     dataSet.data = data;
                     readComplete.resolve();
+                    dataSet._dataLoaded.resolve();
                 });
             }
             else {
                 // Invalid file type.
-                return;
+                readComplete.reject();
             }
 
             return readComplete.promise();

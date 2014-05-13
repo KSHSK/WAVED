@@ -145,5 +145,18 @@ define([
         return [this.constantGlyphSize, this.scaledGlyphSize];
     };
 
+    /**
+     * @param valueType 'originalValue' or 'value' or 'displayValue'
+     */
+    GlyphSizeSelectionProperty.prototype.displayErrorMessage = function(valueType) {
+        var properties = this[valueType].properties;
+        for (var i = 0; i < properties.length; i++) {
+            var property = properties[i];
+            if (property.error) {
+                property.displayErrorMessage(valueType);
+            }
+        }
+    };
+
     return GlyphSizeSelectionProperty;
 });

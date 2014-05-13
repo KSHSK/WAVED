@@ -93,10 +93,23 @@ define([
         },
         unmarkedDataSets: {
             get: function() {
-                // TODO: Should this also filter to only grab proper DataSets (exclude DataSubsets)?
-                // If not here, it still needs to be done somewhere for displaying on the page.
                 return this._dataSets.filter(function(dataSet) {
                     return !dataSet.isMarkedForDeletion();
+                });
+            }
+        },
+        unmarkedProperDataSets: {
+            get: function() {
+                var subsets = this.dataSubsets;
+                return this.unmarkedDataSets.filter(function(dataSet) {
+                    return subsets.indexOf(dataSet) === -1;
+                });
+            }
+        },
+        dataSubsets: {
+            get: function() {
+                return this._dataSets.filter(function(dataSet) {
+                    return dataSet instanceof DataSubset;
                 });
             }
         },
@@ -220,7 +233,7 @@ define([
             // Clear array.
             this._dataSets.length = 0;
 
-            var newDataSets = $.each(state.dataSets, function(itemIndex, itemState) {
+            $.each(state.dataSets, function(itemIndex, itemState) {
                 var dataSet;
 
                 if (itemState.type === DataSet.getType()) {
@@ -236,13 +249,25 @@ define([
 
                 self.addDataSet(dataSet);
             });
+
+
+            // Update DataSubset parents.
+            // Must be done after all DataSets are loaded in case the DataSubset shows up before its parent.
+            $.each(self._dataSets, function(index, dataSet) {
+                if (dataSet.type === DataSubset.getType()) {
+                    // Get the parent object from the name.
+                    dataSet.setState({
+                        parent: self.getDataSet(dataSet.parent)
+                    });
+                }
+            });
         }
 
         if (defined(state.widgets)) {
-            // Clear array except for Workspace.
+            // Clear array.
             this._widgets.length = 0;
 
-            var newWidgets = $.each(state.widgets, function(itemIndex, itemState) {
+            $.each(state.widgets, function(itemIndex, itemState) {
                 for (var index = 0; index < availableWidgets.length; index++) {
                     var widgetType = availableWidgets[index];
                     if (itemState.type === widgetType.o.getViewModelType()) {
@@ -257,7 +282,7 @@ define([
             // Clear array.
             this._actions.length = 0;
 
-            var newActions = $.each(state.actions, function(itemIndex, itemState) {
+            $.each(state.actions, function(itemIndex, itemState) {
                 var action;
 
                 if (itemState.type === PropertyAction.getType()) {
@@ -280,7 +305,7 @@ define([
             // Clear array.
             this._events.length = 0;
 
-            var newEvents = $.each(state.events, function(itemIndex, itemState) {
+            $.each(state.events, function(itemIndex, itemState) {
                 itemState.triggeringWidget = self.getWidget(itemState.triggeringWidget);
                 // TODO: Trigger?
                 var actions = [];
@@ -331,7 +356,8 @@ define([
         });
     };
 
-    ProjectViewModel.prototype.addDataSet = function(data) {
+    ProjectViewModel.prototype.addDataSet = function(data, index) {
+        var self = this;
         var namespace = DataSet.getUniqueNameNamespace();
 
         // Try to add unique name.
@@ -344,7 +370,29 @@ define([
 
         var historyMonitor = HistoryMonitor.getInstance();
 
-        if (data instanceof DataSet) {
+        if (data instanceof DataSubset) {
+            // DataSubset
+
+            if (defined(index)) {
+                this._dataSets.splice(index, 0, data);
+            }
+            else {
+                this._dataSets.push(data);
+            }
+
+            // Undo by removing the item.
+            historyMonitor.addUndoChange(function() {
+                self.removeDataSet(data);
+            });
+
+            // Redo by readding the item.
+            historyMonitor.addRedoChange(function() {
+                self.addDataSet(data);
+            });
+        }
+        else {
+            // DataSet
+
             this._dataSets.push(data);
 
             // Undo by marking the DataSet for deletion.
@@ -516,9 +564,15 @@ define([
         return true;
     };
 
-    // TODO: Do we want to allow removal using dataset instance and name?
-    // The DD specifies this, but we should probably pick one.
     ProjectViewModel.prototype.removeDataSet = function(dataSet) {
+        var self = this;
+
+        var response = DependencyChecker.allowedToDeleteDataSet(dataSet, self);
+        if (!response.allowed) {
+            displayMessage(response.message);
+            return;
+        }
+
         var index = this._dataSets.indexOf(dataSet);
         if (index > -1) {
             this._dataSets.splice(index, 1);
@@ -526,7 +580,20 @@ define([
             // Remove unique name.
             UniqueTracker.removeItem(DataSet.getUniqueNameNamespace(), dataSet);
 
-            // Cannot undo/redo removing a DataSet.
+            // Cannot undo/redo removing a DataSet. Only add history if removing DataSubset.
+            if (dataSet instanceof DataSubset) {
+                var historyMonitor = HistoryMonitor.getInstance();
+
+                // Undo by adding the item.
+                historyMonitor.addUndoChange(function() {
+                    self.addDataSet(dataSet, index);
+                });
+
+                // Redo by removing the item.
+                historyMonitor.addRedoChange(function() {
+                    self.removeDataSet(dataSet);
+                });
+            }
         }
     };
 

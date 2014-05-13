@@ -201,11 +201,11 @@ define([
         return valid;
     };
 
-    ComponentViewModel.prototype.displayErrors = function() {
+    ComponentViewModel.prototype.displayErrors = function(valueType) {
         for (var i = 0; i < this.properties.length; i++) {
             var property = this.properties[i];
             if (property.error) {
-                property.message = property.errorMessage;
+                property.displayErrorMessage(valueType);
             }
         }
     };
