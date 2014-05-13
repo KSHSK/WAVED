@@ -38,7 +38,7 @@ define([
             for (i = 0; i < project.events.length; i++) {
                 var event = project.events[i];
 
-                if (event.triggeringComponent === widget) {
+                if (event.triggeringWidget === widget) {
                     message = 'Cannot delete this widget since it is used by event "' + event.name + '"';
                     return {
                         allowed: false,
@@ -86,19 +86,30 @@ define([
          * @param project The current project.
          * @param dataSet The dataSet to be deleted.
          */
-        allowedToDeleteDataSet: function(dataSet) {
-            var allowed = (dataSet.referenceCount <= 0);
-            var message = '';
-
-            if (!allowed) {
-                message = 'Cannot delete data that is bound to a widget';
+        allowedToDeleteDataSet: function(dataSet, project) {
+            // Check reference count
+            if (dataSet.referenceCount > 0) {
+                return {
+                    allowed: false,
+                    message: 'Cannot delete data that is bound to a widget'
+                };
             }
 
-            // TODO Check if the DataSet is used by a QueryAction.
+            // Check if dataSet has a DataSubset created from it.
+            var subsets = project.dataSubsets;
+            for (var i = 0; i < subsets.length; i++) {
+                var subset = subsets[i];
+                if (subset.parent === dataSet) {
+                    return {
+                        allowed: false,
+                        message: 'Cannot delete data that a Data Subset is created from'
+                    };
+                }
+            }
 
             return {
-                allowed: allowed,
-                message: message
+                allowed: true,
+                message: ''
             };
         },
 

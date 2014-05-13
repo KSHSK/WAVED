@@ -1,4 +1,9 @@
 <textarea class="widget" disabled data-bind="text:text.value,
-    style:{left: x.value + '%', top: y.value+'%', height: height.value + '%', width: width.value + '%', border: border.value + 'px solid #000'},
-    visible: visible.value" style="position: relative; display: block; border-radius: 5px; overflow: hidden; padding: 3px;">
+    style:{fontSize: textSize.value + 'px', textAlign: textAlign.value, color: textColor.value,
+    fontWeight: (textWeight.value === true) ? 'bold' : 'normal',
+    textDecoration: (textUnderline.value === true) ? 'underline' : 'none',
+    left: x.value + '%', top: y.value + '%', backgroundColor: backgroundColor.value,
+    border: border.value + 'px solid ' + borderColor.value,
+    height: height.value + '%', width: width.value + '%', zIndex: z.value},
+    visible: visible.value" style="position: relative; display: block; border-radius: 5px; overflow: hidden; padding: 3px; font-family: Arial">
 </textarea>

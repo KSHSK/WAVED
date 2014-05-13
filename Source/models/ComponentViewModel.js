@@ -3,6 +3,8 @@ define([
         'knockout',
         'models/Property/StringProperty',
         'models/Property/BooleanProperty',
+        'models/Property/NumberProperty',
+        'models/Property/ButtonProperty',
         'modules/PropertyChangeSubscriber',
         'modules/UniqueTracker',
         'util/defined',
@@ -14,6 +16,8 @@ define([
         ko,
         StringProperty,
         BooleanProperty,
+        NumberProperty,
+        ButtonProperty,
         PropertyChangeSubscriber,
         UniqueTracker,
         defined,
@@ -43,6 +47,47 @@ define([
             value: false
         });
 
+        /*
+         * Default to 25. Override 0 for components that need to always be on bottom (e.g. WorkspaceViewModel, USMapViewModel)
+         * 25 is a magic number, it's just so that if you add multiple widgets on top of one another and want to send one to the back,
+         * you don't need to send all the other ones forward, just move the one back.
+         */
+        this.z = new NumberProperty({
+            displayName: 'Z',
+            value: 25,
+            visible: false,
+            onchange: function() {
+                /*
+                 * Don't let this go below zMinimum. Z-index is relative to the parent container
+                 * so a negative z will put it behind the parent.
+                 */
+                if (this.value === self.zMinimum) {
+                    self.zDecrement.disableButton();
+                }
+                else {
+                    self.zDecrement.enableButton();
+                }
+            }
+        });
+
+        this.zMinimum = 1;
+
+        this.zIncrement = new ButtonProperty({
+            displayName: '',
+            buttonLabel: 'Move Forward',
+            clickFunction: function() {
+                self.z.originalValue++;
+            }
+        });
+
+        this.zDecrement = new ButtonProperty({
+           displayName: '',
+           buttonLabel: 'Move Backward',
+           clickFunction: function() {
+               self.z.originalValue--;
+           }
+        });
+
         ko.track(this);
 
         // Add the name to the unique tracker when changed.
@@ -68,7 +113,8 @@ define([
         return {
             name: this.name.getState(),
             visible : this.visible.getState(),
-            logGoogleAnalytics : this.logGoogleAnalytics.getState()
+            logGoogleAnalytics : this.logGoogleAnalytics.getState(),
+            z : this.z.getState()
         };
     };
 
@@ -83,6 +129,14 @@ define([
 
         if (defined(state.logGoogleAnalytics)) {
             this.logGoogleAnalytics.originalValue = state.logGoogleAnalytics.value;
+        }
+
+        if(defined(state.z)){
+            this.z.originalValue = state.z.value;
+
+            if(this.z.originalValue === this.zMinimum){
+                this.zDecrement.disableButton();
+            }
         }
     };
 
@@ -147,11 +201,11 @@ define([
         return valid;
     };
 
-    ComponentViewModel.prototype.displayErrors = function() {
+    ComponentViewModel.prototype.displayErrors = function(valueType) {
         for (var i = 0; i < this.properties.length; i++) {
             var property = this.properties[i];
             if (property.error) {
-                property.message = property.errorMessage;
+                property.displayErrorMessage(valueType);
             }
         }
     };

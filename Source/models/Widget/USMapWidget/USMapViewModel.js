@@ -19,6 +19,7 @@ define([
         'modules/HistoryMonitor',
         'util/defined',
         'util/displayMessage',
+        'models/Constants/MessageType',
         'util/subscribeObservable',
         'knockout',
         'd3',
@@ -43,6 +44,7 @@ define([
         HistoryMonitor,
         defined,
         displayMessage,
+        MessageType,
         subscribeObservable,
         ko,
         d3,
@@ -68,6 +70,26 @@ define([
         }
     }
 
+    var addStateDataToTrigger = function(viewModel, d) {
+        viewModel._trigger.addData('state', d.properties.name);
+
+        // Iterate through each bound DataSet and add data values to the trigger
+        // only for the state matching the specified name.
+        for (var i = 0; i < viewModel._boundData.length; i++) {
+            var data = viewModel._boundData[i].data;
+            for (var j = 0; j < data.length; j++) {
+                for (var key in data[j]) {
+                    if (data[j][key] === d.properties.name) {
+                        for (var k in data[j]) {
+                            viewModel._trigger.addData(viewModel._boundData[i].name, k, data[j][k]);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    };
+
     function renderMap (viewModel) {
         if (viewModel._ready) {
             var w = $('#waved-workspace').width();
@@ -82,11 +104,9 @@ define([
             var svg = getElement(viewModel)
                 .append('svg')
                 .attr('height', h2)
-                .attr('width', w2)
-                .attr('class', 'widget-container');
+                .attr('width', w2);
             viewModel._svg = svg;
-            viewModel._states = svg.append('g')
-                .attr('pointer-events', 'none');
+            viewModel._states = svg.append('g');
             var statesDataPath = ReadData.getFilePath(STATES_DATA_FILE);
             d3.json(statesDataPath, function(json) {
                 viewModel._states.selectAll('path')
@@ -97,6 +117,18 @@ define([
                     .attr('stroke', 'white')
                     .style('fill', function(d) {
                         return viewModel.coloring.value;
+                    })
+                    .on('mouseover', function(d) {
+                        addStateDataToTrigger(viewModel, d);
+                    })
+                    .on('mousemove', function(d) {
+                        addStateDataToTrigger(viewModel, d);
+                    })
+                    .on('mouseout', function(d) {
+                        addStateDataToTrigger(viewModel, d);
+                    })
+                    .on('click', function(d) {
+                        addStateDataToTrigger(viewModel, d);
                     });
                 viewModel._isRendered = true;
                 viewModel.updateSvg();
@@ -151,65 +183,57 @@ define([
                     break;
                 }
 
-                // Wait until data is available
-                if(!defined(coloringScheme.dataSet.value.data)){
-                    var interval = setInterval(function(){
-                        if(defined(coloringScheme.dataSet.value.data)){
-                            clearInterval(interval);
-                        }
-                    }, 100);
-                }
+                coloringScheme.dataSet.value.executeWhenDataLoaded(function() {
+                 // Find the min and max values for the dataField we're using to scale the gradient
+                    var dataField = coloringScheme.dataField.value;
+                    var min = d3.min(coloringScheme.dataSet.value.data, function(d) { return +d[dataField]; });
+                    var max = d3.max(coloringScheme.dataSet.value.data, function(d) { return +d[dataField]; });
 
-                // Find the min and max values for the dataField we're using to scale the gradient
-                var dataField = coloringScheme.dataField.value;
-                var min = d3.min(coloringScheme.dataSet.value.data, function(d) { return +d[dataField]; });
-                var max = d3.max(coloringScheme.dataSet.value.data, function(d) { return +d[dataField]; });
-
-                // Default the map to black when we can't extract an actual min or max (the field is not numeric)
-                if(!defined(min) || !defined(max)){
-                    path.style('fill', function(d){
-                        return viewModel.DEFAULT_MAP_COLOR.toLowerCase();
-                    });
-                }
-
-                // Set up the gradient function
-                // Color names must be lowercase or this won't work due to the range function not liking caps
-                var gradient = d3.scale.linear().domain([min, max]).range([coloringScheme.startColor.value.toLowerCase(), coloringScheme.endColor.value.toLowerCase()]);
-                path.style('fill', function(d) {
-                    var stateName = d.properties.name;
-                    var keyName = coloringScheme.keyField.value;
-
-                    if(!defined(keyName)){
-                        return viewModel.DEFAULT_MAP_COLOR;
+                    // Default the map to black when we can't extract an actual min or max (the field is not numeric)
+                    if(!defined(min) || !defined(max)){
+                        path.style('fill', function(d){
+                            return viewModel.DEFAULT_MAP_COLOR.toLowerCase();
+                        });
                     }
 
-                    for(var i=0; i<coloringScheme.dataSet.value.data.length; i++){
-                        if(coloringScheme.dataSet.value.data[i][keyName] === stateName){
-                            return gradient(coloringScheme.dataSet.value.data[i][dataField]);
-                        }
+                    // Set up the gradient function
+                    // Color names must be lowercase or this won't work due to the range function not liking caps
+                    var gradient = d3.scale.linear().domain([min, max]).range([coloringScheme.startColor.value.toLowerCase(), coloringScheme.endColor.value.toLowerCase()]);
+                    path.style('fill', function(d) {
+                        var stateName = d.properties.name;
+                        var keyName = coloringScheme.keyField.value;
 
-                        // Didn't find any matches
-                        if(i === coloringScheme.dataSet.value.data.length-1){
+                        if(!defined(keyName)){
                             return viewModel.DEFAULT_MAP_COLOR;
                         }
-                    }
-                });
 
+                        for(var i=0; i<coloringScheme.dataSet.value.data.length; i++){
+                            if(coloringScheme.dataSet.value.data[i][keyName] === stateName){
+                                return gradient(coloringScheme.dataSet.value.data[i][dataField]);
+                            }
+
+                            // Didn't find any matches
+                            if(i === coloringScheme.dataSet.value.data.length-1){
+                                return viewModel.DEFAULT_MAP_COLOR;
+                            }
+                        }
+                    });
+                });
                 break;
             default:
                 break;
         }
     }
 
-    function removeGlyph(options, value) {
-        value.remove();
-        UniqueTracker.removeItem(ComponentViewModel.getUniqueNameNamespace(), value);
-        options.splice(options.indexOf(value), 1);
+    function removeGlyph(options, glyph) {
+        glyph.remove();
+        UniqueTracker.removeItem(ComponentViewModel.getUniqueNameNamespace(), glyph);
+        options.splice(options.indexOf(glyph), 1);
     }
 
-    function addGlyph(options, value, index) {
+    function addGlyph(options, glyph, index) {
         var success = UniqueTracker.addValueIfUnique(ComponentViewModel.getUniqueNameNamespace(),
-            value.name.value, value);
+            glyph.name.value, glyph);
 
         if (!success) {
             console.log('New Component name was not unique.');
@@ -217,28 +241,31 @@ define([
         }
 
         if (defined(index)) {
-            options.splice(index, 0, value);
+            options.splice(index, 0, glyph);
         } else {
-            options.push(value);
+            options.push(glyph);
         }
 
-        value.add();
+        glyph.add();
     }
 
-    function addSuccess(options, value) {
-        options.push(value);
+    function addSuccess(options, glyph) {
+        options.push(glyph);
         //set lat lon first for validation reasons
         //TODO: look into why subscription isn't working for array property
-        value.latitude.originalValue = value.latitude.displayValue;
-        value.latitude.value = value.latitude.displayValue;
-        value.longitude.originalValue = value.longitude.displayValue;
-        value.longitude.value = value.longitude.displayValue;
+        glyph.latitude.originalValue = glyph.latitude.displayValue;
+        glyph.latitude.value = glyph.latitude.displayValue;
+        glyph.longitude.originalValue = glyph.longitude.displayValue;
+        glyph.longitude.value = glyph.longitude.displayValue;
 
-        for (var i = 0; i < value.properties.length; i++) {
-            var property = value.properties[i];
+        // Reversed to get GlyphSizeSelectionProperty (its scaled size dataField) before dataSet is changed.
+        for (var i = glyph.properties.length - 1; i >= 0; i--) {
+            var property = glyph.properties[i];
             property._originalValue = property._displayValue;
+
             if (property instanceof GlyphSizeSelectionProperty){
                 var p = property.value.properties;
+
                 // Reversed to get dataField before dataSet for scaled size
                 for (var j = p.length - 1; j >= 0 ; j--) {
                     p[j].originalValue = p[j].displayValue;
@@ -246,68 +273,72 @@ define([
                 }
             }
         }
-        value.add();
+        glyph.add();
 
         var historyMonitor = HistoryMonitor.getInstance();
 
         // Undo by removing the item.
         historyMonitor.addUndoChange(function() {
-            removeGlyph(options, value);
+            removeGlyph(options, glyph);
         });
 
         // Redo by readding the item.
         historyMonitor.addRedoChange(function() {
-            addGlyph(options, value);
+            addGlyph(options, glyph);
         });
     }
 
-    function editSuccess(value) {
-        var originalState = value.getState();
+    function editSuccess(glyph) {
+        var originalState = glyph.getState();
 
-        value.latitude.originalValue = value.latitude.displayValue;
-        value.latitude.value = value.latitude.displayValue;
-        value.longitude.originalValue = value.longitude.displayValue;
-        value.longitude.value = value.longitude.displayValue;
+        glyph.latitude.originalValue = glyph.latitude.displayValue;
+        glyph.latitude.value = glyph.latitude.displayValue;
+        glyph.longitude.originalValue = glyph.longitude.displayValue;
+        glyph.longitude.value = glyph.longitude.displayValue;
 
-        for (var i = 0; i < value.properties.length; i++) {
-            var property = value.properties[i];
+        // Reversed to get GlyphSizeSelectionProperty (its scaled size dataField) before dataSet is changed.
+        for (var i = glyph.properties.length - 1; i >= 0; i--) {
+            var property = glyph.properties[i];
             property._originalValue = property._displayValue;
+
             if (property instanceof GlyphSizeSelectionProperty){
                 var p = property.value.properties;
+
+                // Reversed to get dataField before dataSet for scaled size
                 for (var j = p.length - 1; j >= 0 ; j--) {
                     p[j].originalValue = p[j].displayValue;
                     p[j].value = p[j].displayValue;
                 }
             }
         }
-        value.edit();
-        var newState = value.getState();
+        glyph.edit();
+        var newState = glyph.getState();
 
         var historyMonitor = HistoryMonitor.getInstance();
 
         historyMonitor.addUndoChange(function() {
-            value.setState(originalState);
-            value.latitude.options = value.dataSet.value.dataFields;
-            value.longitude.options = value.dataSet.value.dataFields;
-            value.latitude.value = originalState.latitude.value;
-            value.longitude.value = originalState.longitude.value;
-            value.edit();
+            glyph.setState(originalState);
+            glyph.latitude.options = glyph.dataSet.value.dataFields;
+            glyph.longitude.options = glyph.dataSet.value.dataFields;
+            glyph.latitude.value = originalState.latitude.value;
+            glyph.longitude.value = originalState.longitude.value;
+            glyph.edit();
         });
 
         historyMonitor.addRedoChange(function() {
-            value.setState(newState);
-            value.latitude.options = value.dataSet.value.dataFields;
-            value.longitude.options = value.dataSet.value.dataFields;
-            value.latitude.value = newState.latitude.value;
-            value.longitude.value = newState.longitude.value;
-            value.edit();
+            glyph.setState(newState);
+            glyph.latitude.options = glyph.dataSet.value.dataFields;
+            glyph.longitude.options = glyph.dataSet.value.dataFields;
+            glyph.latitude.value = newState.latitude.value;
+            glyph.longitude.value = newState.longitude.value;
+            glyph.edit();
        });
     }
 
-    function editFailure(value) {
-        for (var i = 0; i < value.properties.length; i++) {
-            var property = value.properties[i];
-            property.displayValue = value.properties[i].originalValue;
+    function editFailure(glyph) {
+        for (var i = 0; i < glyph.properties.length; i++) {
+            var property = glyph.properties[i];
+            property.displayValue = glyph.properties[i].originalValue;
             if (property instanceof GlyphSizeSelectionProperty){
                 var p = property.value.properties;
                 for (var j = p.length - 1; j >= 0 ; j--) {
@@ -362,7 +393,7 @@ define([
             options: this.glyphs,
             add: function() {
                 if (!defined(self.boundData) || self.boundData.length === 0) {
-                    displayMessage('Must bind data to map before adding glyph');
+                    displayMessage('Must bind data to map before adding glyph', MessageType.WARNING);
                 } else {
                     var newGlyph = new GlyphViewModel({}, self);
                     var options = this.options;
@@ -417,6 +448,12 @@ define([
 
         this._isRendered = false;
         this._ready = true;
+
+        /*
+         * Map will always be below everything else. Must always be set to 0.
+         * This is due to a click-through issue where clicks on the map will propagate to elements underneath.
+         */
+        this.z.originalValue = 0;
 
         ko.track(this);
     };
@@ -484,10 +521,11 @@ define([
 
     Object.defineProperties(USMapViewModel.prototype, {
         properties: {
+            // z is not exposed here because the map should always be on the bottom
             get: function() {
-                return [this.name, this.x, this.y, this.width, this.strokeColor, this.coloring,
-                this.visible, this.logGoogleAnalytics, this.glyphList];
-             }
+                return [this.name, this.x, this.y, this.width, this.visible,
+                        this.strokeColor, this.coloring, this.logGoogleAnalytics, this.glyphList];
+            }
         }
     });
 

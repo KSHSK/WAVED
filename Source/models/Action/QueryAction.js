@@ -1,14 +1,12 @@
 define([
         'models/Action/Action',
         'models/Data/DataSubset',
-        'models/Data/QueryNode',
         'util/defined',
         'knockout',
         'jquery'
     ],function(
         Action,
         DataSubset,
-        QueryNode,
         defined,
         ko,
         $

@@ -4,11 +4,14 @@ define([
         'models/Property/StringProperty',
         'models/Property/NumberProperty',
         'models/Property/BooleanProperty',
+        'models/Property/ButtonProperty',
         'models/ComponentViewModel',
+        'models/Event/Trigger',
         'modules/HistoryMonitor',
         'util/defined',
         'util/defaultValue',
         'util/createValidator',
+        'models/Constants/MessageType',
         'util/displayMessage'
     ], function(
         $,
@@ -16,18 +19,20 @@ define([
         StringProperty,
         NumberProperty,
         BooleanProperty,
+        ButtonProperty,
         ComponentViewModel,
+        Trigger,
         HistoryMonitor,
         defined,
         defaultValue,
         createValidator,
+        MessageType,
         displayMessage) {
     'use strict';
 
-    var self;
     var WidgetViewModel = function(state, getDataSet) {
         ComponentViewModel.call(this, state);
-        self = this;
+        var self = this;
 
         this.getDataSetByName = function(dataSetName){
             return getDataSet(dataSetName);
@@ -78,7 +83,7 @@ define([
         });
 
         this._boundData = []; // String[]
-        this._triggers = []; // Trigger[]
+        this._trigger = new Trigger();
     };
 
     WidgetViewModel.prototype = Object.create(ComponentViewModel.prototype);
@@ -86,7 +91,7 @@ define([
     Object.defineProperties(WidgetViewModel.prototype, {
         properties: {
             get: function() {
-                return [this.name, this.x, this.y, this.width, this.height, this.visible, this.logGoogleAnalytics];
+                return [this.name, this.x, this.y, this.z, this.zIncrement, this.zDecrement, this.width, this.height, this.visible, this.logGoogleAnalytics];
             }
         },
         boundData: {
@@ -94,9 +99,9 @@ define([
                 return this._boundData;
             }
         },
-        triggers: {
+        trigger: {
             get: function() {
-                return this._triggers;
+                return this._trigger;
             }
         }
     });
@@ -136,22 +141,18 @@ define([
             this.y.originalValue = state.y.value;
         }
 
+        if (defined(state.elements)) {
+            this._elementNames = state.elements;
+        }
+
         if (defined(state.boundData)) {
             for(var index=0; index < state.boundData.length; index++){
-                var dataSet = self.getDataSetByName(state.boundData[index].name);
+                var dataSet = this.getDataSetByName(state.boundData[index].name);
                 if(dataSet !== null){
                     this._boundData.push(dataSet);
                 }
             }
         }
-    };
-
-    WidgetViewModel.prototype.getTriggers = function() {
-        return this._triggers;
-    };
-
-    WidgetViewModel.prototype.addTrigger = function(trigger) {
-        this._triggers.push(trigger);
     };
 
     WidgetViewModel.prototype.boundDataIndex = function(dataSet) {
@@ -162,7 +163,7 @@ define([
         var self = this;
 
         if (this.boundDataIndex(dataSet) > -1) {
-            displayMessage('DataSet "' + dataSet.name + '" is already bound.');
+            displayMessage('DataSet "' + dataSet.name + '" is already bound.', MessageType.INFO);
             return;
         }
 
