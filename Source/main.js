@@ -50,3 +50,20 @@ require(['infuser'], function(infuser){
     infuser.defaults.templateSuffix = '.html';
     infuser.defaults.loadingTemplate.content = '';
 });
+
+// Set custom knockout settings
+require(['knockout'], function(ko){
+   'use strict';
+
+    ko.bindingHandlers['jQueryDisable'] = {
+        'update': function(element, valueAccessor) {
+            var value = ko.utils.unwrapObservable(valueAccessor());
+            var $element = $(element);
+            $element.prop("disabled", value);
+
+            if ($element.hasClass("ui-button")) {
+                $element.button("option", "disabled", value);
+            }
+        }
+    };
+});

@@ -169,7 +169,7 @@ define(['jquery',
                 minLength: 1,
                 regex: new RegExp('.(csv|json)$', 'i')
             }),
-            errorMessage: 'Must select a file with extension CSV or JSON.'
+            errorMessage: 'Must select a unique file with extension CSV or JSON.'
         });
 
         var filenameInvalidCharRegex = new RegExp('[^a-zA-Z0-9_\\- ]', 'g');
@@ -534,6 +534,34 @@ define(['jquery',
 
     WAVEDViewModel.prototype.openProjectTreePanel = function() {
         $('#accordion').accordion('option', 'active', projectTreePanelPosition);
+    };
+
+    WAVEDViewModel.prototype.newProjectDialogHasErrors = function() {
+        return NewProject.hasErrors(self);
+    };
+
+    WAVEDViewModel.prototype.loadProjectDialogHasErrors = function() {
+        return LoadProject.hasErrors(self);
+    };
+
+    WAVEDViewModel.prototype.saveProjectAsDialogHasErrors = function() {
+        return SaveProject.hasErrors(self);
+    };
+
+    WAVEDViewModel.prototype.actionDialogHasErrors = function() {
+        return ActionHelper.hasErrors(self);
+    };
+
+    WAVEDViewModel.prototype.eventDialogHasErrors = function() {
+        return EventHelper.hasErrors(self);
+    };
+
+    WAVEDViewModel.prototype.uploadDataDialogHasErrors = function() {
+        return UploadData.hasErrors(self);
+    };
+
+    WAVEDViewModel.prototype.dataSubsetDialogHasErrors = function() {
+        return DataSubsetHelper.hasErrors(self);
     };
 
     Object.defineProperties(WAVEDViewModel.prototype, {

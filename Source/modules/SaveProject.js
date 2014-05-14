@@ -5,12 +5,14 @@ define([
         'jquery',
         './ReadData',
         'models/Constants/MessageType',
-        'util/displayMessage'
+        'util/displayMessage',
+        'knockout',
     ], function(
         $,
         ReadData,
         MessageType,
-        displayMessage) {
+        displayMessage,
+        ko) {
     'use strict';
 
     var SaveProject = {
@@ -32,22 +34,33 @@ define([
                 width: 400,
                 modal: true,
                 buttons: {
-                    'Save': function() {
-                        if (!viewModel.saveProjectAsName.error) {
-                            self.saveProjectAs(projectSaved, viewModel);
-                            $.when(projectSaved).done(function() {
-                                saveProjectAsDialog.dialog('close');
-                            });
-                        }
-                        else {
-                            viewModel.saveProjectAsName.message = viewModel.saveProjectAsName.errorMessage;
-                        }
+                    'Save': {
+                        text: 'Save',
+                        'data-bind': 'jQueryDisable: saveProjectAsDialogHasErrors()',
+                        click:  function() {
+                            if (!viewModel.saveProjectAsName.error) {
+                                self.saveProjectAs(projectSaved, viewModel);
+                                $.when(projectSaved).done(function() {
+                                    saveProjectAsDialog.dialog('close');
+                                });
+                            }
+                            else {
+                                viewModel.saveProjectAsName.message = viewModel.saveProjectAsName.errorMessage;
+                            }
+                        },
+                        create: function() {
+                            ko.applyBindings(viewModel, this);
+                        },
                     },
                     'Cancel': function() {
                         saveProjectAsDialog.dialog('close');
                     }
                 }
             });
+        },
+
+        hasErrors: function(viewModel) {
+            return viewModel.saveProjectAsName.error;
         },
 
         saveProject: function(projectSaved, viewModel) {
