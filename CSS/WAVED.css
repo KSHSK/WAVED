@@ -48,8 +48,16 @@ textarea:disabled {
 	float: right;
 }
 
+.padding5 {
+	padding: 5px;
+}
+
 .padding15 {
 	padding: 15px;
+}
+
+.padding-vertical5 {
+    padding: 5px 0px;
 }
 
 .marginBottom10 {
@@ -214,6 +222,28 @@ textarea:disabled {
     display: inline-block;
 }
 
+.center {
+    text-align: center;
+}
+
+.table {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.table-row {
+    display: table-row;
+}
+
+.table-cell {
+    display: table-cell;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
 .dirty {
     color: #E63241;
     font-family: arial;
@@ -232,7 +262,7 @@ textarea:disabled {
 }
 
 td.button-cell {
-    text-align: center
+    text-align: center;
 }
 
 table.dataTable#project-list tr.odd { background-color: #e8e8e8; }
@@ -240,3 +270,8 @@ table.dataTable#project-list tr.even { background-color: white; }
 table.dataTable#project-list tr.odd td { background-color: inherit; }
 table.dataTable#project-list tr.even td { background-color: inherit; }
 table.dataTable#project-list tr.row_selected td { background-color: #aaaaaa; }
+
+
+#toast-container>div {
+    opacity: 1;
+}

@@ -8,12 +8,16 @@ require.config({
         TrafficCop: '../ThirdParty/knockout/koExternalTemplateEngine/TrafficCop',
         koExternalTemplateEngine: '../ThirdParty/knockout/koExternalTemplateEngine/koExternalTemplateEngine-amd',
         d3: '../ThirdParty/d3/d3.v3',
-        DataTables: '../ThirdParty/DataTables/js/jquery.dataTables.min'
+        DataTables: '../ThirdParty/DataTables/js/jquery.dataTables.min',
+        toastr: '../ThirdParty/toastr/toastr.min'
     },
 
     shim: {
         'jqueryUI': {
             'exports': '$',
+            deps: ['jquery']
+        },
+        'toastr' : {
             deps: ['jquery']
         },
         'TrafficCop': {
