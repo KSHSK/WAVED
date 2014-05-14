@@ -1,9 +1,11 @@
 /* global console*/
 define(['jquery',
         'knockout',
-        'models/Constants/ActionType',
         'models/Action/Action',
+        'models/Constants/ActionType',
         'models/Constants/EventType',
+        'models/Constants/ComparisonOperator',
+        'models/Constants/LogicalOperator',
         'models/Event/Event',
         'models/GoogleAnalytics',
         'models/ProjectViewModel',
@@ -11,9 +13,12 @@ define(['jquery',
         'models/Property/StringProperty',
         'models/Widget/Widget',
         'models/Widget/ButtonWidget/Button',
+        'models/Widget/TextBlockWidget/TextBlock',
+        'models/Widget/USMapWidget/USMap',
         'models/ProjectTree',
         'modules/ActionHelper',
         'modules/EventHelper',
+        'modules/DataSubsetHelper',
         'modules/NewProject',
         'modules/LoadProject',
         'modules/SaveProject',
@@ -24,19 +29,21 @@ define(['jquery',
         'modules/PropertyChangeSubscriber',
         'modules/HistoryMonitor',
         'modules/UniqueTracker',
-        'models/Widget/TextBlockWidget/TextBlock',
-        'models/Widget/USMapWidget/USMap',
+        'util/getBasename',
         'util/defined',
         'util/defaultValue',
+        'util/displayMessage',
         'util/createValidator',
         'util/subscribeObservable',
         'util/getNamePropertyInstance'
     ], function(
         $,
         ko,
-        ActionType,
         Action,
+        ActionType,
         EventType,
+        ComparisonOperator,
+        LogicalOperator,
         Event,
         GoogleAnalytics,
         ProjectViewModel,
@@ -44,9 +51,12 @@ define(['jquery',
         StringProperty,
         Widget,
         Button,
+        TextBlock,
+        USMap,
         ProjectTree,
         ActionHelper,
         EventHelper,
+        DataSubsetHelper,
         NewProject,
         LoadProject,
         SaveProject,
@@ -57,10 +67,10 @@ define(['jquery',
         PropertyChangeSubscriber,
         HistoryMonitor,
         UniqueTracker,
-        TextBlock,
-        USMap,
+        getBasename,
         defined,
         defaultValue,
+        displayMessage,
         createValidator,
         subscribeObservable,
         getNamePropertyInstance) {
@@ -78,11 +88,15 @@ define(['jquery',
         this._lastSaveIndex = undefined;
         this.resetHistory();
 
+        // Used to know when to display DataSet vs DataSubset for preview.
+        this.dataSetToPreview = '';
+
         this.disableOpeningPropertiesPanel = false;
 
         this._projectList = [];
         this._selectedComponent = '';
         this._selectedDataSet = '';
+        this._selectedDataSubset = '';
         this._selectedBoundData = '';
 
         // Create the HistoryMonitor singleton that everything else will use.
@@ -118,20 +132,34 @@ define(['jquery',
         }
 
         this.actionTypes = [];
-        for (var key in ActionType) {
-            this.actionTypes.push(ActionType[key]);
+        for (var actionKey in ActionType) {
+            this.actionTypes.push(ActionType[actionKey]);
         }
 
+        this.comparisonOperators = [];
+        for (var comparisonOpKey in ComparisonOperator) {
+            this.comparisonOperators.push(ComparisonOperator[comparisonOpKey]);
+        }
+
+        this.logicalOperators = [];
+        for (var logicalOpKey in LogicalOperator) {
+            this.logicalOperators.push(LogicalOperator[logicalOpKey]);
+        }
+
+        // New Project
         this.newProjectName = getNamePropertyInstance('Project Name:');
 
+        // Save Project As
         this.saveProjectAsName = getNamePropertyInstance('Project Name:');
 
+        // Load Project
         this.loadProjectName = new ArrayProperty({
             displayName: 'Project Name:',
             value: '',
             options: this.projectList
         });
 
+        // Upload Data File
         this.uploadDataName = getNamePropertyInstance('Name:');
 
         this.uploadDataFile = new StringProperty({
@@ -144,6 +172,18 @@ define(['jquery',
             errorMessage: 'Must select a unique file with extension CSV or JSON.'
         });
 
+        var filenameInvalidCharRegex = new RegExp('[^a-zA-Z0-9_\\- ]', 'g');
+
+        // Update the upload data name based on the filename.
+        subscribeObservable(self.uploadDataFile, '_value', function(newFilename) {
+            if (newFilename !== '') {
+                var originalName = getBasename(newFilename).split('.')[0];
+                var validName = originalName.replace(filenameInvalidCharRegex, '');
+                self.uploadDataName.value = validName;
+            }
+        });
+
+        // Action Editor
         this.selectedActionName = getNamePropertyInstance('Action Name');
         this.selectedAction = undefined;
         this.selectedActionType = '';
@@ -151,12 +191,20 @@ define(['jquery',
         this.actionEditorAffectedWidgetError = false;
         this.actionEditorDataSet = undefined;
 
+        // Event Editor
         this.selectedEventName = getNamePropertyInstance('Event Name');
         this.selectedEvent = undefined;
         this.eventEditorTriggeringWidget = undefined;
         this.eventEditorTriggeringWidgetError = false;
         this.selectedEventType = undefined;
         this.selectedEventActions = [];
+
+        // Data Subset Editor
+        this.dataSubsetEditorName = getNamePropertyInstance();
+        this.dataSubsetEditorDataSource = undefined;
+        this.dataSubsetEditorDataSourceError = undefined;
+        this.dataSubsetEditorConditions = [];
+        this.dataSubsetEditorConditionCount = 0;
 
         ko.track(this);
 
@@ -344,12 +392,52 @@ define(['jquery',
             return;
         }
 
+        this.dataSetToPreview = this.selectedDataSet;
+
         $('#preview-data-dialog').dialog({
             height: 'auto',
             width: 'auto',
             modal: true,
-            title: 'Preview Data for "' + this.selectedDataSet.getNameAndFilename() + '"'
+            title: 'Preview Data for "' + this.selectedDataSet.displayName + '"'
         });
+    };
+
+    WAVEDViewModel.prototype.previewDataSubset = function() {
+        if (!defined(this.selectedDataSubset)) {
+            return;
+        }
+
+        this.dataSetToPreview = this.selectedDataSubset;
+
+        $('#preview-data-dialog').dialog({
+            height: 'auto',
+            width: 'auto',
+            modal: true,
+            title: 'Preview Data for "' + this.selectedDataSubset.displayName + '"'
+        });
+    };
+
+    WAVEDViewModel.prototype.addDataSubset = function() {
+        if (self.currentProject.unmarkedDataSets.length === 0) {
+            displayMessage('Must upload a Data Source before creating a Data Subset.');
+            return;
+        }
+
+        DataSubsetHelper.addDataSubset(self);
+    };
+
+    WAVEDViewModel.prototype.editDataSubset = function() {
+        DataSubsetHelper.editDataSubset(self);
+    };
+
+    WAVEDViewModel.prototype.removeSelectedDataSubset = function() {
+        this.currentProject.removeDataSet(this.selectedDataSubset);
+    };
+
+    WAVEDViewModel.prototype.dataSubsetConditionChange = function(index) {
+        setTimeout(function() {
+            DataSubsetHelper.dataSubsetConditionChange(self, index);
+        }, 0);
     };
 
     WAVEDViewModel.prototype.addAction = function() {
@@ -514,6 +602,14 @@ define(['jquery',
                 this._selectedDataSet = value;
             }
         },
+        selectedDataSubset: {
+            get: function() {
+                return this._selectedDataSubset;
+            },
+            set: function(value) {
+                this._selectedDataSubset = value;
+            }
+        },
         selectedBoundData: {
             get: function() {
                 return this._selectedBoundData;
@@ -529,8 +625,6 @@ define(['jquery',
                     return [];
                 }
 
-                // TODO: Make sure use of 'unmarkedDataSets' works after DataSubsets are implemented
-                // since implementation of that function could change at that point.
                 var dataSets = this.currentProject.unmarkedDataSets;
                 var boundDataSets = defaultValue(this.selectedComponent.viewModel.boundData, []);
 

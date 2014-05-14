@@ -1,5 +1,5 @@
 <div>
-    <span data-bind="text:displayName"></span>
-    <select data-bind="options: options, optionsText: getOptionText, optionsCaption: 'Choose an option...', value: displayValue, valueAllowUnset: true"></select>
+    <span data-bind="text:displayName, visible: visible"></span>
+    <select data-bind="options: options, optionsText: getOptionText, optionsCaption: optionsCaption, value: displayValue, valueAllowUnset: true, visible: visible"></select>
     <div class="error" data-bind="visible: error, html: message"></div>
 </div>
