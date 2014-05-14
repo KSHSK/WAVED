@@ -35,11 +35,18 @@ define([
         autoOpen: false
     });
 
-    var openDialog = function(saveCallback, cancelCallback) {
+    var openDialog = function(saveCallback, cancelCallback, viewModel) {
         dataSubsetDialog.dialog({
             autoOpen: true,
             buttons: {
-                'Save': saveCallback,
+                'Save': {
+                    text: 'Save',
+                    'data-bind': 'jQueryDisable: dataSubsetDialogHasErrors()',
+                    click: saveCallback,
+                    create: function() {
+                        ko.applyBindings(viewModel, this);
+                    },
+                },
                 'Cancel': cancelCallback
             }
         });
@@ -93,7 +100,7 @@ define([
                 dataSubsetDialog.dialog('close');
             };
 
-            openDialog(saveCallback, cancelCallback);
+            openDialog(saveCallback, cancelCallback, viewModel);
         },
         editDataSubset: function(viewModel) {
             var self = this;
@@ -136,7 +143,7 @@ define([
                 dataSubsetDialog.dialog('close');
             };
 
-            openDialog(saveCallback, cancelCallback);
+            openDialog(saveCallback, cancelCallback, viewModel);
         },
         updateEditChanges: function(viewModel) {
             var dataSubset = viewModel.selectedDataSubset;
@@ -181,7 +188,6 @@ define([
 
             // Check that the DataSubset name is valid.
             if (viewModel.dataSubsetEditorName.error) {
-                viewModel.dataSubsetEditorName.message = viewModel.dataSubsetEditorName.errorMessage;
                 error = true;
             }
 
