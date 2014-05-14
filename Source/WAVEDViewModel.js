@@ -560,6 +560,10 @@ define(['jquery',
         return UploadData.hasErrors(self);
     };
 
+    WAVEDViewModel.prototype.dataSubsetDialogHasErrors = function() {
+        return DataSubsetHelper.hasErrors(self);
+    };
+
     Object.defineProperties(WAVEDViewModel.prototype, {
         dirty: {
             get: function() {
