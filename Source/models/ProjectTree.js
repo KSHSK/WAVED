@@ -22,6 +22,8 @@ define(['knockout',
                 return wavedViewModel.removeSelectedComponent();
             case self.SelectedTypeEnum.DATA:
                 return wavedViewModel.markDataForDeletion();
+            case self.SelectedTypeEnum.DATA_SUBSET:
+                return wavedViewModel.removeSelectedDataSubset();
             case self.SelectedTypeEnum.ACTION:
                 return wavedViewModel.removeSelectedAction();
             case self.SelectedTypeEnum.EVENT:
@@ -41,6 +43,8 @@ define(['knockout',
                 return wavedViewModel.selectedComponent === value;
             case self.SelectedTypeEnum.DATA:
                 return wavedViewModel.selectedDataSet === value;
+            case self.SelectedTypeEnum.DATA_SUBSET:
+                return wavedViewModel.selectedDataSubset === value;
             case self.SelectedTypeEnum.ACTION:
                 return wavedViewModel.selectedAction === value;
             case self.SelectedTypeEnum.EVENT:
@@ -60,6 +64,9 @@ define(['knockout',
             case self.SelectedTypeEnum.DATA:
                 wavedViewModel.selectedDataSet = value;
                 break;
+            case self.SelectedTypeEnum.DATA_SUBSET:
+                wavedViewModel.selectedDataSubset = value;
+                break;
             case self.SelectedTypeEnum.ACTION:
                 wavedViewModel.selectedAction = value;
                 break;
@@ -76,8 +83,9 @@ define(['knockout',
                     PROJECT: 0,
                     COMPONENT: 1,
                     DATA: 2,
-                    ACTION: 3,
-                    EVENT: 4
+                    DATA_SUBSET: 3,
+                    ACTION: 4,
+                    EVENT: 5
                 };
             }
         },
