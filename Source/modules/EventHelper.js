@@ -4,6 +4,7 @@ define([
         './HistoryMonitor',
         'models/Event/Event',
         'util/defined',
+        'models/Constants/MessageType',
         'util/displayMessage',
         'knockout',
         'jquery'
@@ -13,6 +14,7 @@ define([
         HistoryMonitor,
         Event,
         defined,
+        MessageType,
         displayMessage,
         ko,
         $
@@ -48,7 +50,7 @@ define([
                             if (!UniqueTracker.isValueUnique(Event.getUniqueNameNamespace(),
                                 viewModel.selectedEventName.value)) {
 
-                                displayMessage('The name "' + viewModel.selectedEventName.value + '" is already in use.');
+                                displayMessage('The name "' + viewModel.selectedEventName.value + '" is already in use.', MessageType.WARNING);
                                 return;
                             }
 
@@ -99,7 +101,7 @@ define([
                         if (!UniqueTracker.isValueUnique(Event.getUniqueNameNamespace(),
                             viewModel.selectedEventName.value, viewModel.selectedEvent)) {
 
-                            displayMessage('The name "' + viewModel.selectedEventName.value + '" is already in use.');
+                            displayMessage('The name "' + viewModel.selectedEventName.value + '" is already in use.', MessageType.WARNING);
                             return;
                         }
 

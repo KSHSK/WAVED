@@ -6,6 +6,7 @@ define([
         'WAVEDViewModel',
         './SaveProject',
         './UniqueTracker',
+        'models/Constants/MessageType',
         'models/Data/DataSet',
         'util/displayMessage',
         'knockout',
@@ -14,6 +15,7 @@ define([
         WAVEDViewModel,
         SaveProject,
         UniqueTracker,
+        MessageType,
         DataSet,
         displayMessage,
         ko) {
@@ -57,7 +59,7 @@ define([
                             if (!UniqueTracker.isValueUnique(DataSet.getUniqueNameNamespace(),
                                 viewModel.uploadDataName.value)) {
 
-                                displayMessage('The name "' + viewModel.uploadDataName.value + '" is already in use.');
+                                displayMessage('The name "' + viewModel.uploadDataName.value + '" is already in use.', MessageType.WARNING);
                                 return;
                             }
 
@@ -107,7 +109,7 @@ define([
             var file = self.uploadDataFileInput[0].files[0];
             if (file === undefined) {
                 // Just a precaution, but should never be called.
-                displayMessage('No file has been selected');
+                displayMessage('No file has been selected', MessageType.WARNING);
                 return;
             }
 
@@ -144,7 +146,7 @@ define([
                     }
                     else {
                         // Display error to user.
-                        displayMessage(data.errorMessage);
+                        displayMessage(data.errorMessage, MessageType.ERROR);
                     }
                 }
 
