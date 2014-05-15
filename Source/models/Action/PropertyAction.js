@@ -65,6 +65,10 @@ define([
                         }
                     } else {
                         self._target.viewModel[key].value = self._newValues[key];
+
+                        // Figure out nested props here
+                        // TODO: This is where the nested props get set, we need to look for the correct object and sets its properties accordingly
+                        console.log(self._newValues[key]);
                     }
                 }
             };
