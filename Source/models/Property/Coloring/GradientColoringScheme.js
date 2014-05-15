@@ -102,6 +102,10 @@ define([
         return ColoringSchemeType.GRADIENT_COLORING;
     };
 
+    GradientColoringScheme.prototype.getDisplayText = function() {
+        return 'Gradient coloring';
+    };
+
     Object.defineProperties(GradientColoringScheme.prototype, {
        properties: {
            get: function() {

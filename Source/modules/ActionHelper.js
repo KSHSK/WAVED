@@ -89,6 +89,23 @@ define([
                             if (propertyIndex > -1) {
                                 if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
                                     actionValues[property] = properties[propertyIndex].displayValue;
+                                    continue; // We don't need to check for nested stuff since the top level changed
+                                }
+
+                                // Check for changes in nested properties
+                                if (defined(properties[propertyIndex].getSubscribableNestedProperties())) {
+                                    // This means we have to look at the displayValue of the currently selected thing...
+                                    properties[propertyIndex].displayValue.properties.forEach(function(value) {
+                                        if (value.displayValue !== value.originalValue){
+                                            // We have to check for undefined here because we can't break out of forEach
+                                            if (actionValues[property] === undefined) {
+                                                actionValues[property] = properties[propertyIndex].displayValue;
+
+                                                // This is for knowing what type the object is so it can be identified later
+                                                actionValues[property].type = properties[propertyIndex].displayValue.getType();
+                                            }
+                                        }
+                                    });
                                 }
                             }
                         }
@@ -130,9 +147,12 @@ define([
                 widget.properties[index].displayValue = widget.properties[index].originalValue;
             }
 
+            // Update any modified values
             for (var key in viewModel.selectedAction.newValues) {
                 widget[key].displayValue = viewModel.selectedAction.newValues[key];
             }
+
+            // TODO: Look at nested, do a diff, only change the ones that need to be changed. Might not need to happen? Seems to be working.
 
             self.actionDialog.dialog({
                 resizable: false,
@@ -187,6 +207,23 @@ define([
                 if (propertyIndex > -1) {
                     if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
                         actionValues[property] = properties[propertyIndex].displayValue;
+                        continue;
+                    }
+
+                    // Check for changes in nested properties
+                    if (defined(properties[propertyIndex].getSubscribableNestedProperties())) {
+                        // This means we have to look at the displayValue of the currently selected thing...
+                        properties[propertyIndex].displayValue.properties.forEach(function(value) {
+                            if (value.displayValue !== value.originalValue){
+                                // We have to check for undefined here because we can't break out of forEach
+                                if (actionValues[property] === undefined) {
+                                    actionValues[property] = properties[propertyIndex].displayValue;
+
+                                    // This is for knowing what type the object is so it can be identified later
+                                    actionValues[property].type = properties[propertyIndex].displayValue.getType();
+                                }
+                            }
+                        });
                     }
                 }
             }
@@ -204,6 +241,8 @@ define([
                 if (action.applyAutomatically) {
                     action.apply();
                 }
+
+                // TODO: Look into whether this needs to be changed for nested properties
             }
 
             var historyMonitor = HistoryMonitor.getInstance();

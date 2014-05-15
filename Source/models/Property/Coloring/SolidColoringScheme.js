@@ -38,6 +38,10 @@ define([
         return ColoringSchemeType.SOLID_COLORING;
     };
 
+    SolidColoringScheme.prototype.getDisplayText = function() {
+        return 'Solid coloring';
+    };
+
     Object.defineProperties(SolidColoringScheme.prototype, {
         properties: {
             get: function() {

@@ -19,6 +19,8 @@ define([
 
         ColoringScheme.call(this, state);
 
+        this.name = 'FourColoringScheme';
+
         // All colors default to black
         this.color1 = new StringProperty({
             displayName: 'Color #1',
@@ -53,6 +55,10 @@ define([
 
     FourColoringScheme.prototype.getType = function() {
         return ColoringSchemeType.FOUR_COLORING;
+    };
+
+    FourColoringScheme.prototype.getDisplayText = function() {
+        return 'Four coloring';
     };
 
     Object.defineProperties(FourColoringScheme.prototype, {
