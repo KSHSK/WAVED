@@ -1,12 +1,16 @@
 define([
         'models/Action/Action',
         'models/Data/DataSubset',
+        'models/Constants/ActionType',
+        'models/Data/Condition',
         'util/defined',
         'knockout',
         'jquery'
     ],function(
         Action,
         DataSubset,
+        ActionType,
+        Condition,
         defined,
         ko,
         $
@@ -16,11 +20,10 @@ define([
     var QueryAction = function(state) {
         Action.call(this, state);
 
-        // TODO: Validation, etc
-        // TODO: target visibility conflicts with Action _target visibility, issue?
-        this._target = state.target; // DataSubset
-        // TODO: Rename this to something that makes more sense.
-        this._newValues = state.newValues; // QueryNode
+        this._dataSubset = undefined; // DataSubset
+        this._conditions = []; // Condition[]
+
+        this.setState(state);
 
         ko.track(this);
     };
@@ -29,20 +32,46 @@ define([
      * Static method that returns the type String for this class.
      */
     QueryAction.getType = function() {
-        return 'QueryAction';
+        return ActionType.QUERY_ACTION;
     };
 
     QueryAction.prototype = Object.create(Action.prototype);
 
-    QueryAction.getType = function() {
-        return 'QueryAction';
-    };
+    QueryAction.prototype.getType = function() {
+        return QueryAction.getType();
+    }
+
+    Object.defineProperties(QueryAction.prototype, {
+        dataSubset: {
+            get: function() {
+                return this._dataSubset;
+            },
+            set: function(dataSubset) {
+                this._dataSubset = dataSubset;
+            }
+        },
+        conditions: {
+            get: function() {
+                return this._conditions;
+            },
+            set: function(conditions) {
+                var self = this;
+                this._conditions.length = 0;
+                conditions.forEach(function(condition) {
+                    self._conditions.push(new Condition(condition.getState()));
+                });
+            }
+        }
+    });
 
     QueryAction.prototype.setState = function(state) {
+        // TODO: Validation, etc
+        if (defined(state.dataSubset)) {
+            this.dataSubset = state.dataSubset;
+        }
 
-        if (defined(state.newValues)) {
-            // TODO: Determine how to handle QueryNode
-            this._newValues = state.newValues;
+        if (defined(state.conditions)) {
+            this.conditions = state.conditions;
         }
 
         Action.prototype.setState.call(this, state);
@@ -51,7 +80,8 @@ define([
     QueryAction.prototype.getState = function() {
         var state = Action.prototype.getState.call(this);
         state.type = QueryAction.getType();
-        state.target = this._target.viewModel.name.value;
+        state.dataSubset = this._dataSubset;
+        state.conditions = this._conditions;
         return state;
     };
 

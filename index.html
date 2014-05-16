@@ -408,9 +408,9 @@
             
             <!-- ko if: selectedActionType === 'Query Action' -->
             <div class="marginBottom10">
-                <label class="required" for="action-editor-dataset">Dataset:</label> 
+                <label class="required" for="action-editor-dataset">Data Subset:</label>
                 <select id="action-editor-dataset" class="marginBottom10 width100"
-                        data-bind="optionsCaption: 'None',
+                        data-bind="
                         options: currentProject.dataSubsets,
                           optionsText: function(dataSet) {
                                return dataSet.name;
@@ -434,7 +434,6 @@
             </div>
             <!-- /ko -->
             <!-- ko if: selectedActionType === 'Query Action' && actionEditorDataSubset -->
-            <!-- TODO: Query Action Options -->
             <div class="center" data-bind="foreach: actionDataSubsetEditorConditions">
                 <!-- ko if: $index() < $parent.actionDataSubsetEditorConditionCount -->
                 <hr/>
