@@ -6,6 +6,7 @@ define([
         'models/Action/PropertyAction',
         'models/Action/QueryAction',
         'models/Constants/ActionType',
+        'models/Data/Condition',
         'util/defined',
         'models/Constants/MessageType',
         'util/displayMessage',
@@ -19,6 +20,7 @@ define([
         PropertyAction,
         QueryAction,
         ActionType,
+        Condition,
         defined,
         MessageType,
         displayMessage,
@@ -41,7 +43,7 @@ define([
             viewModel.actionEditorAffectedWidgetError = false;
 
             // Unselect DataSet.
-            viewModel.actionEditorDataSet = undefined;
+            viewModel.actionEditorDataSubset = undefined;
 
             $('#actionApplyAutomatically').attr('checked', false);
         },
@@ -252,6 +254,38 @@ define([
             }
 
             return error;
+        },
+        actionDataSubsetConditionChange: function(viewModel, index) {
+            var currentCondition = viewModel.actionDataSubsetEditorConditions[index];
+
+            if (defined(currentCondition.logicalOperator)) {
+                // Only move to next condition if the logical operator is defined.
+                // This means that AND or OR has been selected.
+
+                if (index === viewModel.actionDataSubsetEditorConditions.length - 1) {
+                    // Reached limit, so add new condition.
+                    viewModel.actionDataSubsetEditorConditions.push(new Condition());
+                    viewModel.actionDataSubsetEditorConditionCount++;
+                }
+                else {
+                    // Display all conditions until an undefined logical operator is found.
+                    for (var i = index; i < viewModel.actionDataSubsetEditorConditions.length; i++) {
+                        var condition = viewModel.actionDataSubsetEditorConditions[i];
+
+                        if (!defined(condition.logicalOperator)) {
+                            break;
+                        }
+
+                        viewModel.actionDataSubsetEditorConditionCount++;
+                    }
+                }
+            }
+            else {
+                if (index < viewModel.actionDataSubsetEditorConditionCount - 1) {
+                    // Hide conditions that aren't needed anymore.
+                    viewModel.actionDataSubsetEditorConditionCount = index + 1;
+                }
+            }
         }
     };
 
