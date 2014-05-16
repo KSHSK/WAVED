@@ -20,6 +20,7 @@ define([
 
     var DEFAULT_WIDTH = 750;
     var DEFAULT_HEIGHT = 600;
+    var DEFAULT_COLOR = 'White';
 
     var WorkspaceViewModel = function(state) {
         ComponentViewModel.call(this, state);
@@ -54,7 +55,7 @@ define([
         UniqueTracker.addValueIfUnique(ComponentViewModel.getUniqueNameNamespace(), this.name.value, this);
         this.color = new StringProperty({
             displayName: 'Color',
-            value: 'White'
+            value: DEFAULT_COLOR
         });
 
         // Override so workspace is always on the bottom
@@ -70,25 +71,31 @@ define([
     WorkspaceViewModel.prototype = Object.create(ComponentViewModel.prototype);
 
     WorkspaceViewModel.prototype.resetWorkspace = function() {
-        this.width.value = DEFAULT_WIDTH;
-        this.height.value = DEFAULT_HEIGHT;
+        this.width.originalValue = DEFAULT_WIDTH;
+        this.height.originalValue = DEFAULT_HEIGHT;
+        this.color.originalValue = DEFAULT_COLOR;
     };
 
     WorkspaceViewModel.prototype.getState = function() {
         var state = ComponentViewModel.prototype.getState.call(this);
         state.width = this.width.getState();
         state.height = this.height.getState();
+        state.color = this.color.getState();
 
         return state;
     };
 
     WorkspaceViewModel.prototype.setState = function(state) {
         if (defined(state.width)) {
-            this.width.originalValue = state.width.value;
+            this.width.setState(state.width);
         }
 
         if (defined(state.height)) {
-            this.height.originalValue = state.height.value;
+            this.height.setState(state.height);
+        }
+
+        if (defined(state.color)) {
+            this.color.setState(state.color);
         }
     };
 

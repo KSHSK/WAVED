@@ -126,23 +126,19 @@ define([
         ComponentViewModel.prototype.setState.call(this, state);
 
         if (defined(state.width)) {
-            this.width.originalValue = state.width.value;
+            this.width.setState(state.width);
         }
 
         if (defined(state.height)) {
-            this.height.originalValue = state.height.value;
+            this.height.setState(state.height);
         }
 
         if (defined(state.x)) {
-            this.x.originalValue = state.x.value;
+            this.x.setState(state.x);
         }
 
         if (defined(state.y)) {
-            this.y.originalValue = state.y.value;
-        }
-
-        if (defined(state.elements)) {
-            this._elementNames = state.elements;
+            this.y.setState(state.y);
         }
 
         if (defined(state.boundData)) {
