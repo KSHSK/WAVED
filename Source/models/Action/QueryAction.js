@@ -17,11 +17,12 @@ define([
     ){
     'use strict';
 
-    var QueryAction = function(state) {
+    var QueryAction = function(state, getDataSubset) {
         Action.call(this, state);
 
         this._dataSubset = undefined; // DataSubset
         this._conditions = []; // Condition[]
+        this.getDataSubset = getDataSubset;
 
         this.setState(state);
 
@@ -65,13 +66,17 @@ define([
     });
 
     QueryAction.prototype.setState = function(state) {
+        var self = this;
         // TODO: Validation, etc
         if (defined(state.dataSubset)) {
-            this.dataSubset = state.dataSubset;
+            this.dataSubset = this.getDataSubset(state.dataSubset);
         }
 
         if (defined(state.conditions)) {
-            this.conditions = state.conditions;
+            this.conditions.length = 0;
+            state.conditions.forEach(function(condition) {
+                self.conditions.push(new Condition(condition));
+            });
         }
 
         Action.prototype.setState.call(this, state);
@@ -80,8 +85,10 @@ define([
     QueryAction.prototype.getState = function() {
         var state = Action.prototype.getState.call(this);
         state.type = QueryAction.getType();
-        state.dataSubset = this._dataSubset;
-        state.conditions = this._conditions;
+        state.dataSubset = this._dataSubset.name;
+        state.conditions = this._conditions.map(function(condition) {
+            return condition.getState();
+        });
         return state;
     };
 

@@ -290,7 +290,7 @@ define([
                     action = new PropertyAction(itemState);
                 }
                 else if (itemState.type === QueryAction.getType()) {
-                    action = new QueryAction(itemState);
+                    action = new QueryAction(itemState, self.getDataSet.bind(self));
                 }
                 else {
                     // Invalid state.
