@@ -192,7 +192,7 @@ define(['jquery',
         this.actionEditorAffectedWidget = undefined;
         this.actionEditorAffectedWidgetError = false;
         this._actionEditorDataSubset = undefined;
-        this.actionDataSubsetEditorConditions = [];
+        this._actionDataSubsetEditorConditions = [];
         this.actionDataSubsetEditorConditionCount = 0;
 
         // Event Editor
@@ -638,18 +638,26 @@ define(['jquery',
                 return this._actionEditorDataSubset;
             },
             set: function(value) {
-                var self = this;
                 this._actionEditorDataSubset = value;
                 if (defined(this._actionEditorDataSubset)) {
-                    // Make a deep copy of the array so that it's not referencing the same object.
-                    this.actionDataSubsetEditorConditions.length = 0;
-                    this.actionEditorDataSubset.query.conditions.forEach(function(condition) {
-                        self.actionDataSubsetEditorConditions.push(new Condition(condition.getState()));
-                    });
-
-                    this.actionDataSubsetEditorConditionCount = this.actionDataSubsetEditorConditions.length;
+                    this.actionDataSubsetEditorConditions = this.actionEditorDataSubset.query.conditions;
                 }
+            }
+        },
 
+        actionDataSubsetEditorConditions: {
+            get: function() {
+                return this._actionDataSubsetEditorConditions;
+            },
+            set: function(conditions) {
+                var self = this;
+                // Make a deep copy of the array so that it's not referencing the same object.
+                this.actionDataSubsetEditorConditions.length = 0;
+                conditions.forEach(function(condition) {
+                    self.actionDataSubsetEditorConditions.push(new Condition(condition.getState()));
+                });
+
+                this.actionDataSubsetEditorConditionCount = this.actionDataSubsetEditorConditions.length;
             }
         },
 

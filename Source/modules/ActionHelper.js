@@ -42,9 +42,6 @@ define([
             // Select first Widget
             viewModel.actionEditorAffectedWidgetError = false;
 
-            // Unselect DataSet.
-            viewModel.actionEditorDataSubset = undefined;
-
             $('#actionApplyAutomatically').attr('checked', false);
         },
 
@@ -98,13 +95,22 @@ define([
                                 }
                             }
 
-                            // TODO: Handle QueryAction
-                            var action = new PropertyAction({
+                            var action;
+                            var actionState = {
                                 name: viewModel.selectedActionName.value,
-                                target: viewModel.actionEditorAffectedWidget,
-                                newValues: actionValues,
                                 applyAutomatically: $('#actionApplyAutomatically').is(':checked')
-                            });
+                            };
+
+                            if (viewModel.selectedActionType === ActionType.PROPERTY_ACTION) {
+                                actionState.target = viewModel.actionEditorAffectedWidget,
+                                actionState.newValues = actionValues,
+                                action = new PropertyAction(actionState);
+                            }
+                            else {
+                                actionState.dataSubset = viewModel.actionEditorDataSubset;
+                                actionState.conditions = viewModel.actionDataSubsetEditorConditions;
+                                action = new QueryAction(actionState);
+                            }
 
                             viewModel.currentProject.addAction(action);
                             self.closeActionDialog(viewModel);
@@ -128,19 +134,28 @@ define([
             var self = this;
             self.resetActionEditor(viewModel);
 
+            viewModel.selectedActionType = viewModel.selectedAction.getType();
             viewModel.selectedActionName.value = viewModel.selectedAction.name;
-            viewModel.actionEditorAffectedWidget = viewModel.selectedAction.target;
             $('#actionApplyAutomatically').prop('checked', viewModel.selectedAction.applyAutomatically ? true : false);
 
-            var widget = viewModel.actionEditorAffectedWidget.viewModel;
+            if (viewModel.selectedActionType === ActionType.PROPERTY_ACTION) {
+                viewModel.actionEditorAffectedWidget = viewModel.selectedAction.target;
 
-            // Set the displayValues to match those saved in the Action
-            for (var index in widget.properties) {
-                widget.properties[index].displayValue = widget.properties[index].originalValue;
+                var widget = viewModel.actionEditorAffectedWidget.viewModel;
+
+                // Set the displayValues to match those saved in the Action
+                for (var index in widget.properties) {
+                    widget.properties[index].displayValue = widget.properties[index].originalValue;
+                }
+
+                for (var key in viewModel.selectedAction.newValues) {
+                    widget[key].displayValue = viewModel.selectedAction.newValues[key];
+                }
             }
-
-            for (var key in viewModel.selectedAction.newValues) {
-                widget[key].displayValue = viewModel.selectedAction.newValues[key];
+            else {
+                viewModel.actionEditorDataSubset = viewModel.selectedAction.dataSubset;
+                viewModel.actionDataSubsetEditorConditions = viewModel.selectedAction.conditions;
+                viewModel.actionDataSubsetEditorConditionCount = viewModel.actionDataSubsetEditorConditions.length;
             }
 
             self.actionDialog.dialog({
@@ -250,7 +265,7 @@ define([
             }
             else {
                 // Check Query Action errors.
-                // TODO
+                error |= !defined(viewModel.actionEditorDataSubset);
             }
 
             return error;

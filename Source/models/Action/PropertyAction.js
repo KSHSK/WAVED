@@ -1,6 +1,7 @@
 define([
         'models/Action/Action',
         'models/Data/DataSet',
+        'models/Constants/ActionType',
         'modules/HistoryMonitor',
         'util/defined',
         'knockout',
@@ -8,6 +9,7 @@ define([
     ],function(
         Action,
         DataSet,
+        ActionType,
         HistoryMonitor,
         defined,
         ko,
@@ -20,6 +22,7 @@ define([
         Action.call(this, state);
 
         this._newValues = {};
+        this._target = undefined;
 
         this.apply = function(data) {
             var historyMonitor = HistoryMonitor.getInstance();
@@ -90,12 +93,25 @@ define([
      * Static method that returns the type String for this class.
      */
     PropertyAction.getType = function() {
-        return 'PropertyAction';
+        return ActionType.PROPERTY_ACTION;
     };
 
     PropertyAction.prototype = Object.create(Action.prototype);
 
+    PropertyAction.prototype.getType = function() {
+        return PropertyAction.getType();
+    }
+
+
     Object.defineProperties(PropertyAction.prototype, {
+        target: {
+            get: function() {
+                return this._target;
+            },
+            set: function(target) {
+                this._target = target;
+            }
+        },
         newValues: {
             get: function() {
                 return this._newValues;
@@ -108,6 +124,10 @@ define([
 
     PropertyAction.prototype.setState = function(state) {
         Action.prototype.setState.call(this, state);
+
+        if (defined(state.target)) {
+            this._target = state.target;
+        }
 
         if (defined(state.newValues)) {
             this._newValues = state.newValues;
