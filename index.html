@@ -411,11 +411,11 @@
                 <label class="required" for="action-editor-dataset">Dataset:</label> 
                 <select id="action-editor-dataset" class="marginBottom10 width100"
                         data-bind="optionsCaption: 'None',
-                        options: currentProject.dataSets, 
+                        options: currentProject.dataSubsets,
                           optionsText: function(dataSet) {
                                return dataSet.name;
                           },
-                      value: actionEditorDataSet">
+                      value: actionEditorDataSubset">
                 </select>
             </div>
             <!-- /ko -->
@@ -424,7 +424,7 @@
                 <span>Apply Automatically</span>
             </div>
         </div>
-        <div class="inline top padding15">
+        <div class="inline top padding15" style="max-width: 500px">
             <div>Options</div>
             <!-- ko if: selectedActionType === 'Property Action' && actionEditorAffectedWidget -->
             <div data-bind="foreach: actionEditorAffectedWidget.viewModel.properties">
@@ -433,9 +433,40 @@
                 <!-- /ko -->
             </div>
             <!-- /ko -->
-            <!-- ko if: selectedActionType === 'Query Action' -->
+            <!-- ko if: selectedActionType === 'Query Action' && actionEditorDataSubset -->
             <!-- TODO: Query Action Options -->
-            <!-- /ko -->
+            <div class="center" data-bind="foreach: actionDataSubsetEditorConditions">
+                <!-- ko if: $index() < $parent.actionDataSubsetEditorConditionCount -->
+                <hr/>
+                <div class="table">
+                    <div class="padding-vertical5 table-row">
+                        <div class="table-cell">
+                            <select data-bind="options: $parent.actionEditorDataSubset.dataFields, value: $data.field"></select>
+                        </div>
+                        <div class="table-cell">
+                            <select data-bind="options: $parent.comparisonOperators, value: $data.comparisonOperator"></select>
+                        </div>
+                        <div class="table-cell">
+                            <input type="text" data-bind="value: $data.value, valueUpdate: 'keyup'"/>
+                        </div>
+                    </div>
+                </div>
+
+                <hr/>
+                <div class="table">
+                    <div class="padding-vertical5 table-row">
+                        <div class="table-cell">
+                            <select data-bind="options: $parent.logicalOperators,
+                                               optionsCaption: 'END QUERY',
+                                               event: {change: $parent.actionDataSubsetConditionChange.bind($parent, $index())},
+                                               value: $data.logicalOperator">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- /ko -->
+            </div>
+        <!-- /ko -->
         </div>
     </div>
     
