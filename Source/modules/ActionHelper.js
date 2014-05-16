@@ -107,9 +107,9 @@ define([
                                 action = new PropertyAction(actionState);
                             }
                             else {
-                                actionState.dataSubset = viewModel.actionEditorDataSubset;
+                                actionState.dataSubset = viewModel.actionEditorDataSubset.name;
                                 actionState.conditions = viewModel.actionDataSubsetEditorConditions;
-                                action = new QueryAction(actionState);
+                                action = new QueryAction(actionState, viewModel.currentProject.getDataSet.bind(viewModel.currentProject));
                             }
 
                             viewModel.currentProject.addAction(action);
