@@ -93,7 +93,40 @@ define([
     };
 
     QueryAction.prototype.apply = function(data) {
-        this.dataSubset.query.currentConditions = this.conditions;
+        // Deep copy of conditions with templates so they can be replaced
+        var conditions = this.conditions.map(function(condition) {
+            return new Condition(condition.getState());
+        });
+
+        function getTemplateMatches(str) {
+            var index = 1;
+            var matches = [];
+            var templateRegex = /{{([ _.\w]+)}}/g;
+            var match;
+            while ((match = templateRegex.exec(str)) !== null) {
+                matches.push(match[index]);
+            }
+            return matches;
+        }
+
+        for (var i = 0; i < conditions.length; i++) {
+            var condition = conditions[i];
+            var templates = getTemplateMatches(condition.value);
+            for (var i = 0; i < templates.length; i++) {
+                if (defined(data.trigger) && defined(data.trigger[templates[i]])) {
+                    condition.value = condition.value.replace('{{' + templates[i]+ '}}', data.trigger[templates[i]]);
+                } else {
+                    var components = templates[i].split('.');
+                    if (components.length > 1) {
+                        if (defined(data[components[0]]) && defined(data[components[0]][components[1]])) {
+                            condition.value = condition.value.replace('{{' + templates[i]+ '}}', data[components[0]][components[1]]);
+                        }
+                    }
+                }
+            }
+        }
+
+        this.dataSubset.query.currentConditions = conditions;
         this.dataSubset.executeCurrentQuery();
     };
 
