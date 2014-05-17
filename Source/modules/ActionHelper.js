@@ -43,6 +43,9 @@ define([
             viewModel.actionEditorAffectedWidgetError = false;
 
             $('#actionApplyAutomatically').attr('checked', false);
+
+            // Force reset of data subset so that the conditions are reloaded
+            viewModel.actionEditorDataSubset = undefined;
         },
 
         closeActionDialog: function(viewModel) {
@@ -84,17 +87,6 @@ define([
                                 return;
                             }
 
-                            var actionValues = {};
-                            var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
-                            for (var property in viewModel.actionEditorAffectedWidget.viewModel) {
-                                var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
-                                if (propertyIndex > -1) {
-                                    if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
-                                        actionValues[property] = properties[propertyIndex].displayValue;
-                                    }
-                                }
-                            }
-
                             var action;
                             var actionState = {
                                 name: viewModel.selectedActionName.value,
@@ -102,6 +94,17 @@ define([
                             };
 
                             if (viewModel.selectedActionType === ActionType.PROPERTY_ACTION) {
+                                var actionValues = {};
+                                var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
+                                for (var property in viewModel.actionEditorAffectedWidget.viewModel) {
+                                    var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
+                                    if (propertyIndex > -1) {
+                                        if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
+                                            actionValues[property] = properties[propertyIndex].displayValue;
+                                        }
+                                    }
+                                }
+
                                 actionState.target = viewModel.actionEditorAffectedWidget,
                                 actionState.newValues = actionValues,
                                 action = new PropertyAction(actionState);
@@ -234,11 +237,12 @@ define([
                 };
             }
             else {
+                var limit = viewModel.actionDataSubsetEditorConditionCount;
                 var oldState = action.getState();
                 var newState = {
                     name: viewModel.selectedActionName.value,
                     dataSubset: viewModel.actionEditorDataSubset.name,
-                    conditions: viewModel.actionDataSubsetEditorConditions.map(function (condition) {
+                    conditions: viewModel.actionDataSubsetEditorConditions.slice(0, limit).map(function (condition) {
                         return new Condition(condition.getState());
                     }),
                     applyAutomatically: $('#actionApplyAutomatically').is(':checked'),
