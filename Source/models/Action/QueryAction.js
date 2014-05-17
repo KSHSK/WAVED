@@ -109,8 +109,8 @@ define([
             return matches;
         }
 
-        for (var i = 0; i < conditions.length; i++) {
-            var condition = conditions[i];
+        for (var j = 0; j < conditions.length; j++) {
+            var condition = conditions[j];
             var templates = getTemplateMatches(condition.value);
             for (var i = 0; i < templates.length; i++) {
                 if (defined(data.trigger) && defined(data.trigger[templates[i]])) {
