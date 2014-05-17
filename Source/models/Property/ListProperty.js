@@ -112,6 +112,12 @@ define([
         return state;
     };
 
+    ListProperty.prototype.getDisplayState = function() {
+        var displayState = Property.prototype.getDisplayState.call(this);
+        displayState.options = this.options;
+        return displayState;
+    };
+
     ListProperty.prototype.setState = function(state) {
         this._options = defaultValue(state.options, []);
         this.getOptionText = state.getOptionText;

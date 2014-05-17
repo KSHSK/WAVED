@@ -116,6 +116,16 @@ define([
         }
     });
 
+    GlyphSizeSelectionProperty.prototype.getDisplayState = function() {
+        var displayState = Property.prototype.getDisplayState.call(this);
+
+        if(defined(this._displayValue)) {
+            displayState.value = this._displayValue.getDisplayState();
+        }
+
+        return displayState;
+    };
+
     GlyphSizeSelectionProperty.prototype.getState = function() {
         // This actually sets state.value to an object, we don't want that
         var state = Property.prototype.getState.call(this);

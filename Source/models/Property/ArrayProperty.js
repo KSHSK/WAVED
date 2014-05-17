@@ -2,12 +2,14 @@ define([
         './Property',
         'util/defined',
         'util/defaultValue',
+        'util/subscribeObservable',
         'models/Constants/PropertyTemplateName',
         'knockout'
     ],function(
         Property,
         defined,
         defaultValue,
+        subscribeObservable,
         PropertyTemplateName,
         ko
     ){
@@ -24,6 +26,7 @@ define([
         this._displayTemplateName = PropertyTemplateName.ARRAY_DISPLAY;
 
         this._options = defaultValue(opts.options, []);
+        this._displayOptions = defaultValue(opts.options, []);
 
         // Set a default isValidValue function if necessary.
         if (!defined(opts.validValue)) {
@@ -54,6 +57,12 @@ define([
         this.setState(opts);
 
         ko.track(this);
+
+        // When the options change, make sure to change the displayOptions as well
+        var self = this;
+        subscribeObservable(this, '_options', function(){
+            self._displayOptions = self._options;
+        });
     };
 
     ArrayProperty.prototype = Object.create(Property.prototype);
@@ -68,6 +77,20 @@ define([
                     this._options = options;
                     if (options.indexOf(this._value) === -1) {
                         this._value = '';
+                        this._displayValue = '';
+                        this.error = true;
+                    }
+                }
+            }
+        },
+        displayOptions: {
+            get: function() {
+                return this._displayOptions;
+            },
+            set: function(displayOptions) {
+                if (Array.isArray(displayOptions)) {
+                    this._displayOptions = displayOptions;
+                    if (displayOptions.indexOf(this._displayValue) === -1) {
                         this._displayValue = '';
                         this.error = true;
                     }
@@ -123,6 +146,12 @@ define([
             }
         }
     });
+
+    ArrayProperty.prototype.getDisplayState = function() {
+        var displayState = Property.prototype.getDisplayState.call(this);
+        displayState.options = this.options;
+        return displayState;
+    };
 
     ArrayProperty.prototype.getState = function() {
         var state = Property.prototype.getState.call(this);

@@ -50,6 +50,15 @@ define([
         }
     });
 
+    SolidColoringScheme.prototype.getDisplayState = function() {
+        var displayState = {
+            color: this.color.getDisplayState(),
+            type: this.getType()
+        };
+
+        return displayState;
+    };
+
     SolidColoringScheme.prototype.getState = function() {
         var state = {
             color: this.color.getState(),
