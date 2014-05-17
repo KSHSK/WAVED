@@ -41,7 +41,7 @@ define([
                     var templates = getTemplateMatches(self._newValues[key]);
                     if (templates.length > 0) {
                         var temp = self._newValues[key];
-                        if (typeof self._target.viewModel[key].value === 'number') {
+                        if (typeof self._target[key].value === 'number') {
                             temp = self._newValues[key].toString();
                         }
 
@@ -61,15 +61,15 @@ define([
                             }
                         }
 
-                        if (typeof self._target.viewModel[key].value === 'number') {
-                            self._target.viewModel[key].value = parseFloat(temp);
+                        if (typeof self._target[key].value === 'number') {
+                            self._target[key].value = parseFloat(temp);
                         }
                         else {
-                            self._target.viewModel[key].value = temp;
+                            self._target[key].value = temp;
                         }
                     }
                     else {
-                        self._target.viewModel[key].value = self._newValues[key];
+                        self._target[key].value = self._newValues[key];
                     }
                 }
             };
@@ -126,7 +126,7 @@ define([
     PropertyAction.prototype.getState = function() {
         var state = Action.prototype.getState.call(this);
         state.type = PropertyAction.getType();
-        state.target = this._target.viewModel.name.value;
+        state.target = this._target.name.value;
         state.newValues = this._newValues;
         return state;
     };

@@ -397,9 +397,9 @@
             <div class="marginBottom10">
                 <label class="required" for="action-editor-selected-widget">Affected Widget:</label> 
                 <select id="action-editor-selected-widget" class="width100"
-                        data-bind="options: currentProject.widgets, 
+                        data-bind="options: currentProject.actionComponentOptions, 
                           optionsText: function(widget) {
-                             return widget.viewModel.name.value;
+                             return widget.name.value;
                           },
                       value: actionEditorAffectedWidget">
                 </select>
@@ -428,7 +428,7 @@
         <div class="inline top padding15">
             <div>Options</div>
             <!-- ko if: selectedActionType === 'Property Action' && actionEditorAffectedWidget -->
-            <div data-bind="foreach: actionEditorAffectedWidget.viewModel.properties">
+            <div data-bind="foreach: actionEditorAffectedWidget.properties">
                 <!-- ko if:  $data.displayName !== 'Name'  && $data.displayTemplateName !== undefined -->
                 <div data-bind="template: {name : $data.displayTemplateName, data: $data}"></div>
                 <!-- /ko -->
