@@ -155,7 +155,6 @@ define([
             else {
                 viewModel.actionEditorDataSubset = viewModel.selectedAction.dataSubset;
                 viewModel.actionDataSubsetEditorConditions = viewModel.selectedAction.conditions;
-                viewModel.actionDataSubsetEditorConditionCount = viewModel.actionDataSubsetEditorConditions.length;
             }
 
             self.actionDialog.dialog({
@@ -185,49 +184,81 @@ define([
             });
         },
         updateEditChanges: function(viewModel) {
-            var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
             var action = viewModel.selectedAction;
+            var undoChange;
+            var executeChange;
 
-            var oldName = action.name;
-            var oldTarget = action.target;
-            var oldNewValues = $.extend({}, action.newValues);
-            var oldApplyAutomatically = action.applyAutomatically;
+            if (viewModel.selectedActionType === ActionType.PROPERTY_ACTION) {
+                var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
 
-            function undoChange() {
-                action.name = oldName;
-                action.target = oldTarget;
-                action.newValues = oldNewValues;
-                action.applyAutomatically = oldApplyAutomatically;
+                var oldName = action.name;
+                var oldTarget = action.target;
+                var oldNewValues = $.extend({}, action.newValues);
+                var oldApplyAutomatically = action.applyAutomatically;
 
-                if (action.applyAutomatically) {
-                    action.apply();
-                }
-            }
+                undoChange = function() {
+                    action.name = oldName;
+                    action.target = oldTarget;
+                    action.newValues = oldNewValues;
+                    action.applyAutomatically = oldApplyAutomatically;
 
-            var actionValues = {};
+                    if (action.applyAutomatically) {
+                        action.apply();
+                    }
+                };
 
-            for (var property in viewModel.actionEditorAffectedWidget.viewModel) {
-                var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
-                if (propertyIndex > -1) {
-                    if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
-                        actionValues[property] = properties[propertyIndex].displayValue;
+                var actionValues = {};
+
+                for (var property in viewModel.actionEditorAffectedWidget.viewModel) {
+                    var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
+                    if (propertyIndex > -1) {
+                        if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
+                            actionValues[property] = properties[propertyIndex].displayValue;
+                        }
                     }
                 }
+
+                var newName = viewModel.selectedActionName.value;
+                var newTarget = viewModel.actionEditorAffectedWidget;
+                var newApplyAutomatically = $('#actionApplyAutomatically').is(':checked');
+
+                 executeChange = function() {
+                    action.name = newName;
+                    action.target = newTarget;
+                    action.newValues = actionValues;
+                    action.applyAutomatically = newApplyAutomatically;
+
+                    if (action.applyAutomatically) {
+                        action.apply();
+                    }
+                };
             }
+            else {
+                var oldState = action.getState();
+                var newState = {
+                    name: viewModel.selectedActionName.value,
+                    dataSubset: viewModel.actionEditorDataSubset.name,
+                    conditions: viewModel.actionDataSubsetEditorConditions.map(function (condition) {
+                        return new Condition(condition.getState());
+                    }),
+                    applyAutomatically: $('#actionApplyAutomatically').is(':checked'),
+                };
 
-            var newName = viewModel.selectedActionName.value;
-            var newTarget = viewModel.actionEditorAffectedWidget;
-            var newApplyAutomatically = $('#actionApplyAutomatically').is(':checked');
+                undoChange = function() {
+                    action.setState(oldState);
 
-            function executeChange() {
-                action.name = newName;
-                action.target = newTarget;
-                action.newValues = actionValues;
-                action.applyAutomatically = newApplyAutomatically;
+                    if (action.applyAutomatically) {
+                        action.apply();
+                    }
+                };
 
-                if (action.applyAutomatically) {
-                    action.apply();
-                }
+                executeChange = function() {
+                    action.setState(newState);
+
+                    if (action.applyAutomatically) {
+                        action.apply();
+                    }
+                };
             }
 
             var historyMonitor = HistoryMonitor.getInstance();
