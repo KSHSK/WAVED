@@ -357,7 +357,7 @@
                     </tr>
                 </thead>
                 <!-- Need to limit to 10 rows or this could lock up the browser if there are too many rows. -->
-                <tbody data-bind="foreach: {data: dataSetToPreview.data.slice(0,10), as: 'dataRow'}">
+                <tbody data-bind="foreach: {data: dataSetToPreview.originalData.slice(0,10), as: 'dataRow'}">
                     <tr data-bind="foreach: {data: $parent.dataSetToPreview.dataFields, as: 'key'}">
                         <td data-bind="text: dataRow[key]">
                     </tr>

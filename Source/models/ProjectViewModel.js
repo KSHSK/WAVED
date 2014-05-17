@@ -675,6 +675,10 @@ define([
             }
         }
 
+        for (i = 0; i < this.dataSubsets.length; i++) {
+            this.dataSubsets[i].reset();
+        }
+
         // Reapply automatically applied actions.
         for (i = 0; i < this._actions.length; i++) {
             if (this._actions[i].applyAutomatically) {

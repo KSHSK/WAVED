@@ -92,5 +92,10 @@ define([
         return state;
     };
 
+    QueryAction.prototype.apply = function(data) {
+        this.dataSubset.query.currentConditions = this.conditions;
+        this.dataSubset.executeCurrentQuery();
+    };
+
     return QueryAction;
 });
