@@ -413,6 +413,7 @@ define([
             edit: function() {
                 if (defined(this.value)) {
                     var value = this.value;
+                    GlyphHelper.resetGlyphDialog(value);
                     GlyphHelper.addEditGlyph(value).then(function() {
                         editSuccess(value);
                     }, function() {

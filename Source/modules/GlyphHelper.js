@@ -33,7 +33,6 @@ define([
     GlyphHelper.addEditGlyph = function(glyph) {
         var self = this;
 
-        self.resetGlyphDialog(glyph);
         var glyphAdded = $.Deferred();
         glyphDialog.dialog({
             resizable: false,
