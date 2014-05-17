@@ -60,7 +60,7 @@ define([
     ColoringSelectionProperty.prototype = Object.create(Property.prototype);
 
     Object.defineProperties(ColoringSelectionProperty.prototype, {
-        properies: {
+        properties: {
             get: function() {
                 return [this.solidColoring, this.fourColoring, this.gradientColoring];
             }
@@ -90,6 +90,16 @@ define([
             }
         }
     });
+
+    ColoringSelectionProperty.prototype.getDisplayState = function() {
+        var displayState = Property.prototype.getDisplayState.call(this);
+
+        if(defined(this._displayValue)){
+            displayState.value = this._displayValue.getDisplayState();
+        }
+
+        return displayState;
+    };
 
     ColoringSelectionProperty.prototype.getState = function() {
         // This actually sets state.value to an object, we don't want that

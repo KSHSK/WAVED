@@ -45,8 +45,26 @@ define([
             getOptionText: function(value) {
                 return value.displayName;
             },
-            onchange: state.onchange
+            onchange: state.onchange,
+            validValue: function(value) {
+                if (value === undefined) {
+                    return true;
+                }
+
+                if (defined(this._options) && this._options.length > 0) {
+                    return (this.options.indexOf(value) !== -1);
+                }
+
+                return true;
+            }
         });
+
+        /*
+         * Note: validValue in both dataField and keyField just check for undefined
+         * More robust checks aren't necessary due to assurances elsewhere that the options
+         * in the fields are correct and nothing that isn't present in the fields can be set
+         * as the value.
+         */
 
         this.dataField = new ArrayProperty({
             displayName: 'Data Field',
@@ -55,7 +73,10 @@ define([
             getOptionText: function(value) {
                 return value;
             },
-            onchange: state.onchange
+            onchange: state.onchange,
+            validValue: function(value) {
+                return defined(value);
+            }
         });
 
         /*
@@ -72,24 +93,11 @@ define([
             getOptionText: function(value) {
                 return value;
             },
-            onchange: state.onchange
+            onchange: state.onchange,
+            validValue: function(value) {
+                return defined(value);
+            }
         });
-
-        var isValidValue = function(value) {
-            if (value === undefined) {
-                return true;
-            }
-
-            if (defined(this._options) && this._options.length > 0) {
-                return (this.options.indexOf(value) !== -1);
-            }
-
-            return true;
-        };
-
-        this.dataSet.isValidValue = isValidValue;
-        this.dataField.isValidValue = isValidValue;
-        this.keyField.isValidValue = isValidValue;
 
         ko.track(this);
 
@@ -131,6 +139,25 @@ define([
         };
 
         return state;
+    };
+
+    GradientColoringScheme.prototype.getDisplayState = function() {
+        var displaySet;
+
+        if(defined(this.dataSet.getDisplayState().value)) {
+            displaySet = this.dataSet.getDisplayState().value;
+        }
+
+        var displayState = {
+            startColor: this.startColor.getDisplayState(),
+            endColor: this.endColor.getDisplayState(),
+            dataSet: displaySet,
+            dataField: this.dataField.getDisplayState().value,
+            keyField: this.keyField.getDisplayState().value,
+            type: this.getType()
+        };
+
+        return displayState;
     };
 
     GradientColoringScheme.prototype.setState = function(state, viewModel) {
@@ -178,6 +205,32 @@ define([
             // Change bundling
             var historyMonitor = HistoryMonitor.getInstance();
             historyMonitor.executeAmendHistory(changeFunction);
+        });
+
+        // Properly set things when displayValue changes (for actions)
+        subscribeObservable(self.dataSet, '_displayValue', function(newValue){
+            if(defined(newValue) && newValue !== '') {
+                newValue.executeWhenDataLoaded(function() {
+                    if(newValue.dataFields.indexOf(self.dataField.displayValue) === -1) {
+                        self.dataField.displayValue = undefined;
+                    }
+                    self.dataField.displayOptions = newValue.dataFields;
+
+                    if(newValue.dataFields.indexOf(self.keyField.displayValue) === -1) {
+                        self.keyField.displayValue = undefined;
+                    }
+                    self.keyField.displayOptions = newValue.dataFields;
+                });
+            }
+            else {
+                self.dataField.displayValue = undefined;
+                self.dataField.displayOptions = [];
+                self.keyField.displayValue = undefined;
+                self.keyField.displayOptions = [];
+            }
+
+            // TODO: Need HistoryMonitor?
+            // TODO: Undo/redo isn't working
         });
 
         // Properly unset the dataSet value when the options disappear (when the bound data is unbound)

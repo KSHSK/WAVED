@@ -85,6 +85,18 @@ define([
         return state;
     };
 
+    FourColoringScheme.prototype.getDisplayState = function() {
+        var displayState = {
+            color1: this.color1.getDisplayState(),
+            color2: this.color2.getDisplayState(),
+            color3: this.color3.getDisplayState(),
+            color4: this.color4.getDisplayState(),
+            type: this.getType()
+        };
+
+        return displayState;
+    };
+
     FourColoringScheme.prototype.setState = function(state) {
         if(defined(state.color1)){
             this.color1._originalValue = state.color1.value;
