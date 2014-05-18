@@ -24,14 +24,17 @@ define([
         WAVED_JS: '<script src="WAVED.js"></script>'
     };
 
-    var ExportProject = {
+    function cssToString(widget) {
+        var str = '#' + widget.viewModel.name.value + ' {\n';
+        var css = widget.getCss();
+        for (var property in css) {
+            str = str + '\t' + property + ': ' + css[property];
+        }
+        str = str + '}';
+        return str;
+    }
 
-        addCssProperty: function(css, attribute, value) {
-            var end = css.lastIndexOf('}');
-            var style = css.substring(0, end);
-            style = style + '\t' + attribute + ': ' + value + ';\n';
-            return style + '}';
-        },
+    var ExportProject = {
 
         /**
          * If the project is clean, the export project dialog is opened. If the project is dirty, the unsaved changes must
@@ -68,7 +71,7 @@ define([
                                '}\n\n';
 
             for (var i = 0; i < viewModel.currentProject.widgets.length; i++) {
-                css += viewModel.currentProject.widgets[i].exportCss();
+                css += cssToString(viewModel.currentProject.widgets[i]);
                 css += '\n\n';
             }
 
