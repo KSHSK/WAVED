@@ -81,16 +81,16 @@ define([
                 .attr('transform', 'translate(0,' + height + ')')
                 .call(xAxis)
                 .append('text')
-                .attr('transform', 'translate(0, 40)')
-                .style('font-weight', 'bold')
+                .attr('text-anchor', 'middle')
+                .attr('transform', 'translate(' + width/2 + ', 40)')
                 .text(viewModel.xAxisLabel.value);
 
             svg.append('g')
                 .attr('class', 'y axis')
                 .call(yAxis)
                 .append('text')
-                .attr('transform', 'translate(-40, ' + height +'), rotate(-90)')
-                .style('font-size', '18px')
+                .attr('text-anchor', 'middle')
+                .attr('transform', 'translate(0, -6)')
                 .text(viewModel.yAxisLabel.value);
 
         }
