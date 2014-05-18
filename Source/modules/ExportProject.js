@@ -26,6 +26,13 @@ define([
 
     var ExportProject = {
 
+        addCssProperty: function(css, attribute, value) {
+            var end = css.lastIndexOf('}');
+            var style = css.substring(0, end);
+            style = style + '\t' + attribute + ': ' + value + ';\n';
+            return style + '}';
+        },
+
         /**
          * If the project is clean, the export project dialog is opened. If the project is dirty, the unsaved changes must
          * be handled before the export project dialog is opened.
