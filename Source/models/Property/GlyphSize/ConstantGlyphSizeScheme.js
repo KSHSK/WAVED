@@ -77,6 +77,12 @@ define([
         return displayState;
     };
 
+    ConstantGlyphSizeScheme.prototype.setDisplayState = function(state) {
+        if(defined(state.size) && state.size.value !== this.size.originalValue) {
+            this.size.displayValue = state.size.value;
+        }
+    };
+
     ConstantGlyphSizeScheme.prototype.getState = function() {
         var state = {
             size: this.size.getState(),

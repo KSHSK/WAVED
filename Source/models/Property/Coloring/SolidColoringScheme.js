@@ -59,6 +59,12 @@ define([
         return displayState;
     };
 
+    SolidColoringScheme.prototype.setDisplayState = function(state) {
+        if(defined(state.color) && state.color.value !== this.color.originalValue) {
+            this.color.displayValue = state.color.value;
+        }
+    };
+
     SolidColoringScheme.prototype.getState = function() {
         var state = {
             color: this.color.getState(),
@@ -70,7 +76,7 @@ define([
 
     SolidColoringScheme.prototype.setState = function(state) {
         if(defined(state.color)){
-            this.color._originalValue = state.color.value;
+            this.color.originalValue = state.color.value;
         }
     };
 
