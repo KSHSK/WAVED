@@ -88,7 +88,7 @@ define([
                             var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
                             if (propertyIndex > -1) {
                                 if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
-                                    actionValues[property] = properties[propertyIndex].displayValue;
+                                    actionValues[property] = properties[propertyIndex].getDisplayState();
                                     continue; // We don't need to check for nested stuff since the top level changed
                                 }
 
@@ -99,10 +99,7 @@ define([
                                         if (value.displayValue !== value.originalValue){
                                             // We have to check for undefined here because we can't break out of forEach
                                             if (actionValues[property] === undefined) {
-                                                actionValues[property] = properties[propertyIndex].displayValue;
-
-                                                // This is for knowing what type the object is so it can be identified later
-                                                actionValues[property].type = properties[propertyIndex].displayValue.getType();
+                                                actionValues[property] = properties[propertyIndex].getDisplayState();
                                             }
                                         }
                                     });
@@ -149,10 +146,8 @@ define([
 
             // Update any modified values
             for (var key in viewModel.selectedAction.newValues) {
-                widget[key].displayValue = viewModel.selectedAction.newValues[key];
+                widget[key].setDisplayState(viewModel.selectedAction.newValues[key]);
             }
-
-            // TODO: Look at nested, do a diff, only change the ones that need to be changed. Might not need to happen? Seems to be working.
 
             self.actionDialog.dialog({
                 resizable: false,
@@ -206,7 +201,7 @@ define([
                 var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
                 if (propertyIndex > -1) {
                     if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
-                        actionValues[property] = properties[propertyIndex].displayValue;
+                        actionValues[property] = properties[propertyIndex].getDisplayState();
                         continue;
                     }
 
@@ -217,10 +212,7 @@ define([
                             if (value.displayValue !== value.originalValue){
                                 // We have to check for undefined here because we can't break out of forEach
                                 if (actionValues[property] === undefined) {
-                                    actionValues[property] = properties[propertyIndex].displayValue;
-
-                                    // This is for knowing what type the object is so it can be identified later
-                                    actionValues[property].type = properties[propertyIndex].displayValue.getType();
+                                    actionValues[property] = properties[propertyIndex].getDisplayState();
                                 }
                             }
                         });
@@ -241,8 +233,6 @@ define([
                 if (action.applyAutomatically) {
                     action.apply();
                 }
-
-                // TODO: Look into whether this needs to be changed for nested properties
             }
 
             var historyMonitor = HistoryMonitor.getInstance();
