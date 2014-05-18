@@ -275,3 +275,16 @@ table.dataTable#project-list tr.row_selected td { background-color: #aaaaaa; }
 #toast-container>div {
     opacity: 1;
 }
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
