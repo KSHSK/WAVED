@@ -153,13 +153,13 @@ define([
         return displayState;
     };
 
-    ArrayProperty.prototype.setDisplayState = function(state) {
-        if(defined(state.options)) {
-            this.displayOptions = state.options;
-        }
-
-        Property.prototype.setDisplayState.call(this, state);
-    };
+//    ArrayProperty.prototype.setDisplayState = function(state) {
+//        if(defined(state.options)) {
+//            this.displayOptions = state.options;
+//        }
+//
+//        Property.prototype.setDisplayState.call(this, state);
+//    };
 
     ArrayProperty.prototype.getState = function() {
         var state = Property.prototype.getState.call(this);
