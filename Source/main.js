@@ -55,14 +55,14 @@ require(['infuser'], function(infuser){
 require(['knockout'], function(ko){
    'use strict';
 
-    ko.bindingHandlers['jQueryDisable'] = {
+    ko.bindingHandlers.jQueryDisable = {
         'update': function(element, valueAccessor) {
             var value = ko.utils.unwrapObservable(valueAccessor());
             var $element = $(element);
-            $element.prop("disabled", value);
+            $element.prop('disabled', value);
 
-            if ($element.hasClass("ui-button")) {
-                $element.button("option", "disabled", value);
+            if ($element.hasClass('ui-button')) {
+                $element.button('option', 'disabled', value);
             }
         }
     };
