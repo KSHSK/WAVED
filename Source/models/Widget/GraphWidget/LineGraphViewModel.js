@@ -31,7 +31,7 @@ define([
         var xAxisDataField = viewModel.xAxisDataField.value;
         var yAxisDataField = viewModel.yAxisDataField.value;
 
-        var margin = {top:20, right: 20, bottom: 30, left: 50};
+        var margin = {top:20, right: 20, bottom: 50, left: 55};
         var width = w2 - margin.left - margin.right;
         var height = h2 - margin.top - margin.bottom;
 
@@ -60,11 +60,11 @@ define([
 
         svg.append('text')
             .attr('x', (width / 2))
-            .attr('y', 0)
+            .attr('y', -5)
             .attr('text-anchor', 'middle')
             .style('font-size', '16px')
             .style('text-decoration', 'underline')
-            .style('backgound-color', '#ffffff')
+            .style('font-weight', 'bold')
             .text(viewModel.title.value);
 
         if (defined(data) && xAxisDataField !== '' && yAxisDataField !== '') {
@@ -81,23 +81,26 @@ define([
                 .attr('transform', 'translate(0,' + height + ')')
                 .call(xAxis)
                 .append('text')
+                .attr('transform', 'translate(0, 40)')
+                .style('font-weight', 'bold')
                 .text(viewModel.xAxisLabel.value);
 
             svg.append('g')
                 .attr('class', 'y axis')
                 .call(yAxis)
                 .append('text')
-                .attr('transform', 'rotate(-90)')
+                .attr('transform', 'translate(-40, ' + height +'), rotate(-90)')
+                .style('font-size', '18px')
                 .text(viewModel.yAxisLabel.value);
 
         }
     }
 
-    var LineGraphViewModel = function(state) {
+    var LineGraphViewModel = function(state, getDataSet) {
         var self = this;
         state = (defined(state)) ? state : {};
 
-        GraphViewModel.call(this, state);
+        GraphViewModel.call(this, state, getDataSet);
 
         var namespace = ComponentViewModel.getUniqueNameNamespace();
         this.id = UniqueTracker.getDefaultUniqueValue(namespace, LineGraphViewModel.getType(), this);

@@ -4,6 +4,7 @@ define([
         'models/Property/StringProperty',
         'models/Property/ArrayProperty',
         'util/defined',
+        'util/subscribeObservable',
         'util/createValidator',
         'knockout'
     ],function(
@@ -11,6 +12,7 @@ define([
         StringProperty,
         ArrayProperty,
         defined,
+        subscribeObservable,
         createValidator,
         ko){
     'use strict';
@@ -102,6 +104,9 @@ define([
         this.dataSet.onchange = function(newValue) {
             self.xAxisDataField.options = newValue.dataFields;
             self.yAxisDataField.options = newValue.dataFields;
+            subscribeObservable(self.dataSet.value, '_data', function() {
+                self.render();
+            });
             self.render();
         };
 
@@ -131,7 +136,7 @@ define([
         state.dataSet = this.dataSet.getState().value.name;
         state.xAxisLabel = this.xAxisLabel.getState();
         state.yAxisLabel = this.yAxisLabel.getState();
-        state.xAxisDataField = this.yAxisDataField.getState();
+        state.xAxisDataField = this.xAxisDataField.getState();
         state.yAxisDataField = this.yAxisDataField.getState();
 
         return state;
