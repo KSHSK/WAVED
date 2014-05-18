@@ -58,24 +58,34 @@ define([
                 width: 400,
                 modal: true,
                 buttons: {
-                    'Create Project': function() {
-                        var value = viewModel.newProjectName.value;
+                    'Create Project': {
+                        text: 'Create Project',
+                        'data-bind': 'jQueryDisable: newProjectDialogHasErrors()',
+                        click: function() {
+                            var value = viewModel.newProjectName.value;
 
-                        if (!viewModel.newProjectName.error) {
-                            self.createNewProject(projectCreated, viewModel);
-                            $.when(projectCreated).done(function() {
-                                createNewProjectDialog.dialog('close');
-                            });
-                        }
-                        else {
-                            viewModel.newProjectName.message = viewModel.newProjectName.errorMessage;
-                        }
+                            if (!viewModel.newProjectName.error) {
+                                self.createNewProject(projectCreated, viewModel);
+                                $.when(projectCreated).done(function() {
+                                    createNewProjectDialog.dialog('close');
+                                });
+                            }
+                            else {
+                                viewModel.newProjectName.message = viewModel.newProjectName.errorMessage;
+                            }
+                        },
+                        create: function() {
+                            ko.applyBindings(viewModel, this);
+                        },
                     },
                     'Cancel': function() {
                         createNewProjectDialog.dialog('close');
                     }
                 }
             });
+        },
+        hasErrors: function(viewModel) {
+            return viewModel.newProjectName.error;
         },
 
         /**

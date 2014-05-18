@@ -60,7 +60,7 @@ define([
     ColoringSelectionProperty.prototype = Object.create(Property.prototype);
 
     Object.defineProperties(ColoringSelectionProperty.prototype, {
-        properies: {
+        properties: {
             get: function() {
                 return [this.solidColoring, this.fourColoring, this.gradientColoring];
             }

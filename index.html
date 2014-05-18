@@ -49,7 +49,7 @@
                                 value: selectedComponent,
                                 event: {change: openPropertiesPanel}">
                     </select>
-                    <button class="inline" id="refresh-button" data-bind="click: refreshWorkspace">Refresh</button>
+                    <button class="inline" id="refresh-button" data-bind="click: refreshWorkspace">Reset</button>
                 </div>                
         </div>
         
@@ -204,8 +204,9 @@
                             <hr/>
                             <div class="inline">Bound Data</div>
                             <div class="inline right">
-                                <button data-bind="click: tryToBindData" class="button-small add-icon-button">Bind Data</button>
-                                <button data-bind="click: unbindData" class="button-small delete-icon-button">Unbind Data</button>
+                                <button class="button-small add-icon-button" data-bind="click: tryToBindData">Bind Data</button>
+                                <button class="button-small preview-icon-button" data-bind="click: previewBoundDataSet">Preview Bound Data</button>
+                                <button class="button-small delete-icon-button" data-bind="click: unbindData">Unbind Data</button>
                             </div>
                         
                             <div data-bind="if: selectedComponent && typeof selectedComponent.viewModel.boundData !== 'undefined'">
