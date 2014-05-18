@@ -58,7 +58,7 @@ define([
                                  '\theight: ' + workspace.height.value + 'px;\n' +
                                  '\tposition: relative;\n' +
                                  '\tbackground-color: ' + workspace.color.value + ';\n' +
-                               '}\n';
+                               '}\n\n';
 
             for (var i = 0; i < viewModel.currentProject.widgets.length; i++) {
                 css += viewModel.currentProject.widgets[i].exportCss();

@@ -32,5 +32,19 @@ define([
         this._domElement.detach();
     };
 
+    Widget.prototype.exportCss = function() {
+        var css = '#' + this.viewModel.name.value + ' {\n' +
+            '\tposition: relative;\n' +
+            '\tdisplay: ' + (this.viewModel.visible.value ? 'block' : 'none') + ';\n' +
+            '\tleft: ' + this.viewModel.x.originalValue + '%;\n' +
+            '\ttop: ' + this.viewModel.y.originalValue + '%;\n' +
+            '\theight: ' + this.viewModel.height.originalValue + '%;\n' +
+            '\twidth: ' + this.viewModel.width.originalValue + '%;\n' +
+            '\tz-index: ' + this.viewModel.z.originalValue + ';\n' +
+        '}';
+
+        return css;
+    };
+
     return Widget;
 });
