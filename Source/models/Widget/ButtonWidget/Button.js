@@ -44,8 +44,8 @@ define([
         return 'Source/models/Widget/ButtonWidget/button-icon.png';
     };
 
-    Button.prototype.exportCss = function() {
-        return Widget.prototype.exportCss.call(this);
+    Button.prototype.getCss = function() {
+        return Widget.prototype.getCss.call(this);
     };
 
     Button.prototype.exportHtml = function() {
