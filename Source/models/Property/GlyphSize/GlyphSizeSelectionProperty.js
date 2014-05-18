@@ -126,6 +126,31 @@ define([
         return displayState;
     };
 
+    GlyphSizeSelectionProperty.prototype.setDisplayState = function(state, viewModel) {
+        if(!defined(state.value)) {
+            return;
+        }
+
+        var scheme = state.value;
+        switch(scheme.type) {
+            case GlyphSizeSchemeType.SCALED_SIZE:
+                this.scaledGlyphSize.setDisplayState(scheme, viewModel);
+                if(this.scaledGlyphSize !== this.originalValue) {
+                    this.displayValue = this.scaledGlyphSize;
+                }
+                break;
+            case GlyphSizeSchemeType.CONSTANT_SIZE:
+                this.constantGlyphSize.setDisplayState(scheme);
+                if(this.constantGlyphSize !== this.originalValue) {
+                    this.displayValue = this.constantGlyphSize;
+                }
+                break;
+            default:
+                this.displayValue = this.originalValue;
+                break;
+        }
+    };
+
     GlyphSizeSelectionProperty.prototype.getState = function() {
         // This actually sets state.value to an object, we don't want that
         var state = Property.prototype.getState.call(this);

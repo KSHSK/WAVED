@@ -170,19 +170,27 @@ define([
     };
 
     ScaledGlyphSizeScheme.prototype.getDisplayState = function() {
-        var displaySet;
-
-        if(defined(this.dataSet.getDisplayState().value)) {
-            displaySet = this.dataSet.getDisplayState.value.name;
-        }
-
         var displayState = {
-            dataSet: displaySet,
-            dataField: this.dataField.getDisplayState().value,
+            dataSet: this.dataSet.getDisplayState(),
+            dataField: this.dataField.getDisplayState(),
             type: this.getType()
         };
 
         return displayState;
+    };
+
+    ScaledGlyphSizeScheme.prototype.setDisplayState = function(state, viewModel) {
+        var self = this;
+        if(defined(state.dataSet)) {
+            this.dataSet.displayOptions.forEach(function(i) {
+                if(i.name === state.dataSet.value.name) {
+                    self.dataSet.displayValue = i;
+                }
+            });
+        }
+        if(defined(state.dataField) && state.dataField.value !== this.dataField.originalValue) {
+            this.dataField.displayValue = state.dataField.value;
+        }
     };
 
     return ScaledGlyphSizeScheme;

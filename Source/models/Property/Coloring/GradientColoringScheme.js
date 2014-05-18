@@ -141,25 +141,6 @@ define([
         return state;
     };
 
-    GradientColoringScheme.prototype.getDisplayState = function() {
-        var displaySet;
-
-        if(defined(this.dataSet.getDisplayState().value)) {
-            displaySet = this.dataSet.getDisplayState().value;
-        }
-
-        var displayState = {
-            startColor: this.startColor.getDisplayState(),
-            endColor: this.endColor.getDisplayState(),
-            dataSet: displaySet,
-            dataField: this.dataField.getDisplayState().value,
-            keyField: this.keyField.getDisplayState().value,
-            type: this.getType()
-        };
-
-        return displayState;
-    };
-
     GradientColoringScheme.prototype.setState = function(state, viewModel) {
         var self = this;
 
@@ -250,6 +231,43 @@ define([
                 self.keyField.originalValue = state.keyField;
             }
         });
+    };
+
+    GradientColoringScheme.prototype.getDisplayState = function() {
+        var displayState = {
+            startColor: this.startColor.getDisplayState(),
+            endColor: this.endColor.getDisplayState(),
+            dataSet: this.dataSet.getDisplayState(),
+            dataField: this.dataField.getDisplayState(),
+            keyField: this.keyField.getDisplayState(),
+            type: this.getType()
+        };
+
+        return displayState;
+    };
+
+    GradientColoringScheme.prototype.setDisplayState = function(state) {
+        var self = this;
+
+        if(defined(state.startColor) && state.startColor.value !== this.startColor.originalValue) {
+            this.startColor.displayValue = state.startColor.value;
+        }
+        if(defined(state.endColor) && state.endColor.value !== this.endColor.originalValue) {
+            this.endColor.displayValue = state.endColor.value;
+        }
+        if(defined(state.dataSet)) {
+            this.dataSet.displayOptions.forEach(function(i) {
+                if(i.name === state.dataSet.value.name) {
+                    self.dataSet.displayValue = i;
+                }
+            });
+        }
+        if(defined(state.dataField) && state.dataField.value !== this.dataField.originalValue) {
+            this.dataField.displayValue = state.dataField.value;
+        }
+        if(defined(state.keyField) && state.keyField.value !== this.keyField.originalValue) {
+            this.keyField.displayValue = state.keyField.value;
+        }
     };
 
     return GradientColoringScheme;
