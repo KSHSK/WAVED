@@ -70,53 +70,60 @@ define([
                 width: 'auto',
                 modal: true,
                 buttons: {
-                    'Save': function() {
-                        if (self.hasErrors(viewModel)) {
-                            return;
-                        }
+                    'Save': {
+                        text: 'Save',
+                        'data-bind': 'jQueryDisable: actionDialogHasErrors()',
+                        click: function() {
+                            if (self.hasErrors(viewModel)) {
+                                return;
+                            }
 
-                        if (!UniqueTracker.isValueUnique(Action.getUniqueNameNamespace(),
-                            viewModel.selectedActionName.value)) {
+                            if (!UniqueTracker.isValueUnique(Action.getUniqueNameNamespace(),
+                                viewModel.selectedActionName.value)) {
 
-                            displayMessage('The name "' + viewModel.selectedActionName.value + '" is already in use.', MessageType.WARNING);
-                            return;
-                        }
+                                displayMessage('The name "' + viewModel.selectedActionName.value + '" is already in use.', MessageType.WARNING);
+                                return;
+                            }
 
-                        var actionValues = {};
-                        var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
-                        for (var property in viewModel.actionEditorAffectedWidget.viewModel) {
-                            var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
-                            if (propertyIndex > -1) {
-                                if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
-                                    actionValues[property] = properties[propertyIndex].getDisplayState();
-                                    continue; // We don't need to check for nested stuff since the top level changed
-                                }
+                            var actionValues = {};
+                            var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
+                            for (var property in viewModel.actionEditorAffectedWidget.viewModel) {
+                                var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
+                                if (propertyIndex > -1) {
+                                    if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
+                                        actionValues[property] = properties[propertyIndex].getDisplayState();
+                                        continue; // We don't need to check for nested stuff since the top level changed
+                                    }
 
-                                // Check for changes in nested properties
-                                if (defined(properties[propertyIndex].getSubscribableNestedProperties())) {
-                                    // This means we have to look at the displayValue of the currently selected thing...
-                                    properties[propertyIndex].displayValue.properties.forEach(function(value) {
-                                        if (value.displayValue !== value.originalValue){
-                                            // We have to check for undefined here because we can't break out of forEach
-                                            if (actionValues[property] === undefined) {
-                                                actionValues[property] = properties[propertyIndex].getDisplayState();
+                                    // Check for changes in nested properties
+                                    if (defined(properties[propertyIndex].getSubscribableNestedProperties())) {
+                                        // This means we have to look at the displayValue of the currently selected thing...
+                                        properties[propertyIndex].displayValue.properties.forEach(function(value) {
+                                            if (value.displayValue !== value.originalValue){
+                                                // We have to check for undefined here because we can't break out of forEach
+                                                if (actionValues[property] === undefined) {
+                                                    actionValues[property] = properties[propertyIndex].getDisplayState();
+                                                }
                                             }
-                                        }
-                                    });
+                                        });
+                                    }
                                 }
                             }
-                        }
 
-                        // TODO: Handle QueryAction
-                        var action = new PropertyAction({
-                            name: viewModel.selectedActionName.value,
-                            target: viewModel.actionEditorAffectedWidget,
-                            newValues: actionValues,
-                            applyAutomatically: $('#actionApplyAutomatically').is(':checked')
-                        });
+                            // TODO: Handle QueryAction
+                            var action = new PropertyAction({
+                                name: viewModel.selectedActionName.value,
+                                target: viewModel.actionEditorAffectedWidget,
+                                newValues: actionValues,
+                                applyAutomatically: $('#actionApplyAutomatically').is(':checked')
+                            });
 
-                        viewModel.currentProject.addAction(action);
-                        self.closeActionDialog(viewModel);
+                            viewModel.currentProject.addAction(action);
+                            self.closeActionDialog(viewModel);
+                        },
+                        create: function() {
+                            ko.applyBindings(viewModel, this);
+                        },
                     },
                     'Cancel': function() {
                         self.closeActionDialog(viewModel);
