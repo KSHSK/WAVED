@@ -43,6 +43,12 @@ define([
             // Unselect DataSet.
             viewModel.actionEditorDataSet = undefined;
 
+            var widget = viewModel.actionEditorAffectedWidget.viewModel;
+
+            for (var index in widget.properties) {
+                widget.properties[index].displayValue = widget.properties[index].originalValue;
+            }
+
             $('#actionApplyAutomatically').attr('checked', false);
         },
 
@@ -146,12 +152,12 @@ define([
 
             var widget = viewModel.actionEditorAffectedWidget.viewModel;
 
-            // Set the displayValues to match those saved in the Action
+            // Set the displayValues to match those saved in the widget
             for (var index in widget.properties) {
                 widget.properties[index].displayValue = widget.properties[index].originalValue;
             }
 
-            // Update any modified values
+            // Update any modified values from the Action
             for (var key in viewModel.selectedAction.newValues) {
                 widget[key].setDisplayState(viewModel.selectedAction.newValues[key]);
             }
