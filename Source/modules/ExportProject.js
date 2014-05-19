@@ -2,6 +2,7 @@
  * A module for exporting the current project.
  */
 define([
+        '../models/Constants/EventType',
         '../models/Action/PropertyAction',
         '../models/Widget/USMapWidget/USMap',
         './UnsavedChanges',
@@ -10,6 +11,7 @@ define([
         '../util/displayMessage',
         'jquery'
     ], function(
+        EventType,
         PropertyAction,
         USMap,
         UnsavedChangesModule,
@@ -82,24 +84,44 @@ define([
         generateJs: function(viewModel) {
             var js = '$(document).ready(function() {\n';
 
-            // Override CSS attributes from automatically applied Actions
-            // TODO: Nested Properties?
-            for (var i = 0; i < viewModel.currentProject.actions.length; i++) {
-                var action = viewModel.currentProject.actions[i];
-                if (action.applyAutomatically && action instanceof PropertyAction) {
+            function exportAction(action, tabs) {
+                var js = '';
+                if (action instanceof PropertyAction) {
                     for (var key in action.newValues) {
                         if (defined(action.target.viewModel[key].css)) {
                             var value = action.newValues[key];
                             if (defined(action.target.viewModel[key].css.units)) {
                                 value += action.target.viewModel[key].css.units;
                             }
-                            js += '\t$(\'#' + action.target.viewModel.name.value + '\').css(\'' + action.target.viewModel[key].css.attribute + '\', \'' + value + '\');\n';
+                            js += tabs + '\t$(\'#' + action.target.viewModel.name.value + '\').css(\'' + action.target.viewModel[key].css.attribute + '\', \'' + value + '\');\n';
                         }
+
                         if (defined(action.target.viewModel[key].html)) {
-                            js += '\t$(\'#' + action.target.viewModel.name.value + '\').html(\'' + action.newValues[key] + '\');\n';
+                            js += tabs + '\t$(\'#' + action.target.viewModel.name.value + '\').html(\'' + action.newValues[key] + '\');\n';
                         }
                     }
                 }
+                return js;
+            }
+
+            // Override CSS attributes from automatically applied Actions
+            // TODO: Nested Properties?
+            for (var i = 0; i < viewModel.currentProject.actions.length; i++) {
+                var action = viewModel.currentProject.actions[i];
+                if (action.applyAutomatically) {
+                    js += exportAction(action, '');
+                }
+            }
+
+            // Export Events
+            for (i = 0; i < viewModel.currentProject.events.length; i++) {
+                var event = viewModel.currentProject.events[i];
+                js += '$(\'#'+ event.triggeringWidget.viewModel.name.value + '\').on(\'' + EventType[event.eventType] + '\', function() {';
+                // apply actions
+                for (var j = 0; j < event.actions.length; j++) {
+                    js += exportAction(event.actions[j], '\t');
+                }
+                js += '});';
             }
 
             return js + '});';

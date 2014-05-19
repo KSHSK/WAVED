@@ -41,7 +41,7 @@ define(['knockout',
 
         // Used for applying Actions after export.
         this.css = options.css;
-        this.htmlAttribute = options.htmlAttribute;
+        this.html = options.html;
 
         ko.track(this);
 
