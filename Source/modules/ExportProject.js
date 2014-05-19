@@ -46,20 +46,9 @@ define([
          */
         tryToExportProject: function(viewModel) {
             var self = this;
-            var projectClean = $.Deferred();
-
-            if (viewModel.dirty === true) {
-                UnsavedChangesModule.handleUnsavedChanges(projectClean);
-            }
-            else {
-                // Project is already clean.
-                projectClean.resolve();
-            }
 
             var projectExported = $.Deferred();
-            $.when(projectClean).done(function() {
-                self.exportProject(projectExported, viewModel);
-            });
+            self.exportProject(projectExported, viewModel);
 
             return projectExported.promise();
         },
