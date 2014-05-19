@@ -64,6 +64,7 @@ define(['jquery',
     var Query = function(state) {
         state = defined(state) ? state : {};
 
+        this._currentConditions = undefined;
         this.conditions = [];
     };
 
@@ -96,6 +97,34 @@ define(['jquery',
         });
     };
 
+    Query.prototype.executeCurrent = function(data) {
+        // Every entry is an array contaning the matching rows for that condition.
+        var conditionIndices = [];
+
+        // Run each condition separately.
+        this.currentConditions.forEach(function(condition) {
+            var indices = condition.execute(data);
+            conditionIndices.push(indices);
+        });
+
+        // Join all of the AND conditions.
+        var andIndices = [];
+        for (var i = 0; i < this.currentConditions.length; i++) {
+            var group = conditionIndices[i];
+            while (this.currentConditions[i].logicalOperator === LogicalOperator.AND) {
+                i++;
+                group = intersection(group, conditionIndices[i]);
+            }
+            andIndices.push(group);
+        }
+
+        // Join the resulting indices by OR.
+        var dataIndices = unionAll(andIndices);
+
+        return data.filter(function(value, index) {
+            return dataIndices.indexOf(index) !== -1;
+        });
+    };
     Query.prototype.getState = function() {
         return {
             conditions: $.map(this.conditions, function(condition) {
@@ -117,6 +146,21 @@ define(['jquery',
             });
         }
     };
+
+    Query.prototype.reset = function() {
+        this._currentConditions = undefined;
+    };
+
+    Object.defineProperties(Query.prototype, {
+        currentConditions: {
+            get: function() {
+                return defined(this._currentConditions) ? this._currentConditions : this.conditions;
+            },
+            set: function(value) {
+                this._currentConditions = value;
+            }
+        },
+    });
 
     return Query;
 });
