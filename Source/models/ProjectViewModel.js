@@ -290,7 +290,7 @@ define([
                     action = new PropertyAction(itemState);
                 }
                 else if (itemState.type === QueryAction.getType()) {
-                    action = new QueryAction(itemState);
+                    action = new QueryAction(itemState, self.getDataSet.bind(self));
                 }
                 else {
                     // Invalid state.
@@ -673,6 +673,10 @@ define([
                 properties[j].value = properties[j].originalValue;
                 properties[j].displayValue = displayValue;
             }
+        }
+
+        for (i = 0; i < this.dataSubsets.length; i++) {
+            this.dataSubsets[i].reset();
         }
 
         // Reapply automatically applied actions.

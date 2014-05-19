@@ -57,8 +57,14 @@ define([
 
         if (shouldExecute) {
             this.executeQuery();
+            this.executeCurrentQuery();
         }
     };
+
+    DataSubset.prototype.reset = function() {
+        this.query.reset();
+        this.executeCurrentQuery();
+    }
 
     DataSubset.prototype.executeQuery = function() {
         var self = this;
@@ -73,13 +79,34 @@ define([
             var data = self.parent.data;
 
             // Run query
-            self._data = self.query.execute(data);
+            self._originalData = self.query.execute(data);
 
             self._dataLoaded.resolve();
         };
 
         self.parent.executeWhenDataLoaded(localExecuteQuery);
     };
+
+    DataSubset.prototype.executeCurrentQuery = function() {
+        var self = this;
+
+        if (!(self.parent instanceof DataSet)) {
+            // When loaded from state, the parent will initially be a String, for the name of the parent.
+            return;
+        }
+
+        // Function to run the query.
+        var localExecuteQuery = function() {
+            var data = self.parent.data;
+
+            // Run query
+            self._data = self.query.executeCurrent(data);
+
+            self._dataLoaded.resolve();
+        };
+
+        self.parent.executeWhenDataLoaded(localExecuteQuery);
+    }
 
     Object.defineProperties(DataSubset.prototype, {
         type: {
@@ -116,6 +143,11 @@ define([
                 if (query instanceof Query) {
                     this._query = query;
                 }
+            }
+        },
+        originalData: {
+            get: function() {
+                return this._originalData;
             }
         }
     });
