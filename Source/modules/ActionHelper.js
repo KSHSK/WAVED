@@ -166,7 +166,7 @@ define([
                 }
 
                 for (var key in viewModel.selectedAction.newValues) {
-                    widget[key].displayValue = viewModel.selectedAction.newValues[key];
+                    widget[key].setDisplayState(viewModel.selectedAction.newValues[key]);
                 }
             }
             else {
