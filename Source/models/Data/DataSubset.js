@@ -64,7 +64,16 @@ define([
     DataSubset.prototype.reset = function() {
         this.query.reset();
         this.executeCurrentQuery();
-    }
+    };
+
+    DataSubset.prototype.getDisplayState = function() {
+        var displayState = DataSet.prototype.getDisplayState.call(this);
+
+        displayState.type = DataSubset.getType;
+
+        return displayState;
+    };
+
 
     DataSubset.prototype.executeQuery = function() {
         var self = this;
@@ -106,7 +115,7 @@ define([
         };
 
         self.parent.executeWhenDataLoaded(localExecuteQuery);
-    }
+    };
 
     Object.defineProperties(DataSubset.prototype, {
         type: {

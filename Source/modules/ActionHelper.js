@@ -100,7 +100,21 @@ define([
                                     var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
                                     if (propertyIndex > -1) {
                                         if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
-                                            actionValues[property] = properties[propertyIndex].displayValue;
+                                              actionValues[property] = properties[propertyIndex].getDisplayState();
+                                            continue; // We don't need to check for nested stuff since the top level changed
+                                        }
+
+                                        // Check for changes in nested properties
+                                        if (defined(properties[propertyIndex].getSubscribableNestedProperties())) {
+                                            // This means we have to look at the displayValue of the currently selected thing...
+                                            properties[propertyIndex].displayValue.properties.forEach(function(value) {
+                                                if (value.displayValue !== value.originalValue){
+                                                    // We have to check for undefined here because we can't break out of forEach
+                                                    if (actionValues[property] === undefined) {
+                                                        actionValues[property] = properties[propertyIndex].getDisplayState();
+                                                    }
+                                                }
+                                            });
                                         }
                                     }
                                 }
@@ -120,7 +134,7 @@ define([
                         },
                         create: function() {
                             ko.applyBindings(viewModel, this);
-                        },
+                        }
                     },
                     'Cancel': function() {
                         self.closeActionDialog(viewModel);
@@ -216,7 +230,21 @@ define([
                     var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
                     if (propertyIndex > -1) {
                         if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
-                            actionValues[property] = properties[propertyIndex].displayValue;
+                            actionValues[property] = properties[propertyIndex].getDisplayState();
+                            continue;
+                        }
+
+                        // Check for changes in nested properties
+                        if (defined(properties[propertyIndex].getSubscribableNestedProperties())) {
+                            // This means we have to look at the displayValue of the currently selected thing...
+                            properties[propertyIndex].displayValue.properties.forEach(function(value) {
+                                if (value.displayValue !== value.originalValue){
+                                    // We have to check for undefined here because we can't break out of forEach
+                                    if (actionValues[property] === undefined) {
+                                        actionValues[property] = properties[propertyIndex].getDisplayState();
+                                    }
+                                }
+                            });
                         }
                     }
                 }
@@ -245,7 +273,7 @@ define([
                     conditions: viewModel.actionDataSubsetEditorConditions.slice(0, limit).map(function (condition) {
                         return new Condition(condition.getState());
                     }),
-                    applyAutomatically: $('#actionApplyAutomatically').is(':checked'),
+                    applyAutomatically: $('#actionApplyAutomatically').is(':checked')
                 };
 
                 undoChange = function() {

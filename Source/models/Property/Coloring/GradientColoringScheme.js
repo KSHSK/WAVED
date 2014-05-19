@@ -45,8 +45,26 @@ define([
             getOptionText: function(value) {
                 return value.displayName;
             },
-            onchange: state.onchange
+            onchange: state.onchange,
+            validValue: function(value) {
+                if (value === undefined) {
+                    return true;
+                }
+
+                if (defined(this._options) && this._options.length > 0) {
+                    return (this.options.indexOf(value) !== -1);
+                }
+
+                return true;
+            }
         });
+
+        /*
+         * Note: validValue in both dataField and keyField just check for undefined
+         * More robust checks aren't necessary due to assurances elsewhere that the options
+         * in the fields are correct and nothing that isn't present in the fields can be set
+         * as the value.
+         */
 
         this.dataField = new ArrayProperty({
             displayName: 'Data Field',
@@ -55,7 +73,10 @@ define([
             getOptionText: function(value) {
                 return value;
             },
-            onchange: state.onchange
+            onchange: state.onchange,
+            validValue: function(value) {
+                return defined(value);
+            }
         });
 
         /*
@@ -72,24 +93,11 @@ define([
             getOptionText: function(value) {
                 return value;
             },
-            onchange: state.onchange
+            onchange: state.onchange,
+            validValue: function(value) {
+                return defined(value);
+            }
         });
-
-        var isValidValue = function(value) {
-            if (value === undefined) {
-                return true;
-            }
-
-            if (defined(this._options) && this._options.length > 0) {
-                return (this.options.indexOf(value) !== -1);
-            }
-
-            return true;
-        };
-
-        this.dataSet.isValidValue = isValidValue;
-        this.dataField.isValidValue = isValidValue;
-        this.keyField.isValidValue = isValidValue;
 
         ko.track(this);
 
@@ -100,6 +108,10 @@ define([
 
     GradientColoringScheme.prototype.getType = function() {
         return ColoringSchemeType.GRADIENT_COLORING;
+    };
+
+    GradientColoringScheme.prototype.getDisplayText = function() {
+        return 'Gradient coloring';
     };
 
     Object.defineProperties(GradientColoringScheme.prototype, {
@@ -176,6 +188,32 @@ define([
             historyMonitor.executeAmendHistory(changeFunction);
         });
 
+        // Properly set things when displayValue changes (for actions)
+        subscribeObservable(self.dataSet, '_displayValue', function(newValue){
+            if(defined(newValue) && newValue !== '') {
+                newValue.executeWhenDataLoaded(function() {
+                    if(newValue.dataFields.indexOf(self.dataField.displayValue) === -1) {
+                        self.dataField.displayValue = undefined;
+                    }
+                    self.dataField.displayOptions = newValue.dataFields;
+
+                    if(newValue.dataFields.indexOf(self.keyField.displayValue) === -1) {
+                        self.keyField.displayValue = undefined;
+                    }
+                    self.keyField.displayOptions = newValue.dataFields;
+                });
+            }
+            else {
+                self.dataField.displayValue = undefined;
+                self.dataField.displayOptions = [];
+                self.keyField.displayValue = undefined;
+                self.keyField.displayOptions = [];
+            }
+
+            // TODO: Need HistoryMonitor?
+            // TODO: Undo/redo isn't working
+        });
+
         // Properly unset the dataSet value when the options disappear (when the bound data is unbound)
         subscribeObservable(self.dataSet, '_options', function(newValue){
             if(defined(self.dataSet.originalValue) && (newValue.indexOf(self.dataSet.originalValue) === -1)){
@@ -193,6 +231,43 @@ define([
                 self.keyField.originalValue = state.keyField;
             }
         });
+    };
+
+    GradientColoringScheme.prototype.getDisplayState = function() {
+        var displayState = {
+            startColor: this.startColor.getDisplayState(),
+            endColor: this.endColor.getDisplayState(),
+            dataSet: this.dataSet.getDisplayState(),
+            dataField: this.dataField.getDisplayState(),
+            keyField: this.keyField.getDisplayState(),
+            type: this.getType()
+        };
+
+        return displayState;
+    };
+
+    GradientColoringScheme.prototype.setDisplayState = function(state) {
+        var self = this;
+
+        if(defined(state.startColor) && state.startColor.value !== this.startColor.originalValue) {
+            this.startColor.displayValue = state.startColor.value;
+        }
+        if(defined(state.endColor) && state.endColor.value !== this.endColor.originalValue) {
+            this.endColor.displayValue = state.endColor.value;
+        }
+        if(defined(state.dataSet)) {
+            this.dataSet.displayOptions.forEach(function(i) {
+                if(i.name === state.dataSet.value.name) {
+                    self.dataSet.displayValue = i;
+                }
+            });
+        }
+        if(defined(state.dataField) && state.dataField.value !== this.dataField.originalValue) {
+            this.dataField.displayValue = state.dataField.value;
+        }
+        if(defined(state.keyField) && state.keyField.value !== this.keyField.originalValue) {
+            this.keyField.displayValue = state.keyField.value;
+        }
     };
 
     return GradientColoringScheme;

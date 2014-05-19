@@ -159,7 +159,7 @@ define(['jquery',
             set: function(value) {
                 this._currentConditions = value;
             }
-        },
+        }
     });
 
     return Query;
