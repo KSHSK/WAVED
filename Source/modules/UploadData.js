@@ -8,7 +8,8 @@ define([
         './UniqueTracker',
         'models/Constants/MessageType',
         'models/Data/DataSet',
-        'util/displayMessage'
+        'util/displayMessage',
+        'knockout',
     ], function(
         $,
         WAVEDViewModel,
@@ -16,7 +17,8 @@ define([
         UniqueTracker,
         MessageType,
         DataSet,
-        displayMessage) {
+        displayMessage,
+        ko) {
     'use strict';
 
     var UploadData = {
@@ -46,6 +48,7 @@ define([
                     'Upload': {
                         text: 'Upload',
                         'class': 'submit-button',
+                        'data-bind': 'jQueryDisable: uploadDataDialogHasErrors()',
                         click: function() {
                             if (viewModel.uploadDataName.error || viewModel.uploadDataFile.error) {
                                 viewModel.uploadDataName.message = viewModel.uploadDataName.errorMessage;
@@ -60,10 +63,28 @@ define([
                                 return;
                             }
 
+                            var basename = viewModel.uploadDataFile.value.split(new RegExp('(\\\\|/)')).pop();
+                            var dataSet = viewModel.currentProject.getDataSetByFilename(basename);
+                            if (dataSet)
+                            {
+                                if (dataSet.isMarkedForDeletion()) {
+                                    displayMessage('The project must be saved and reloaded to reuse this filename.');
+                                }
+                                else {
+                                    viewModel.uploadDataFile.error = true;
+                                    viewModel.uploadDataFile.message = viewModel.uploadDataFile.errorMessage;
+                                }
+
+                                return;
+                            }
+
                             self.uploadData(dataUploaded, viewModel);
                             $.when(dataUploaded).done(function() {
                                 self.uploadDataDialog.dialog('close');
                             });
+                        },
+                        create: function() {
+                            ko.applyBindings(viewModel, this);
                         }
                     },
                     'Cancel': function() {
@@ -71,6 +92,10 @@ define([
                     }
                 }
             });
+        },
+
+        hasErrors: function(viewModel) {
+            return viewModel.uploadDataName.error || viewModel.uploadDataFile.error;
         },
 
         uploadData: function(dataUploaded, viewModel){

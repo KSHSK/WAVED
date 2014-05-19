@@ -39,26 +39,33 @@ define([
                 width: 'auto',
                 modal: true,
                 buttons: {
-                    'Save': function() {
-                        if (self.hasErrors(viewModel)) {
-                            return;
-                        }
+                    'Save': {
+                        text: 'Save',
+                        'data-bind': 'jQueryDisable: eventDialogHasErrors()',
+                        click:  function() {
+                            if (self.hasErrors(viewModel)) {
+                                return;
+                            }
 
-                        if (!UniqueTracker.isValueUnique(Event.getUniqueNameNamespace(),
-                            viewModel.selectedEventName.value)) {
+                            if (!UniqueTracker.isValueUnique(Event.getUniqueNameNamespace(),
+                                viewModel.selectedEventName.value)) {
 
-                            displayMessage('The name "' + viewModel.selectedEventName.value + '" is already in use.', MessageType.WARNING);
-                            return;
-                        }
+                                displayMessage('The name "' + viewModel.selectedEventName.value + '" is already in use.', MessageType.WARNING);
+                                return;
+                            }
 
-                        var event = new Event({
-                            name: viewModel.selectedEventName.value,
-                            eventType: viewModel.selectedEventType,
-                            triggeringWidget: viewModel.eventEditorTriggeringWidget,
-                            actions: viewModel.selectedEventActions
-                        });
-                        viewModel.currentProject.addEvent(event);
-                        self.eventDialog.dialog('close');
+                            var event = new Event({
+                                name: viewModel.selectedEventName.value,
+                                eventType: viewModel.selectedEventType,
+                                triggeringWidget: viewModel.eventEditorTriggeringWidget,
+                                actions: viewModel.selectedEventActions
+                            });
+                            viewModel.currentProject.addEvent(event);
+                            self.eventDialog.dialog('close');
+                        },
+                        create: function() {
+                            ko.applyBindings(viewModel, this);
+                        },
                     },
                     'Cancel': function() {
                         self.eventDialog.dialog('close');
@@ -145,7 +152,6 @@ define([
 
             // Check that the event name is valid.
             if (viewModel.selectedEventName.error) {
-                viewModel.selectedEventName.message = viewModel.selectedEventName.errorMessage;
                 error = true;
             }
 

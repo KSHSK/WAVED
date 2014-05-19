@@ -48,11 +48,14 @@ define([
                         for (var i = 0; i < templates.length; i++) {
                             if (defined(data.trigger) && defined(data.trigger[templates[i]])) {
                                 temp = temp.replace('{{' + templates[i]+ '}}', data.trigger[templates[i]]);
-                            } else {
-                                var components = templates[i].split('.');
-                                if (components.length > 1) {
-                                    if (defined(data[components[0]]) && defined(data[components[0]][components[1]])) {
-                                        temp = temp.replace('{{' + templates[i]+ '}}', data[components[0]][components[1]]);
+                            }
+                            else {
+                                var index = templates[i].indexOf('.');
+                                if (index > -1) {
+                                    var dataName = templates[i].slice(0, index);
+                                    var fieldName = templates[i].slice(index + 1);
+                                    if (defined(data[dataName]) && defined(data[dataName][fieldName])) {
+                                        temp = temp.replace('{{' + templates[i] + '}}', data[dataName][fieldName]);
                                     }
                                 }
                             }
@@ -60,7 +63,8 @@ define([
 
                         if (typeof self._target.viewModel[key].value === 'number') {
                             self._target.viewModel[key].value = parseFloat(temp);
-                        } else {
+                        }
+                        else {
                             self._target.viewModel[key].value = temp;
                         }
                     }
