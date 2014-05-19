@@ -9,7 +9,8 @@ define([
         './DeleteData',
         './SaveProject',
         './UniqueTracker',
-        'models/ProjectViewModel'
+        'models/ProjectViewModel',
+        'knockout'
     ], function(
         $,
         DataTables,
@@ -18,7 +19,8 @@ define([
         DeleteData,
         SaveProject,
         UniqueTracker,
-        ProjectViewModel) {
+        ProjectViewModel,
+        ko) {
     'use strict';
 
     var LoadProject = {
@@ -75,6 +77,7 @@ define([
                             if ($(this).hasClass('row_selected')) {
                                 $(this).removeClass('row_selected');
                                 viewModel.loadProjectName._value = '';
+                                viewModel.loadProjectName.error = true;
                             }
                             else {
                                 table.$('tr.row_selected').removeClass('row_selected');
@@ -85,9 +88,13 @@ define([
                         });
                     }
                     else {
-                        viewModel.loadProjectName.error = true;
                         viewModel.loadProjectName.message = data.errorMessage;
                     }
+
+                    // Nothing is currently selected
+                    viewModel.loadProjectName._value = '';
+                    viewModel.loadProjectName.message = '';
+                    viewModel.loadProjectName.error = true;
                 }
             }).promise();
         },
@@ -100,6 +107,7 @@ define([
             var self = this;
             viewModel.loadProjectName._value = '';
             viewModel.loadProjectName.message = '';
+            viewModel.loadProjectName.error = true;
 
             loadProjectDialog.dialog({
                 resizable: false,
@@ -110,6 +118,7 @@ define([
                     'Load Project': {
                         text: 'Load Project',
                         'class': 'submit-button',
+                        'data-bind': 'jQueryDisable: loadProjectDialogHasErrors()',
                         click: function() {
                             var projectName = viewModel.loadProjectName.value;
 
@@ -118,7 +127,10 @@ define([
                             $.when(projectLoaded).done(function() {
                                 loadProjectDialog.dialog('close');
                             });
-                        }
+                        },
+                        create: function() {
+                            ko.applyBindings(viewModel, this);
+                        },
                     },
                     'Cancel': function() {
                         projectLoaded.reject();
@@ -131,6 +143,9 @@ define([
             var table = $('#project-list').dataTable();
             table.fnAdjustColumnSizing();
 
+        },
+        hasErrors: function(viewModel) {
+            return viewModel.loadProjectName.error;
         },
 
         /**

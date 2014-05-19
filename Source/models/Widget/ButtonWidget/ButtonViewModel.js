@@ -67,7 +67,7 @@ define([
         WidgetViewModel.prototype.setState.call(this, state);
 
         if (defined(state.label)) {
-            this.label.originalValue = state.label.value;
+            this.label.setState(state.label);
         }
     };
 

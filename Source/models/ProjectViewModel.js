@@ -505,6 +505,19 @@ define([
         return null;
     };
 
+    ProjectViewModel.prototype.getDataSetByFilename = function(filename) {
+        var self = this;
+
+        for (var index = 0; index < self._dataSets.length; index++) {
+            var dataSet = self._dataSets[index];
+            if (dataSet.filename === filename) {
+                return dataSet;
+            }
+        }
+
+        return null;
+    };
+
     ProjectViewModel.prototype.getAction = function(name) {
         for (var index = 0; index < this._actions.length; index++) {
             var action = this._actions[index];

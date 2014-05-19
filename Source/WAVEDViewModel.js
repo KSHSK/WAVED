@@ -169,7 +169,7 @@ define(['jquery',
                 minLength: 1,
                 regex: new RegExp('.(csv|json)$', 'i')
             }),
-            errorMessage: 'Must select a file with extension CSV or JSON.'
+            errorMessage: 'Must select a unique file with extension CSV or JSON.'
         });
 
         var filenameInvalidCharRegex = new RegExp('[^a-zA-Z0-9_\\- ]', 'g');
@@ -178,7 +178,7 @@ define(['jquery',
         subscribeObservable(self.uploadDataFile, '_value', function(newFilename) {
             if (newFilename !== '') {
                 var originalName = getBasename(newFilename).split('.')[0];
-                var validName = originalName.replace(filenameInvalidCharRegex, '');
+                var validName = originalName.replace(filenameInvalidCharRegex, '').substring(0, 50);
                 self.uploadDataName.value = validName;
             }
         });
@@ -387,19 +387,26 @@ define(['jquery',
         return DeleteData.markDataForDeletion(self);
     };
 
+    WAVEDViewModel.prototype.openPreviewDataDialog = function() {
+        if (!defined(this.dataSetToPreview)) {
+            return;
+        }
+
+        $('#preview-data-dialog').dialog({
+            height: 'auto',
+            width: 'auto',
+            modal: true,
+            title: 'Preview Data for "' + this.dataSetToPreview.displayName + '"'
+        });
+    };
+
     WAVEDViewModel.prototype.previewDataSet = function() {
         if (!defined(this.selectedDataSet)) {
             return;
         }
 
         this.dataSetToPreview = this.selectedDataSet;
-
-        $('#preview-data-dialog').dialog({
-            height: 'auto',
-            width: 'auto',
-            modal: true,
-            title: 'Preview Data for "' + this.selectedDataSet.displayName + '"'
-        });
+        this.openPreviewDataDialog();
     };
 
     WAVEDViewModel.prototype.previewDataSubset = function() {
@@ -408,13 +415,16 @@ define(['jquery',
         }
 
         this.dataSetToPreview = this.selectedDataSubset;
+        this.openPreviewDataDialog();
+    };
 
-        $('#preview-data-dialog').dialog({
-            height: 'auto',
-            width: 'auto',
-            modal: true,
-            title: 'Preview Data for "' + this.selectedDataSubset.displayName + '"'
-        });
+    WAVEDViewModel.prototype.previewBoundDataSet = function() {
+        if (!defined(this.selectedBoundData)) {
+            return;
+        }
+
+        this.dataSetToPreview = this.selectedBoundData;
+        this.openPreviewDataDialog();
     };
 
     WAVEDViewModel.prototype.addDataSubset = function() {
@@ -534,6 +544,34 @@ define(['jquery',
 
     WAVEDViewModel.prototype.openProjectTreePanel = function() {
         $('#accordion').accordion('option', 'active', projectTreePanelPosition);
+    };
+
+    WAVEDViewModel.prototype.newProjectDialogHasErrors = function() {
+        return NewProject.hasErrors(self);
+    };
+
+    WAVEDViewModel.prototype.loadProjectDialogHasErrors = function() {
+        return LoadProject.hasErrors(self);
+    };
+
+    WAVEDViewModel.prototype.saveProjectAsDialogHasErrors = function() {
+        return SaveProject.hasErrors(self);
+    };
+
+    WAVEDViewModel.prototype.actionDialogHasErrors = function() {
+        return ActionHelper.hasErrors(self);
+    };
+
+    WAVEDViewModel.prototype.eventDialogHasErrors = function() {
+        return EventHelper.hasErrors(self);
+    };
+
+    WAVEDViewModel.prototype.uploadDataDialogHasErrors = function() {
+        return UploadData.hasErrors(self);
+    };
+
+    WAVEDViewModel.prototype.dataSubsetDialogHasErrors = function() {
+        return DataSubsetHelper.hasErrors(self);
     };
 
     Object.defineProperties(WAVEDViewModel.prototype, {
