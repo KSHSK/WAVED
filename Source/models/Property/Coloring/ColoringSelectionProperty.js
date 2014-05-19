@@ -60,7 +60,7 @@ define([
     ColoringSelectionProperty.prototype = Object.create(Property.prototype);
 
     Object.defineProperties(ColoringSelectionProperty.prototype, {
-        properies: {
+        properties: {
             get: function() {
                 return [this.solidColoring, this.fourColoring, this.gradientColoring];
             }
@@ -90,6 +90,47 @@ define([
             }
         }
     });
+
+    ColoringSelectionProperty.prototype.getDisplayState = function() {
+        var displayState = Property.prototype.getDisplayState.call(this);
+
+        if(defined(this.displayValue)){
+            displayState.value = this.displayValue.getDisplayState();
+        }
+
+        return displayState;
+    };
+
+    ColoringSelectionProperty.prototype.setDisplayState = function(state, viewModel) {
+        if(!defined(state.value)) {
+            return;
+        }
+
+        var scheme = state.value;
+        switch(scheme.type) {
+            case ColoringSchemeType.SOLID_COLORING:
+                this.solidColoring.setDisplayState(scheme);
+                if(this.solidColoring !== this.originalValue) {
+                    this.displayValue = this.solidColoring;
+                }
+                break;
+            case ColoringSchemeType.FOUR_COLORING:
+                this.fourColoring.setDisplayState(scheme);
+                if(this.fourColoring !== this.originalValue) {
+                    this.displayValue = this.fourColoring;
+                }
+                break;
+            case ColoringSchemeType.GRADIENT_COLORING:
+                this.gradientColoring.setDisplayState(scheme, viewModel);
+                if(this.gradientColoring !== this.originalValue) {
+                    this.displayValue = this.gradientColoring;
+                }
+                break;
+            default:
+                this.displayValue = this.originalValue;
+                break;
+        }
+    };
 
     ColoringSelectionProperty.prototype.getState = function() {
         // This actually sets state.value to an object, we don't want that

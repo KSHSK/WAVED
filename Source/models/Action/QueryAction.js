@@ -40,7 +40,7 @@ define([
 
     QueryAction.prototype.getType = function() {
         return QueryAction.getType();
-    }
+    };
 
     Object.defineProperties(QueryAction.prototype, {
         dataSubset: {

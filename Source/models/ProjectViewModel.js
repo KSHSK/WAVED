@@ -669,9 +669,17 @@ define([
         for (var i = 0; i < this._widgets.length; i++) {
             var properties = this._widgets[i].viewModel.properties;
             for (var j = 0; j < properties.length; j++) {
-                var displayValue = properties[j].displayValue;
-                properties[j].value = properties[j].originalValue;
-                properties[j].displayValue = displayValue;
+                // If the value didn't change, but nested values did. Reset them properly here.
+                if(defined(properties[j].getSubscribableNestedProperties()) && properties[j].value === properties[j].originalValue) {
+                    properties[j].value.properties.forEach(function(nestedProp, index) {
+                        nestedProp.value = properties[j].value.properties[index].originalValue;
+                    });
+                }
+                else {
+                    var displayValue = properties[j].displayValue;
+                    properties[j].value = properties[j].originalValue;
+                    properties[j].displayValue = displayValue;
+                }
             }
         }
 
