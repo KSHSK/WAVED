@@ -35,7 +35,8 @@ define([
                 minLength: 0,
                 maxLength: 50
             }),
-            errorMessage: 'Must be between 0 and 50 characters'
+            errorMessage: 'Must be between 0 and 50 characters',
+            html: true
         });
 
         this.height.originalValue = 5;

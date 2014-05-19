@@ -40,7 +40,8 @@ define([
                 maxLength: 500
             }),
             textArea: true,
-            errorMessage: 'Must be between 0 and 500 characters'
+            errorMessage: 'Must be between 0 and 500 characters',
+            html: true
         });
 
         // Text Size
@@ -50,7 +51,11 @@ define([
             validValue: createValidator({
                 min: 1
             }),
-            errorMessage: 'Value must be greater than 0.'
+            errorMessage: 'Value must be greater than 0.',
+            css: {
+                attribute: 'font-size',
+                units: 'px'
+            }
         });
 
         // Text Align
@@ -59,31 +64,46 @@ define([
             value: 'Left',
             options: ['Left', 'Center', 'Right'],
             optionsCaption: null,
-            errorMessage: 'Value is required.'
+            errorMessage: 'Value is required.',
+            css: {
+                attribute: 'text-align'
+            }
         });
 
         // Text Color
         this.textColor = new StringProperty({
             displayName: 'Text Color',
-            value: 'Black'
+            value: 'Black',
+            css: {
+                attribute: 'color'
+            }
         });
 
         // Bold
         this.textWeight = new BooleanProperty({
             displayName: 'Bold Text',
-            value: false
+            value: false,
+            css: {
+                attribute: 'font-weight'
+            }
         });
 
         // Underline
         this.textUnderline = new BooleanProperty({
             displayName: 'Underline Text',
-            value: false
+            value: false,
+            css: {
+                attribute: 'text-decoration'
+            }
         });
 
         // Background Color
         this.backgroundColor = new StringProperty({
             displayName: 'Background Color',
-            value: 'White'
+            value: 'White',
+            css: {
+                attribute: 'background-color'
+            }
         });
 
         // Border Size
@@ -93,13 +113,20 @@ define([
             validValue: createValidator({
                 min: 0
             }),
-            errorMessage: 'Value must be a positive number'
+            errorMessage: 'Value must be a positive number',
+            css: {
+                attribute: 'border-width',
+                units: 'px'
+            }
         });
 
         // Border Color
         this.borderColor = new StringProperty({
             displayName: 'Border Color',
-            value: 'Black'
+            value: 'Black',
+            css: {
+                attribute: 'border-color'
+            }
         });
 
         this.height.originalValue = 5;
