@@ -39,6 +39,10 @@ define(['knockout',
 
         this.setState(options);
 
+        // Used for applying Actions after export.
+        this.css = options.css;
+        this.htmlAttribute = options.htmlAttribute;
+
         ko.track(this);
 
         var self = this;

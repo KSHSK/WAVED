@@ -2,6 +2,7 @@
  * A module for exporting the current project.
  */
 define([
+        '../models/Action/PropertyAction',
         '../models/Widget/USMapWidget/USMap',
         './UnsavedChanges',
         '../WAVEDViewModel',
@@ -9,6 +10,7 @@ define([
         '../util/displayMessage',
         'jquery'
     ], function(
+        PropertyAction,
         USMap,
         UnsavedChangesModule,
         WAVEDViewModel,
@@ -28,9 +30,9 @@ define([
         var str = '#' + widget.viewModel.name.value + ' {\n';
         var css = widget.getCss();
         for (var property in css) {
-            str = str + '\t' + property + ': ' + css[property];
+            str = str + '\t' + property + ': ' + css[property] + ';\n';
         }
-        str = str + '}';
+        str = str + '}\n\n';
         return str;
     }
 
@@ -74,12 +76,33 @@ define([
                 css += cssToString(viewModel.currentProject.widgets[i]);
                 css += '\n\n';
             }
-
             return css;
         },
 
         generateJs: function(viewModel) {
-            // TODO;
+            var js = '$(document).ready(function() {\n';
+
+            // Override CSS attributes from automatically applied Actions
+            // TODO: Nested Properties?
+            for (var i = 0; i < viewModel.currentProject.actions.length; i++) {
+                var action = viewModel.currentProject.actions[i];
+                if (action.applyAutomatically && action instanceof PropertyAction) {
+                    for (var key in action.newValues) {
+                        if (defined(action.target.viewModel[key].css)) {
+                            var value = action.newValues[key];
+                            if (defined(action.target.viewModel[key].css.units)) {
+                                value += action.target.viewModel[key].css.units;
+                            }
+                            js += '\t$(\'#' + action.target.viewModel.name.value + '\').css(\'' + action.target.viewModel[key].css.attribute + '\', \'' + value + '\');\n';
+                        }
+                        if (defined(action.target.viewModel[key].html)) {
+                            js += '\t$(\'#' + action.target.viewModel.name.value + '\').html(\'' + action.newValues[key] + '\');\n';
+                        }
+                    }
+                }
+            }
+
+            return js + '});';
         },
 
         generateHtml: function(viewModel) {
