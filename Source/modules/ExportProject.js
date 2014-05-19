@@ -120,7 +120,7 @@ define([
 
             for (var i = 0; i < viewModel.currentProject.widgets.length; i++) {
                 // TODO: proper tabbing
-                htmlTemplate += viewModel.currentProject.widgets[i].exportHtml();
+                htmlTemplate += '\t\t' + viewModel.currentProject.widgets[i].exportHtml() + '\n';
             }
 
             htmlTemplate += '\t</div>\n' +
