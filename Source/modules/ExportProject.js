@@ -56,12 +56,7 @@ define([
         generateCss: function(viewModel) {
             var workspace = viewModel.currentProject.workspace;
 
-            var css = '#waved-container {\n' +
-                                 '\twidth: ' + workspace.width.value + 'px;\n' +
-                                 '\theight: ' + workspace.height.value + 'px;\n' +
-                                 '\tposition: relative;\n' +
-                                 '\tbackground-color: ' + workspace.color.value + ';\n' +
-                               '}\n\n';
+            var css = workspace.getCss() + '\n\n';
 
             for (var i = 0; i < viewModel.currentProject.widgets.length; i++) {
                 css += cssToString(viewModel.currentProject.widgets[i]);
@@ -127,10 +122,9 @@ define([
                              thirdPartyImports +
                              '</head>\n' +
                              '<body>\n' +
-                                 '\t<div id="waved-container">\n';
+                             '\t<div id="waved-container">\n';
 
             for (var i = 0; i < viewModel.currentProject.widgets.length; i++) {
-                // TODO: proper tabbing
                 htmlTemplate += '\t\t' + viewModel.currentProject.widgets[i].exportHtml() + '\n';
             }
 
