@@ -99,6 +99,15 @@ define([
         }
     };
 
+    WorkspaceViewModel.prototype.getCss = function() {
+        return '#waved-container {\n' +
+            '\tposition: relative;\n' +
+            '\twidth: ' + this.width.value + 'px;\n' +
+            '\theight: ' + this.height.value + 'px;\n' +
+            '\tbackground-color: ' + this.color.value + ';\n' +
+        '}';
+    };
+
     // TODO: In the DD, add getProperties() and getViewModel() to be consistent here
     Object.defineProperties(WorkspaceViewModel.prototype, {
         viewModel: {
