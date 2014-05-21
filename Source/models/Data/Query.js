@@ -68,21 +68,24 @@ define(['jquery',
         this.conditions = [];
     };
 
-    Query.prototype.execute = function(data) {
+    var execute = function(data, current) {
+        // Select which set of conditions to use
+        var conditions = current ? this.currentConditions : this.conditions;
+
         // Every entry is an array contaning the matching rows for that condition.
         var conditionIndices = [];
 
         // Run each condition separately.
-        this.conditions.forEach(function(condition) {
+        conditions.forEach(function(condition) {
             var indices = condition.execute(data);
             conditionIndices.push(indices);
         });
 
         // Join all of the AND conditions.
         var andIndices = [];
-        for (var i = 0; i < this.conditions.length; i++) {
+        for (var i = 0; i < conditions.length; i++) {
             var group = conditionIndices[i];
-            while (this.conditions[i].logicalOperator === LogicalOperator.AND) {
+            while (conditions[i].logicalOperator === LogicalOperator.AND) {
                 i++;
                 group = intersection(group, conditionIndices[i]);
             }
@@ -95,36 +98,16 @@ define(['jquery',
         return data.filter(function(value, index) {
             return dataIndices.indexOf(index) !== -1;
         });
+    };
+
+    Query.prototype.execute = function(data) {
+        return execute.call(this, data, false);
     };
 
     Query.prototype.executeCurrent = function(data) {
-        // Every entry is an array contaning the matching rows for that condition.
-        var conditionIndices = [];
-
-        // Run each condition separately.
-        this.currentConditions.forEach(function(condition) {
-            var indices = condition.execute(data);
-            conditionIndices.push(indices);
-        });
-
-        // Join all of the AND conditions.
-        var andIndices = [];
-        for (var i = 0; i < this.currentConditions.length; i++) {
-            var group = conditionIndices[i];
-            while (this.currentConditions[i].logicalOperator === LogicalOperator.AND) {
-                i++;
-                group = intersection(group, conditionIndices[i]);
-            }
-            andIndices.push(group);
-        }
-
-        // Join the resulting indices by OR.
-        var dataIndices = unionAll(andIndices);
-
-        return data.filter(function(value, index) {
-            return dataIndices.indexOf(index) !== -1;
-        });
+        return execute.call(this, data, true);
     };
+
     Query.prototype.getState = function() {
         return {
             conditions: $.map(this.conditions, function(condition) {

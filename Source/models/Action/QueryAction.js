@@ -128,6 +128,7 @@ define([
             }
         }
 
+        // Update and run the query with the new current conditions
         this.dataSubset.query.currentConditions = conditions;
         this.dataSubset.executeCurrentQuery();
     };
