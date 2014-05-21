@@ -45,8 +45,20 @@ define([
 
             var widget = viewModel.actionEditorAffectedWidget.viewModel;
 
+            // Resets top level
             for (var index in widget.properties) {
-                widget.properties[index].displayValue = widget.properties[index].originalValue;
+
+                if(defined(widget.properties[index].getSubscribableNestedProperties())) {
+                    var nestedProps = widget.properties[index].getSubscribableNestedProperties();
+
+                    for(var nestedIndex in nestedProps) {
+                        nestedProps[nestedIndex].properties.forEach(function(value) {
+                            value.displayValue = value.originalValue;
+                        })
+                    }
+                }
+
+                widget.properties[index].setDisplayState(widget.properties[index].getState());
             }
 
             $('#actionApplyAutomatically').attr('checked', false);
