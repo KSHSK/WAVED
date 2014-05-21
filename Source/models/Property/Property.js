@@ -118,7 +118,7 @@ define(['knockout',
     };
 
     Property.prototype.getState = function() {
-        if (typeof this._value === 'object' && typeof this._value.getState === 'function') {
+        if (typeof this._originalValue === 'object' && typeof this._originalValue.getState === 'function') {
             return {
                 'value': this._originalValue.getState()
             };
