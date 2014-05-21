@@ -253,9 +253,9 @@ define([
             this.endColor.displayValue = state.endColor.value;
         }
         if(defined(state.dataSet)) {
-            this.dataSet.displayOptions.forEach(function(i) {
-                if(i.name === state.dataSet.value.name) {
-                    self.dataSet.displayValue = i;
+            this.dataSet.displayOptions.forEach(function(opts) {
+                if(opts.name === state.dataSet.value.name) {
+                    self.dataSet.displayValue = opts;
                 }
             });
         }

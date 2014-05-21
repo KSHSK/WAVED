@@ -63,7 +63,7 @@ define([
     DataSubset.prototype.getDisplayState = function() {
         var displayState = DataSet.prototype.getDisplayState.call(this);
 
-        displayState.type = DataSubset.getType;
+        displayState.type = DataSubset.getType();
 
         return displayState;
     };
