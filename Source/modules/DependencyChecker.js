@@ -20,17 +20,16 @@ define([
             var message = '';
 
             // Check PropertyActions.
-            for (i = 0; i < project.actions.length; i++) {
-                var action = project.actions[i];
+            var propertyActions = project.propertyActions;
+            for (i = 0; i < propertyActions.length; i++) {
+                var action = propertyActions[i];
 
-                if (action instanceof PropertyAction) {
-                    if (action.target === widget) {
-                        message = 'Cannot delete this widget since it is used by action "' + action.name + '"';
-                        return {
-                            allowed: false,
-                            message: message
-                        };
-                    }
+                if (action.target === widget) {
+                    message = 'Cannot delete this widget since it is used by action "' + action.name + '"';
+                    return {
+                        allowed: false,
+                        message: message
+                    };
                 }
             }
 
