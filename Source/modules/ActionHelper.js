@@ -38,6 +38,7 @@ define([
 
             // Select Property Action
             viewModel.selectedActionType = ActionType.PROPERTY_ACTION;
+            $('#action-editor-selected-action-type').prop('disabled', false);
 
             // Select first Widget
             viewModel.actionEditorAffectedWidgetError = false;
@@ -143,6 +144,9 @@ define([
             viewModel.selectedActionType = viewModel.selectedAction.type;
             viewModel.selectedActionName.value = viewModel.selectedAction.name;
             $('#actionApplyAutomatically').prop('checked', viewModel.selectedAction.applyAutomatically ? true : false);
+
+            // Don't allow the modification of action type
+            $('#action-editor-selected-action-type').prop('disabled', true);
 
             if (viewModel.selectedActionType === ActionType.PROPERTY_ACTION) {
                 viewModel.actionEditorAffectedWidget = viewModel.selectedAction.target;
