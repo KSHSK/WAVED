@@ -68,16 +68,17 @@ define([
 
     QueryAction.prototype.setState = function(state) {
         var self = this;
-        // TODO: Validation, etc
         if (defined(state.dataSubset)) {
             this.dataSubset = this.getDataSubset(state.dataSubset);
         }
 
         if (defined(state.conditions)) {
             this.conditions.length = 0;
-            state.conditions.forEach(function(condition) {
-                self.conditions.push(new Condition(condition));
-            });
+            if (state.conditions instanceof Array) {
+                state.conditions.forEach(function(condition) {
+                    self.conditions.push(new Condition(condition));
+                });
+            }
         }
 
         Action.prototype.setState.call(this, state);
