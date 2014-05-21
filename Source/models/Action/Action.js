@@ -43,7 +43,6 @@ define(['jquery',
                 }
             }
         },
-        // TODO: These not in the DD, should be required
         applyAutomatically: {
             get: function() {
                 return this._applyAutomatically;

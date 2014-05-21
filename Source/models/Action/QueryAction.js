@@ -110,6 +110,7 @@ define([
             return matches;
         }
 
+        // Loop through every condition to replace any templated arguments with the relevant values from the data given
         for (var j = 0; j < conditions.length; j++) {
             var condition = conditions[j];
             var templates = getTemplateMatches(condition.value);
