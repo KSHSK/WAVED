@@ -191,6 +191,7 @@ define(['jquery',
         this.selectedActionType = '';
         this.actionEditorAffectedWidget = undefined;
         this.actionEditorAffectedWidgetError = false;
+        this.actionEditorDataSubsetError = false;
         this._actionEditorDataSubset = undefined;
         this._actionDataSubsetEditorConditions = [];
         this.actionDataSubsetEditorConditionCount = 0;
