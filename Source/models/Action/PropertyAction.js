@@ -98,12 +98,12 @@ define([
 
     PropertyAction.prototype = Object.create(Action.prototype);
 
-    PropertyAction.prototype.getType = function() {
-        return PropertyAction.getType();
-    }
-
-
     Object.defineProperties(PropertyAction.prototype, {
+        type : {
+            get: function() {
+                return PropertyAction.getType();
+            }
+        },
         target: {
             get: function() {
                 return this._target;

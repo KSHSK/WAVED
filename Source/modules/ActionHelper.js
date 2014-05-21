@@ -140,7 +140,7 @@ define([
             var self = this;
             self.resetActionEditor(viewModel);
 
-            viewModel.selectedActionType = viewModel.selectedAction.getType();
+            viewModel.selectedActionType = viewModel.selectedAction.type;
             viewModel.selectedActionName.value = viewModel.selectedAction.name;
             $('#actionApplyAutomatically').prop('checked', viewModel.selectedAction.applyAutomatically ? true : false);
 
