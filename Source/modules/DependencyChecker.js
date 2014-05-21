@@ -107,6 +107,18 @@ define([
                 }
             }
 
+            // Check if dataSet is in use by a QueryAction
+            var queryActions = project.queryActions;
+            for (i = 0; i < queryActions.length; i++) {
+                var queryAction = queryActions[i];
+                if (queryAction.dataSubset === dataSet) {
+                    return {
+                        allowed: false,
+                        message: 'Cannot delete data that is in use by a Query Action'
+                    };
+                }
+            }
+
             return {
                 allowed: true,
                 message: ''
