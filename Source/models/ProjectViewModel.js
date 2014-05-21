@@ -131,6 +131,20 @@ define([
                 return this._actions;
             }
         },
+        propertyActions: {
+            get: function() {
+                return this._actions.filter(function(action) {
+                    return action instanceof PropertyAction;
+                });
+            }
+        },
+        queryActions: {
+            get: function() {
+                return this._actions.filter(function(action) {
+                    return action instanceof QueryAction;
+                });
+            }
+        },
         nonAutoActions: {
             get: function() {
                 return this._actions.filter(function(action) {
