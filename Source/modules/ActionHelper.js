@@ -177,7 +177,13 @@ define([
                             return;
                         }
 
-                        self.updateEditChanges(viewModel);
+                        if (viewModel.selectedActionType === ActionType.PROPERTY_ACTION) {
+                            self.updateEditPropertyActionChanges(viewModel);
+                        }
+                        else {
+                            self.updateEditQueryActionChanges(viewModel);
+                        }
+
                         self.closeActionDialog(viewModel);
                     },
                     'Cancel': function() {
@@ -186,90 +192,92 @@ define([
                 }
             });
         },
-        updateEditChanges: function(viewModel) {
+
+        updateEditPropertyActionChanges: function(viewModel) {
             var action = viewModel.selectedAction;
-            var undoChange;
-            var executeChange;
+            var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
 
-            if (viewModel.selectedActionType === ActionType.PROPERTY_ACTION) {
-                var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
+            var oldName = action.name;
+            var oldTarget = action.target;
+            var oldNewValues = $.extend({}, action.newValues);
+            var oldApplyAutomatically = action.applyAutomatically;
 
-                var oldName = action.name;
-                var oldTarget = action.target;
-                var oldNewValues = $.extend({}, action.newValues);
-                var oldApplyAutomatically = action.applyAutomatically;
+            var undoChange = function() {
+                action.name = oldName;
+                action.target = oldTarget;
+                action.newValues = oldNewValues;
+                action.applyAutomatically = oldApplyAutomatically;
 
-                undoChange = function() {
-                    action.name = oldName;
-                    action.target = oldTarget;
-                    action.newValues = oldNewValues;
-                    action.applyAutomatically = oldApplyAutomatically;
+                if (action.applyAutomatically) {
+                    action.apply();
+                }
+            };
 
-                    if (action.applyAutomatically) {
-                        action.apply();
-                    }
-                };
+            var actionValues = {};
 
-                var actionValues = {};
-
-                for (var property in viewModel.actionEditorAffectedWidget.viewModel) {
-                    var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
-                    if (propertyIndex > -1) {
-                        if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
-                            actionValues[property] = properties[propertyIndex].displayValue;
-                        }
+            for (var property in viewModel.actionEditorAffectedWidget.viewModel) {
+                var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
+                if (propertyIndex > -1) {
+                    if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
+                        actionValues[property] = properties[propertyIndex].displayValue;
                     }
                 }
-
-                var newName = viewModel.selectedActionName.value;
-                var newTarget = viewModel.actionEditorAffectedWidget;
-                var newApplyAutomatically = $('#actionApplyAutomatically').is(':checked');
-
-                 executeChange = function() {
-                    action.name = newName;
-                    action.target = newTarget;
-                    action.newValues = actionValues;
-                    action.applyAutomatically = newApplyAutomatically;
-
-                    if (action.applyAutomatically) {
-                        action.apply();
-                    }
-                };
             }
-            else {
-                var limit = viewModel.actionDataSubsetEditorConditionCount;
-                var oldState = action.getState();
-                var newState = {
-                    name: viewModel.selectedActionName.value,
-                    dataSubset: viewModel.actionEditorDataSubset.name,
-                    conditions: viewModel.actionDataSubsetEditorConditions.slice(0, limit).map(function (condition) {
-                        return new Condition(condition.getState());
-                    }),
-                    applyAutomatically: $('#actionApplyAutomatically').is(':checked'),
-                };
 
-                undoChange = function() {
-                    action.setState(oldState);
+            var newName = viewModel.selectedActionName.value;
+            var newTarget = viewModel.actionEditorAffectedWidget;
+            var newApplyAutomatically = $('#actionApplyAutomatically').is(':checked');
 
-                    if (action.applyAutomatically) {
-                        action.apply();
-                    }
-                };
+            var executeChange = function() {
+                action.name = newName;
+                action.target = newTarget;
+                action.newValues = actionValues;
+                action.applyAutomatically = newApplyAutomatically;
 
-                executeChange = function() {
-                    action.setState(newState);
-
-                    if (action.applyAutomatically) {
-                        action.apply();
-                    }
-                };
-            }
+                if (action.applyAutomatically) {
+                    action.apply();
+                }
+            };
 
             var historyMonitor = HistoryMonitor.getInstance();
             historyMonitor.addChanges(undoChange, executeChange);
-
             historyMonitor.executeIgnoreHistory(executeChange);
         },
+
+        updateEditQueryActionChanges: function(viewModel) {
+            var action = viewModel.selectedAction;
+            var limit = viewModel.actionDataSubsetEditorConditionCount;
+            var oldState = action.getState();
+            var newState = {
+                name: viewModel.selectedActionName.value,
+                dataSubset: viewModel.actionEditorDataSubset.name,
+                conditions: viewModel.actionDataSubsetEditorConditions.slice(0, limit).map(function (condition) {
+                    return new Condition(condition.getState());
+                }),
+                applyAutomatically: $('#actionApplyAutomatically').is(':checked'),
+            };
+
+            var undoChange = function() {
+                action.setState(oldState);
+
+                if (action.applyAutomatically) {
+                    action.apply();
+                }
+            };
+
+            var executeChange = function() {
+                action.setState(newState);
+
+                if (action.applyAutomatically) {
+                    action.apply();
+                }
+            };
+
+            var historyMonitor = HistoryMonitor.getInstance();
+            historyMonitor.addChanges(undoChange, executeChange);
+            historyMonitor.executeIgnoreHistory(executeChange);
+        },
+
         hasErrors: function(viewModel) {
             var error = false;
 
