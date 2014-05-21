@@ -44,6 +44,9 @@ define([
 
             $('#actionApplyAutomatically').attr('checked', false);
 
+            // Select first Data Subset
+            viewModel.actionEditorDataSubsetError = false;
+
             // Force reset of data subset so that the conditions are reloaded
             viewModel.actionEditorDataSubset = undefined;
         },
@@ -308,11 +311,15 @@ define([
             }
             else {
                 // Check Query Action errors.
-                error |= !defined(viewModel.actionEditorDataSubset);
+                if (!defined(viewModel.actionEditorDataSubset)) {
+                    error = true;
+                    viewModel.actionEditorDataSubsetError = true;
+                }
             }
 
             return error;
         },
+
         actionDataSubsetConditionChange: function(viewModel, index) {
             var currentCondition = viewModel.actionDataSubsetEditorConditions[index];
 
