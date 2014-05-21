@@ -54,7 +54,7 @@ define([
                     for(var nestedIndex in nestedProps) {
                         nestedProps[nestedIndex].properties.forEach(function(value) {
                             value.displayValue = value.originalValue;
-                        })
+                        });
                     }
                 }
 
