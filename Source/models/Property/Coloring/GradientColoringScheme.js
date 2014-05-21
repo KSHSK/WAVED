@@ -209,9 +209,6 @@ define([
                 self.keyField.displayValue = undefined;
                 self.keyField.displayOptions = [];
             }
-
-            // TODO: Need HistoryMonitor?
-            // TODO: Undo/redo isn't working
         });
 
         // Properly unset the dataSet value when the options disappear (when the bound data is unbound)
