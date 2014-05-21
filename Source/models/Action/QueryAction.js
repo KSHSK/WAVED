@@ -38,11 +38,12 @@ define([
 
     QueryAction.prototype = Object.create(Action.prototype);
 
-    QueryAction.prototype.getType = function() {
-        return QueryAction.getType();
-    }
-
     Object.defineProperties(QueryAction.prototype, {
+        type : {
+            get: function() {
+                return QueryAction.getType();
+            }
+        },
         dataSubset: {
             get: function() {
                 return this._dataSubset;
