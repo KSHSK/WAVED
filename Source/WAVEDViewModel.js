@@ -180,7 +180,7 @@ define(['jquery',
         subscribeObservable(self.uploadDataFile, '_value', function(newFilename) {
             if (newFilename !== '') {
                 var originalName = getBasename(newFilename).split('.')[0];
-                var validName = originalName.replace(filenameInvalidCharRegex, '');
+                var validName = originalName.replace(filenameInvalidCharRegex, '').substring(0, 50);
                 self.uploadDataName.value = validName;
             }
         });
@@ -392,19 +392,26 @@ define(['jquery',
         return DeleteData.markDataForDeletion(self);
     };
 
+    WAVEDViewModel.prototype.openPreviewDataDialog = function() {
+        if (!defined(this.dataSetToPreview)) {
+            return;
+        }
+
+        $('#preview-data-dialog').dialog({
+            height: 'auto',
+            width: 'auto',
+            modal: true,
+            title: 'Preview Data for "' + this.dataSetToPreview.displayName + '"'
+        });
+    };
+
     WAVEDViewModel.prototype.previewDataSet = function() {
         if (!defined(this.selectedDataSet)) {
             return;
         }
 
         this.dataSetToPreview = this.selectedDataSet;
-
-        $('#preview-data-dialog').dialog({
-            height: 'auto',
-            width: 'auto',
-            modal: true,
-            title: 'Preview Data for "' + this.selectedDataSet.displayName + '"'
-        });
+        this.openPreviewDataDialog();
     };
 
     WAVEDViewModel.prototype.previewDataSubset = function() {
@@ -413,13 +420,16 @@ define(['jquery',
         }
 
         this.dataSetToPreview = this.selectedDataSubset;
+        this.openPreviewDataDialog();
+    };
 
-        $('#preview-data-dialog').dialog({
-            height: 'auto',
-            width: 'auto',
-            modal: true,
-            title: 'Preview Data for "' + this.selectedDataSubset.displayName + '"'
-        });
+    WAVEDViewModel.prototype.previewBoundDataSet = function() {
+        if (!defined(this.selectedBoundData)) {
+            return;
+        }
+
+        this.dataSetToPreview = this.selectedBoundData;
+        this.openPreviewDataDialog();
     };
 
     WAVEDViewModel.prototype.addDataSubset = function() {

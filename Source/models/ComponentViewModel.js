@@ -120,19 +120,19 @@ define([
 
     ComponentViewModel.prototype.setState = function(state) {
         if (defined(state.name)) {
-            this.name.originalValue = state.name.value;
+            this.name.setState(state.name);
         }
 
         if (defined(state.visible)) {
-            this.visible.originalValue = state.visible.value;
+            this.visible.setState(state.visible);
         }
 
         if (defined(state.logGoogleAnalytics)) {
-            this.logGoogleAnalytics.originalValue = state.logGoogleAnalytics.value;
+            this.logGoogleAnalytics.setState(state.logGoogleAnalytics);
         }
 
         if(defined(state.z)){
-            this.z.originalValue = state.z.value;
+            this.z.setState(state.z);
 
             if(this.z.originalValue === this.zMinimum){
                 this.zDecrement.disableButton();
