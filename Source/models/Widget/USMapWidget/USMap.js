@@ -148,9 +148,9 @@ define([
         var vm = this.viewModel;
         var js = '';
 
-        var w = $('#waved-container').width();
+        var w = $('#waved-workspace').width();
         var w2 = w * vm.width.value/100;
-        var h = $('#waved-container').height();
+        var h = $('#waved-workspace').height();
         var h2 = h * vm.width.value/100;
         var scale = w*1.3*vm.width.value/100;
 
