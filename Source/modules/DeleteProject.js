@@ -45,6 +45,7 @@ define([
             deleteProjectDialog.find('.error').html('');
 
             deleteProjectDialog.dialog({
+                title: 'Delete Project "' + projectName + '"',
                 resizable: false,
                 height: 220,
                 width: 350,
