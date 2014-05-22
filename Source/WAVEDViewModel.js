@@ -15,6 +15,7 @@ define(['jquery',
         'models/Widget/ButtonWidget/Button',
         'models/Widget/TextBlockWidget/TextBlock',
         'models/Widget/USMapWidget/USMap',
+        'models/Widget/GraphWidget/LineGraph',
         'models/ProjectTree',
         'modules/ActionHelper',
         'modules/EventHelper',
@@ -53,6 +54,7 @@ define(['jquery',
         Button,
         TextBlock,
         USMap,
+        LineGraph,
         ProjectTree,
         ActionHelper,
         EventHelper,
@@ -124,6 +126,10 @@ define(['jquery',
             name: 'US Map',
             icon: USMap.iconLocation(),
             o: USMap
+        }, {
+            name: 'Line Graph',
+            icon: LineGraph.iconLocation(),
+            o: LineGraph
         }];
 
         this.eventTypes = [];
