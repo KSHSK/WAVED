@@ -3,14 +3,14 @@
 // Get the name of the demo.
 $name = $_POST["name"];
 if ($name == "") {
-   echo "App name cannot be blank.";   
-   return;
+    reportReturnValue("App name cannot be blank.");   
+    return;
 }
 
 // Get the HTML
 $html = $_POST["html"];
 if ($html == "") {
-   echo "HTML cannot be blank.";
+   reportReturnValue("HTML cannot be blank.");
    return;
 }
 
@@ -55,9 +55,9 @@ foreach ($data_files as $file) {
 $zip->close();
 
 if (!file_exists($zipPath)) {
-   echo "Failed to create zip file.";
+   reportReturnValue("Failed to create zip file.");
    return;
 }
 
-echo "success";
+reportReturnValue("success");
 ?>
