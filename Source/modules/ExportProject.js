@@ -181,7 +181,7 @@ define([
         },
 
         downloadGeneratedZipFile: function(data, fileName) {
-            if (data !== 'success') {
+            if (data.success) {
                 displayMessage('Could not download zip file.');
                 return;
             }

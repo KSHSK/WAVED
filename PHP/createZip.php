@@ -1,17 +1,22 @@
 <?php
+include_once("CommonMethods.php");
+
+$returnValue = getInitialReturnValue();
 
 // Get the name of the demo.
 $name = $_POST["name"];
 if ($name == "") {
-    reportReturnValue("App name cannot be blank.");   
+    setReturnValueError($returnValue, "App name cannot be blank.");
+    reportReturnValue($returnValue);
     return;
 }
 
 // Get the HTML
 $html = $_POST["html"];
 if ($html == "") {
-   reportReturnValue("HTML cannot be blank.");
-   return;
+    setReturnValueError($returnValue, "HTML cannot be blank.");
+    reportReturnValue($returnValue);
+    return;
 }
 
 $css = $_POST["css"];
@@ -55,9 +60,10 @@ foreach ($data_files as $file) {
 $zip->close();
 
 if (!file_exists($zipPath)) {
-   reportReturnValue("Failed to create zip file.");
-   return;
+    setReturnValueError($returnValue, "This project does not exist.");
+    reportReturnValue($returnValue);
+    return;
 }
 
-reportReturnValue("success");
+reportReturnValue($returnValue);
 ?>
