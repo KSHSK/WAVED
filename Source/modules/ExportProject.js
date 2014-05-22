@@ -32,9 +32,9 @@ define([
         var str = '#' + widget.viewModel.name.value + ' {\n';
         var css = widget.getCss();
         for (var property in css) {
-            str = str + '\t' + property + ': ' + css[property] + ';\n';
+            str += '\t' + property + ': ' + css[property] + ';\n';
         }
-        str = str + '}\n\n';
+        str += '}';
         return str;
     }
 
@@ -77,11 +77,11 @@ define([
                             if (defined(action.target.viewModel[key].css.units)) {
                                 value += action.target.viewModel[key].css.units;
                             }
-                            js += tabs + '\t$(\'#' + action.target.viewModel.name.value + '\').css(\'' + action.target.viewModel[key].css.attribute + '\', \'' + value + '\');\n';
+                            js += tabs + '\n\t$(\'#' + action.target.viewModel.name.value + '\').css(\'' + action.target.viewModel[key].css.attribute + '\', \'' + value + '\');\n';
                         }
 
                         if (defined(action.target.viewModel[key].html)) {
-                            js += tabs + '\t$(\'#' + action.target.viewModel.name.value + '\').html(\'' + action.newValues[key] + '\');\n';
+                            js += tabs + '\n\t$(\'#' + action.target.viewModel.name.value + '\').html(\'' + action.newValues[key] + '\');\n';
                         }
                     }
                 }
@@ -108,7 +108,13 @@ define([
                 js += '});';
             }
 
-            return js + '});';
+            for (i = 0; i < viewModel.currentProject.widgets.length; i++) {
+                if (defined(viewModel.currentProject.widgets[i].getJs)) {
+                    js += viewModel.currentProject.widgets[i].getJs();
+                }
+            }
+
+            return js + '\n});';
         },
 
         generateHtml: function(viewModel) {
