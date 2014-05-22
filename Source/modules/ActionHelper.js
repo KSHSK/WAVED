@@ -109,8 +109,8 @@ define([
                                     }
                                 }
 
-                                actionState.target = viewModel.actionEditorAffectedWidget,
-                                actionState.newValues = actionValues,
+                                actionState.target = viewModel.actionEditorAffectedWidget;
+                                actionState.newValues = actionValues;
                                 action = new PropertyAction(actionState);
                             }
                             else {
@@ -124,7 +124,7 @@ define([
                         },
                         create: function() {
                             ko.applyBindings(viewModel, this);
-                        },
+                        }
                     },
                     'Cancel': function() {
                         self.closeActionDialog(viewModel);
@@ -261,7 +261,7 @@ define([
                 conditions: viewModel.actionDataSubsetEditorConditions.slice(0, limit).map(function (condition) {
                     return new Condition(condition.getState());
                 }),
-                applyAutomatically: $('#actionApplyAutomatically').is(':checked'),
+                applyAutomatically: $('#actionApplyAutomatically').is(':checked')
             };
 
             var undoChange = function() {

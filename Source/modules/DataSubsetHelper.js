@@ -45,7 +45,7 @@ define([
                     click: saveCallback,
                     create: function() {
                         ko.applyBindings(viewModel, this);
-                    },
+                    }
                 },
                 'Cancel': cancelCallback
             }

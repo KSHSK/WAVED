@@ -64,7 +64,7 @@ define([
     DataSubset.prototype.reset = function() {
         this.query.reset();
         this.executeCurrentQuery();
-    }
+    };
 
     var executeQuery = function(current) {
         var self = this;
@@ -90,7 +90,7 @@ define([
         };
 
         self.parent.executeWhenDataLoaded(localExecuteQuery);
-    }
+    };
 
     DataSubset.prototype.executeQuery = function() {
         executeQuery.call(this, false);
