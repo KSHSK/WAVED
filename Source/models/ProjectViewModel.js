@@ -596,7 +596,7 @@ define([
 
         var response = DependencyChecker.allowedToDeleteDataSet(dataSet, self);
         if (!response.allowed) {
-            displayMessage(response.message);
+            displayMessage(response.message, MessageType.WARNING);
             return;
         }
 
