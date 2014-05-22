@@ -180,9 +180,10 @@ define([
             });
         },
 
-        downloadGeneratedZipFile: function(data, fileName) {
-            if (data.success) {
-                displayMessage('Could not download zip file.');
+        downloadGeneratedZipFile: function(response, fileName) {
+            var data = JSON.parse(response);
+            if (!data.success) {
+                displayMessage(data.errorMessage);
                 return;
             }
 
