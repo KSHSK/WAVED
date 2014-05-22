@@ -96,13 +96,13 @@ define([
                 js += '["California", "Colorado", "Georgia", "Idaho", "Indiana", "Louisiana", "Massachusetts", "Missouri", "New Jersey", "South Dakota", "West Virginia"],\n';
                 js += '["Florida", "Hawaii", "Iowa", "Maryland", "New Hampshire", "New York", "North Dakota", "Ohio", "Oklahoma", "South Carolina", "Tennessee", "Utah", "Washington"]\n';
                 js += '];\n\n';
-                js += 'var colorArray = [' + coloringScheme.getColorArray()[0] + ', ' + coloringScheme.getColorArray()[1];
-                js += ', ' + coloringScheme.getColorArray()[2] + ', ' + coloringScheme.getColorArray()[3] + '];\n\n';
+                js += 'var colorArray = ["' + coloringScheme.getColorArray()[0] + '", "' + coloringScheme.getColorArray()[1];
+                js += '", "' + coloringScheme.getColorArray()[2] + '", "' + coloringScheme.getColorArray()[3] + '"];\n\n';
                 js += 'path.style("fill", function(d) {\n';
                 js += 'var stateName = d.properties.name;\n';
                 js += 'for(var i=0; i < 4; i++){\n';
                 js += 'if(fourColorStateGroupings[i].indexOf(stateName) !== -1){\n';
-                js += 'return colorArray()[i].toLowerCase();\n';
+                js += 'return colorArray[i].toLowerCase();\n';
                 js += '}\n';
                 js += '}\n';
                 js += '});\n';
@@ -168,7 +168,7 @@ define([
         js += '.attr("height", ' +  h2 + ')\n';
         js += '.attr("width", '  + w2 + ');\n';
         js += 'var states = svg.append("g");\n';
-        js += 'd3.json(\'./states.json\', function(json) {\n';
+        js += 'd3.json(\'./data/states.json\', function(json) {\n';
         js += 'states.selectAll("path")\n';
         js += '.data(json.features)\n';
         js += '.enter()\n';
