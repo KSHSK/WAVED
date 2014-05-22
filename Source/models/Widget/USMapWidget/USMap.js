@@ -69,24 +69,24 @@ define([
     };
 
 
-    function getColoringJS(viewModel) {
+    function getColoringJs(viewModel) {
         var js = '';
 
         var coloringScheme = viewModel.coloring.value;
 
         js += 'function updateColoring (states) {\n';
-        js += 'var path = states.selectAll("path");\n';
-        js += 'path.style("stroke", function(d) {\n';
-        js += 'return ' + viewModel.strokeColor.value + ';\n';
+        js += '\tvar path = states.selectAll("path");\n';
+        js += '\tpath.style("stroke", function(d) {\n';
+        js += '\treturn "' + viewModel.strokeColor.value + '";\n';
         js += '});\n';
 
         // Every time a color is used here, it should be converted toLowerCase() to be consistent across the board
         switch(coloringScheme.getType()){
             case ColoringSchemeType.SOLID_COLORING:
                 js += 'path.style("fill", function(d) {\n';
-                js += 'return ';
+                js += 'return "';
                 js += defined(coloringScheme.color.value) ? coloringScheme.color.value.toLowerCase() : viewModel.DEFAULT_MAP_COLOR.toLowerCase();
-                js += ';\n';
+                js += '";\n';
                 js += '});\n';
                 break;
             case ColoringSchemeType.FOUR_COLORING:
@@ -144,13 +144,13 @@ define([
         return js;
     }
 
-    USMap.prototype.getJS = function() {
+    USMap.prototype.getJs = function() {
         var vm = this.viewModel;
         var js = '';
 
-        var w = $('#waved-workspace').width();
+        var w = $('#waved-container').width();
         var w2 = w * vm.width.value/100;
-        var h = $('#waved-workspace').height();
+        var h = $('#waved-container').height();
         var h2 = h * vm.width.value/100;
         var scale = w*1.3*vm.width.value/100;
 
@@ -158,17 +158,17 @@ define([
 
         js += 'function addStateDataToTrigger(d){\n';
         js += '//todo\n';
-        js += '}\n';
-        js += '\n';
-        js += getColoringJS(this.viewModel);
-        js += 'var projection = d3.geo.albersUsa().scale(scale).translate(([w2/2, h2/2]));\n';
+        js += '}\n\n';
+        js += 'var scale = ' + w + '*1.3*' + vm.width.value/100 + '; //1.3 is a magic number\n';
+        js += 'var projection = d3.geo.albersUsa().scale(scale).translate(([' + w2 + '/2, ' + h2 + '/2]));\n';
         js += 'var path = d3.geo.path().projection(projection);\n';
-        js += 'var svg = d3.select("#"' + this.vm.name.value + ');\n';
+        js += getColoringJs(vm);
+        js += 'var svg = d3.select("#' + vm.name.value + '")\n';
         js += '.append("svg")\n';
         js += '.attr("height", ' +  h2 + ')\n';
-        js += '.attr("width", '  + w2 + ')\n';
+        js += '.attr("width", '  + w2 + ');\n';
         js += 'var states = svg.append("g");\n';
-        js += 'd3.json(./state.json, function(json) {\n';
+        js += 'd3.json(\'./states.json\', function(json) {\n';
         js += 'states.selectAll("path")\n';
         js += '.data(json.features)\n';
         js += '.enter()\n';
@@ -176,7 +176,7 @@ define([
         js += '.attr("d", path)\n';
         js += '.attr("stroke", "white")\n';
         js += '.style("fill", function(d) {\n';
-        js += 'return ' + vm.coloring.value + ';\n';
+        js += 'return "' + vm.coloring.value.getType() + '";\n';
         js += '})\n';
         js += '.on("mouseover", function(d) {\n';
         js += 'addStateDataToTrigger(d);\n';
@@ -190,7 +190,8 @@ define([
         js += '.on("click", function(d) {\n';
         js += 'addStateDataToTrigger(d);\n';
         js += '});\n';
-        js += 'updateColoring(states)';
+        js += 'updateColoring(states);';
+        js += '});\n';
 
         return js;
     };
