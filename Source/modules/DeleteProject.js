@@ -42,7 +42,10 @@ define([
         openDeleteProjectDialog: function(projectDeleted, projectName, viewModel, doCleanUp) {
             var self = this;
             var deleteProjectDialog = $('#delete-project-dialog');
-            deleteProjectDialog.find('.error').html('');
+
+            // Reset dialog text
+            deleteProjectDialog.find('.error').empty();
+            deleteProjectDialog.find('.content').text(projectName);
 
             deleteProjectDialog.dialog({
                 title: 'Delete Project "' + projectName + '"',
