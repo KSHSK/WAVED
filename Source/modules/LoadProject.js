@@ -133,9 +133,12 @@ define([
                         }
                     },
                     'Cancel': function() {
-                        projectLoaded.reject();
                         loadProjectDialog.dialog('close');
                     }
+                },
+                close: function() {
+                    // Attempt to reject the deferred. If it was already resolved this will do nothing.
+                    projectLoaded.reject();
                 }
             });
 
