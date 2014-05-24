@@ -9,7 +9,7 @@ define([
         'models/Constants/MessageType',
         'models/Data/DataSet',
         'util/displayMessage',
-        'knockout',
+        'knockout'
     ], function(
         $,
         WAVEDViewModel,

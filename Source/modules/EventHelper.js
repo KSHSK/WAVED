@@ -65,7 +65,7 @@ define([
                         },
                         create: function() {
                             ko.applyBindings(viewModel, this);
-                        },
+                        }
                     },
                     'Cancel': function() {
                         self.eventDialog.dialog('close');
