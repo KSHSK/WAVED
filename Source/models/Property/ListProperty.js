@@ -31,9 +31,14 @@ define([
         // Set a default isValidValue function if necessary.
         if (!defined(opts.validValue)) {
             this.isValidValue = function(value) {
+                if (!defined(value)) {
+                    return true;
+                }
+
                 if (defined(this._options) && this._options.length > 0) {
                     return (this._options.indexOf(value) !== -1);
                 }
+
                 return true;
             };
         }
