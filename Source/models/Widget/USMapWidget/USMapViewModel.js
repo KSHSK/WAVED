@@ -413,6 +413,7 @@ define([
             edit: function() {
                 if (defined(this.value)) {
                     var value = this.value;
+                    GlyphHelper.resetGlyphDialog(value);
                     GlyphHelper.addEditGlyph(value).then(function() {
                         editSuccess(value);
                     }, function() {
@@ -525,6 +526,11 @@ define([
             get: function() {
                 return [this.name, this.x, this.y, this.width, this.visible,
                         this.strokeColor, this.coloring, this.logGoogleAnalytics, this.glyphList];
+            }
+        },
+        subTargets: {
+            get: function() {
+                return this.glyphs;
             }
         }
     });

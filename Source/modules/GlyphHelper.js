@@ -24,8 +24,15 @@ define([
 
     var glyphDialog = $('#glyph-editor-dialog');
 
+    GlyphHelper.resetGlyphDialog = function(glyph) {
+        glyph.properties.forEach(function(prop) {
+            prop.displayValue = prop.originalValue;
+        });
+    };
+
     GlyphHelper.addEditGlyph = function(glyph) {
         var self = this;
+
         var glyphAdded = $.Deferred();
         glyphDialog.dialog({
             resizable: false,
