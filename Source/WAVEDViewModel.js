@@ -707,6 +707,12 @@ define(['jquery',
             get: function() {
                 return this._historyIndex;
             }
+        },
+        title: {
+            get: function() {
+                var projectName = this.currentProject.name;
+                return projectName ? 'WAVED - ' + projectName : 'WAVED';
+            }
         }
     });
 
