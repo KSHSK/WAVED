@@ -450,12 +450,14 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.dataSubsetConditionChange = function(index) {
+        // Use setTimeout to wait for updated conditions
         setTimeout(function() {
             DataSubsetHelper.dataSubsetConditionChange(self, index);
         }, 0);
     };
 
     WAVEDViewModel.prototype.actionDataSubsetConditionChange = function(index) {
+        // Use setTimeout to wait for updated conditions
         setTimeout(function() {
             ActionHelper.actionDataSubsetConditionChange(self, index);
         }, 0);
