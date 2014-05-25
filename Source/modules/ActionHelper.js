@@ -43,11 +43,10 @@ define([
             // Unselect DataSet.
             viewModel.actionEditorDataSet = undefined;
 
-            var widget = viewModel.actionEditorAffectedWidget.viewModel;
+            var widget = viewModel.actionEditorAffectedWidget;
 
             // Resets top level
             for (var index in widget.properties) {
-
                 if(defined(widget.properties[index].getSubscribableNestedProperties())) {
                     var nestedProps = widget.properties[index].getSubscribableNestedProperties();
 
@@ -70,7 +69,7 @@ define([
             // Restore displayValue to value so that it's not shown as the new value
             // if the action isn't applied automatically.
             if (defined(viewModel.actionEditorAffectedWidget)) {
-                var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
+                var properties = viewModel.actionEditorAffectedWidget.properties;
                 for (var i = 0; i < properties.length; i++) {
                     properties[i].displayValue = properties[i].value;
 
@@ -104,9 +103,9 @@ define([
                             }
 
                             var actionValues = {};
-                            var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
-                            for (var property in viewModel.actionEditorAffectedWidget.viewModel) {
-                                var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
+                            var properties = viewModel.actionEditorAffectedWidget.properties;
+                            for (var property in viewModel.actionEditorAffectedWidget) {
+                                var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget[property]);
                                 if (propertyIndex > -1) {
                                     if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
                                           actionValues[property] = properties[propertyIndex].getDisplayState();
@@ -162,7 +161,7 @@ define([
             viewModel.actionEditorAffectedWidget = viewModel.selectedAction.target;
             $('#actionApplyAutomatically').prop('checked', viewModel.selectedAction.applyAutomatically ? true : false);
 
-            var widget = viewModel.actionEditorAffectedWidget.viewModel;
+            var widget = viewModel.actionEditorAffectedWidget;
 
             // Set the displayValues to match those saved in the widget
             for (var index in widget.properties) {
@@ -201,7 +200,7 @@ define([
             });
         },
         updateEditChanges: function(viewModel) {
-            var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
+            var properties = viewModel.actionEditorAffectedWidget.properties;
             var action = viewModel.selectedAction;
 
             var oldName = action.name;
@@ -222,8 +221,8 @@ define([
 
             var actionValues = {};
 
-            for (var property in viewModel.actionEditorAffectedWidget.viewModel) {
-                var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
+            for (var property in viewModel.actionEditorAffectedWidget) {
+                var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget[property]);
                 if (propertyIndex > -1) {
                     if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
                         actionValues[property] = properties[propertyIndex].getDisplayState();
@@ -284,7 +283,7 @@ define([
 
                 // Check if any property has an error.
                 if (defined(viewModel.actionEditorAffectedWidget)) {
-                    var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
+                    var properties = viewModel.actionEditorAffectedWidget.properties;
                     for (var i = 0; i < properties.length; i++) {
                         if (properties[i].error) {
                             error = true;

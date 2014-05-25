@@ -86,6 +86,17 @@ define([
                 return [this.workspace].concat(this.widgets);
             }
         },
+        actionComponentOptions: {
+            get: function() {
+                var items = [];
+                this.widgets.forEach(function(widget) {
+                    items.push(widget.viewModel);
+                    items.push.apply(items, widget.viewModel.subTargets);
+                });
+
+                return items;
+            }
+        },
         dataSets: {
             get: function() {
                 return this._dataSets;
@@ -286,7 +297,7 @@ define([
                 var action;
 
                 if (itemState.type === PropertyAction.getType()) {
-                    itemState.target = self.getWidget(itemState.target);
+                    itemState.target = self.getActionComponentOption(itemState.target);
                     action = new PropertyAction(itemState);
                 }
                 else if (itemState.type === QueryAction.getType()) {
@@ -492,6 +503,17 @@ define([
         return null;
     };
 
+    ProjectViewModel.prototype.getActionComponentOption = function(name) {
+        for (var index = 0; index < this.actionComponentOptions.length; index++) {
+            var viewModel = this.actionComponentOptions[index];
+            if (viewModel.name.value === name) {
+                return viewModel;
+            }
+        }
+
+        return null;
+    };
+
     ProjectViewModel.prototype.getDataSet = function(name) {
         var self = this;
 
@@ -666,8 +688,8 @@ define([
     };
 
     ProjectViewModel.prototype.refreshWorkspace = function() {
-        for (var i = 0; i < this._widgets.length; i++) {
-            var properties = this._widgets[i].viewModel.properties;
+        this.actionComponentOptions.forEach(function(viewModel) {
+            var properties = viewModel.properties;
             for (var j = 0; j < properties.length; j++) {
                 // Reset all nested values if present
                 if(defined(properties[j].getSubscribableNestedProperties())) {
@@ -684,10 +706,10 @@ define([
                 properties[j].value = properties[j].originalValue;
                 properties[j].displayValue = displayValue;
             }
-        }
+        });
 
         // Reapply automatically applied actions.
-        for (i = 0; i < this._actions.length; i++) {
+        for (var i = 0; i < this._actions.length; i++) {
             if (this._actions[i].applyAutomatically) {
                 this._actions[i].apply();
             }
