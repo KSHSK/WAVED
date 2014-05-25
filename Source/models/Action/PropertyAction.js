@@ -41,7 +41,7 @@ define([
                     var templates = getTemplateMatches(self._newValues[key].value);
                     if (templates.length > 0) {
                         var temp = self._newValues[key].value;
-                        if (typeof self._target.viewModel[key].value === 'number') {
+                        if (typeof self._target[key].value === 'number') {
                             temp = self._newValues[key].value.toString();
                         }
 
@@ -61,20 +61,18 @@ define([
                             }
                         }
 
-                        if (typeof self._target.viewModel[key].value === 'number') {
-                            self._target.viewModel[key].value = parseFloat(temp);
+                        if (typeof self._target[key].value === 'number') {
+                            self._target[key].value = parseFloat(temp);
                         }
                         else {
-                            self._target.viewModel[key].value = temp;
+                            self._target[key].value = temp;
                         }
                     }
                     else {
                         // For values that have nested props, properly set them here (e.g. ArrayProperty)
-                        if(defined(self._target.viewModel[key].getSubscribableNestedProperties())) {
-                            self._target.viewModel[key].getSubscribableNestedProperties().forEach(function(prop) {
+                        if(defined(self._target[key].getSubscribableNestedProperties())) {
+                            self._target[key].getSubscribableNestedProperties().forEach(function(prop) {
                                 if(prop.getType() === self._newValues[key].value.type) {
-                                    // Set the value to the proper property
-                                    self._target.viewModel[key].value = prop;
 
                                     // Iterate through the nested properties and set them appropriately
                                     for(var nestKey in self._newValues[key].value) {
@@ -84,21 +82,27 @@ define([
                                         }
 
                                         if(self._newValues[key].value[nestKey].value.type === 'DataSet' || self._newValues[key].value[nestKey] === 'DataSubset') {
-                                            self._target.viewModel[key].value[nestKey].displayOptions.forEach(function(displayOption) {
+                                            self._target[key].value[nestKey].displayOptions.forEach(function(displayOption) {
                                                 if(displayOption.name === self._newValues[key].value[nestKey].value.name) {
-                                                    self._target.viewModel[key].value[nestKey].value = displayOption;
+                                                    self._target[key].value[nestKey].value = displayOption;
                                                 }
                                             });
                                         }
                                         else {
-                                            self._target.viewModel[key].value[nestKey].value = self._newValues[key].value[nestKey].value;
+                                            self._target[key].value[nestKey].value = self._newValues[key].value[nestKey].value;
                                         }
                                     }
+
+                                    /*
+                                     * Set this AFTER setting all the properties due to glyph rendering issue
+                                     * If set before setting the values of the properties, glyphs will render before the nested properties are set
+                                     */
+                                    self._target[key].value = prop; // Set the value to the proper property
                                 }
                             });
                         }
                         else {
-                            self._target.viewModel[key].value = self._newValues[key].value;
+                            self._target[key].value = self._newValues[key].value;
                         }
                     }
                 }
@@ -156,7 +160,7 @@ define([
     PropertyAction.prototype.getState = function() {
         var state = Action.prototype.getState.call(this);
         state.type = PropertyAction.getType();
-        state.target = this._target.viewModel.name.value;
+        state.target = this._target.name.value;
         state.newValues = this._newValues;
 
         return state;

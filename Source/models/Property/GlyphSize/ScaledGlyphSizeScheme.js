@@ -141,7 +141,6 @@ define([
             }
         });
 
-
         self.dataSet.options = viewModel.boundData;
 
         // Set default selection. This MUST go after the subscribe in order to trigger dataField to update

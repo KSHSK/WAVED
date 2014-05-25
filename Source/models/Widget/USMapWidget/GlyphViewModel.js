@@ -133,14 +133,17 @@ define([
                 return value.displayName;
             }
         });
+
         this.color = new StringProperty({
             displayName: 'Color',
             value: 'Red',
             validValue: createValidator({
                 minLength: 1
             }),
-            errorMessage: 'Value is required.'
+            errorMessage: 'Value is required.',
+            onchange: editGlyph.bind(self, self)
         });
+
         this.opacity = new NumberProperty({
             displayName: 'Opacity',
             value: 50,
@@ -148,23 +151,28 @@ define([
                 min: 0,
                 max: 100
             }),
-            errorMessage: 'Value must be between 0 and 100.'
+            errorMessage: 'Value must be between 0 and 100.',
+            onchange: editGlyph.bind(self, self)
         });
+
         this.size = new GlyphSizeSelectionProperty({
             displayName: 'Size',
-            errorMessage: 'All size fields are required.'
+            errorMessage: 'All size fields are required.',
+            onchange: editGlyph.bind(self, self)
         }, this);
 
         this.latitude = new ArrayProperty({
             displayName: 'Latitude',
             errorMessage: 'Value is required.',
-            options: []
+            options: [],
+            onchange: editGlyph.bind(self, self)
         });
 
         this.longitude = new ArrayProperty({
             displayName: 'Longitude',
             errorMessage: 'Value is required.',
-            options: []
+            options: [],
+            onchange: editGlyph.bind(self, self)
         });
 
         // Change the data field options.
@@ -198,6 +206,8 @@ define([
             subscribeObservable(self.dataSet.value, '_data', function() {
                 editGlyph(self);
             });
+
+            editGlyph(self);
         };
 
         this.setState(state);
