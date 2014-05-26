@@ -28,7 +28,7 @@ textarea:disabled {
 }
 
 .ui-accordion-header {
-    border: solid 1px #3BB4BF;
+    border: solid 1px #1e55ab;
 }
 /*** End ***/
 
@@ -72,7 +72,7 @@ textarea:disabled {
     padding: .4em .4em;
     line-height: normal;
     font-weight: bold;
-    color: #3BB4BF;
+    color: #1e55ab;
     font-family: Segoe UI,Arial,sans-serif;
     font-size: 14px;
 }
@@ -102,7 +102,7 @@ textarea:disabled {
 }
 
 #waved-workspace {
-    border: 1px solid #3BB4BF;
+    border: 1px solid #1e55ab;
 }
 
 .right {
@@ -192,7 +192,7 @@ textarea:disabled {
 }
 
 #project-tree .tree-row:hover {
-    color: #3BB4BF;
+    color: #1e55ab;
 }
 
 #project-tree li {
@@ -204,7 +204,7 @@ textarea:disabled {
 }
 
 #project-tree .tree-folder-icon {
-    background:url('../ThirdParty/jquery/css/waved-theme/images/ui-icons_3BB4BF_256x240.png') no-repeat -16px -96px;
+    background:url('../ThirdParty/jquery/css/waved-theme/images/ui-icons_1e55ab_256x240.png') no-repeat -16px -96px;
     width:16px;
     height:16px;
     display: inline-block;
@@ -212,11 +212,11 @@ textarea:disabled {
 }
 
 #project-tree .tree-folder-icon.closed {
-    background:url('../ThirdParty/jquery/css/waved-theme/images/ui-icons_3BB4BF_256x240.png') no-repeat -0px -96px;
+    background:url('../ThirdParty/jquery/css/waved-theme/images/ui-icons_1e55ab_256x240.png') no-repeat -0px -96px;
 }
 
 #project-tree .tree-gear-icon {
-    background:url('../ThirdParty/jquery/css/waved-theme/images/ui-icons_3BB4BF_256x240.png') no-repeat -192px -112px;
+    background:url('../ThirdParty/jquery/css/waved-theme/images/ui-icons_1e55ab_256x240.png') no-repeat -192px -112px;
     width:16px;
     height:16px;
     display: inline-block;
