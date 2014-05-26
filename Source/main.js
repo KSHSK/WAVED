@@ -52,10 +52,10 @@ require(['infuser'], function(infuser){
 });
 
 // Set custom knockout settings
-require(['knockout'], function(ko){
+require(['knockout', 'jquery'], function(ko, $){
    'use strict';
 
-    ko.bindingHandlers['jQueryDisable'] = {
+    ko.bindingHandlers.jQueryDisable = {
         'update': function(element, valueAccessor) {
             var value = ko.utils.unwrapObservable(valueAccessor());
             var $element = $(element);

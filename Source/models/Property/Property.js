@@ -100,6 +100,23 @@ define(['knockout',
         }
     });
 
+    Property.prototype.getDisplayState = function() {
+        if (typeof this._displayValue === 'object' && typeof this._displayValue.getDisplayState === 'function') {
+            return {
+                'value': this._displayValue.getDisplayState()
+            };
+        }
+        return {
+            'value': this._displayValue
+        };
+    };
+
+    Property.prototype.setDisplayState = function(state) {
+        if(defined(state.value) && state.value !== this.originalValue) {
+            this.displayValue = state.value;
+        }
+    };
+
     Property.prototype.getState = function() {
         if (typeof this._value === 'object' && typeof this._value.getState === 'function') {
             return {
