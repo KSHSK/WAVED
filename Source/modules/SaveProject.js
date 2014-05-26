@@ -6,7 +6,7 @@ define([
         './ReadData',
         'models/Constants/MessageType',
         'util/displayMessage',
-        'knockout',
+        'knockout'
     ], function(
         $,
         ReadData,
@@ -50,7 +50,7 @@ define([
                         },
                         create: function() {
                             ko.applyBindings(viewModel, this);
-                        },
+                        }
                     },
                     'Cancel': function() {
                         saveProjectAsDialog.dialog('close');

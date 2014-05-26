@@ -9,7 +9,7 @@ define([
         'models/Constants/MessageType',
         'models/Data/DataSet',
         'util/displayMessage',
-        'knockout',
+        'knockout'
     ], function(
         $,
         WAVEDViewModel,
@@ -85,7 +85,7 @@ define([
                         },
                         create: function() {
                             ko.applyBindings(viewModel, this);
-                        },
+                        }
                     },
                     'Cancel': function() {
                         self.uploadDataDialog.dialog('close');
