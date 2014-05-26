@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     
-    <title>WAVED</title>
+    <title data-bind="text: title">WAVED</title>
     <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
     
     <!-- CSS -->
@@ -278,7 +278,7 @@
     </div>
     
     <div id="delete-project-dialog" title="Delete Project" class="dialog">
-        <p>Are you sure you want to delete this project?</p>
+        <p>Are you sure you want to delete the project "<span class="content"></span>"?</p>
         <p>This action cannot be undone!</p>
         <div class="error"></div>
     </div>
