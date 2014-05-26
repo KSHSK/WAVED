@@ -1,26 +1,30 @@
 define([
         'models/Action/Action',
         'models/Data/DataSubset',
+        'models/Constants/ActionType',
+        'models/Data/Condition',
         'util/defined',
         'knockout',
         'jquery'
     ],function(
         Action,
         DataSubset,
+        ActionType,
+        Condition,
         defined,
         ko,
         $
     ){
     'use strict';
 
-    var QueryAction = function(state) {
+    var QueryAction = function(state, getDataSubset) {
         Action.call(this, state);
 
-        // TODO: Validation, etc
-        // TODO: target visibility conflicts with Action _target visibility, issue?
-        this._target = state.target; // DataSubset
-        // TODO: Rename this to something that makes more sense.
-        this._newValues = state.newValues; // QueryNode
+        this._dataSubset = undefined; // DataSubset
+        this._conditions = []; // Condition[]
+        this.getDataSubset = getDataSubset;
+
+        this.setState(state);
 
         ko.track(this);
     };
@@ -29,20 +33,50 @@ define([
      * Static method that returns the type String for this class.
      */
     QueryAction.getType = function() {
-        return 'QueryAction';
+        return ActionType.QUERY_ACTION;
     };
 
     QueryAction.prototype = Object.create(Action.prototype);
 
-    QueryAction.getType = function() {
-        return 'QueryAction';
+    QueryAction.prototype.getType = function() {
+        return QueryAction.getType();
     };
 
-    QueryAction.prototype.setState = function(state) {
+    Object.defineProperties(QueryAction.prototype, {
+        dataSubset: {
+            get: function() {
+                return this._dataSubset;
+            },
+            set: function(dataSubset) {
+                this._dataSubset = dataSubset;
+            }
+        },
+        conditions: {
+            get: function() {
+                return this._conditions;
+            },
+            set: function(conditions) {
+                var self = this;
+                this._conditions.length = 0;
+                conditions.forEach(function(condition) {
+                    self._conditions.push(new Condition(condition.getState()));
+                });
+            }
+        }
+    });
 
-        if (defined(state.newValues)) {
-            // TODO: Determine how to handle QueryNode
-            this._newValues = state.newValues;
+    QueryAction.prototype.setState = function(state) {
+        var self = this;
+        // TODO: Validation, etc
+        if (defined(state.dataSubset)) {
+            this.dataSubset = this.getDataSubset(state.dataSubset);
+        }
+
+        if (defined(state.conditions)) {
+            this.conditions.length = 0;
+            state.conditions.forEach(function(condition) {
+                self.conditions.push(new Condition(condition));
+            });
         }
 
         Action.prototype.setState.call(this, state);
@@ -51,8 +85,49 @@ define([
     QueryAction.prototype.getState = function() {
         var state = Action.prototype.getState.call(this);
         state.type = QueryAction.getType();
-        state.target = this._target.viewModel.name.value;
+        state.dataSubset = this._dataSubset.name;
+        state.conditions = this._conditions.map(function(condition) {
+            return condition.getState();
+        });
         return state;
+    };
+
+    QueryAction.prototype.apply = function(data) {
+        // Deep copy of conditions with templates so they can be replaced
+        var conditions = this.conditions.map(function(condition) {
+            return new Condition(condition.getState());
+        });
+
+        function getTemplateMatches(str) {
+            var index = 1;
+            var matches = [];
+            var templateRegex = /{{([ _.\w]+)}}/g;
+            var match;
+            while ((match = templateRegex.exec(str)) !== null) {
+                matches.push(match[index]);
+            }
+            return matches;
+        }
+
+        for (var j = 0; j < conditions.length; j++) {
+            var condition = conditions[j];
+            var templates = getTemplateMatches(condition.value);
+            for (var i = 0; i < templates.length; i++) {
+                if (defined(data.trigger) && defined(data.trigger[templates[i]])) {
+                    condition.value = condition.value.replace('{{' + templates[i]+ '}}', data.trigger[templates[i]]);
+                } else {
+                    var components = templates[i].split('.');
+                    if (components.length > 1) {
+                        if (defined(data[components[0]]) && defined(data[components[0]][components[1]])) {
+                            condition.value = condition.value.replace('{{' + templates[i]+ '}}', data[components[0]][components[1]]);
+                        }
+                    }
+                }
+            }
+        }
+
+        this.dataSubset.query.currentConditions = conditions;
+        this.dataSubset.executeCurrentQuery();
     };
 
     return QueryAction;

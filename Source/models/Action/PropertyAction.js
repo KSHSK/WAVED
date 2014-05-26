@@ -1,6 +1,7 @@
 define([
         'models/Action/Action',
         'models/Data/DataSet',
+        'models/Constants/ActionType',
         'modules/HistoryMonitor',
         'util/defined',
         'knockout',
@@ -8,6 +9,7 @@ define([
     ],function(
         Action,
         DataSet,
+        ActionType,
         HistoryMonitor,
         defined,
         ko,
@@ -20,6 +22,7 @@ define([
         Action.call(this, state);
 
         this._newValues = {};
+        this._target = undefined;
 
         this.apply = function(data) {
             var historyMonitor = HistoryMonitor.getInstance();
@@ -38,11 +41,11 @@ define([
                 }
 
                 for (var key in self._newValues) {
-                    var templates = getTemplateMatches(self._newValues[key]);
+                    var templates = getTemplateMatches(self._newValues[key].value);
                     if (templates.length > 0) {
-                        var temp = self._newValues[key];
+                        var temp = self._newValues[key].value;
                         if (typeof self._target.viewModel[key].value === 'number') {
-                            temp = self._newValues[key].toString();
+                            temp = self._newValues[key].value.toString();
                         }
 
                         for (var i = 0; i < templates.length; i++) {
@@ -69,7 +72,37 @@ define([
                         }
                     }
                     else {
-                        self._target.viewModel[key].value = self._newValues[key];
+                        // For values that have nested props, properly set them here (e.g. ArrayProperty)
+                        if(defined(self._target.viewModel[key].getSubscribableNestedProperties())) {
+                            self._target.viewModel[key].getSubscribableNestedProperties().forEach(function(prop) {
+                                if(prop.getType() === self._newValues[key].value.type) {
+                                    // Set the value to the proper property
+                                    self._target.viewModel[key].value = prop;
+
+                                    // Iterate through the nested properties and set them appropriately
+                                    for(var nestKey in self._newValues[key].value) {
+                                        if(nestKey === 'type'){
+                                            // Don't look at type, it's just an identifier, not a real property
+                                            continue;
+                                        }
+
+                                        if(self._newValues[key].value[nestKey].value.type === 'DataSet' || self._newValues[key].value[nestKey] === 'DataSubset') {
+                                            self._target.viewModel[key].value[nestKey].displayOptions.forEach(function(displayOption) {
+                                                if(displayOption.name === self._newValues[key].value[nestKey].value.name) {
+                                                    self._target.viewModel[key].value[nestKey].value = displayOption;
+                                                }
+                                            });
+                                        }
+                                        else {
+                                            self._target.viewModel[key].value[nestKey].value = self._newValues[key].value[nestKey].value;
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                        else {
+                            self._target.viewModel[key].value = self._newValues[key].value;
+                        }
                     }
                 }
             };
@@ -95,12 +128,24 @@ define([
      * Static method that returns the type String for this class.
      */
     PropertyAction.getType = function() {
-        return 'PropertyAction';
+        return ActionType.PROPERTY_ACTION;
     };
 
     PropertyAction.prototype = Object.create(Action.prototype);
 
+    PropertyAction.prototype.getType = function() {
+        return PropertyAction.getType();
+    };
+
     Object.defineProperties(PropertyAction.prototype, {
+        target: {
+            get: function() {
+                return this._target;
+            },
+            set: function(target) {
+                this._target = target;
+            }
+        },
         newValues: {
             get: function() {
                 return this._newValues;
@@ -114,8 +159,12 @@ define([
     PropertyAction.prototype.setState = function(state) {
         Action.prototype.setState.call(this, state);
 
+        if (defined(state.target)) {
+            this._target = state.target;
+        }
+
         if (defined(state.newValues)) {
-            this._newValues = state.newValues;
+            this.newValues = state.newValues;
         }
 
         if (this._applyAutomatically) {
@@ -128,6 +177,7 @@ define([
         state.type = PropertyAction.getType();
         state.target = this._target.viewModel.name.value;
         state.newValues = this._newValues;
+
         return state;
     };
 
