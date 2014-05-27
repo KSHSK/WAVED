@@ -45,9 +45,11 @@ define([
 
             var widget = viewModel.actionEditorAffectedWidget.viewModel;
 
-            // Resets top level
+            // All the properties
             for (var index in widget.properties) {
+                widget.properties[index].displayValue = widget.properties[index].originalValue;
 
+                // Nested props
                 if(defined(widget.properties[index].getSubscribableNestedProperties())) {
                     var nestedProps = widget.properties[index].getSubscribableNestedProperties();
 
@@ -57,8 +59,6 @@ define([
                         });
                     }
                 }
-
-                widget.properties[index].setDisplayState(widget.properties[index].getState());
             }
 
             $('#actionApplyAutomatically').attr('checked', false);
