@@ -102,8 +102,8 @@ define([
             value: 'Black'
         });
 
-        this.height.originalValue = 5;
-        this.width.originalValue = 15;
+        this.height.originalValue = 6;
+        this.width.originalValue = 16;
 
         this.setState(state);
 
