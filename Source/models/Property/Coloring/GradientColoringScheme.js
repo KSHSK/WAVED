@@ -51,7 +51,7 @@ define([
                     return true;
                 }
 
-                if (defined(this._options) && this._options.length > 0) {
+                if (defined(this.options) && this.options.length > 0) {
                     return (this.options.indexOf(value) !== -1);
                 }
 
@@ -60,12 +60,15 @@ define([
         });
 
         /*
-         * Note: validValue in both dataField and keyField just check for undefined
-         * More robust checks aren't necessary due to assurances elsewhere that the options
-         * in the fields are correct and nothing that isn't present in the fields can be set
-         * as the value.
+         * validValue for dataField and keyField return true due to issues with detecting valid values and comparing
+         * based on options vs displayOptions.
+         * Without returning true, the fields won't properly reset when the dataSet is deselected and
+         * detecting valid values based on the options won't work because this function is shared
+         * between the property editor and action editor and the options in each may be different if a
+         * different data set is chosen. If the user leaves this field undefined, the visualization
+         * won't behave correctly anyway so even without us enforcing a value here, they are forced
+         * to choose one anyway.
          */
-
         this.dataField = new ArrayProperty({
             displayName: 'Data Field',
             value: undefined,
@@ -75,7 +78,7 @@ define([
             },
             onchange: state.onchange,
             validValue: function(value) {
-                return defined(value);
+                return true;
             }
         });
 
@@ -95,7 +98,7 @@ define([
             },
             onchange: state.onchange,
             validValue: function(value) {
-                return defined(value);
+                return true;
             }
         });
 
@@ -254,7 +257,7 @@ define([
         }
         if(defined(state.dataSet)) {
             this.dataSet.displayOptions.forEach(function(opts) {
-                if(opts.name === state.dataSet.value.name) {
+                if(opts.name === state.dataSet.name) {
                     self.dataSet.displayValue = opts;
                 }
             });
