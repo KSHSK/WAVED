@@ -23,6 +23,8 @@ define([
     var GradientColoringScheme = function(state, viewModel) {
         state = defined(state) ? state : {};
 
+        var self = this;
+
         ColoringScheme.call(this, state);
 
         // Start and end colors default to grey and black
@@ -55,7 +57,19 @@ define([
                     return (this.options.indexOf(value) !== -1);
                 }
 
-                return true;
+                return false;
+            },
+            validDisplayValue: function(value) {
+                if (!defined(this.displayOptions) && !defined(value)) {
+                    // If there are no options, allow this to be undefined
+                    return true;
+                }
+
+                if (defined(this.options) && this.options.length > 0) {
+                    return (this.options.indexOf(value) !== -1);
+                }
+
+                return false;
             }
         });
 
@@ -78,7 +92,27 @@ define([
             },
             onchange: state.onchange,
             validValue: function(value) {
-                return defined(value);
+                if (!defined(value)) {
+                    return true;
+                }
+
+                if (defined(this.options) && this.options.length > 0) {
+                    return (this.options.indexOf(value) !== -1);
+                }
+
+                return false;
+            },
+            validDisplayValue: function(value) {
+                if (!defined(self.dataSet.displayValue) && !defined(value)) {
+                    // If there's no dataSet selected, allow the value to be undefined
+                    return true;
+                }
+
+                if (defined(this.displayOptions) && this.displayOptions.length > 0) {
+                    return (this.displayOptions.indexOf(value) !== -1);
+                }
+
+                return false;
             }
         });
 
@@ -98,7 +132,27 @@ define([
             },
             onchange: state.onchange,
             validValue: function(value) {
-                return defined(value);
+                if (!defined(value)) {
+                    return true;
+                }
+
+                if (defined(this.options) && this.options.length > 0) {
+                    return (this.options.indexOf(value) !== -1);
+                }
+
+                return false;
+            },
+            validDisplayValue: function(value) {
+                if (!defined(self.dataSet.displayValue) && !defined(value)) {
+                    // If there's no dataSet selected, allow the value to be undefined
+                    return true;
+                }
+
+                if (defined(this.displayOptions) && this.displayOptions.length > 0) {
+                    return (this.displayOptions.indexOf(value) !== -1);
+                }
+
+                return false;
             }
         });
 

@@ -76,19 +76,19 @@ define([
             },
             set: function(value) {
                 var templateRegex = /{{[\w]+}}/g;
-                if (!isNaN(Number(value)) && this.isValidValue(value)) {
-                    this.error = false;
+                if (!isNaN(Number(value)) && this.isValidDisplayValue(value)) {
+                    this.displayError = false;
                     this.message = '';
                     this._displayValue = Number(value);
                 }
                 else if (templateRegex.test(value)) {
-                    this.error = false;
-                    this.message = '';
+                    this.displayError = false;
+                    this.dialogErrorMessage = '';
                     this._displayValue = value;
                 }
                 else {
-                    this.error = true;
-                    this.message = this.errorMessage;
+                    this.displayError = true;
+                    this.dialogErrorMessage = this.errorMessage;
                 }
             }
         }
