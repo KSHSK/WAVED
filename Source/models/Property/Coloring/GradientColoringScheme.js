@@ -49,7 +49,7 @@ define([
             },
             onchange: state.onchange,
             validValue: function(value) {
-                if (value === undefined) {
+                if (!defined(value)) {
                     return true;
                 }
 
@@ -57,7 +57,7 @@ define([
                     return (this.options.indexOf(value) !== -1);
                 }
 
-                return false;
+                return true;
             },
             validDisplayValue: function(value) {
                 if (!defined(this.displayOptions) && !defined(value)) {
@@ -69,7 +69,7 @@ define([
                     return (this.options.indexOf(value) !== -1);
                 }
 
-                return false;
+                return true;
             }
         });
 
@@ -100,7 +100,7 @@ define([
                     return (this.options.indexOf(value) !== -1);
                 }
 
-                return false;
+                return true;
             },
             validDisplayValue: function(value) {
                 if (!defined(self.dataSet.displayValue) && !defined(value)) {
@@ -112,7 +112,7 @@ define([
                     return (this.displayOptions.indexOf(value) !== -1);
                 }
 
-                return false;
+                return true;
             }
         });
 
@@ -140,7 +140,7 @@ define([
                     return (this.options.indexOf(value) !== -1);
                 }
 
-                return false;
+                return true;
             },
             validDisplayValue: function(value) {
                 if (!defined(self.dataSet.displayValue) && !defined(value)) {
@@ -152,7 +152,7 @@ define([
                     return (this.displayOptions.indexOf(value) !== -1);
                 }
 
-                return false;
+                return true;
             }
         });
 
