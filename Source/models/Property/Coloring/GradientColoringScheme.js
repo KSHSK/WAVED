@@ -78,7 +78,7 @@ define([
             },
             onchange: state.onchange,
             validValue: function(value) {
-                return true;
+                return defined(value);
             }
         });
 
@@ -98,7 +98,7 @@ define([
             },
             onchange: state.onchange,
             validValue: function(value) {
-                return true;
+                return defined(value);
             }
         });
 
@@ -257,7 +257,7 @@ define([
         }
         if(defined(state.dataSet)) {
             this.dataSet.displayOptions.forEach(function(opts) {
-                if(opts.name === state.dataSet.name) {
+                if(opts.name === state.dataSet.value.name) {
                     self.dataSet.displayValue = opts;
                 }
             });
