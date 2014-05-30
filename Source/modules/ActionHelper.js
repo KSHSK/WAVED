@@ -172,26 +172,33 @@ define([
                 width: 'auto',
                 modal: true,
                 buttons: {
-                    'Save': function() {
-                        if (self.hasErrors(viewModel)) {
-                            return;
-                        }
+                    'Save': {
+                        text: 'Save',
+                        'data-bind': 'jQueryDisable: actionDialogHasErrors()',
+                        click: function() {
+                            if (self.hasErrors(viewModel)) {
+                                return;
+                            }
 
-                        if (!UniqueTracker.isValueUnique(Action.getUniqueNameNamespace(),
-                            viewModel.selectedActionName.value, viewModel.selectedAction)) {
+                            if (!UniqueTracker.isValueUnique(Action.getUniqueNameNamespace(),
+                                viewModel.selectedActionName.value, viewModel.selectedAction)) {
 
-                            displayMessage('The name "' + viewModel.selectedActionName.value + '" is already in use.', MessageType.WARNING);
-                            return;
-                        }
+                                displayMessage('The name "' + viewModel.selectedActionName.value + '" is already in use.', MessageType.WARNING);
+                                return;
+                            }
 
-                        if (viewModel.selectedActionType === ActionType.PROPERTY_ACTION) {
-                            self.updateEditPropertyActionChanges(viewModel);
-                        }
-                        else {
-                            self.updateEditQueryActionChanges(viewModel);
-                        }
+                            if (viewModel.selectedActionType === ActionType.PROPERTY_ACTION) {
+                                self.updateEditPropertyActionChanges(viewModel);
+                            }
+                            else {
+                                self.updateEditQueryActionChanges(viewModel);
+                            }
 
-                        self.closeActionDialog(viewModel);
+                            self.closeActionDialog(viewModel);
+                        },
+                        create: function() {
+                            ko.applyBindings(viewModel, this);
+                        }
                     },
                     'Cancel': function() {
                         self.closeActionDialog(viewModel);
