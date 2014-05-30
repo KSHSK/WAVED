@@ -127,15 +127,11 @@ define([
                 return this._value;
             },
             set: function(value) {
-                if (this.isValidValue(value)) {
-                    this.error = false;
-                    this.message = '';
-                    this._value = value;
-                }
-                else {
-                    this.error = true;
-                    this.message = this.errorMessage;
-                }
+                /*
+                 * Don't check for validValue here since we never set value directly without first
+                 * checking validValue in originalValue or displayValue
+                 */
+                this._value = value;
             }
         },
         displayValue: {
