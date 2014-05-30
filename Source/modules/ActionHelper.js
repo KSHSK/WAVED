@@ -286,9 +286,21 @@ define([
                 if (defined(viewModel.actionEditorAffectedWidget)) {
                     var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
                     for (var i = 0; i < properties.length; i++) {
-                        if (properties[i].error) {
+                        if (properties[i].displayError) {
                             error = true;
                             break;
+                        }
+
+                        if (defined(properties[i].getSubscribableNestedProperties())) {
+                            for (var j = 0; j < properties[i].displayValue.properties.length; j++) {
+                                if(properties[i].displayValue.properties[j].displayError) {
+                                    error = true;
+                                    break;
+                                }
+                            }
+                            if (error) {
+                                break; // Break out of the outer loop
+                            }
                         }
                     }
                 }
