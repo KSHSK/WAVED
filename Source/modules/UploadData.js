@@ -9,7 +9,7 @@ define([
         'models/Constants/MessageType',
         'models/Data/DataSet',
         'util/displayMessage',
-        'knockout',
+        'knockout'
     ], function(
         $,
         WAVEDViewModel,
@@ -68,7 +68,7 @@ define([
                             if (dataSet)
                             {
                                 if (dataSet.isMarkedForDeletion()) {
-                                    displayMessage('The project must be saved and reloaded to reuse this filename.');
+                                    displayMessage('The project must be saved and reloaded to reuse this filename.', MessageType.WARNING);
                                 }
                                 else {
                                     viewModel.uploadDataFile.error = true;
@@ -85,7 +85,7 @@ define([
                         },
                         create: function() {
                             ko.applyBindings(viewModel, this);
-                        },
+                        }
                     },
                     'Cancel': function() {
                         self.uploadDataDialog.dialog('close');

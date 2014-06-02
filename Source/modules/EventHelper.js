@@ -65,7 +65,7 @@ define([
                         },
                         create: function() {
                             ko.applyBindings(viewModel, this);
-                        },
+                        }
                     },
                     'Cancel': function() {
                         self.eventDialog.dialog('close');
@@ -93,21 +93,28 @@ define([
                 width: 'auto',
                 modal: true,
                 buttons: {
-                    'Save': function() {
-                        if (self.hasErrors(viewModel)) {
-                            return;
+                    'Save': {
+                        text: 'Save',
+                        'data-bind': 'jQueryDisable: eventDialogHasErrors()',
+                        click: function() {
+                            if (self.hasErrors(viewModel)) {
+                                return;
+                            }
+
+                            if (!UniqueTracker.isValueUnique(Event.getUniqueNameNamespace(),
+                                viewModel.selectedEventName.value, viewModel.selectedEvent)) {
+
+                                displayMessage('The name "' + viewModel.selectedEventName.value + '" is already in use.', MessageType.WARNING);
+                                return;
+                            }
+
+                            self.updateEditChanges(viewModel);
+
+                            self.eventDialog.dialog('close');
+                        },
+                        create: function() {
+                            ko.applyBindings(viewModel, this);
                         }
-
-                        if (!UniqueTracker.isValueUnique(Event.getUniqueNameNamespace(),
-                            viewModel.selectedEventName.value, viewModel.selectedEvent)) {
-
-                            displayMessage('The name "' + viewModel.selectedEventName.value + '" is already in use.', MessageType.WARNING);
-                            return;
-                        }
-
-                        self.updateEditChanges(viewModel);
-
-                        self.eventDialog.dialog('close');
                     },
                     'Cancel': function() {
                         self.eventDialog.dialog('close');

@@ -199,6 +199,11 @@ define(['knockout',
                 }
             }
         },
+        originalData: {
+            get: function() {
+                return this._data;
+            }
+        },
         referenceCount: {
             get: function() {
                 return this._referenceCount;
