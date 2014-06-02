@@ -2,6 +2,7 @@ define([
         'WAVEDViewModel',
         './UniqueTracker',
         './HistoryMonitor',
+        'models/Constants/MessageType',
         'models/Data/DataSet',
         'models/Data/DataSubset',
         'models/Data/Condition',
@@ -13,6 +14,7 @@ define([
         WAVEDViewModel,
         UniqueTracker,
         HistoryMonitor,
+        MessageType,
         DataSet,
         DataSubset,
         Condition,
@@ -45,7 +47,7 @@ define([
                     click: saveCallback,
                     create: function() {
                         ko.applyBindings(viewModel, this);
-                    },
+                    }
                 },
                 'Cancel': cancelCallback
             }
@@ -78,7 +80,7 @@ define([
                 if (!UniqueTracker.isValueUnique(DataSet.getUniqueNameNamespace(),
                     viewModel.dataSubsetEditorName.value)) {
 
-                    displayMessage('The name "' + viewModel.dataSubsetEditorName.value + '" is already in use.');
+                    displayMessage('The name "' + viewModel.dataSubsetEditorName.value + '" is already in use.', MessageType.WARNING);
                     return;
                 }
 
@@ -130,7 +132,7 @@ define([
                 if (!UniqueTracker.isValueUnique(DataSet.getUniqueNameNamespace(),
                     viewModel.dataSubsetEditorName.value, viewModel.selectedDataSubset)) {
 
-                    displayMessage('The name "' + viewModel.dataSubsetEditorName.value + '" is already in use.');
+                    displayMessage('The name "' + viewModel.dataSubsetEditorName.value + '" is already in use.', MessageType.WARNING);
                     return;
                 }
 
