@@ -53,8 +53,8 @@ define(['knockout',
 
         var self = this;
         subscribeObservable(this, '_originalValue', function() {
-            self._value = self._originalValue;
-            self._displayValue = self._originalValue;
+            self.value = self.originalValue;
+            self.displayValue = self.originalValue;
         });
 
         // When this._value changes, call onchange.
@@ -62,7 +62,7 @@ define(['knockout',
             if (defined(self.onchange)) {
                 self.onchange(newValue);
             }
-            self._displayValue = self._value;
+            self.displayValue = self.value;
         });
 
         subscribeObservable(this, '_displayValue', function(newValue) {
@@ -166,7 +166,13 @@ define(['knockout',
      * @param valueType 'originalValue' or 'value' or 'displayValue'
      */
     Property.prototype.displayErrorMessage = function(valueType) {
-        this.message = this.errorMessage;
+
+        if(valueType === 'displayValue') {
+            this.dialogErrorMessage = this.errorMessage;
+        }
+        else {
+            this.message = this.errorMessage;
+        }
     };
 
     Property.prototype.isValidValue = function() {
