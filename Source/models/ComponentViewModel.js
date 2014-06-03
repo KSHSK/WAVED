@@ -1,6 +1,7 @@
 define([
         'jquery',
         'knockout',
+        'models/Constants/ValueType',
         'models/Property/StringProperty',
         'models/Property/BooleanProperty',
         'models/Property/NumberProperty',
@@ -14,6 +15,7 @@ define([
     ], function(
         $,
         ko,
+        ValueType,
         StringProperty,
         BooleanProperty,
         NumberProperty,
@@ -193,10 +195,32 @@ define([
         }
     };
 
-    ComponentViewModel.prototype.isValid = function() {
+    ComponentViewModel.prototype.isValid = function(type) {
         var valid = true;
         for (var i = 0; i < this.properties.length; i++) {
-            valid = valid && !this.properties[i].error;
+            var error = false;
+            var nestedError = false;
+
+            if (type === ValueType.DISPLAY_VALUE) {
+                error = this.properties[i].displayError;
+            }
+            else {
+                error = this.properties[i].error;
+            }
+
+            // Search for nested property errors
+            if (defined(this.properties[i].getSubscribableNestedProperties())) {
+                for (var j = 0; j < this.properties[i].displayValue.properties.length; j++) {
+                    if (type === ValueType.DISPLAY_VALUE) {
+                        nestedError = this.properties[i].displayValue.properties[j].displayError;
+                    }
+                    else {
+                        nestedError = this.properties[i].displayValue.properties[j].error;
+                    }
+                }
+            }
+
+            valid = valid && !error && !nestedError;
         }
         return valid;
     };
@@ -204,8 +228,16 @@ define([
     ComponentViewModel.prototype.displayErrors = function(valueType) {
         for (var i = 0; i < this.properties.length; i++) {
             var property = this.properties[i];
-            if (property.error) {
-                property.displayErrorMessage(valueType);
+
+            if (valueType === ValueType.DISPLAY_VALUE) {
+                if (property.displayError) {
+                    property.displayErrorMessage(ValueType.DISPLAY_VALUE);
+                }
+            }
+            else {
+                if (property.error) {
+                    property.displayErrorMessage(valueType);
+                }
             }
         }
     };
