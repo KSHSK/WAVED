@@ -53,8 +53,8 @@ define(['knockout',
 
         var self = this;
         subscribeObservable(this, '_originalValue', function() {
-            self.value = self.originalValue;
-            self.displayValue = self.originalValue;
+            self._value = self._originalValue;
+            self._displayValue = self._originalValue;
         });
 
         // When this._value changes, call onchange.
@@ -62,7 +62,7 @@ define(['knockout',
             if (defined(self.onchange)) {
                 self.onchange(newValue);
             }
-            self.displayValue = self.value;
+            self._displayValue = self._value;
         });
 
         subscribeObservable(this, '_displayValue', function(newValue) {
