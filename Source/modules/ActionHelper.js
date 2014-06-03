@@ -46,24 +46,26 @@ define([
             // Unselect DataSet.
             viewModel.actionEditorDataSet = undefined;
 
-            var widget = viewModel.actionEditorAffectedWidget.viewModel;
+            // Only reset properties if there's a widget available
+            if(defined(viewModel.actionEditorAffectedWidget)) {
+                var widget = viewModel.actionEditorAffectedWidget.viewModel;
 
-            // All the properties
-            for (var index in widget.properties) {
-                widget.properties[index].displayValue = widget.properties[index].originalValue;
+                // All the properties
+                for (var index in widget.properties) {
+                    widget.properties[index].displayValue = widget.properties[index].originalValue;
 
-                // Nested props
-                if(defined(widget.properties[index].getSubscribableNestedProperties())) {
-                    var nestedProps = widget.properties[index].getSubscribableNestedProperties();
+                    // Nested props
+                    if(defined(widget.properties[index].getSubscribableNestedProperties())) {
+                        var nestedProps = widget.properties[index].getSubscribableNestedProperties();
 
-                    for(var nestedIndex in nestedProps) {
-                        nestedProps[nestedIndex].properties.forEach(function(value) {
-                            value.displayValue = value.originalValue;
-                        });
+                        for(var nestedIndex in nestedProps) {
+                            nestedProps[nestedIndex].properties.forEach(function(value) {
+                                value.displayValue = value.originalValue;
+                            });
+                        }
                     }
                 }
             }
-
             $('#actionApplyAutomatically').attr('checked', false);
 
             // Select first Data Subset
@@ -169,10 +171,6 @@ define([
         },
 
         editAction: function(viewModel) {
-            if (!defined(viewModel.selectedAction)) {
-                return;
-            }
-
             var self = this;
             self.resetActionEditor(viewModel);
 
