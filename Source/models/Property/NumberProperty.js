@@ -32,7 +32,7 @@ define([
             },
             set: function(value) {
                 var templateRegex = /{{[\w]+}}/g;
-                if (!isNaN(Number(value)) && this.isValidValue(value)) {
+                if (!isNaN(parseFloat(value)) && this.isValidValue(value)) {
                     this.error = false;
                     this.message = '';
                     this._originalValue = Number(value);
