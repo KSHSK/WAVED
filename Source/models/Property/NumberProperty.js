@@ -32,14 +32,6 @@ define([
             },
             set: function(value) {
                 var templateRegex = /{{[\w]+}}/g;
-
-                // If the user deletes the value, it still converts it to 0, which is odd behavior from a UX perspective
-                if(value.trim() === '') {
-                    this.error = true;
-                    this.message = this.errorMessage;
-                    return;
-                }
-
                 if (!isNaN(Number(value)) && this.isValidValue(value)) {
                     this.error = false;
                     this.message = '';
@@ -62,14 +54,6 @@ define([
             },
             set: function(value) {
                 var templateRegex = /{{[\w]+}}/g;
-
-                // If the user deletes the value, it still converts it to 0, which is odd behavior from a UX perspective
-                if(value.trim() === '') {
-                    this.error = true;
-                    this.message = this.errorMessage;
-                    return;
-                }
-
                 if (!isNaN(Number(value)) && this.isValidValue(value)) {
                     this.error = false;
                     this.message = '';
@@ -92,14 +76,6 @@ define([
             },
             set: function(value) {
                 var templateRegex = /{{[\w]+}}/g;
-
-                // If the user deletes the value, it still converts it to 0, which is odd behavior from a UX perspective
-                if(value.trim() === '') {
-                    this.displayError = true;
-                    this.dialogErrorMessage = this.errorMessage;
-                    return;
-                }
-
                 if (!isNaN(Number(value)) && this.isValidDisplayValue(value)) {
                     this.displayError = false;
                     this.message = '';

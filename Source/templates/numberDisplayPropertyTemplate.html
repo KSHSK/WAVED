@@ -1,5 +1,5 @@
 <div>
     <span data-bind="text:displayName, visible: visible"></span>
-    <input type="text" data-bind="value: displayValue, visible: visible, valueUpdate: 'keyup'"></input>
+    <input type="number" step="0.1" data-bind="value: displayValue, visible: visible, valueUpdate: 'keyup'"></input>
     <div class="error" data-bind="visible: displayError, html: dialogErrorMessage"></div>
 </div>
