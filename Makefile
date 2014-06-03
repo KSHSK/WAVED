@@ -18,4 +18,5 @@ DB/waved.db: DB
 
 generated_files:
 	mkdir $@
+	chmod g+s $@
 	setfacl -m u:www-data:rwx $@
