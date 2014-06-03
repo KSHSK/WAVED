@@ -190,7 +190,7 @@ define([
             var exportLink = $('#export-file-link');
 
             // Set and click a hidden link so this doesn't require another step by the user.
-            exportLink.attr('href', 'php/downloadZip.php?fileName=' + fileName);
+            exportLink.attr('href', 'PHP/downloadZip.php?fileName=' + fileName);
             exportLink.attr('download', fileName);
             exportLink[0].click();
         }
