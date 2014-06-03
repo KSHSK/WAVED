@@ -6,6 +6,7 @@ define([
         'models/Action/PropertyAction',
         'models/Action/QueryAction',
         'models/Constants/ActionType',
+        'models/Data/Condition',
         'util/defined',
         'models/Constants/MessageType',
         'util/displayMessage',
@@ -19,6 +20,7 @@ define([
         PropertyAction,
         QueryAction,
         ActionType,
+        Condition,
         defined,
         MessageType,
         displayMessage,
@@ -36,6 +38,7 @@ define([
 
             // Select Property Action
             viewModel.selectedActionType = ActionType.PROPERTY_ACTION;
+            $('#action-editor-selected-action-type').prop('disabled', false);
 
             // Select first Widget
             viewModel.actionEditorAffectedWidgetError = false;
@@ -62,6 +65,12 @@ define([
             }
 
             $('#actionApplyAutomatically').attr('checked', false);
+
+            // Select first Data Subset
+            viewModel.actionEditorDataSubsetError = false;
+
+            // Force reset of data subset so that the conditions are reloaded
+            viewModel.actionEditorDataSubset = undefined;
         },
 
         closeActionDialog: function(viewModel) {
@@ -103,38 +112,47 @@ define([
                                 return;
                             }
 
-                            var actionValues = {};
-                            var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
-                            for (var property in viewModel.actionEditorAffectedWidget.viewModel) {
-                                var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
-                                if (propertyIndex > -1) {
-                                    if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
-                                          actionValues[property] = properties[propertyIndex].getDisplayState();
-                                        continue; // We don't need to check for nested stuff since the top level changed
-                                    }
+                            var action;
+                            var actionState = {
+                                name: viewModel.selectedActionName.value,
+                                applyAutomatically: $('#actionApplyAutomatically').is(':checked')
+                            };
 
-                                    // Check for changes in nested properties
-                                    if (defined(properties[propertyIndex].getSubscribableNestedProperties())) {
-                                        // This means we have to look at the displayValue of the currently selected thing...
-                                        properties[propertyIndex].displayValue.properties.forEach(function(value) {
-                                            if (value.displayValue !== value.originalValue){
-                                                // We have to check for undefined here because we can't break out of forEach
-                                                if (actionValues[property] === undefined) {
-                                                    actionValues[property] = properties[propertyIndex].getDisplayState();
+                            if (viewModel.selectedActionType === ActionType.PROPERTY_ACTION) {
+                                var actionValues = {};
+                                var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
+                                for (var property in viewModel.actionEditorAffectedWidget.viewModel) {
+                                    var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
+                                    if (propertyIndex > -1) {
+                                        if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
+                                            actionValues[property] = properties[propertyIndex].getDisplayState();
+                                            continue; // We don't need to check for nested stuff since the top level changed
+                                        }
+
+                                        // Check for changes in nested properties
+                                        if (defined(properties[propertyIndex].getSubscribableNestedProperties())) {
+                                            // This means we have to look at the displayValue of the currently selected thing...
+                                            properties[propertyIndex].displayValue.properties.forEach(function(value) {
+                                                if (value.displayValue !== value.originalValue){
+                                                    // We have to check for undefined here because we can't break out of forEach
+                                                    if (actionValues[property] === undefined) {
+                                                        actionValues[property] = properties[propertyIndex].getDisplayState();
+                                                    }
                                                 }
-                                            }
-                                        });
+                                            });
+                                        }
                                     }
                                 }
-                            }
 
-                            // TODO: Handle QueryAction
-                            var action = new PropertyAction({
-                                name: viewModel.selectedActionName.value,
-                                target: viewModel.actionEditorAffectedWidget,
-                                newValues: actionValues,
-                                applyAutomatically: $('#actionApplyAutomatically').is(':checked')
-                            });
+                                actionState.target = viewModel.actionEditorAffectedWidget;
+                                actionState.newValues = actionValues;
+                                action = new PropertyAction(actionState);
+                            }
+                            else {
+                                actionState.dataSubset = viewModel.actionEditorDataSubset.name;
+                                actionState.conditions = viewModel.actionDataSubsetEditorConditions;
+                                action = new QueryAction(actionState, viewModel.currentProject.getDataSet.bind(viewModel.currentProject));
+                            }
 
                             viewModel.currentProject.addAction(action);
                             self.closeActionDialog(viewModel);
@@ -158,20 +176,31 @@ define([
             var self = this;
             self.resetActionEditor(viewModel);
 
+            viewModel.selectedActionType = viewModel.selectedAction.type;
             viewModel.selectedActionName.value = viewModel.selectedAction.name;
-            viewModel.actionEditorAffectedWidget = viewModel.selectedAction.target;
             $('#actionApplyAutomatically').prop('checked', viewModel.selectedAction.applyAutomatically ? true : false);
 
-            var widget = viewModel.actionEditorAffectedWidget.viewModel;
+            // Don't allow the modification of action type
+            $('#action-editor-selected-action-type').prop('disabled', true);
 
-            // Set the displayValues to match those saved in the widget
-            for (var index in widget.properties) {
-                widget.properties[index].displayValue = widget.properties[index].originalValue;
+            if (viewModel.selectedActionType === ActionType.PROPERTY_ACTION) {
+                viewModel.actionEditorAffectedWidget = viewModel.selectedAction.target;
+
+                var widget = viewModel.actionEditorAffectedWidget.viewModel;
+
+                // Set the displayValues to match those saved in the widget
+                for (var index in widget.properties) {
+                    widget.properties[index].displayValue = widget.properties[index].originalValue;
+                }
+
+                // Update any modified values from the Action
+                for (var key in viewModel.selectedAction.newValues) {
+                    widget[key].setDisplayState(viewModel.selectedAction.newValues[key]);
+                }
             }
-
-            // Update any modified values from the Action
-            for (var key in viewModel.selectedAction.newValues) {
-                widget[key].setDisplayState(viewModel.selectedAction.newValues[key]);
+            else {
+                viewModel.actionEditorDataSubset = viewModel.selectedAction.dataSubset;
+                viewModel.actionDataSubsetEditorConditions = viewModel.selectedAction.conditions;
             }
 
             self.actionDialog.dialog({
@@ -179,20 +208,33 @@ define([
                 width: 'auto',
                 modal: true,
                 buttons: {
-                    'Save': function() {
-                        if (self.hasErrors(viewModel)) {
-                            return;
+                    'Save': {
+                        text: 'Save',
+                        'data-bind': 'jQueryDisable: actionDialogHasErrors()',
+                        click: function() {
+                            if (self.hasErrors(viewModel)) {
+                                return;
+                            }
+
+                            if (!UniqueTracker.isValueUnique(Action.getUniqueNameNamespace(),
+                                viewModel.selectedActionName.value, viewModel.selectedAction)) {
+
+                                displayMessage('The name "' + viewModel.selectedActionName.value + '" is already in use.', MessageType.WARNING);
+                                return;
+                            }
+
+                            if (viewModel.selectedActionType === ActionType.PROPERTY_ACTION) {
+                                self.updateEditPropertyActionChanges(viewModel);
+                            }
+                            else {
+                                self.updateEditQueryActionChanges(viewModel);
+                            }
+
+                            self.closeActionDialog(viewModel);
+                        },
+                        create: function() {
+                            ko.applyBindings(viewModel, this);
                         }
-
-                        if (!UniqueTracker.isValueUnique(Action.getUniqueNameNamespace(),
-                            viewModel.selectedActionName.value, viewModel.selectedAction)) {
-
-                            displayMessage('The name "' + viewModel.selectedActionName.value + '" is already in use.', MessageType.WARNING);
-                            return;
-                        }
-
-                        self.updateEditChanges(viewModel);
-                        self.closeActionDialog(viewModel);
                     },
                     'Cancel': function() {
                         self.closeActionDialog(viewModel);
@@ -200,16 +242,17 @@ define([
                 }
             });
         },
-        updateEditChanges: function(viewModel) {
-            var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
+
+        updateEditPropertyActionChanges: function(viewModel) {
             var action = viewModel.selectedAction;
+            var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
 
             var oldName = action.name;
             var oldTarget = action.target;
             var oldNewValues = $.extend({}, action.newValues);
             var oldApplyAutomatically = action.applyAutomatically;
 
-            function undoChange() {
+            var undoChange = function() {
                 action.name = oldName;
                 action.target = oldTarget;
                 action.newValues = oldNewValues;
@@ -218,7 +261,7 @@ define([
                 if (action.applyAutomatically) {
                     action.apply();
                 }
-            }
+            };
 
             var actionValues = {};
 
@@ -249,7 +292,7 @@ define([
             var newTarget = viewModel.actionEditorAffectedWidget;
             var newApplyAutomatically = $('#actionApplyAutomatically').is(':checked');
 
-            function executeChange() {
+            var executeChange = function() {
                 action.name = newName;
                 action.target = newTarget;
                 action.newValues = actionValues;
@@ -258,13 +301,47 @@ define([
                 if (action.applyAutomatically) {
                     action.apply();
                 }
-            }
+            };
 
             var historyMonitor = HistoryMonitor.getInstance();
             historyMonitor.addChanges(undoChange, executeChange);
-
             historyMonitor.executeIgnoreHistory(executeChange);
         },
+
+        updateEditQueryActionChanges: function(viewModel) {
+            var action = viewModel.selectedAction;
+            var limit = viewModel.actionDataSubsetEditorConditionCount;
+            var oldState = action.getState();
+            var newState = {
+                name: viewModel.selectedActionName.value,
+                dataSubset: viewModel.actionEditorDataSubset.name,
+                conditions: viewModel.actionDataSubsetEditorConditions.slice(0, limit).map(function (condition) {
+                    return new Condition(condition.getState());
+                }),
+                applyAutomatically: $('#actionApplyAutomatically').is(':checked')
+            };
+
+            var undoChange = function() {
+                action.setState(oldState);
+
+                if (action.applyAutomatically) {
+                    action.apply();
+                }
+            };
+
+            var executeChange = function() {
+                action.setState(newState);
+
+                if (action.applyAutomatically) {
+                    action.apply();
+                }
+            };
+
+            var historyMonitor = HistoryMonitor.getInstance();
+            historyMonitor.addChanges(undoChange, executeChange);
+            historyMonitor.executeIgnoreHistory(executeChange);
+        },
+
         hasErrors: function(viewModel) {
             var error = false;
 
@@ -307,10 +384,46 @@ define([
             }
             else {
                 // Check Query Action errors.
-                // TODO
+                if (!defined(viewModel.actionEditorDataSubset)) {
+                    error = true;
+                    viewModel.actionEditorDataSubsetError = true;
+                }
             }
 
             return error;
+        },
+
+        actionDataSubsetConditionChange: function(viewModel, index) {
+            var currentCondition = viewModel.actionDataSubsetEditorConditions[index];
+
+            if (defined(currentCondition.logicalOperator)) {
+                // Only move to next condition if the logical operator is defined.
+                // This means that AND or OR has been selected.
+
+                if (index === viewModel.actionDataSubsetEditorConditions.length - 1) {
+                    // Reached limit, so add new condition.
+                    viewModel.actionDataSubsetEditorConditions.push(new Condition());
+                    viewModel.actionDataSubsetEditorConditionCount++;
+                }
+                else {
+                    // Display all conditions until an undefined logical operator is found.
+                    for (var i = index; i < viewModel.actionDataSubsetEditorConditions.length; i++) {
+                        var condition = viewModel.actionDataSubsetEditorConditions[i];
+
+                        if (!defined(condition.logicalOperator)) {
+                            break;
+                        }
+
+                        viewModel.actionDataSubsetEditorConditionCount++;
+                    }
+                }
+            }
+            else {
+                if (index < viewModel.actionDataSubsetEditorConditionCount - 1) {
+                    // Hide conditions that aren't needed anymore.
+                    viewModel.actionDataSubsetEditorConditionCount = index + 1;
+                }
+            }
         }
     };
 

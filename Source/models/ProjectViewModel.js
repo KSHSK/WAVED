@@ -131,6 +131,20 @@ define([
                 return this._actions;
             }
         },
+        propertyActions: {
+            get: function() {
+                return this._actions.filter(function(action) {
+                    return action instanceof PropertyAction;
+                });
+            }
+        },
+        queryActions: {
+            get: function() {
+                return this._actions.filter(function(action) {
+                    return action instanceof QueryAction;
+                });
+            }
+        },
         nonAutoActions: {
             get: function() {
                 return this._actions.filter(function(action) {
@@ -290,7 +304,7 @@ define([
                     action = new PropertyAction(itemState);
                 }
                 else if (itemState.type === QueryAction.getType()) {
-                    action = new QueryAction(itemState);
+                    action = new QueryAction(itemState, self.getDataSet.bind(self));
                 }
                 else {
                     // Invalid state.
@@ -582,7 +596,7 @@ define([
 
         var response = DependencyChecker.allowedToDeleteDataSet(dataSet, self);
         if (!response.allowed) {
-            displayMessage(response.message);
+            displayMessage(response.message, MessageType.WARNING);
             return;
         }
 
@@ -684,6 +698,10 @@ define([
                 properties[j].value = properties[j].originalValue;
                 properties[j].displayValue = displayValue;
             }
+        }
+
+        for (i = 0; i < this.dataSubsets.length; i++) {
+            this.dataSubsets[i].reset();
         }
 
         // Reapply automatically applied actions.

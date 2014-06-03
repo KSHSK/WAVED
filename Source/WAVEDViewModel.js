@@ -29,6 +29,7 @@ define(['jquery',
         'modules/PropertyChangeSubscriber',
         'modules/HistoryMonitor',
         'modules/UniqueTracker',
+        'models/Data/Condition',
         'util/getBasename',
         'util/defined',
         'util/defaultValue',
@@ -67,6 +68,7 @@ define(['jquery',
         PropertyChangeSubscriber,
         HistoryMonitor,
         UniqueTracker,
+        Condition,
         getBasename,
         defined,
         defaultValue,
@@ -189,7 +191,10 @@ define(['jquery',
         this.selectedActionType = '';
         this.actionEditorAffectedWidget = undefined;
         this.actionEditorAffectedWidgetError = false;
-        this.actionEditorDataSet = undefined;
+        this.actionEditorDataSubsetError = false;
+        this._actionEditorDataSubset = undefined;
+        this._actionDataSubsetEditorConditions = [];
+        this.actionDataSubsetEditorConditionCount = 0;
 
         // Event Editor
         this.selectedEventName = getNamePropertyInstance('Event Name');
@@ -445,8 +450,16 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.dataSubsetConditionChange = function(index) {
+        // Use setTimeout to wait for updated conditions
         setTimeout(function() {
             DataSubsetHelper.dataSubsetConditionChange(self, index);
+        }, 0);
+    };
+
+    WAVEDViewModel.prototype.actionDataSubsetConditionChange = function(index) {
+        // Use setTimeout to wait for updated conditions
+        setTimeout(function() {
+            ActionHelper.actionDataSubsetConditionChange(self, index);
         }, 0);
     };
 
@@ -632,6 +645,35 @@ define(['jquery',
                 this._selectedBoundData = value;
             }
         },
+
+        actionEditorDataSubset: {
+            get: function() {
+                return this._actionEditorDataSubset;
+            },
+            set: function(value) {
+                this._actionEditorDataSubset = value;
+                if (defined(this._actionEditorDataSubset)) {
+                    this.actionDataSubsetEditorConditions = this.actionEditorDataSubset.query.conditions;
+                }
+            }
+        },
+
+        actionDataSubsetEditorConditions: {
+            get: function() {
+                return this._actionDataSubsetEditorConditions;
+            },
+            set: function(conditions) {
+                var self = this;
+                // Make a deep copy of the array so that it's not referencing the same object.
+                this.actionDataSubsetEditorConditions.length = 0;
+                conditions.forEach(function(condition) {
+                    self.actionDataSubsetEditorConditions.push(new Condition(condition.getState()));
+                });
+
+                this.actionDataSubsetEditorConditionCount = this.actionDataSubsetEditorConditions.length;
+            }
+        },
+
         availableDataForBinding: {
             // Returns the list of datasets that are not bound to the selected widget.
             get: function() {
