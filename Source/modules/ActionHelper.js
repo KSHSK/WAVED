@@ -52,7 +52,7 @@ define([
 
                 // All the properties
                 for (var index in widget.properties) {
-                    widget.properties[index].displayValue = widget.properties[index].originalValue;
+                    widget.properties[index]._displayValue = widget.properties[index]._originalValue;
 
                     // Nested props
                     if(defined(widget.properties[index].getSubscribableNestedProperties())) {
@@ -60,7 +60,7 @@ define([
 
                         for(var nestedIndex in nestedProps) {
                             nestedProps[nestedIndex].properties.forEach(function(value) {
-                                value.displayValue = value.originalValue;
+                                value._displayValue = value._originalValue; // Set directly to avoid validation for undefined values
                             });
                         }
                     }
