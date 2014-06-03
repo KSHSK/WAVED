@@ -201,24 +201,14 @@ define([
         for (var i = 0; i < this.properties.length; i++) {
             var error = false;
             var nestedError = false;
-            var useDisplayError = (type === ValueType.DISPLAY_VALUE);
+            var errorType = (type === ValueType.DISPLAY_VALUE ? 'displayError' : 'error');
 
-            if (useDisplayError) {
-                error = this.properties[i].displayError;
-            }
-            else {
-                error = this.properties[i].error;
-            }
+            error = this.properties[i][errorType];
 
             // Search for nested property errors
             if (defined(this.properties[i].getSubscribableNestedProperties())) {
                 for (var j = 0; j < this.properties[i].displayValue.properties.length; j++) {
-                    if (useDisplayError) {
-                        nestedError = this.properties[i].displayValue.properties[j].displayError;
-                    }
-                    else {
-                        nestedError = this.properties[i].displayValue.properties[j].error;
-                    }
+                    nestedError = this.properties[i].displayValue.properties[j][errorType];
                 }
             }
 
