@@ -388,7 +388,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.unbindData = function() {
         if(!defined(self.selectedBoundData)) {
-            displayMessage('No bound data selected for unbinding.');
+            displayMessage('No bound data selected for unbinding.', MessageType.INFO);
             return;
         }
 
@@ -449,7 +449,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.addDataSubset = function() {
         if (self.currentProject.unmarkedDataSets.length === 0) {
-            displayMessage('Must upload a Data Source before creating a Data Subset.');
+            displayMessage('Must upload a Data Source before creating a Data Subset.', MessageType.INFO);
             return;
         }
 
@@ -467,7 +467,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.removeSelectedDataSubset = function() {
         if(!defined(this.selectedDataSubset)) {
-            displayMessage('No data subset selected for deletion.');
+            displayMessage('No data subset selected for deletion.', MessageType.INFO);
             return;
         }
 
