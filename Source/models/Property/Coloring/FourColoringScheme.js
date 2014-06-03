@@ -20,7 +20,7 @@ define([
         ColoringScheme.call(this, state);
 
         var isColorValid = function(value) {
-            return defined(value) && (value !== '');
+            return defined(value) && (value.trim() !== '');
         };
 
         this.color1 = new StringProperty({

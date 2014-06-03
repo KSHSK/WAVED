@@ -28,7 +28,7 @@ define([
         ColoringScheme.call(this, state);
 
         var isColorValid = function(value) {
-            return defined(value) && (value !== '');
+            return defined(value) && (value.trim() !== '');
         };
 
         // Start and end colors default to grey and black

@@ -34,7 +34,7 @@ define([
                 var templateRegex = /{{[\w]+}}/g;
 
                 // If the user deletes the value, it still converts it to 0, which is odd behavior from a UX perspective
-                if(value === '') {
+                if(value.trim() === '') {
                     this.error = true;
                     this.message = this.errorMessage;
                     return;
@@ -64,7 +64,7 @@ define([
                 var templateRegex = /{{[\w]+}}/g;
 
                 // If the user deletes the value, it still converts it to 0, which is odd behavior from a UX perspective
-                if(value === '') {
+                if(value.trim() === '') {
                     this.error = true;
                     this.message = this.errorMessage;
                     return;
@@ -94,7 +94,7 @@ define([
                 var templateRegex = /{{[\w]+}}/g;
 
                 // If the user deletes the value, it still converts it to 0, which is odd behavior from a UX perspective
-                if(value === '') {
+                if(value.trim() === '') {
                     this.displayError = true;
                     this.dialogErrorMessage = this.errorMessage;
                     return;
