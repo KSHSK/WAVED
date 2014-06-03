@@ -19,29 +19,36 @@ define([
 
         ColoringScheme.call(this, state);
 
-        // All colors default to black
+        var isColorValid = function(value) {
+            return defined(value) && (value !== '');
+        };
+
         this.color1 = new StringProperty({
             displayName: 'Color #1',
             value: 'PaleGreen',
-            onchange: state.onchange
+            onchange: state.onchange,
+            validValue: isColorValid
         });
 
         this.color2 = new StringProperty({
             displayName: 'Color #2',
             value: 'PowderBlue',
-            onchange: state.onchange
+            onchange: state.onchange,
+            validValue: isColorValid
         });
 
         this.color3 = new StringProperty({
             displayName: 'Color #3',
             value: 'Plum',
-            onchange: state.onchange
+            onchange: state.onchange,
+            validValue: isColorValid
         });
 
         this.color4 = new StringProperty({
             displayName: 'Color #4',
             value: 'Khaki',
-            onchange: state.onchange
+            onchange: state.onchange,
+            validValue: isColorValid
         });
 
         this.setState(state);
