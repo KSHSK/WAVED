@@ -121,6 +121,7 @@ define([
         if (!defined(state.name)) {
             var namespace = ComponentViewModel.getUniqueNameNamespace();
             this.name.value = UniqueTracker.getDefaultUniqueValue(namespace, GlyphViewModel.getType(), this);
+            this.name.displayValue = this.name.value; // Don't rely on the subscription here, we need this to go through the setter for proper error flags
         }
 
         this.parent = parent;
