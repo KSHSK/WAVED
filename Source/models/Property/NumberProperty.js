@@ -32,7 +32,7 @@ define([
             },
             set: function(value) {
                 var templateRegex = /{{[\w]+}}/g;
-                if (!isNaN(parseFloat(value)) && this.isValidValue(value)) {
+                if (!isNaN(Number(value)) && this.isValidValue(value) && !isNaN(parseFloat(value))) {
                     this.error = false;
                     this.message = '';
                     this._originalValue = Number(value);
@@ -54,7 +54,7 @@ define([
             },
             set: function(value) {
                 var templateRegex = /{{[\w]+}}/g;
-                if (!isNaN(Number(value)) && this.isValidValue(value)) {
+                if (!isNaN(parseFloat(value)) && this.isValidValue(value) && !isNaN(parseFloat(value))) {
                     this.error = false;
                     this.message = '';
                     this._value = Number(value);
@@ -76,7 +76,7 @@ define([
             },
             set: function(value) {
                 var templateRegex = /{{[\w]+}}/g;
-                if (!isNaN(Number(value)) && this.isValidDisplayValue(value)) {
+                if (!isNaN(parseFloat(value)) && this.isValidDisplayValue(value) && !isNaN(parseFloat(value))) {
                     this.displayError = false;
                     this.message = '';
                     this._displayValue = Number(value);
