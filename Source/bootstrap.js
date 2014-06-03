@@ -152,6 +152,7 @@
 
         var viewModel = WAVED.viewModel;
         ko.applyBindings(viewModel, document.body);
+        ko.applyBindings(viewModel, document.head);
     }
 
     function displayPage() {
