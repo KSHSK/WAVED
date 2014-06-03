@@ -197,11 +197,13 @@ define([
 
     ComponentViewModel.prototype.isValid = function(type) {
         var valid = true;
+
         for (var i = 0; i < this.properties.length; i++) {
             var error = false;
             var nestedError = false;
+            var useDisplayError = (type === ValueType.DISPLAY_VALUE);
 
-            if (type === ValueType.DISPLAY_VALUE) {
+            if (useDisplayError) {
                 error = this.properties[i].displayError;
             }
             else {
@@ -211,7 +213,7 @@ define([
             // Search for nested property errors
             if (defined(this.properties[i].getSubscribableNestedProperties())) {
                 for (var j = 0; j < this.properties[i].displayValue.properties.length; j++) {
-                    if (type === ValueType.DISPLAY_VALUE) {
+                    if (useDisplayError) {
                         nestedError = this.properties[i].displayValue.properties[j].displayError;
                     }
                     else {
@@ -222,6 +224,7 @@ define([
 
             valid = valid && !error && !nestedError;
         }
+
         return valid;
     };
 
