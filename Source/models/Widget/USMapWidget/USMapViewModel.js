@@ -388,7 +388,7 @@ define([
                 updateColoring(self);
             },
             validValue: function(value) {
-                return defined(value) && (value !== '');
+                return defined(value) && (value.trim() !== '');
             }
         }, this);
 

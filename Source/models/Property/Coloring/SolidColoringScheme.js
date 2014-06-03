@@ -25,7 +25,7 @@ define([
             value: 'LightGrey',
             onchange: state.onchange,
             validValue: function(value) {
-                return defined(value) && (value !== '');
+                return defined(value) && (value.trim() !== '');
             }
         };
         this.color = new StringProperty(stateColor);
