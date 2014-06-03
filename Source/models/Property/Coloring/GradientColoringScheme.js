@@ -27,17 +27,23 @@ define([
 
         ColoringScheme.call(this, state);
 
+        var isColorValid = function(value) {
+            return defined(value) && (value !== '');
+        };
+
         // Start and end colors default to grey and black
         this.startColor = new StringProperty({
             displayName: 'Start color',
             value: 'LightGrey',
-            onchange: state.onchange
+            onchange: state.onchange,
+            validValue: isColorValid
         });
 
         this.endColor = new StringProperty({
             displayName: 'End color',
             value: 'Black',
-            onchange: state.onchange
+            onchange: state.onchange,
+            validValue: isColorValid
         });
 
         this.dataSet = new ArrayProperty({
