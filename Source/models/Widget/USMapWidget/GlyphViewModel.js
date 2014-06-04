@@ -233,9 +233,7 @@ define([
         if (this.dataSet.value === dataSet) {
             return true;
         }
-        if (defined(this.size.getType) && (this.size.getType() === GlyphSizeSchemeType.SCALED_SIZE)) {
-            return this.size.value.dataField.value === dataSet;
-        }
+
         return false;
     };
 
