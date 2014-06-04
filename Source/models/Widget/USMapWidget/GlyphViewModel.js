@@ -234,6 +234,11 @@ define([
             return true;
         }
 
+        /*
+         * The dataset used in the scaled glyph size scheme is not checked here because that dataset
+         * shadows the GlyphViewModel's dataset.
+         */
+
         return false;
     };
 
