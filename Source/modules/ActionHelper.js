@@ -52,7 +52,14 @@ define([
 
                 // All the properties
                 for (var index in widget.properties) {
-                    widget.properties[index]._displayValue = widget.properties[index]._originalValue;
+                    if(!defined(widget.properties[index])) {
+                        // Set directly to bypass undefined validation checks or errors might pop up everywhere
+                        widget.properties[index]._displayValue = widget.properties[index]._originalValue;
+                    }
+                    else {
+                        // Use the setters to go through validation and clear any error flags
+                        widget.properties[index].displayValue = widget.properties[index].originalValue;
+                    }
 
                     // Nested props
                     if(defined(widget.properties[index].getSubscribableNestedProperties())) {
@@ -60,7 +67,14 @@ define([
 
                         for(var nestedIndex in nestedProps) {
                             nestedProps[nestedIndex].properties.forEach(function(value) {
-                                value._displayValue = value._originalValue; // Set directly to avoid validation for undefined values
+                                if(!defined(value.originalValue)) {
+                                    // Set directly to avoid validation for undefined values or errors might pop up everywhere
+                                    value._displayValue = value._originalValue;
+                                }
+                                else {
+                                    // Use setters to through validation and clear any error flags
+                                    value.displayValue = value.originalValue;
+                                }
                             });
                         }
                     }
