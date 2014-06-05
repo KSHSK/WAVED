@@ -153,20 +153,20 @@ define(['knockout',
         this.subscribed = true;
     };
 
-	DataSet.prototype.getLoadDataJs = function () {
-		return 'd3.csv("data/' + this.filename + '", function (loadedData) { \n' +
-				'\tdataSets["' + this.name + '"].loadedData = loadedData;\n' +
-				'\tdataSets["' + this.name + '"].dataIsLoaded.resolve();\n' +
-				'});\n';
+    DataSet.prototype.getLoadDataJs = function () {
+        return 'd3.csv("data/' + this.filename + '", function (loadedData) { \n' +
+                '\tdataSets["' + this.name + '"].loadedData = loadedData;\n' +
+                '\tdataSets["' + this.name + '"].dataIsLoaded.resolve();\n' +
+                '});\n';
     };
 
     DataSet.prototype.getSetupJs = function() {
-		return 'dataSets["' + this.name + '"] = {\n' +
-				'\t"dataIsLoaded" : $.Deferred()' + ',\n' +
-				'\t"loadedData": []' + ',\n' +
-				'\t"onChange": []' + ',\n' +
-				'\t"getData": function(args) {return this.loadedData;}\n' +
-				'};\n';
+        return 'dataSets["' + this.name + '"] = {\n' +
+                '\t"dataIsLoaded" : $.Deferred()' + ',\n' +
+                '\t"loadedData": []' + ',\n' +
+                '\t"onChange": []' + ',\n' +
+                '\t"getData": function(args) {return this.loadedData;}\n' +
+                '};\n';
     };
 
     Object.defineProperties(DataSet.prototype, {
