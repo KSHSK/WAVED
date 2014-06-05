@@ -78,13 +78,13 @@ define([
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
                     if (data.success) {
-                        displayMessage('The project was successfully saved', MessageType.SUCCESS);
+                        displayMessage.show('The project was successfully saved', MessageType.SUCCESS);
                         projectSaved.resolve();
                         viewModel.setSaveIndex();
                     }
                     else {
                         // Display error to user.
-                        displayMessage(data.errorMessage, MessageType.ERROR);
+                        displayMessage.show(data.errorMessage, MessageType.ERROR);
                     }
                 }
             });
@@ -114,13 +114,13 @@ define([
                         // Set the project name since the name has changed.
                         viewModel.currentProject.name = data.projectName;
 
-                        displayMessage('The project was successfully saved', MessageType.SUCCESS);
+                        displayMessage.show('The project was successfully saved', MessageType.SUCCESS);
                         projectSaved.resolve();
                         viewModel.setSaveIndex();
                     }
                     else {
                         // Display error to user.
-                        displayMessage(data.errorMessage, MessageType.ERROR);
+                        displayMessage.show(data.errorMessage, MessageType.ERROR);
                     }
                 }
             });

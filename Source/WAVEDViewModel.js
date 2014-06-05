@@ -391,7 +391,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.unbindData = function() {
         if(!defined(self.selectedBoundData)) {
-            displayMessage('No bound data selected for unbinding.', MessageType.INFO);
+            displayMessage.show('No bound data selected for unbinding.', MessageType.INFO);
             return;
         }
 
@@ -400,7 +400,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.markDataForDeletion = function() {
         if(!defined(self.selectedDataSet)) {
-            displayMessage('No dataset selected for deletion.', MessageType.INFO);
+            displayMessage.show('No dataset selected for deletion.', MessageType.INFO);
             return;
         }
 
@@ -422,7 +422,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.previewDataSet = function() {
         if (!defined(this.selectedDataSet)) {
-            displayMessage('No dataset selected for preview.', MessageType.INFO);
+            displayMessage.show('No dataset selected for preview.', MessageType.INFO);
             return;
         }
 
@@ -432,7 +432,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.previewDataSubset = function() {
         if (!defined(this.selectedDataSubset)) {
-            displayMessage('No data subset selected for preview.', MessageType.INFO);
+            displayMessage.show('No data subset selected for preview.', MessageType.INFO);
             return;
         }
 
@@ -442,7 +442,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.previewBoundDataSet = function() {
         if (!defined(this.selectedBoundData)) {
-            displayMessage('No bound data selected for preview.', MessageType.INFO);
+            displayMessage.show('No bound data selected for preview.', MessageType.INFO);
             return;
         }
 
@@ -452,7 +452,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.addDataSubset = function() {
         if (self.currentProject.unmarkedDataSets.length === 0) {
-            displayMessage('Must upload a Data Source before creating a Data Subset.', MessageType.INFO);
+            displayMessage.show('Must upload a Data Source before creating a Data Subset.', MessageType.INFO);
             return;
         }
 
@@ -461,7 +461,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.editDataSubset = function() {
         if(!defined(this.selectedDataSubset)) {
-            displayMessage('No data subset selected for edit.', MessageType.INFO);
+            displayMessage.show('No data subset selected for edit.', MessageType.INFO);
             return;
         }
 
@@ -470,7 +470,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.removeSelectedDataSubset = function() {
         if(!defined(this.selectedDataSubset)) {
-            displayMessage('No data subset selected for deletion.', MessageType.INFO);
+            displayMessage.show('No data subset selected for deletion.', MessageType.INFO);
             return;
         }
 
@@ -493,7 +493,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.addAction = function() {
         if(self.currentProject.widgets.length === 0) {
-            displayMessage('No widgets have been added. Please add at least one before adding an action.', MessageType.INFO);
+            displayMessage.show('No widgets have been added. Please add at least one before adding an action.', MessageType.INFO);
             return;
         }
 
@@ -502,7 +502,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.editAction = function() {
         if (!defined(self.selectedAction)) {
-            displayMessage('No action selected for editing.', MessageType.INFO);
+            displayMessage.show('No action selected for editing.', MessageType.INFO);
             return;
         }
 
@@ -511,7 +511,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.removeSelectedAction = function() {
         if(!defined(self.selectedAction)) {
-            displayMessage('No action selected for deletion.', MessageType.INFO);
+            displayMessage.show('No action selected for deletion.', MessageType.INFO);
             return;
         }
 
@@ -520,7 +520,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.addEvent = function() {
         if(self.currentProject.widgets.length === 0) {
-            displayMessage('No widgets have been added that can be used as event triggers. Please add at least one widget before creating an event.', MessageType.INFO);
+            displayMessage.show('No widgets have been added that can be used as event triggers. Please add at least one widget before creating an event.', MessageType.INFO);
             return;
         }
 
@@ -529,7 +529,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.editEvent = function() {
         if(!defined(self.selectedEvent)) {
-            displayMessage('No event selected for editing.', MessageType.INFO);
+            displayMessage.show('No event selected for editing.', MessageType.INFO);
             return;
         }
 
@@ -538,7 +538,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.removeSelectedEvent = function() {
         if(!defined(self.selectedEvent)) {
-            displayMessage('No event selected for deletion.', MessageType.INFO);
+            displayMessage.show('No event selected for deletion.', MessageType.INFO);
             return;
         }
 

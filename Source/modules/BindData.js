@@ -48,7 +48,7 @@ define([
                         var checked = $('.bind-data-selections:checked');
 
                         if (checked.length === 0) {
-                            displayMessage('Select data to bind or click Cancel.', MessageType.INFO);
+                            displayMessage.show('Select data to bind or click Cancel.', MessageType.INFO);
                             return;
                         }
 
@@ -114,7 +114,7 @@ define([
 
                     var response = DependencyChecker.allowedToUnbindDataSet(dataSet, widget, viewModel.currentProject);
                     if (!response.allowed) {
-                        displayMessage(response.message, MessageType.WARNING);
+                        displayMessage.show(response.message, MessageType.WARNING);
                         return;
                     }
 

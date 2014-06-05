@@ -397,7 +397,7 @@ define([
             options: this.glyphs,
             add: function() {
                 if (!defined(self.boundData) || self.boundData.length === 0) {
-                    displayMessage('Must bind data to map before adding glyph', MessageType.WARNING);
+                    displayMessage.show('Must bind data to map before adding glyph', MessageType.WARNING);
                 } else {
                     var newGlyph = new GlyphViewModel({}, self);
                     var options = this.options;

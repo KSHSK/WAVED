@@ -126,7 +126,7 @@ define([
                             if (!UniqueTracker.isValueUnique(Action.getUniqueNameNamespace(),
                                 viewModel.selectedActionName.value)) {
 
-                                displayMessage('The name "' + viewModel.selectedActionName.value + '" is already in use.', MessageType.WARNING);
+                                displayMessage.show('The name "' + viewModel.selectedActionName.value + '" is already in use.', MessageType.WARNING);
                                 return;
                             }
 
@@ -233,7 +233,7 @@ define([
                             if (!UniqueTracker.isValueUnique(Action.getUniqueNameNamespace(),
                                 viewModel.selectedActionName.value, viewModel.selectedAction)) {
 
-                                displayMessage('The name "' + viewModel.selectedActionName.value + '" is already in use.', MessageType.WARNING);
+                                displayMessage.show('The name "' + viewModel.selectedActionName.value + '" is already in use.', MessageType.WARNING);
                                 return;
                             }
 
