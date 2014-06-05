@@ -88,9 +88,18 @@ define([
                 return js;
             }
 
+            // Export Data
+            js += 'var dataSets = {};\n';
+            for (var i = 0; i < viewModel.currentProject.dataSets.length; i++) {
+				js += viewModel.currentProject.dataSets[i].getSetupJs();
+            }
+            for (i = 0; i < viewModel.currentProject.dataSets.length; i++) {
+				js += viewModel.currentProject.dataSets[i].getLoadDataJs();
+            }
+
             // Override CSS attributes from automatically applied Actions
             // TODO: Nested Properties?
-            for (var i = 0; i < viewModel.currentProject.actions.length; i++) {
+            for (i = 0; i < viewModel.currentProject.actions.length; i++) {
                 var action = viewModel.currentProject.actions[i];
                 if (action.applyAutomatically) {
                     js += exportAction(action, '');
