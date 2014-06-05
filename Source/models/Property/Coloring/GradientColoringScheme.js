@@ -56,7 +56,7 @@ define([
             onchange: state.onchange,
             validValue: function(value) {
                 if (!defined(value)) {
-                    return true;
+                    return true; // Allows this to be undefined
                 }
 
                 if (defined(this.options) && this.options.length > 0) {
@@ -66,9 +66,12 @@ define([
                 return true;
             },
             validDisplayValue: function(value) {
-                if (!defined(this.displayOptions) && !defined(value)) {
-                    // If there are no options, allow this to be undefined
-                    return true;
+                if (!defined(value)) {
+                    /*
+                     * Force the value to be undefined to trigger the dataField and keyFields to update and validate
+                     */
+                    this._displayValue = undefined;
+                    return false;
                 }
 
                 if (defined(this.options) && this.options.length > 0) {
@@ -256,20 +259,20 @@ define([
             if(defined(newValue) && newValue !== '') {
                 newValue.executeWhenDataLoaded(function() {
                     if(newValue.dataFields.indexOf(self.dataField.displayValue) === -1) {
-                        self.dataField.displayValue = undefined;
+                        self.dataField._displayValue = undefined; // Set directly, avoid validation
                     }
                     self.dataField.displayOptions = newValue.dataFields;
 
                     if(newValue.dataFields.indexOf(self.keyField.displayValue) === -1) {
-                        self.keyField.displayValue = undefined;
+                        self.keyField._displayValue = undefined; // Set directly, avoid validation
                     }
                     self.keyField.displayOptions = newValue.dataFields;
                 });
             }
             else {
-                self.dataField.displayValue = undefined;
+                self.dataField._displayValue = undefined; // Set directly, avoid validation
                 self.dataField.displayOptions = [];
-                self.keyField.displayValue = undefined;
+                self.keyField._displayValue = undefined; // Set directly, avoid validation
                 self.keyField.displayOptions = [];
             }
         });
@@ -317,8 +320,10 @@ define([
         }
         if(defined(state.dataSet)) {
             this.dataSet.displayOptions.forEach(function(opts) {
-                if(opts.name === state.dataSet.value.name) {
-                    self.dataSet.displayValue = opts;
+                if(defined(state.dataSet.value)) {
+                    if(opts.name === state.dataSet.value.name) {
+                        self.dataSet.displayValue = opts;
+                    }
                 }
             });
         }

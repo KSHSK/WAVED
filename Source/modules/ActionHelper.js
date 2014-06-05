@@ -54,6 +54,7 @@ define([
                 for (var index in widget.properties) {
                     if(!defined(widget.properties[index])) {
                         // Set directly to bypass undefined validation checks or errors might pop up everywhere
+                        // Necessary to properly reset the dialog because some fields start out undefined
                         widget.properties[index]._displayValue = widget.properties[index]._originalValue;
                     }
                     else {
@@ -69,6 +70,7 @@ define([
                             nestedProps[nestedIndex].properties.forEach(function(value) {
                                 if(!defined(value.originalValue)) {
                                     // Set directly to avoid validation for undefined values or errors might pop up everywhere
+                                    // Necessary to properly reset the dialog because some fields start out undefined
                                     value._displayValue = value._originalValue;
                                 }
                                 else {
@@ -375,14 +377,19 @@ define([
                 if (defined(viewModel.actionEditorAffectedWidget)) {
                     var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
                     for (var i = 0; i < properties.length; i++) {
-                        if (properties[i].displayError) {
+                        /*
+                         * Calls isValidDisplayValue() for cases where we've bypassed validation for undefined fields (to properly reset the dialog),
+                         * but still want treat the field as if it has an error, such as when disabling the Save button
+                         */
+                        if (properties[i].displayError || !properties[i].isValidDisplayValue(properties[i].displayValue)) {
                             error = true;
                             break;
                         }
 
                         if (defined(properties[i].getSubscribableNestedProperties())) {
                             for (var j = 0; j < properties[i].displayValue.properties.length; j++) {
-                                if(properties[i].displayValue.properties[j].displayError) {
+                                var nestedProperty = properties[i].displayValue.properties[j];
+                                if(nestedProperty.displayError || !nestedProperty.isValidDisplayValue(nestedProperty.displayValue)) {
                                     error = true;
                                     break;
                                 }
