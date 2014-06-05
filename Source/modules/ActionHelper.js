@@ -53,6 +53,10 @@ define([
                 // All the properties
                 for (var index in widget.properties) {
                     if(!defined(widget.properties[index])) {
+                     // Clear any existing error flags
+                        widget.properties[index].displayError = false;
+                        widget.properties[index].dialogErrorMessage = '';
+
                         // Set directly to bypass undefined validation checks or errors might pop up everywhere
                         // Necessary to properly reset the dialog because some fields start out undefined
                         widget.properties[index]._displayValue = widget.properties[index]._originalValue;
@@ -69,6 +73,10 @@ define([
                         for(var nestedIndex in nestedProps) {
                             nestedProps[nestedIndex].properties.forEach(function(value) {
                                 if(!defined(value.originalValue)) {
+                                    // Clear any existing error flags
+                                    value.displayError = false;
+                                    value.dialogErrorMessage = '';
+
                                     // Set directly to avoid validation for undefined values or errors might pop up everywhere
                                     // Necessary to properly reset the dialog because some fields start out undefined
                                     value._displayValue = value._originalValue;
