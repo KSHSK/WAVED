@@ -60,6 +60,13 @@ define([
         }
     };
 
+	DataSubset.prototype.getLoadDataJs = function () {
+		return 'dataSets["' + this.parent.name + '"].dataIsLoaded.then(function () {\n' +
+				'\tdataSets["' + this.name + '"].loadedData = dataSets["' + this.parent.name + '"].loadedData;\n' +
+				'\tdataSets["' + this.name + '"].dataIsLoaded.resolve();\n' +
+				'});\n';
+    };
+
     DataSubset.prototype.executeQuery = function() {
         var self = this;
 
