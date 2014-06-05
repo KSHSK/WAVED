@@ -85,6 +85,10 @@ define([
                         }
                     }
                 }
+                else {
+                    js += '\n' + action.getJs(tabs);
+                }
+
                 return js;
             }
 
@@ -114,7 +118,7 @@ define([
                 for (var j = 0; j < event.actions.length; j++) {
                     js += exportAction(event.actions[j], '\t');
                 }
-                js += '});';
+                js += '});\n';
             }
 
             for (i = 0; i < viewModel.currentProject.widgets.length; i++) {

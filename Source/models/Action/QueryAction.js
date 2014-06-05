@@ -134,5 +134,16 @@ define([
         this.dataSubset.executeCurrentQuery();
     };
 
+    QueryAction.prototype.getDataFunctionJs = function(tabs) {
+        return Condition.getDataFunctionJs(this.condtions, tabs);
+    };
+
+    QueryAction.prototype.getJs = function(tabs) {
+        return tabs + 'dataSets[\'' + this.dataSubset.name + '\'].getData = ' + this.getDataFunctionJs(tabs) +
+            tabs + 'dataSets[\'' + this.dataSubset.name + '\'].onChange.forEach(function(callback) {\n' +
+            tabs + '\tcallback();\n' +
+            tabs + '});\n';
+    };
+
     return QueryAction;
 });
