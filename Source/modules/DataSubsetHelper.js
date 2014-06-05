@@ -80,7 +80,7 @@ define([
                 if (!UniqueTracker.isValueUnique(DataSet.getUniqueNameNamespace(),
                     viewModel.dataSubsetEditorName.value)) {
 
-                    displayMessage('The name "' + viewModel.dataSubsetEditorName.value + '" is already in use.', MessageType.WARNING);
+                    displayMessage.show('The name "' + viewModel.dataSubsetEditorName.value + '" is already in use.', MessageType.WARNING);
                     return;
                 }
 
@@ -132,7 +132,7 @@ define([
                 if (!UniqueTracker.isValueUnique(DataSet.getUniqueNameNamespace(),
                     viewModel.dataSubsetEditorName.value, viewModel.selectedDataSubset)) {
 
-                    displayMessage('The name "' + viewModel.dataSubsetEditorName.value + '" is already in use.', MessageType.WARNING);
+                    displayMessage.show('The name "' + viewModel.dataSubsetEditorName.value + '" is already in use.', MessageType.WARNING);
                     return;
                 }
 

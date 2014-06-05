@@ -159,7 +159,7 @@ define([
         var self = this;
 
         if (this.boundDataIndex(dataSet) > -1) {
-            displayMessage('DataSet "' + dataSet.name + '" is already bound.', MessageType.INFO);
+            displayMessage.show('DataSet "' + dataSet.name + '" is already bound.', MessageType.INFO);
             return;
         }
 

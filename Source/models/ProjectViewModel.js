@@ -552,7 +552,7 @@ define([
 
         var response = DependencyChecker.allowedToDeleteWidget(widget, self);
         if (!response.allowed) {
-            displayMessage(response.message, MessageType.WARNING);
+            displayMessage.show(response.message, MessageType.WARNING);
             return false;
         }
 
@@ -596,7 +596,7 @@ define([
 
         var response = DependencyChecker.allowedToDeleteDataSet(dataSet, self);
         if (!response.allowed) {
-            displayMessage(response.message, MessageType.WARNING);
+            displayMessage.show(response.message, MessageType.WARNING);
             return;
         }
 
@@ -629,7 +629,7 @@ define([
 
         var response = DependencyChecker.allowedToDeleteAction(action, self);
         if (!response.allowed) {
-            displayMessage(response.message, MessageType.WARNING);
+            displayMessage.show(response.message, MessageType.WARNING);
             return;
         }
 

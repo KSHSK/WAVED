@@ -50,7 +50,7 @@ define([
                             if (!UniqueTracker.isValueUnique(Event.getUniqueNameNamespace(),
                                 viewModel.selectedEventName.value)) {
 
-                                displayMessage('The name "' + viewModel.selectedEventName.value + '" is already in use.', MessageType.WARNING);
+                                displayMessage.show('The name "' + viewModel.selectedEventName.value + '" is already in use.', MessageType.WARNING);
                                 return;
                             }
 
@@ -104,7 +104,7 @@ define([
                             if (!UniqueTracker.isValueUnique(Event.getUniqueNameNamespace(),
                                 viewModel.selectedEventName.value, viewModel.selectedEvent)) {
 
-                                displayMessage('The name "' + viewModel.selectedEventName.value + '" is already in use.', MessageType.WARNING);
+                                displayMessage.show('The name "' + viewModel.selectedEventName.value + '" is already in use.', MessageType.WARNING);
                                 return;
                             }
 

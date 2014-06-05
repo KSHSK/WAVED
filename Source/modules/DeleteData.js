@@ -23,7 +23,7 @@ define([
 
             var response = DependencyChecker.allowedToDeleteDataSet(dataSet, viewModel.currentProject);
             if (!response.allowed) {
-                displayMessage(response.message, MessageType.WARNING);
+                displayMessage.show(response.message, MessageType.WARNING);
                 return;
             }
 
@@ -69,7 +69,7 @@ define([
                         viewModel.currentProject.removeDataSet(dataSet);
                     }
                     else {
-                        displayMessage(data.errorMessage, MessageType.ERROR);
+                        displayMessage.show(data.errorMessage, MessageType.ERROR);
                     }
                 }
             }).promise();
