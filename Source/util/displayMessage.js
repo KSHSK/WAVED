@@ -13,6 +13,7 @@ define([
         'hideMethod': 'fadeOut'
     };
 
+
     var displayMessage = {
         show: function(message, type) {
             if (type === MessageType.SUCCESS) {
