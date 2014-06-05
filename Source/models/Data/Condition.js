@@ -91,5 +91,12 @@ define([
         }
     };
 
+    Condition.getDataFunctionJs = function(conditions, tabs) {
+        // TODO return function that filters 'this.loadedData' given the list of conditions
+        return 'function(args) {\n' +
+            tabs + '\treturn this.loadedData;\n' +
+            tabs + '};\n';
+    };
+
     return Condition;
 });

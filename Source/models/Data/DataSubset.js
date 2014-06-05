@@ -1,11 +1,13 @@
 define([
         'knockout',
         './DataSet',
+        './Condition',
         './Query',
         'util/defined'
     ],function(
         ko,
         DataSet,
+        Condition,
         Query,
         defined
     ){
@@ -61,10 +63,15 @@ define([
         }
     };
 
+    DataSubset.prototype.getDataFunctionJs = function(tabs) {
+        return Condition.getDataFunctionJs(this.query.condtions, tabs);
+    };
+
     DataSubset.prototype.getLoadDataJs = function () {
-        return 'dataSets["' + this.parent.name + '"].dataIsLoaded.then(function () {\n' +
-                '\tdataSets["' + this.name + '"].loadedData = dataSets["' + this.parent.name + '"].loadedData;\n' +
-                '\tdataSets["' + this.name + '"].dataIsLoaded.resolve();\n' +
+        return 'dataSets[\'' + this.parent.name + '\'].dataIsLoaded.then(function () {\n' +
+                '\tdataSets[\'' + this.name + '\'].loadedData = dataSets[\'' + this.parent.name + '\'].loadedData;\n' +
+                '\tdataSets[\'' + this.name + '\'].getData = ' + this.getDataFunctionJs('\t') +
+                '\tdataSets[\'' + this.name + '\'].dataIsLoaded.resolve();\n' +
                 '});\n';
     };
 
