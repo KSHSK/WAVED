@@ -179,7 +179,7 @@ define([
 
         isDataSetUsedByPropertyAction: function(values, key, dataSet) {
             // If it's a dataSet, it will always be contained within a .value key
-            if (defined(values[key].value.type)) {
+            if (defined(values[key].value) && defined(values[key].value.type)) {
                 if (values[key].value.type === 'DataSet' || values[key].value.type === 'DataSubset') {
                     if (values[key].value.name === dataSet.name) {
                             return true;
