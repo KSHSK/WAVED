@@ -231,6 +231,9 @@ define(['jquery',
         // Clear the workspace.
         $('#waved-workspace').empty();
 
+        // Clear any existing toast messages
+        displayMessage.clear();
+
         // Reset the unique names.
         UniqueTracker.reset();
 
