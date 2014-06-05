@@ -386,6 +386,9 @@ define([
             value: 'Black',
             onchange: function() {
                 updateColoring(self);
+            },
+            validValue: function(value) {
+                return defined(value) && (value.trim() !== '');
             }
         }, this);
 

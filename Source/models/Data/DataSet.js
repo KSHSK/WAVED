@@ -125,6 +125,13 @@ define(['knockout',
         }
     };
 
+    DataSet.prototype.getDisplayState = function() {
+        return {
+            type: DataSet.getType(),
+            name: this.name
+        };
+    };
+
     DataSet.prototype.subscribed = false;
 
     DataSet.prototype.skipSubscribe = ['_data', '_dataFields', '_dataLoaded'];
