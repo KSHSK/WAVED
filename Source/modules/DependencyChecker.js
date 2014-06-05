@@ -130,14 +130,64 @@ define([
          * @param dataSet The dataSet to be unbound.
          * @param widget The widget that dataSet is bound to.
          */
-        allowedToUnbindDataSet: function(dataSet, widget) {
-            var allowed = (!widget.usesDataSet(dataSet));
-            var message =  allowed ?  '' : 'Cannot unbind data that is used by a widget';
+        allowedToUnbindDataSet: function(dataSet, widget, project) {
+            var returnValue = {
+                allowed: true,
+                message: ''
+            }
 
-            return {
-                allowed: allowed,
-                message: message
-            };
+            // Check if dataSet is in use by a PropertyAction
+            var usedByPropertyAction = false;
+            var propertyActions = project.propertyActions;
+            var usedByPropertyActionMessage = 'Cannot unbind data that is used by an action affecting this widget';
+
+            for (var i = 0; i < propertyActions.length; i++) {
+                var propertyAction = propertyActions[i];
+                var newValues = propertyAction.newValues;
+
+                // Iterate through top level properties (loop is labeled so we can break out directly from nested loops)
+                topLevel:
+                for (var key in newValues) {
+                    if (this.isDataSetUsedByPropertyAction(newValues, key, dataSet)) {
+                        returnValue.allowed = false;
+                        returnValue.message = usedByPropertyActionMessage;
+                        break topLevel; // Breaks the outer loop
+                    }
+
+                    // Iterate through nestedProperties
+                    if(defined(widget[key].getSubscribableNestedProperties())) {
+                        var nestedProperty = newValues[key].value; // If it's a nested property, it will always be within .value
+
+                        for (var nestedKey in nestedProperty) {
+                            if (this.isDataSetUsedByPropertyAction(nestedProperty, nestedKey, dataSet)) {
+                                returnValue.allowed = false;
+                                returnValue.message = usedByPropertyActionMessage;
+                                break topLevel; // Breaks the outer loop
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (widget.usesDataSet(dataSet)) {
+                    returnValue.allowed = false;
+                    returnValue.message = 'Cannot unbind data that is used by a widget';
+            }
+
+            return returnValue;
+        },
+
+        isDataSetUsedByPropertyAction: function(values, key, dataSet) {
+            // If it's a dataSet, it will always be contained within a .value key
+            if (defined(values[key].value.type)) {
+                if (values[key].value.type === 'DataSet' || values[key].value.type === 'DataSubset') {
+                    if (values[key].value.name === dataSet.name) {
+                            return true;
+                    }
+                }
+            }
+
+            return false;
         }
     };
 
