@@ -65,19 +65,9 @@ define([
     };
 
     Condition.prototype.getExecuteJs = function(tabs) {
-        var js = 'function(data) {\n';
-        js += tabs + '\tvar indices = [];\n';
-        js += tabs + '\tdata.forEach(function(row, index) {\n';
-        js += tabs + '\t\tvar fieldValue = row[\'' + this.field + '\'];\n';
-        // TODO: quotes around this.value only if string?
-        js += tabs + '\t\tif((' + comparisonFunctions[this.comparisonOperator].toString().replace(/\n|\r/g, "") + ')(fieldValue, \'' + this.value + '\')) {\n';
-        js += tabs + '\t\t\tindices.push(index);\n';
-        js += tabs + '\t\t}\n';
-        js += tabs + '\t});\n\n';
-        js += tabs + '\treturn indices;\n';
-        js += tabs + '}';
-
-        return js;
+        return 'conditionFunction(\'' + this.field + '\', ' +
+            comparisonFunctions[this.comparisonOperator].toString().replace(/\n|\r/g, '') + ', ' +
+            '\'' + this.value + '\')';
     };
 
     Condition.prototype.getState = function() {
