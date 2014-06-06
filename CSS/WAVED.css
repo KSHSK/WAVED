@@ -275,3 +275,7 @@ table.dataTable#project-list tr.row_selected td { background-color: #aaaaaa; }
 #toast-container>div {
     opacity: 1;
 }
+
+#query-action-options {
+    max-width: 500px;
+}
