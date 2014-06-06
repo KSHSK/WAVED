@@ -156,6 +156,7 @@ define(['knockout',
     DataSet.prototype.getLoadDataJs = function () {
         return 'd3.csv(\'data/' + this.filename + '\', function (loadedData) { \n' +
                 '\tdataSets[\'' + this.name + '\'].loadedData = loadedData;\n' +
+                '\tdataSets[\'' + this.name + '\'].data = loadedData;\n' +
                 '\tdataSets[\'' + this.name + '\'].dataIsLoaded.resolve();\n' +
                 '});\n';
     };
@@ -164,10 +165,9 @@ define(['knockout',
         return 'dataSets[\'' + this.name + '\'] = {\n' +
                 '\t\'dataIsLoaded\' : $.Deferred()' + ',\n' +
                 '\t\'loadedData\': []' + ',\n' +
+                '\t\'data\': []' + ',\n' +
                 '\t\'onChange\': []' + ',\n' +
-                '\t\'getData\': function(args) {\n' +
-                '\t\treturn this.loadedData;\n' +
-                '\t}\n' +
+                '\t\'updateData\': $.noop\n' +
                 '};\n';
     };
 
