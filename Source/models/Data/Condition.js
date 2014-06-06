@@ -64,6 +64,12 @@ define([
         return indices;
     };
 
+    Condition.prototype.getExecuteJs = function(tabs) {
+        return 'conditionFunction(\'' + this.field + '\', ' +
+            comparisonFunctions[this.comparisonOperator].toString().replace(/\n|\r/g, '') + ', ' +
+            '\'' + this.value + '\')';
+    };
+
     Condition.prototype.getState = function() {
         return {
             field: this.field,

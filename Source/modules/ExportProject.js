@@ -4,6 +4,7 @@
 define([
         '../models/Constants/EventType',
         '../models/Action/PropertyAction',
+        '../models/Data/Query',
         '../models/Widget/USMapWidget/USMap',
         './UnsavedChanges',
         '../WAVEDViewModel',
@@ -13,6 +14,7 @@ define([
     ], function(
         EventType,
         PropertyAction,
+        Query,
         USMap,
         UnsavedChangesModule,
         WAVEDViewModel,
@@ -85,12 +87,28 @@ define([
                         }
                     }
                 }
+                else {
+                    js += '\n' + action.getJs(tabs);
+                }
+
                 return js;
             }
 
+            // Export Data
+            js += '// START DATA\n';
+            js += Query.getHelperFunctionsJs();
+            js += 'var dataSets = {};\n';
+            for (var i = 0; i < viewModel.currentProject.dataSets.length; i++) {
+                js += viewModel.currentProject.dataSets[i].getSetupJs();
+            }
+            for (i = 0; i < viewModel.currentProject.dataSets.length; i++) {
+                js += viewModel.currentProject.dataSets[i].getLoadDataJs();
+            }
+            js += '// END DATA\n\n';
+
             // Override CSS attributes from automatically applied Actions
             // TODO: Nested Properties?
-            for (var i = 0; i < viewModel.currentProject.actions.length; i++) {
+            for (i = 0; i < viewModel.currentProject.actions.length; i++) {
                 var action = viewModel.currentProject.actions[i];
                 if (action.applyAutomatically) {
                     js += exportAction(action, '');
@@ -105,7 +123,7 @@ define([
                 for (var j = 0; j < event.actions.length; j++) {
                     js += exportAction(event.actions[j], '\t');
                 }
-                js += '});';
+                js += '});\n';
             }
 
             for (i = 0; i < viewModel.currentProject.widgets.length; i++) {

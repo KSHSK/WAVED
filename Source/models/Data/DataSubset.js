@@ -57,10 +57,29 @@ define([
 
         if (shouldExecute) {
             this.executeQuery();
+            this.executeCurrentQuery();
         }
     };
 
-    DataSubset.prototype.executeQuery = function() {
+    DataSubset.prototype.getDataFunctionJs = function(tabs) {
+        return Query.getDataFunctionJs(this.query.conditions, tabs);
+    };
+
+    DataSubset.prototype.getLoadDataJs = function () {
+        return 'dataSets[\'' + this.parent.name + '\'].dataIsLoaded.then(function () {\n' +
+                '\tdataSets[\'' + this.name + '\'].loadedData = dataSets[\'' + this.parent.name + '\'].loadedData;\n' +
+                '\tdataSets[\'' + this.name + '\'].updateData = ' + this.getDataFunctionJs('\t') +
+                '\tdataSets[\'' + this.name + '\'].updateData();\n' +
+                '\tdataSets[\'' + this.name + '\'].dataIsLoaded.resolve();\n' +
+                '});\n';
+    };
+
+    DataSubset.prototype.reset = function() {
+        this.query.reset();
+        this.executeCurrentQuery();
+    };
+
+    var executeQuery = function(current) {
         var self = this;
 
         if (!(self.parent instanceof DataSet)) {
@@ -72,13 +91,26 @@ define([
         var localExecuteQuery = function() {
             var data = self.parent.data;
 
-            // Run query
-            self._data = self.query.execute(data);
+            // Run either the current or original query
+            if (current) {
+                self._data = self.query.executeCurrent(data);
+            }
+            else {
+                self._originalData = self.query.execute(data);
+            }
 
             self._dataLoaded.resolve();
         };
 
         self.parent.executeWhenDataLoaded(localExecuteQuery);
+    };
+
+    DataSubset.prototype.executeQuery = function() {
+        executeQuery.call(this, false);
+    };
+
+    DataSubset.prototype.executeCurrentQuery = function() {
+        executeQuery.call(this, true);
     };
 
     Object.defineProperties(DataSubset.prototype, {
@@ -116,6 +148,11 @@ define([
                 if (query instanceof Query) {
                     this._query = query;
                 }
+            }
+        },
+        originalData: {
+            get: function() {
+                return this._originalData;
             }
         }
     });

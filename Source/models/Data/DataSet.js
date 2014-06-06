@@ -153,6 +153,24 @@ define(['knockout',
         this.subscribed = true;
     };
 
+    DataSet.prototype.getLoadDataJs = function () {
+        return 'd3.csv(\'data/' + this.filename + '\', function (loadedData) { \n' +
+                '\tdataSets[\'' + this.name + '\'].loadedData = loadedData;\n' +
+                '\tdataSets[\'' + this.name + '\'].data = loadedData;\n' +
+                '\tdataSets[\'' + this.name + '\'].dataIsLoaded.resolve();\n' +
+                '});\n';
+    };
+
+    DataSet.prototype.getSetupJs = function() {
+        return 'dataSets[\'' + this.name + '\'] = {\n' +
+                '\t\'dataIsLoaded\' : $.Deferred()' + ',\n' +
+                '\t\'loadedData\': []' + ',\n' +
+                '\t\'data\': []' + ',\n' +
+                '\t\'onChange\': []' + ',\n' +
+                '\t\'updateData\': $.noop\n' +
+                '};\n';
+    };
+
     Object.defineProperties(DataSet.prototype, {
         type: {
             get: function() {
@@ -197,6 +215,11 @@ define(['knockout',
                         this._dataFields = Object.keys(values);
                     }
                 }
+            }
+        },
+        originalData: {
+            get: function() {
+                return this._data;
             }
         },
         referenceCount: {
