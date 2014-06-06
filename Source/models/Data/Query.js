@@ -101,8 +101,20 @@ define(['jquery',
     };
 
     Query.getHelperFunctionsJs = function() {
-        return 'var intersection = ' +  intersection + '\n\n' +
-            'var unionAll = ' + unionAll + '\n\n';
+        return 'var intersection = ' +  intersection + ';\n\n' +
+            'var unionAll = ' + unionAll + ';\n\n' +
+            'var conditionFunction = function (field, condition, value) {\n' +
+            '\treturn function(data) {\n' +
+            '\t\tvar indices = [];\n' +
+            '\t\tdata.forEach(function(row, index) {\n' +
+            '\t\t\tvar fieldValue = row[field];\n' +
+            '\t\t\tif(condition(fieldValue, value)) {\n' +
+            '\t\t\t\tindices.push(index);\n' +
+            '\t\t\t}\n' +
+            '\t\t});\n\n' +
+            '\t\treturn indices;\n' +
+            '\t};\n' +
+            '};\n\n';
     };
 
     Query.getDataFunctionJs = function(conditions, tabs) {
@@ -114,7 +126,7 @@ define(['jquery',
             js += tabs + '\tgroup = (' + conditions[i].getExecuteJs(tabs + '\t') +')(this.loadedData);\n';
             while (conditions[i].logicalOperator === LogicalOperator.AND) {
                 i++;
-                js += tabs + 'group = intersection(group, (' + conditions[i].getExecuteJs(tabs + '\t') + ')(this.loadedData));\n';
+                js += tabs + '\tgroup = intersection(group, (' + conditions[i].getExecuteJs(tabs + '\t') + ')(this.loadedData));\n';
             }
             js += tabs + '\tandIndices.push(group);\n\n';
         }
