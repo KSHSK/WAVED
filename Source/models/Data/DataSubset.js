@@ -1,13 +1,11 @@
 define([
         'knockout',
         './DataSet',
-        './Condition',
         './Query',
         'util/defined'
     ],function(
         ko,
         DataSet,
-        Condition,
         Query,
         defined
     ){
@@ -64,7 +62,7 @@ define([
     };
 
     DataSubset.prototype.getDataFunctionJs = function(tabs) {
-        return Condition.getDataFunctionJs(this.query.condtions, tabs);
+        return Query.getDataFunctionJs(this.query.conditions, tabs);
     };
 
     DataSubset.prototype.getLoadDataJs = function () {

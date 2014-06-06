@@ -1,6 +1,7 @@
 define([
         'models/Action/Action',
         'models/Data/DataSubset',
+        'models/Data/Query',
         'models/Constants/ActionType',
         'models/Data/Condition',
         'util/defined',
@@ -9,6 +10,7 @@ define([
     ],function(
         Action,
         DataSubset,
+        Query,
         ActionType,
         Condition,
         defined,
@@ -135,11 +137,12 @@ define([
     };
 
     QueryAction.prototype.getDataFunctionJs = function(tabs) {
-        return Condition.getDataFunctionJs(this.condtions, tabs);
+        return Query.getDataFunctionJs(this.conditions, tabs);
     };
 
     QueryAction.prototype.getJs = function(tabs) {
-        return tabs + 'dataSets[\'' + this.dataSubset.name + '\'].getData = ' + this.getDataFunctionJs(tabs) +
+        return tabs + 'dataSets[\'' + this.dataSubset.name + '\'].updateData = ' + this.getDataFunctionJs(tabs) +
+            tabs + 'dataSets[\'' + this.dataSubset.name + '\'].updateData();\n' +
             tabs + 'dataSets[\'' + this.dataSubset.name + '\'].onChange.forEach(function(callback) {\n' +
             tabs + '\tcallback();\n' +
             tabs + '});\n';

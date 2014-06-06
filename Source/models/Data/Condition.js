@@ -66,16 +66,16 @@ define([
 
     Condition.prototype.getExecuteJs = function(tabs) {
         var js = 'function(data) {\n';
-        js += tabs + '\tvar indicies = [];\n';
+        js += tabs + '\tvar indices = [];\n';
         js += tabs + '\tdata.forEach(function(row, index) {\n';
         js += tabs + '\t\tvar fieldValue = row[\'' + this.field + '\'];\n';
         // TODO: quotes around this.value only if string?
         js += tabs + '\t\tif((' + comparisonFunctions[this.comparisonOperator].toString().replace(/\n|\r/g, "") + ')(fieldValue, \'' + this.value + '\')) {\n';
-        js += tabs + '\t\t\tindicies.push(index);\n';
+        js += tabs + '\t\t\tindices.push(index);\n';
         js += tabs + '\t\t}\n';
-        js += tabs + '\t};\n\n';
+        js += tabs + '\t});\n\n';
         js += tabs + '\treturn indices;\n';
-        js += tabs + '}\n';
+        js += tabs + '}';
 
         return js;
     };
@@ -105,13 +105,6 @@ define([
         if (defined(state.logicalOperator)) {
             this.logicalOperator = state.logicalOperator;
         }
-    };
-
-    Condition.getDataFunctionJs = function(conditions, tabs) {
-        // TODO return function that filters 'this.loadedData' given the list of conditions
-        return 'function(args) {\n' +
-            tabs + '\tthis.data = this.loadedData;\n' +
-            tabs + '};\n';
     };
 
     return Condition;
