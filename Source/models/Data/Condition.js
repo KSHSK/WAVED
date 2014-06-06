@@ -64,6 +64,22 @@ define([
         return indices;
     };
 
+    Condition.prototype.getExecuteJs = function(tabs) {
+        var js = 'function(data) {\n';
+        js += tabs + '\tvar indicies = [];\n';
+        js += tabs + '\tdata.forEach(function(row, index) {\n';
+        js += tabs + '\t\tvar fieldValue = row[\'' + this.field + '\'];\n';
+        // TODO: quotes around this.value only if string?
+        js += tabs + '\t\tif((' + comparisonFunctions[this.comparisonOperator].toString().replace(/\n|\r/g, "") + ')(fieldValue, \'' + this.value + '\')) {\n';
+        js += tabs + '\t\t\tindicies.push(index);\n';
+        js += tabs + '\t\t}\n';
+        js += tabs + '\t};\n\n';
+        js += tabs + '\treturn indices;\n';
+        js += tabs + '}\n';
+
+        return js;
+    };
+
     Condition.prototype.getState = function() {
         return {
             field: this.field,
