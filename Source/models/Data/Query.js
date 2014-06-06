@@ -100,6 +100,34 @@ define(['jquery',
         });
     };
 
+    Query.getHelperFunctionsJs = function() {
+        return 'var intersection = ' +  intersection + '\n\n' +
+            'var unionAll = ' + unionAll + '\n\n';
+    };
+
+    Query.getDataFunctionJs = function(conditions, tabs) {
+        var js = 'function(args) {\n';
+        js += tabs + '\tvar group = []\n';
+        js += tabs + '\tvar andIndices = []\n\n';
+
+        for (var i = 0; i < conditions.length; i++) {
+            js += tabs + '\tgroup = (' + conditions[i].getExecuteJs(tabs + '\t') +')(this.loadedData);\n';
+            while (conditions[i].logicalOperator === LogicalOperator.AND) {
+                i++;
+                js += tabs + 'group = intersection(group, (' + conditions[i].getExecuteJs(tabs + '\t') + ')(this.loadedData));\n';
+            }
+            js += tabs + '\tandIndices.push(group);\n\n';
+        }
+
+        js += tabs + '\tvar dataIndices = unionAll(andIndices)\n';
+        js += tabs + '\tthis.data = this.loadedData.filter(function(value, index) {\n';
+        js += tabs + '\t\treturn dataIndices.indexOf(index) !== -1;\n';
+        js += tabs + '\t});\n';
+        js += tabs + '};\n';
+
+        return js;
+    };
+
     Query.prototype.execute = function(data) {
         return execute.call(this, data, false);
     };

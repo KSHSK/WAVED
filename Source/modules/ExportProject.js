@@ -4,6 +4,7 @@
 define([
         '../models/Constants/EventType',
         '../models/Action/PropertyAction',
+        '../models/Data/Query',
         '../models/Widget/USMapWidget/USMap',
         './UnsavedChanges',
         '../WAVEDViewModel',
@@ -13,6 +14,7 @@ define([
     ], function(
         EventType,
         PropertyAction,
+        Query,
         USMap,
         UnsavedChangesModule,
         WAVEDViewModel,
@@ -93,6 +95,8 @@ define([
             }
 
             // Export Data
+            js += '// START DATA\n';
+            js += Query.getHelperFunctionsJs();
             js += 'var dataSets = {};\n';
             for (var i = 0; i < viewModel.currentProject.dataSets.length; i++) {
                 js += viewModel.currentProject.dataSets[i].getSetupJs();
@@ -100,6 +104,7 @@ define([
             for (i = 0; i < viewModel.currentProject.dataSets.length; i++) {
                 js += viewModel.currentProject.dataSets[i].getLoadDataJs();
             }
+            js += '// END DATA\n\n';
 
             // Override CSS attributes from automatically applied Actions
             // TODO: Nested Properties?
