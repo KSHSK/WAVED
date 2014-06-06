@@ -86,7 +86,7 @@ define([
                                             continue;
                                         }
 
-                                        if(self._newValues[key].value[nestKey].value.type === 'DataSet' || self._newValues[key].value[nestKey] === 'DataSubset') {
+                                        if(self._newValues[key].value[nestKey].value.type === 'DataSet' || self._newValues[key].value[nestKey].value.type === 'DataSubset') {
                                             self._target.viewModel[key].value[nestKey].displayOptions.forEach(function(displayOption) {
                                                 if(displayOption.name === self._newValues[key].value[nestKey].value.name) {
                                                     self._target.viewModel[key].value[nestKey].value = displayOption;
