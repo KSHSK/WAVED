@@ -38,6 +38,15 @@ define([
             };
         }
 
+        if(!defined(opts.validDisplayValue)) {
+            this.isValidDisplayValue = function(value) {
+                if (defined(this._displayOptions) && this._displayOptions.length > 0) {
+                    return (this._displayOptions.indexOf(value) !== -1);
+                }
+                return false;
+            };
+        }
+
         if(!defined(opts.getOptionText)) {
             this.getOptionText = function(value){
                 return value;
@@ -118,15 +127,11 @@ define([
                 return this._value;
             },
             set: function(value) {
-                if (this.isValidValue(value)) {
-                    this.error = false;
-                    this.message = '';
-                    this._value = value;
-                }
-                else {
-                    this.error = true;
-                    this.message = this.errorMessage;
-                }
+                /*
+                 * Don't check for validValue here since we never set value directly without first
+                 * checking validValue in originalValue or displayValue
+                 */
+                this._value = value;
             }
         },
         displayValue: {
@@ -134,14 +139,14 @@ define([
                 return this._displayValue;
             },
             set: function(value) {
-                if (this.isValidValue(value)) {
-                    this.error = false;
-                    this.message = '';
+                if (this.isValidDisplayValue(value)) {
+                    this.displayError = false;
+                    this.dialogErrorMessage = '';
                     this._displayValue = value;
                 }
                 else {
-                    this.error = true;
-                    this.message = this.errorMessage;
+                    this.displayError = true;
+                    this.dialogErrorMessage = this.errorMessage;
                 }
             }
         }

@@ -112,7 +112,7 @@ define([
                 if (defined(dataSet)) {
                     var widget = viewModel.selectedComponent.viewModel;
 
-                    var response = DependencyChecker.allowedToUnbindDataSet(dataSet, widget);
+                    var response = DependencyChecker.allowedToUnbindDataSet(dataSet, widget, viewModel.currentProject);
                     if (!response.allowed) {
                         displayMessage(response.message, MessageType.WARNING);
                         return;

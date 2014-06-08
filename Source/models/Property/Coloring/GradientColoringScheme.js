@@ -23,19 +23,27 @@ define([
     var GradientColoringScheme = function(state, viewModel) {
         state = defined(state) ? state : {};
 
+        var self = this;
+
         ColoringScheme.call(this, state);
+
+        var isColorValid = function(value) {
+            return defined(value) && (value.trim() !== '');
+        };
 
         // Start and end colors default to grey and black
         this.startColor = new StringProperty({
             displayName: 'Start color',
             value: 'LightGrey',
-            onchange: state.onchange
+            onchange: state.onchange,
+            validValue: isColorValid
         });
 
         this.endColor = new StringProperty({
             displayName: 'End color',
             value: 'Black',
-            onchange: state.onchange
+            onchange: state.onchange,
+            validValue: isColorValid
         });
 
         this.dataSet = new ArrayProperty({
@@ -47,11 +55,26 @@ define([
             },
             onchange: state.onchange,
             validValue: function(value) {
-                if (value === undefined) {
-                    return true;
+                if (!defined(value)) {
+                    return true; // Allows this to be undefined
                 }
 
-                if (defined(this._options) && this._options.length > 0) {
+                if (defined(this.options) && this.options.length > 0) {
+                    return (this.options.indexOf(value) !== -1);
+                }
+
+                return true;
+            },
+            validDisplayValue: function(value) {
+                if (!defined(value)) {
+                    /*
+                     * Force the value to be undefined to trigger the dataField and keyFields to update and validate
+                     */
+                    this._displayValue = undefined;
+                    return false;
+                }
+
+                if (defined(this.options) && this.options.length > 0) {
                     return (this.options.indexOf(value) !== -1);
                 }
 
@@ -60,12 +83,15 @@ define([
         });
 
         /*
-         * Note: validValue in both dataField and keyField just check for undefined
-         * More robust checks aren't necessary due to assurances elsewhere that the options
-         * in the fields are correct and nothing that isn't present in the fields can be set
-         * as the value.
+         * validValue for dataField and keyField return true due to issues with detecting valid values and comparing
+         * based on options vs displayOptions.
+         * Without returning true, the fields won't properly reset when the dataSet is deselected and
+         * detecting valid values based on the options won't work because this function is shared
+         * between the property editor and action editor and the options in each may be different if a
+         * different data set is chosen. If the user leaves this field undefined, the visualization
+         * won't behave correctly anyway so even without us enforcing a value here, they are forced
+         * to choose one anyway.
          */
-
         this.dataField = new ArrayProperty({
             displayName: 'Data Field',
             value: undefined,
@@ -75,7 +101,27 @@ define([
             },
             onchange: state.onchange,
             validValue: function(value) {
-                return defined(value);
+                if (!defined(value)) {
+                    return true;
+                }
+
+                if (defined(this.options) && this.options.length > 0) {
+                    return (this.options.indexOf(value) !== -1);
+                }
+
+                return true;
+            },
+            validDisplayValue: function(value) {
+                if (!defined(self.dataSet.displayValue) && !defined(value)) {
+                    // If there's no dataSet selected, allow the value to be undefined
+                    return true;
+                }
+
+                if (defined(this.displayOptions) && this.displayOptions.length > 0) {
+                    return (this.displayOptions.indexOf(value) !== -1);
+                }
+
+                return true;
             }
         });
 
@@ -95,7 +141,27 @@ define([
             },
             onchange: state.onchange,
             validValue: function(value) {
-                return defined(value);
+                if (!defined(value)) {
+                    return true;
+                }
+
+                if (defined(this.options) && this.options.length > 0) {
+                    return (this.options.indexOf(value) !== -1);
+                }
+
+                return true;
+            },
+            validDisplayValue: function(value) {
+                if (!defined(self.dataSet.displayValue) && !defined(value)) {
+                    // If there's no dataSet selected, allow the value to be undefined
+                    return true;
+                }
+
+                if (defined(this.displayOptions) && this.displayOptions.length > 0) {
+                    return (this.displayOptions.indexOf(value) !== -1);
+                }
+
+                return true;
             }
         });
 
@@ -193,20 +259,20 @@ define([
             if(defined(newValue) && newValue !== '') {
                 newValue.executeWhenDataLoaded(function() {
                     if(newValue.dataFields.indexOf(self.dataField.displayValue) === -1) {
-                        self.dataField.displayValue = undefined;
+                        self.dataField._displayValue = undefined; // Set directly, avoid validation
                     }
                     self.dataField.displayOptions = newValue.dataFields;
 
                     if(newValue.dataFields.indexOf(self.keyField.displayValue) === -1) {
-                        self.keyField.displayValue = undefined;
+                        self.keyField._displayValue = undefined; // Set directly, avoid validation
                     }
                     self.keyField.displayOptions = newValue.dataFields;
                 });
             }
             else {
-                self.dataField.displayValue = undefined;
+                self.dataField._displayValue = undefined; // Set directly, avoid validation
                 self.dataField.displayOptions = [];
-                self.keyField.displayValue = undefined;
+                self.keyField._displayValue = undefined; // Set directly, avoid validation
                 self.keyField.displayOptions = [];
             }
         });
@@ -254,8 +320,10 @@ define([
         }
         if(defined(state.dataSet)) {
             this.dataSet.displayOptions.forEach(function(opts) {
-                if(opts.name === state.dataSet.value.name) {
-                    self.dataSet.displayValue = opts;
+                if(defined(state.dataSet.value)) {
+                    if(opts.name === state.dataSet.value.name) {
+                        self.dataSet.displayValue = opts;
+                    }
                 }
             });
         }
