@@ -23,7 +23,10 @@ define([
         var stateColor = {
             displayName: 'Color',
             value: 'LightGrey',
-            onchange: state.onchange
+            onchange: state.onchange,
+            validValue: function(value) {
+                return defined(value) && (value.trim() !== '');
+            }
         };
         this.color = new StringProperty(stateColor);
 

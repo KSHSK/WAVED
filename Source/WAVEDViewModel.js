@@ -6,6 +6,7 @@ define(['jquery',
         'models/Constants/EventType',
         'models/Constants/ComparisonOperator',
         'models/Constants/LogicalOperator',
+        'models/Constants/MessageType',
         'models/Event/Event',
         'models/GoogleAnalytics',
         'models/ProjectViewModel',
@@ -29,6 +30,7 @@ define(['jquery',
         'modules/PropertyChangeSubscriber',
         'modules/HistoryMonitor',
         'modules/UniqueTracker',
+        'models/Data/Condition',
         'util/getBasename',
         'util/defined',
         'util/defaultValue',
@@ -44,6 +46,7 @@ define(['jquery',
         EventType,
         ComparisonOperator,
         LogicalOperator,
+        MessageType,
         Event,
         GoogleAnalytics,
         ProjectViewModel,
@@ -67,6 +70,7 @@ define(['jquery',
         PropertyChangeSubscriber,
         HistoryMonitor,
         UniqueTracker,
+        Condition,
         getBasename,
         defined,
         defaultValue,
@@ -189,7 +193,10 @@ define(['jquery',
         this.selectedActionType = '';
         this.actionEditorAffectedWidget = undefined;
         this.actionEditorAffectedWidgetError = false;
-        this.actionEditorDataSet = undefined;
+        this.actionEditorDataSubsetError = false;
+        this._actionEditorDataSubset = undefined;
+        this._actionDataSubsetEditorConditions = [];
+        this.actionDataSubsetEditorConditionCount = 0;
 
         // Event Editor
         this.selectedEventName = getNamePropertyInstance('Event Name');
@@ -380,10 +387,20 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.unbindData = function() {
+        if(!defined(self.selectedBoundData)) {
+            displayMessage('No bound data selected for unbinding.', MessageType.INFO);
+            return;
+        }
+
         return BindData.unbindData(self);
     };
 
     WAVEDViewModel.prototype.markDataForDeletion = function() {
+        if(!defined(self.selectedDataSet)) {
+            displayMessage('No dataset selected for deletion.', MessageType.INFO);
+            return;
+        }
+
         return DeleteData.markDataForDeletion(self);
     };
 
@@ -402,6 +419,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.previewDataSet = function() {
         if (!defined(this.selectedDataSet)) {
+            displayMessage('No dataset selected for preview.', MessageType.INFO);
             return;
         }
 
@@ -411,6 +429,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.previewDataSubset = function() {
         if (!defined(this.selectedDataSubset)) {
+            displayMessage('No data subset selected for preview.', MessageType.INFO);
             return;
         }
 
@@ -420,6 +439,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.previewBoundDataSet = function() {
         if (!defined(this.selectedBoundData)) {
+            displayMessage('No bound data selected for preview.', MessageType.INFO);
             return;
         }
 
@@ -429,7 +449,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.addDataSubset = function() {
         if (self.currentProject.unmarkedDataSets.length === 0) {
-            displayMessage('Must upload a Data Source before creating a Data Subset.');
+            displayMessage('Must upload a Data Source before creating a Data Subset.', MessageType.INFO);
             return;
         }
 
@@ -437,40 +457,88 @@ define(['jquery',
     };
 
     WAVEDViewModel.prototype.editDataSubset = function() {
+        if(!defined(this.selectedDataSubset)) {
+            displayMessage('No data subset selected for edit.', MessageType.INFO);
+            return;
+        }
+
         DataSubsetHelper.editDataSubset(self);
     };
 
     WAVEDViewModel.prototype.removeSelectedDataSubset = function() {
+        if(!defined(this.selectedDataSubset)) {
+            displayMessage('No data subset selected for deletion.', MessageType.INFO);
+            return;
+        }
+
         this.currentProject.removeDataSet(this.selectedDataSubset);
     };
 
     WAVEDViewModel.prototype.dataSubsetConditionChange = function(index) {
+        // Use setTimeout to wait for updated conditions
         setTimeout(function() {
             DataSubsetHelper.dataSubsetConditionChange(self, index);
         }, 0);
     };
 
+    WAVEDViewModel.prototype.actionDataSubsetConditionChange = function(index) {
+        // Use setTimeout to wait for updated conditions
+        setTimeout(function() {
+            ActionHelper.actionDataSubsetConditionChange(self, index);
+        }, 0);
+    };
+
     WAVEDViewModel.prototype.addAction = function() {
+        if(self.currentProject.widgets.length === 0) {
+            displayMessage('No widgets have been added. Please add at least one before adding an action.', MessageType.INFO);
+            return;
+        }
+
         return ActionHelper.addAction(self);
     };
 
     WAVEDViewModel.prototype.editAction = function() {
+        if (!defined(self.selectedAction)) {
+            displayMessage('No action selected for editing.', MessageType.INFO);
+            return;
+        }
+
         return ActionHelper.editAction(self);
     };
 
     WAVEDViewModel.prototype.removeSelectedAction = function() {
+        if(!defined(self.selectedAction)) {
+            displayMessage('No action selected for deletion.', MessageType.INFO);
+            return;
+        }
+
         self._currentProject.removeAction(self.selectedAction);
     };
 
     WAVEDViewModel.prototype.addEvent = function() {
+        if(self.currentProject.widgets.length === 0) {
+            displayMessage('No widgets have been added that can be used as event triggers. Please add at least one widget before creating an event.', MessageType.INFO);
+            return;
+        }
+
         EventHelper.addEvent(self);
     };
 
     WAVEDViewModel.prototype.editEvent = function() {
+        if(!defined(self.selectedEvent)) {
+            displayMessage('No event selected for editing.', MessageType.INFO);
+            return;
+        }
+
         EventHelper.editEvent(self);
     };
 
     WAVEDViewModel.prototype.removeSelectedEvent = function() {
+        if(!defined(self.selectedEvent)) {
+            displayMessage('No event selected for deletion.', MessageType.INFO);
+            return;
+        }
+
         self._currentProject.removeEvent(self.selectedEvent);
     };
 
@@ -632,6 +700,35 @@ define(['jquery',
                 this._selectedBoundData = value;
             }
         },
+
+        actionEditorDataSubset: {
+            get: function() {
+                return this._actionEditorDataSubset;
+            },
+            set: function(value) {
+                this._actionEditorDataSubset = value;
+                if (defined(this._actionEditorDataSubset)) {
+                    this.actionDataSubsetEditorConditions = this.actionEditorDataSubset.query.conditions;
+                }
+            }
+        },
+
+        actionDataSubsetEditorConditions: {
+            get: function() {
+                return this._actionDataSubsetEditorConditions;
+            },
+            set: function(conditions) {
+                var self = this;
+                // Make a deep copy of the array so that it's not referencing the same object.
+                this.actionDataSubsetEditorConditions.length = 0;
+                conditions.forEach(function(condition) {
+                    self.actionDataSubsetEditorConditions.push(new Condition(condition.getState()));
+                });
+
+                this.actionDataSubsetEditorConditionCount = this.actionDataSubsetEditorConditions.length;
+            }
+        },
+
         availableDataForBinding: {
             // Returns the list of datasets that are not bound to the selected widget.
             get: function() {

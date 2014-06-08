@@ -23,7 +23,9 @@ define(['knockout',
         this.ondisplaychange = options.ondisplaychange;
 
         this.message = '';
+        this.dialogErrorMessage = '';
         this._error = false;
+        this._displayError = false;
 
         this._displayName = options.displayName;
         this.errorMessage = defined(options.errorMessage) ? options.errorMessage : 'Invalid value';
@@ -35,6 +37,14 @@ define(['knockout',
             this.isValidValue = function(value) {
                 return true;
             };
+        }
+
+        // For custom validation in the action editor
+        if(defined(options.validDisplayValue)) {
+            this.isValidDisplayValue = options.validDisplayValue;
+        }
+        else {
+            this.isValidDisplayValue = this.isValidValue;
         }
 
         this.setState(options);
@@ -89,12 +99,20 @@ define(['knockout',
                 return this._originalValue;
             }
         },
-        error : {
-            get : function() {
+        error: {
+            get: function() {
                 return this._error;
             },
-            set : function(value) {
+            set: function(value) {
                 this._error = value;
+            }
+        },
+        displayError: {
+            get: function() {
+                return this._displayError;
+            },
+            set: function(value) {
+                this._displayError = value;
             }
         }
     });
@@ -139,14 +157,21 @@ define(['knockout',
         this._value = value; //setState called before subscription is added
         this._originalValue = value;
         this._displayValue = value;
-        this._error = !this.isValidValue(this._value);
+        this.error = !this.isValidValue(this._value);
+        this.displayError = !this.isValidDisplayValue(this._displayValue);
     };
 
     /**
      * @param valueType 'originalValue' or 'value' or 'displayValue'
      */
     Property.prototype.displayErrorMessage = function(valueType) {
-        this.message = this.errorMessage;
+
+        if(valueType === 'displayValue') {
+            this.dialogErrorMessage = this.errorMessage;
+        }
+        else {
+            this.message = this.errorMessage;
+        }
     };
 
     Property.prototype.isValidValue = function() {

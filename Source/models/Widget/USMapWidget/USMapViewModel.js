@@ -72,6 +72,7 @@ define([
 
     var addStateDataToTrigger = function(viewModel, d) {
         viewModel._trigger.addData('state', d.properties.name);
+        viewModel._trigger.addData('stateAbbreviation', d.properties.abbreviation);
 
         // Iterate through each bound DataSet and add data values to the trigger
         // only for the state matching the specified name.
@@ -385,6 +386,9 @@ define([
             value: 'Black',
             onchange: function() {
                 updateColoring(self);
+            },
+            validValue: function(value) {
+                return defined(value) && (value.trim() !== '');
             }
         }, this);
 
