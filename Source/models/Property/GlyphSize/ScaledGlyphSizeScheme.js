@@ -64,15 +64,18 @@ define([
 
     ScaledGlyphSizeScheme.prototype = Object.create(GlyphSizeScheme.prototype);
 
+    ScaledGlyphSizeScheme.prototype.getType = function() {
+        return GlyphSizeSchemeType.SCALED_SIZE;
+    };
+
+    ScaledGlyphSizeScheme.prototype.getDisplayText = function() {
+        return 'Scaled size';
+    };
+
     Object.defineProperties(ScaledGlyphSizeScheme.prototype, {
         properties: {
             get: function() {
                 return [this.dataSet, this.dataField];
-            }
-        },
-        type : {
-            get : function() {
-                return GlyphSizeSchemeType.SCALED_SIZE;
             }
         },
         error: {
@@ -152,6 +155,7 @@ define([
 
     ScaledGlyphSizeScheme.prototype.getState = function(){
         var set;
+
         if(defined(this.dataSet.getState().value)){
             set = this.dataSet.getState().value.name;
         }
@@ -159,10 +163,34 @@ define([
         var state = {
             dataSet: set,
             dataField: this.dataField.getState().value,
-            type: this.type
+            type: this.getType()
         };
 
         return state;
+    };
+
+    ScaledGlyphSizeScheme.prototype.getDisplayState = function() {
+        var displayState = {
+            dataSet: this.dataSet.getDisplayState(),
+            dataField: this.dataField.getDisplayState(),
+            type: this.getType()
+        };
+
+        return displayState;
+    };
+
+    ScaledGlyphSizeScheme.prototype.setDisplayState = function(state, viewModel) {
+        var self = this;
+        if(defined(state.dataSet)) {
+            this.dataSet.displayOptions.forEach(function(i) {
+                if(i.name === state.dataSet.value.name) {
+                    self.dataSet.displayValue = i;
+                }
+            });
+        }
+        if(defined(state.dataField) && state.dataField.value !== this.dataField.originalValue) {
+            this.dataField.displayValue = state.dataField.value;
+        }
     };
 
     return ScaledGlyphSizeScheme;
