@@ -63,14 +63,14 @@ define([
                 return this._displayValue;
             },
             set: function(value) {
-                if (typeof value === 'boolean' && this.isValidValue(value)) {
-                    this.error = false;
-                    this.message = '';
+                if (typeof value === 'boolean' && this.isValidDisplayValue(value)) {
+                    this.displayError = false;
+                    this.dialogErrorMessage = '';
                     this._displayValue = value;
                 }
                 else {
-                    this.error = true;
-                    this.message = this.errorMessage;
+                    this.displayError = true;
+                    this.dialogErrorMessage = this.errorMessage;
                 }
             }
         }

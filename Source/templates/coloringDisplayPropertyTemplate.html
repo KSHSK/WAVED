@@ -1,7 +1,7 @@
 <div>
     <span data-bind="text:displayName, visible: visible"></span>
-    <select data-bind="options: coloringType, optionsText: function(item) { return item.getType(); }, value: displayValue, visible: visible"></select>
-    <div class="error" data-bind="visible: error, html: message"></div>
+    <select data-bind="options: coloringType, optionsText: function(item) { return item.getDisplayText(); }, value: displayValue, visible: visible"></select>
+    <div class="error" data-bind="visible: displayError, html: dialogErrorMessage"></div>
     <a style="font-size: 0.8em; text-decoration: underline; cursor: pointer;" onclick="$('#coloring-display-help-dialog').dialog({ resizable: false, modal: true})">Help</a>
     <!-- ko if: displayValue !== undefined -->
     <div data-bind="foreach: displayValue.properties">

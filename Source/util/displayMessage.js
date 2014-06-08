@@ -23,6 +23,9 @@ define([
         } else if (type === MessageType.WARNING) {
             toastr.options.timeOut = '0';
             toastr.warning(message);
+        } else if (type === MessageType.INFO) {
+            toastr.options.timeOut = '5000';
+            toastr.info(message);
         } else {
             toastr.options.timeOut = '2000';
             toastr.info(message);
