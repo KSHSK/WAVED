@@ -158,7 +158,7 @@ define(['knockout',
                 '\tdataSets[\'' + this.name + '\'].loadedData = loadedData;\n' +
                 '\tdataSets[\'' + this.name + '\'].data = loadedData;\n' +
                 '\tdataSets[\'' + this.name + '\'].dataIsLoaded.resolve();\n' +
-                '});\n';
+                '});\n\n';
     };
 
     DataSet.prototype.getSetupJs = function() {
@@ -168,7 +168,7 @@ define(['knockout',
                 '\t\'data\': []' + ',\n' +
                 '\t\'onChange\': []' + ',\n' +
                 '\t\'updateData\': $.noop\n' +
-                '};\n';
+                '};\n\n';
     };
 
     Object.defineProperties(DataSet.prototype, {

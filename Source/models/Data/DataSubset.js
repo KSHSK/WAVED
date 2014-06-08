@@ -71,7 +71,7 @@ define([
                 '\tdataSets[\'' + this.name + '\'].updateData = ' + this.getDataFunctionJs('\t') +
                 '\tdataSets[\'' + this.name + '\'].updateData();\n' +
                 '\tdataSets[\'' + this.name + '\'].dataIsLoaded.resolve();\n' +
-                '});\n';
+                '});\n\n';
     };
 
     DataSubset.prototype.reset = function() {
