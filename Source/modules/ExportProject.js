@@ -69,6 +69,7 @@ define([
 
         generateJs: function(viewModel) {
             var js = '$(document).ready(function() {\n';
+            var i;
 
             function exportAction(action, tabs) {
                 var js = '';
@@ -94,17 +95,28 @@ define([
                 return js;
             }
 
+            function exportDataJs(dataSets) {
+                var js = '';
+                var i;
+
+                js += '// START DATA\n';
+                js += Query.getHelperFunctionsJs();
+                js += 'var dataSets = {};\n';
+                for (i = 0; i < dataSets.length; i++) {
+                    js += dataSets[i].getSetupJs();
+                }
+                for (i = 0; i < dataSets.length; i++) {
+                    js += dataSets[i].getLoadDataJs();
+                }
+                js += '// END DATA\n\n';
+
+                return js;
+            }
+
             // Export Data
-            js += '// START DATA\n';
-            js += Query.getHelperFunctionsJs();
-            js += 'var dataSets = {};\n';
-            for (var i = 0; i < viewModel.currentProject.dataSets.length; i++) {
-                js += viewModel.currentProject.dataSets[i].getSetupJs();
+            if (viewModel.currentProject.dataSets.length > 0) {
+                js += exportDataJs(viewModel.currentProject.dataSets);
             }
-            for (i = 0; i < viewModel.currentProject.dataSets.length; i++) {
-                js += viewModel.currentProject.dataSets[i].getLoadDataJs();
-            }
-            js += '// END DATA\n\n';
 
             // Override CSS attributes from automatically applied Actions
             // TODO: Nested Properties?
