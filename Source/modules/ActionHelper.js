@@ -219,7 +219,17 @@ define([
 
                 // Update any modified values from the Action
                 for (var key in viewModel.selectedAction.newValues) {
-                    widget[key].setDisplayState(viewModel.selectedAction.newValues[key]);
+                    var type = viewModel.selectedAction.newValues[key].value.type;
+                    if (defined(type) && (type === 'DataSet' || type === 'DataSubset')) {
+                        // Get dataset or subset by the name stored in the action
+                        var data = viewModel.currentProject.getDataSet(viewModel.selectedAction.newValues[key].value.name);
+
+                        // setDisplayState expects an object with the key 'value'
+                        widget[key].setDisplayState({value: data});
+                    }
+                    else {
+                        widget[key].setDisplayState(viewModel.selectedAction.newValues[key]);
+                    }
                 }
             }
             else {
