@@ -119,14 +119,17 @@ define(['jquery',
 
     Query.getDataFunctionJs = function(conditions, tabs) {
         var js = 'function(args) {\n';
-        js += tabs + '\tvar group = []\n';
-        js += tabs + '\tvar andIndices = []\n\n';
+        js += tabs + '\tvar group = [];\n';
+        js += tabs + '\tvar andIndices = [];\n';
+        js += tabs + '\tvar indicesFunction;\n\n';
 
         for (var i = 0; i < conditions.length; i++) {
-            js += tabs + '\tgroup = (' + conditions[i].getExecuteJs(tabs + '\t') +')(this.loadedData);\n';
+            js += tabs + '\tindicesFunction = ' + conditions[i].getExecuteJs(tabs + '\t\t') + ';\n';
+            js += tabs + '\tgroup = indicesFunction(this.loadedData);\n\n';
             while (conditions[i].logicalOperator === LogicalOperator.AND) {
                 i++;
-                js += tabs + '\tgroup = intersection(group, (' + conditions[i].getExecuteJs(tabs + '\t') + ')(this.loadedData));\n';
+                js += tabs + '\tindicesFunction = ' + conditions[i].getExecuteJs(tabs + '\t\t') + ';\n';
+                js += tabs + '\tgroup = intersection(group, indicesFunction(this.loadedData));\n';
             }
             js += tabs + '\tandIndices.push(group);\n\n';
         }
