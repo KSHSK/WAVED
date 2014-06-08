@@ -215,6 +215,16 @@ define(['jquery',
 
         ko.track(this);
 
+        /*
+         * When the affected widget changes, reset the display properties.
+         * Necessary to deal with triggering an action affecting 1 widget, opening up the action editor (add/edit/whatever),
+         * switching to the affected widget, and seeing the properties that represent what's being shown in the workspace after the
+         * action was applied, not what original values like intended.
+         */
+        subscribeObservable(self, 'actionEditorAffectedWidget', function() {
+            ActionHelper.resetComponentDisplayProperties(self);
+        });
+
         this.currentProject.subscribeChanges();
 
         // Remove the hover/focus look when undo or redo is disabled.
