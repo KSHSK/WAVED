@@ -29,6 +29,9 @@ define([
     GlyphHelper.resetGlyphDialog = function(glyph) {
         glyph.properties.forEach(function(prop) {
             prop.displayValue = prop.originalValue;
+
+            // Force view to reset to handle entering invalid input, canceling, and opening the dialog again
+            ko.getObservable(prop, '_displayValue').valueHasMutated();
         });
     };
 
