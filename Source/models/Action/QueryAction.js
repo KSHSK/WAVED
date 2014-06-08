@@ -144,7 +144,7 @@ define([
         return tabs + '// Update data and notify subscribers\n' +
             tabs + 'dataSets[\'' + this.dataSubset.name + '\'].updateData = ' + this.getDataFunctionJs(tabs) +
             tabs + 'dataSets[\'' + this.dataSubset.name + '\'].updateData();\n' +
-            tabs + 'dataSets[\'' + this.dataSubset.name + '\'].onChange.forEach(function(callback) {\n' +
+            tabs + '$.each(dataSets[\'' + this.dataSubset.name + '\'].onChange, function(key, callback) {\n' +
             tabs + '\tcallback();\n' +
             tabs + '});\n';
     };

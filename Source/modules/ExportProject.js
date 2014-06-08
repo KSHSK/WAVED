@@ -5,6 +5,7 @@ define([
         '../models/Constants/EventType',
         '../models/Action/PropertyAction',
         '../models/Data/Query',
+        '../models/Data/DataSet',
         '../models/Widget/USMapWidget/USMap',
         './UnsavedChanges',
         '../WAVEDViewModel',
@@ -15,6 +16,7 @@ define([
         EventType,
         PropertyAction,
         Query,
+        DataSet,
         USMap,
         UnsavedChangesModule,
         WAVEDViewModel,
@@ -101,6 +103,7 @@ define([
 
                 js += '// START DATA\n';
                 js += Query.getHelperFunctionsJs();
+                js += DataSet.getHelperFunctionsJs();
                 js += '// Initialize Data sets\n';
                 js += 'var dataSets = {};\n';
                 for (i = 0; i < dataSets.length; i++) {
