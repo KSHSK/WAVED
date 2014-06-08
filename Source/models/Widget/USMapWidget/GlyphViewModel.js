@@ -189,6 +189,7 @@ define([
             // Update scaled size glyphs
             if (self.size.scaledGlyphSize.dataSet.value !== newValue) {
                 self.size.scaledGlyphSize.dataSet.value = newValue;
+                self.size.scaledGlyphSize.dataSet.displayValue = newValue; // Go through the setter for validation to clear any errors
             }
             if (self.size.scaledGlyphSize.dataField.options !== newValue.dataFields) {
                 self.size.scaledGlyphSize.dataField.options = newValue.dataFields;

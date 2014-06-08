@@ -32,20 +32,7 @@ define([
     var ActionHelper = {
         actionDialog: $('#action-editor-dialog'),
 
-        resetActionEditor: function(viewModel) {
-            // Reset name.
-            viewModel.selectedActionName.reset();
-
-            // Select Property Action
-            viewModel.selectedActionType = ActionType.PROPERTY_ACTION;
-            $('#action-editor-selected-action-type').prop('disabled', false);
-
-            // Select first Widget
-            viewModel.actionEditorAffectedWidgetError = false;
-
-            // Unselect DataSet.
-            viewModel.actionEditorDataSet = undefined;
-
+        resetComponentDisplayProperties: function(viewModel) {
             // Only reset properties if there's a widget available
             if(defined(viewModel.actionEditorAffectedWidget)) {
                 var widget = viewModel.actionEditorAffectedWidget;
@@ -53,7 +40,7 @@ define([
                 // All the properties
                 for (var index in widget.properties) {
                     if(!defined(widget.properties[index])) {
-                     // Clear any existing error flags
+                        // Clear any existing error flags
                         widget.properties[index].displayError = false;
                         widget.properties[index].dialogErrorMessage = '';
 
@@ -90,6 +77,25 @@ define([
                     }
                 }
             }
+        },
+
+        resetActionEditor: function(viewModel) {
+            // Reset name.
+            viewModel.selectedActionName.reset();
+
+            // Select Property Action
+            viewModel.selectedActionType = ActionType.PROPERTY_ACTION;
+            $('#action-editor-selected-action-type').prop('disabled', false);
+
+            // Select first Widget
+            viewModel.actionEditorAffectedWidgetError = false;
+
+            // Unselect DataSet.
+            viewModel.actionEditorDataSet = undefined;
+
+            // Reset the properties
+            this.resetComponentDisplayProperties(viewModel);
+
             $('#actionApplyAutomatically').attr('checked', false);
 
             // Select first Data Subset
