@@ -77,6 +77,9 @@ define([
                             self._target[key].getSubscribableNestedProperties().forEach(function(prop) {
                                 if(prop.getType() === self._newValues[key].value.type) {
 
+                                    // Set the value to the proper property
+                                    self._target[key].value = prop;
+
                                     // Iterate through the nested properties and set them appropriately
                                     for(var nestKey in self._newValues[key].value) {
                                         if(nestKey === 'type'){
