@@ -48,7 +48,7 @@ define([
 
             // Only reset properties if there's a widget available
             if(defined(viewModel.actionEditorAffectedWidget)) {
-                var widget = viewModel.actionEditorAffectedWidget.viewModel;
+                var widget = viewModel.actionEditorAffectedWidget;
 
                 // All the properties
                 for (var index in widget.properties) {
@@ -146,9 +146,9 @@ define([
 
                             if (viewModel.selectedActionType === ActionType.PROPERTY_ACTION) {
                                 var actionValues = {};
-                                var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
-                                for (var property in viewModel.actionEditorAffectedWidget.viewModel) {
-                                    var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
+                                var properties = viewModel.actionEditorAffectedWidget.properties;
+                                for (var property in viewModel.actionEditorAffectedWidget) {
+                                    var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget[property]);
                                     if (propertyIndex > -1) {
                                         if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
                                             actionValues[property] = properties[propertyIndex].getDisplayState();
@@ -210,7 +210,7 @@ define([
             if (viewModel.selectedActionType === ActionType.PROPERTY_ACTION) {
                 viewModel.actionEditorAffectedWidget = viewModel.selectedAction.target;
 
-                var widget = viewModel.actionEditorAffectedWidget.viewModel;
+                var widget = viewModel.actionEditorAffectedWidget;
 
                 // Set the displayValues to match those saved in the widget
                 for (var index in widget.properties) {
@@ -268,7 +268,7 @@ define([
         },
         updateEditPropertyActionChanges: function(viewModel) {
             var action = viewModel.selectedAction;
-            var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
+            var properties = viewModel.actionEditorAffectedWidget.properties;
 
             var oldName = action.name;
             var oldTarget = action.target;
