@@ -29,8 +29,6 @@ define([
     GlyphHelper.resetGlyphDialog = function(glyph) {
         glyph.properties.forEach(function(prop) {
             prop.displayValue = prop.originalValue;
-
-            // TODO: Nested props
         });
     };
 
