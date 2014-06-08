@@ -101,8 +101,19 @@ define(['jquery',
     };
 
     Query.getHelperFunctionsJs = function() {
-        return 'var intersection = ' +  intersection + ';\n\n' +
-            'var unionAll = ' + unionAll + ';\n\n' +
+        return '/**\n' +
+            ' * a and b are sorted arrays of indices.\n' +
+            ' * Returns the intersection of the two arrays.\n' +
+            ' */\n' +
+            'var intersection = ' +  intersection.toString() + ';\n\n' +
+            '/**\n' +
+            ' * array contains array of indices to be unioned.\n' +
+            ' */\n' +
+            'var unionAll = ' + unionAll.toString() + ';\n\n' +
+            '/**\n' +
+            ' * Return a function that computes which indices of data pass the\n' +
+            ' * given condition on the given field based on the given value.\n' +
+            ' */\n' +
             'var conditionFunction = function (field, condition, value) {\n' +
             '\treturn function(data) {\n' +
             '\t\tvar indices = [];\n' +
