@@ -108,7 +108,17 @@ define([
                             });
                         }
                         else {
-                            self._target[key].value = self._newValues[key].value;
+                            var type = self._newValues[key].value.type;
+                            if (defined(type) && (type === 'DataSet' || type === 'DataSubset')) {
+                                self._target[key].displayOptions.forEach(function(displayOption) {
+                                    if(displayOption.name === self._newValues[key].value.name) {
+                                        self._target[key].value = displayOption;
+                                    }
+                                });
+                            }
+                            else {
+                                self._target[key].value = self._newValues[key].value;
+                            }
                         }
                     }
                 }
