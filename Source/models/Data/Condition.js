@@ -66,7 +66,7 @@ define([
 
     Condition.prototype.getExecuteJs = function(tabs) {
         return 'conditionFunction(\'' + this.field + '\', ' +
-            comparisonFunctions[this.comparisonOperator].toString().replace(/\n|\r/g, '') + ', ' +
+            comparisonFunctions[this.comparisonOperator].toString().replace(/\n\s*/g, '' ) + ', ' +
             '\'' + this.value + '\')';
     };
 
