@@ -141,7 +141,8 @@ define([
     };
 
     QueryAction.prototype.getJs = function(tabs) {
-        return tabs + 'dataSets[\'' + this.dataSubset.name + '\'].updateData = ' + this.getDataFunctionJs(tabs) +
+        return tabs + '// Update data and notify subscribers\n' +
+            tabs + 'dataSets[\'' + this.dataSubset.name + '\'].updateData = ' + this.getDataFunctionJs(tabs) +
             tabs + 'dataSets[\'' + this.dataSubset.name + '\'].updateData();\n' +
             tabs + 'dataSets[\'' + this.dataSubset.name + '\'].onChange.forEach(function(callback) {\n' +
             tabs + '\tcallback();\n' +

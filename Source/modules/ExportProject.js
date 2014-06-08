@@ -101,10 +101,13 @@ define([
 
                 js += '// START DATA\n';
                 js += Query.getHelperFunctionsJs();
+                js += '// Initialize Data sets\n';
                 js += 'var dataSets = {};\n';
                 for (i = 0; i < dataSets.length; i++) {
                     js += dataSets[i].getSetupJs();
                 }
+
+                js += '// Load Data\n';
                 for (i = 0; i < dataSets.length; i++) {
                     js += dataSets[i].getLoadDataJs();
                 }
