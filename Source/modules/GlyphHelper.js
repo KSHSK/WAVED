@@ -32,6 +32,13 @@ define([
 
             // Force view to reset to handle entering invalid input, canceling, and opening the dialog again
             ko.getObservable(prop, '_displayValue').valueHasMutated();
+
+            if (defined(prop.getSubscribableNestedProperties())) {
+                prop.displayValue.properties.forEach(function(nestedProp) {
+                    nestedProp.displayValue = nestedProp.originalValue;
+                    ko.getObservable(nestedProp, '_displayValue').valueHasMutated();
+                });
+            }
         });
     };
 
