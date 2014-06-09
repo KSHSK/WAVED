@@ -1,17 +1,18 @@
 define([
         'WAVEDViewModel',
-        './UniqueTracker',
-        './HistoryMonitor',
+        'modules/DisplayMessage',
+        'modules/UniqueTracker',
+        'modules/HistoryMonitor',
         'models/Constants/MessageType',
         'models/Data/DataSet',
         'models/Data/DataSubset',
         'models/Data/Condition',
         'util/defined',
-        'util/displayMessage',
         'knockout',
         'jquery'
     ],function(
         WAVEDViewModel,
+        DisplayMessage,
         UniqueTracker,
         HistoryMonitor,
         MessageType,
@@ -19,7 +20,6 @@ define([
         DataSubset,
         Condition,
         defined,
-        displayMessage,
         ko,
         $
     ){
@@ -80,7 +80,7 @@ define([
                 if (!UniqueTracker.isValueUnique(DataSet.getUniqueNameNamespace(),
                     viewModel.dataSubsetEditorName.value)) {
 
-                    displayMessage.show('The name "' + viewModel.dataSubsetEditorName.value + '" is already in use.', MessageType.WARNING);
+                    DisplayMessage.show('The name "' + viewModel.dataSubsetEditorName.value + '" is already in use.', MessageType.WARNING);
                     return;
                 }
 
@@ -132,7 +132,7 @@ define([
                 if (!UniqueTracker.isValueUnique(DataSet.getUniqueNameNamespace(),
                     viewModel.dataSubsetEditorName.value, viewModel.selectedDataSubset)) {
 
-                    displayMessage.show('The name "' + viewModel.dataSubsetEditorName.value + '" is already in use.', MessageType.WARNING);
+                    DisplayMessage.show('The name "' + viewModel.dataSubsetEditorName.value + '" is already in use.', MessageType.WARNING);
                     return;
                 }
 

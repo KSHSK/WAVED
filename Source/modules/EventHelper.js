@@ -1,21 +1,21 @@
 define([
         'WAVEDViewModel',
-        './UniqueTracker',
-        './HistoryMonitor',
+        'modules/DisplayMessage',
+        'modules/UniqueTracker',
+        'modules/HistoryMonitor',
         'models/Event/Event',
-        'util/defined',
         'models/Constants/MessageType',
-        'util/displayMessage',
+        'util/defined',
         'knockout',
         'jquery'
     ],function(
         WAVEDViewModel,
+        DisplayMessage,
         UniqueTracker,
         HistoryMonitor,
         Event,
-        defined,
         MessageType,
-        displayMessage,
+        defined,
         ko,
         $
     ){
@@ -50,7 +50,7 @@ define([
                             if (!UniqueTracker.isValueUnique(Event.getUniqueNameNamespace(),
                                 viewModel.selectedEventName.value)) {
 
-                                displayMessage.show('The name "' + viewModel.selectedEventName.value + '" is already in use.', MessageType.WARNING);
+                                DisplayMessage.show('The name "' + viewModel.selectedEventName.value + '" is already in use.', MessageType.WARNING);
                                 return;
                             }
 
@@ -104,7 +104,7 @@ define([
                             if (!UniqueTracker.isValueUnique(Event.getUniqueNameNamespace(),
                                 viewModel.selectedEventName.value, viewModel.selectedEvent)) {
 
-                                displayMessage.show('The name "' + viewModel.selectedEventName.value + '" is already in use.', MessageType.WARNING);
+                                DisplayMessage.show('The name "' + viewModel.selectedEventName.value + '" is already in use.', MessageType.WARNING);
                                 return;
                             }
 
