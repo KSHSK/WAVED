@@ -2,13 +2,13 @@
  * A module for deleting data sets from a project
  */
 define([
-        './DependencyChecker',
-        'util/displayMessage',
+        'modules/DependencyChecker',
+        'modules/DisplayMessage',
         'models/Constants/MessageType',
         'jquery'
     ], function(
         DependencyChecker,
-        displayMessage,
+        DisplayMessage,
         MessageType,
         $) {
     'use strict';
@@ -23,7 +23,7 @@ define([
 
             var response = DependencyChecker.allowedToDeleteDataSet(dataSet, viewModel.currentProject);
             if (!response.allowed) {
-                displayMessage.show(response.message, MessageType.WARNING);
+                DisplayMessage.show(response.message, MessageType.WARNING);
                 return;
             }
 
@@ -69,7 +69,7 @@ define([
                         viewModel.currentProject.removeDataSet(dataSet);
                     }
                     else {
-                        displayMessage.show(data.errorMessage, MessageType.ERROR);
+                        DisplayMessage.show(data.errorMessage, MessageType.ERROR);
                     }
                 }
             }).promise();

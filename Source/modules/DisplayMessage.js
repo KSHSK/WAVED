@@ -14,7 +14,7 @@ define([
     };
 
 
-    var displayMessage = {
+    var DisplayMessage = {
         show: function(message, type) {
             if (type === MessageType.SUCCESS) {
                 toastr.options.timeOut = '2000';
@@ -35,5 +35,5 @@ define([
         }
     }
 
-    return displayMessage;
+    return DisplayMessage;
 });

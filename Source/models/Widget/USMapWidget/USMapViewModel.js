@@ -1,5 +1,7 @@
 /*global console*/
 define([
+        'models/Constants/GlyphSizeSchemeType',
+        'models/Constants/MessageType',
         'models/Event/Trigger',
         'models/Property/Coloring/ColoringScheme',
         'models/Property/Coloring/ColoringSelectionProperty',
@@ -10,21 +12,21 @@ define([
         'models/ComponentViewModel',
         'models/Property/ListProperty',
         'models/Widget/WidgetViewModel',
-        'modules/ReadData',
-        'models/Constants/GlyphSizeSchemeType',
-        './GlyphViewModel',
-        'modules/UniqueTracker',
-        'util/createValidator',
+        'modules/DisplayMessage',
         'modules/GlyphHelper',
         'modules/HistoryMonitor',
+        'modules/ReadData',
+        'modules/UniqueTracker',
+        './GlyphViewModel',
+        'util/createValidator',
         'util/defined',
-        'util/displayMessage',
-        'models/Constants/MessageType',
         'util/subscribeObservable',
         'knockout',
         'd3',
         'jquery'
     ],function(
+        GlyphSizeSchemeType,
+        MessageType,
         Trigger,
         ColoringScheme,
         ColoringSelectionProperty,
@@ -35,16 +37,14 @@ define([
         ComponentViewModel,
         ListProperty,
         WidgetViewModel,
-        ReadData,
-        GlyphSizeSchemeType,
-        GlyphViewModel,
-        UniqueTracker,
-        createValidator,
+        DisplayMessage,
         GlyphHelper,
         HistoryMonitor,
+        ReadData,
+        UniqueTracker,
+        GlyphViewModel,
+        createValidator,
         defined,
-        displayMessage,
-        MessageType,
         subscribeObservable,
         ko,
         d3,
@@ -397,7 +397,7 @@ define([
             options: this.glyphs,
             add: function() {
                 if (!defined(self.boundData) || self.boundData.length === 0) {
-                    displayMessage.show('Must bind data to map before adding glyph', MessageType.WARNING);
+                    DisplayMessage.show('Must bind data to map before adding glyph', MessageType.WARNING);
                 } else {
                     var newGlyph = new GlyphViewModel({}, self);
                     var options = this.options;
