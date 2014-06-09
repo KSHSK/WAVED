@@ -33,7 +33,7 @@ define([
         clear: function() {
             toastr.clear();
         }
-    }
+    };
 
     return DisplayMessage;
 });
