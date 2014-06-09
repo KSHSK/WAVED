@@ -131,9 +131,12 @@ define([
          * @param widget The widget that dataSet is bound to.
          */
         allowedToUnbindDataSet: function(dataSet, widget, project) {
-            var returnValue = {
-                allowed: true,
-                message: ''
+            // Check if dataSet is in use by a Widget
+            if (widget.usesDataSet(dataSet)) {
+                return {
+                    allowed: false,
+                    message: 'Cannot unbind data that is used by a widget'
+                };
             }
 
             // Check if dataSet is in use by a PropertyAction
@@ -145,13 +148,13 @@ define([
                 var propertyAction = propertyActions[i];
                 var newValues = propertyAction.newValues;
 
-                // Iterate through top level properties (loop is labeled so we can break out directly from nested loops)
-                topLevel:
+                // Iterate through top level properties
                 for (var key in newValues) {
                     if (this.isDataSetUsedByPropertyAction(newValues, key, dataSet)) {
-                        returnValue.allowed = false;
-                        returnValue.message = usedByPropertyActionMessage;
-                        break topLevel; // Breaks the outer loop
+                        return {
+                            allowed: false,
+                            message: usedByPropertyActionMessage
+                        };
                     }
 
                     // Iterate through nestedProperties
@@ -160,21 +163,20 @@ define([
 
                         for (var nestedKey in nestedProperty) {
                             if (this.isDataSetUsedByPropertyAction(nestedProperty, nestedKey, dataSet)) {
-                                returnValue.allowed = false;
-                                returnValue.message = usedByPropertyActionMessage;
-                                break topLevel; // Breaks the outer loop
+                                return {
+                                    allowed: false,
+                                    message: usedByPropertyActionMessage
+                                };
                             }
                         }
                     }
                 }
             }
 
-            if (widget.usesDataSet(dataSet)) {
-                    returnValue.allowed = false;
-                    returnValue.message = 'Cannot unbind data that is used by a widget';
-            }
-
-            return returnValue;
+            return {
+                allowed: true,
+                message: ''
+            };
         },
 
         isDataSetUsedByPropertyAction: function(values, key, dataSet) {
