@@ -307,7 +307,6 @@ define([
                 this.logGoogleAnalytics];
             }
         },
-
         boundData : {
             get : function() {
                 return this.parent.boundData;
