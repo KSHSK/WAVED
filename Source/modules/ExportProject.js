@@ -4,6 +4,8 @@
 define([
         '../models/Constants/EventType',
         '../models/Action/PropertyAction',
+        '../models/Data/Query',
+        '../models/Data/DataSet',
         '../models/Widget/USMapWidget/USMap',
         './UnsavedChanges',
         '../WAVEDViewModel',
@@ -13,6 +15,8 @@ define([
     ], function(
         EventType,
         PropertyAction,
+        Query,
+        DataSet,
         USMap,
         UnsavedChangesModule,
         WAVEDViewModel,
@@ -65,35 +69,67 @@ define([
             return css;
         },
 
-        generateJs: function(viewModel) {
-            var js = '$(document).ready(function() {\n';
-
-            function exportAction(action, tabs) {
-                var js = '';
-                if (action instanceof PropertyAction) {
-                    for (var key in action.newValues) {
-                        if (defined(action.target.viewModel[key].css)) {
-                            var value = action.newValues[key];
-                            if (defined(action.target.viewModel[key].css.units)) {
-                                value += action.target.viewModel[key].css.units;
-                            }
-                            js += tabs + '\n\t$(\'#' + action.target.viewModel.name.value + '\').css(\'' + action.target.viewModel[key].css.attribute + '\', \'' + value + '\');\n';
+        exportAction: function(action, tabs) {
+            var js = '';
+            if (action instanceof PropertyAction) {
+                for (var key in action.newValues) {
+                    if (defined(action.target.viewModel[key].css)) {
+                        var value = action.newValues[key];
+                        if (defined(action.target.viewModel[key].css.units)) {
+                            value += action.target.viewModel[key].css.units;
                         }
+                        js += tabs + '\n\t$(\'#' + action.target.viewModel.name.value + '\').css(\'' + action.target.viewModel[key].css.attribute + '\', \'' + value + '\');\n';
+                    }
 
-                        if (defined(action.target.viewModel[key].html)) {
-                            js += tabs + '\n\t$(\'#' + action.target.viewModel.name.value + '\').html(\'' + action.newValues[key] + '\');\n';
-                        }
+                    if (defined(action.target.viewModel[key].html)) {
+                        js += tabs + '\n\t$(\'#' + action.target.viewModel.name.value + '\').html(\'' + action.newValues[key] + '\');\n';
                     }
                 }
-                return js;
+            }
+            else {
+                js += '\n' + action.getJs(tabs);
+            }
+
+            return js;
+        },
+
+        exportDataJs: function(dataSets) {
+            var js = '';
+            var i;
+
+            js += '// START DATA\n';
+            js += Query.getHelperFunctionsJs();
+            js += DataSet.getHelperFunctionsJs();
+            js += '// Initialize Data sets\n';
+            js += 'var dataSets = {};\n';
+            for (i = 0; i < dataSets.length; i++) {
+                js += dataSets[i].getSetupJs();
+            }
+
+            js += '// Load Data\n';
+            for (i = 0; i < dataSets.length; i++) {
+                js += dataSets[i].getLoadDataJs();
+            }
+            js += '// END DATA\n\n';
+
+            return js;
+        },
+
+        generateJs: function(viewModel) {
+            var js = '$(document).ready(function() {\n';
+            var i;
+
+            // Export Data
+            if (viewModel.currentProject.dataSets.length > 0) {
+                js += this.exportDataJs(viewModel.currentProject.dataSets);
             }
 
             // Override CSS attributes from automatically applied Actions
             // TODO: Nested Properties?
-            for (var i = 0; i < viewModel.currentProject.actions.length; i++) {
+            for (i = 0; i < viewModel.currentProject.actions.length; i++) {
                 var action = viewModel.currentProject.actions[i];
                 if (action.applyAutomatically) {
-                    js += exportAction(action, '');
+                    js += this.exportAction(action, '');
                 }
             }
 
@@ -103,9 +139,9 @@ define([
                 js += '$(\'#'+ event.triggeringWidget.viewModel.name.value + '\').on(\'' + EventType[event.eventType] + '\', function() {';
                 // apply actions
                 for (var j = 0; j < event.actions.length; j++) {
-                    js += exportAction(event.actions[j], '\t');
+                    js += this.exportAction(event.actions[j], '\t');
                 }
-                js += '});';
+                js += '});\n';
             }
 
             for (i = 0; i < viewModel.currentProject.widgets.length; i++) {
