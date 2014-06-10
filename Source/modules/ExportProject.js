@@ -188,7 +188,12 @@ define([
                 }
 
                 for (var j = 0; j < widget.viewModel.boundData.length; j++) {
-                    filenames[widget.viewModel.boundData[j].filename] = true;
+                    var dataSet = widget.viewModel.boundData[j];
+                    var fileName = dataSet.filename;
+                    if (defined(dataSet.parent)) {
+                        fileName = dataSet.parent.filename;
+                    }
+                    filenames[fileName] = true;
                 }
             }
             var dataFiles = Object.keys(filenames);
