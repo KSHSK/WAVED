@@ -51,5 +51,14 @@ define([
         return 'Source/models/Widget/USMapWidget/usmap-icon.png';
     };
 
+    /**
+     * Returns trigger data supplied to actions when this widget triggers an event.
+     */
+    USMap.actionTriggerInfo = function() {
+        return {
+            'state': 'The name of the state that was clicked.'
+        };
+    };
+
     return USMap;
 });
