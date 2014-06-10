@@ -202,6 +202,7 @@ define([
                     var gradient = d3.scale.linear().domain([min, max]).range([coloringScheme.startColor.value.toLowerCase(), coloringScheme.endColor.value.toLowerCase()]);
                     path.style('fill', function(d) {
                         var stateName = d.properties.name;
+                        var stateAbbrev = d.properties.abbreviation;
                         var keyName = coloringScheme.keyField.value;
 
                         if(!defined(keyName)){
@@ -209,7 +210,8 @@ define([
                         }
 
                         for(var i=0; i<coloringScheme.dataSet.value.data.length; i++){
-                            if(coloringScheme.dataSet.value.data[i][keyName] === stateName){
+                            var currentValue = coloringScheme.dataSet.value.data[i][keyName];
+                            if(currentValue === stateName || currentValue === stateAbbrev){
                                 return gradient(coloringScheme.dataSet.value.data[i][dataField]);
                             }
 
