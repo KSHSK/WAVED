@@ -35,12 +35,19 @@ define([
             width: 500,
             modal: true,
             buttons: {
-                'Save': function() {
-                    if (glyph.isValid(ValueType.DISPLAY_VALUE)) {
-                        glyphAdded.resolve();
-                        glyphDialog.dialog('close');
-                    } else {
-                        glyph.displayErrors(ValueType.DISPLAY_VALUE);
+                'Save': {
+                    text: 'Save',
+                    'data-bind': 'jQueryDisable: glyphDialogHasErrors()',
+                    click: function() {
+                        if (!self.hasErrors(glyph)) {
+                            glyphAdded.resolve();
+                            glyphDialog.dialog('close');
+                        } else {
+                            glyph.displayErrors(ValueType.DISPLAY_VALUE);
+                        }
+                    },
+                    create: function() {
+                        ko.applyBindings(glyph, this);
                     }
                 },
                 'Cancel': function() {
@@ -53,6 +60,10 @@ define([
         });
 
         return glyphAdded.promise();
+    };
+
+    GlyphHelper.hasErrors = function(glyph) {
+        return !glyph.isValid(ValueType.DISPLAY_VALUE);
     };
 
     return GlyphHelper;

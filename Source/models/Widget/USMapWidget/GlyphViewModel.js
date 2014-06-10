@@ -7,6 +7,7 @@ define([
         'models/Constants/GlyphSizeSchemeType',
         'models/Property/GlyphSize/GlyphSizeSelectionProperty',
         'modules/UniqueTracker',
+        'modules/GlyphHelper',
         'util/defined',
         'util/createValidator',
         'util/subscribeObservable',
@@ -22,6 +23,7 @@ define([
         GlyphSizeSchemeType,
         GlyphSizeSelectionProperty,
         UniqueTracker,
+        GlyphHelper,
         defined,
         createValidator,
         subscribeObservable,
@@ -240,6 +242,10 @@ define([
          */
 
         return false;
+    };
+
+    GlyphViewModel.prototype.glyphDialogHasErrors = function() {
+        return GlyphHelper.hasErrors(this);
     };
 
     GlyphViewModel.prototype.getState = function() {
