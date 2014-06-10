@@ -1,6 +1,7 @@
 define([
         'models/Action/Action',
         'models/Data/DataSubset',
+        'models/Data/Query',
         'models/Constants/ActionType',
         'models/Data/Condition',
         'util/defined',
@@ -9,6 +10,7 @@ define([
     ],function(
         Action,
         DataSubset,
+        Query,
         ActionType,
         Condition,
         defined,
@@ -132,6 +134,19 @@ define([
         // Update and run the query with the new current conditions
         this.dataSubset.query.currentConditions = conditions;
         this.dataSubset.executeCurrentQuery();
+    };
+
+    QueryAction.prototype.getDataFunctionJs = function(tabs) {
+        return Query.getDataFunctionJs(this.conditions, tabs);
+    };
+
+    QueryAction.prototype.getJs = function(tabs) {
+        return tabs + '// Update data and notify subscribers\n' +
+            tabs + 'dataSets[\'' + this.dataSubset.name + '\'].updateData = ' + this.getDataFunctionJs(tabs) +
+            tabs + 'dataSets[\'' + this.dataSubset.name + '\'].updateData();\n' +
+            tabs + '$.each(dataSets[\'' + this.dataSubset.name + '\'].onChange, function(key, callback) {\n' +
+            tabs + '\tcallback();\n' +
+            tabs + '});\n';
     };
 
     return QueryAction;

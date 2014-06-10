@@ -61,6 +61,19 @@ define([
         }
     };
 
+    DataSubset.prototype.getDataFunctionJs = function(tabs) {
+        return Query.getDataFunctionJs(this.query.conditions, tabs);
+    };
+
+    DataSubset.prototype.getLoadDataJs = function () {
+        return 'dataSets[\'' + this.parent.name + '\'].dataIsLoaded.then(function () {\n' +
+                '\tdataSets[\'' + this.name + '\'].loadedData = dataSets[\'' + this.parent.name + '\'].loadedData;\n' +
+                '\tdataSets[\'' + this.name + '\'].updateData = ' + this.getDataFunctionJs('\t') +
+                '\tdataSets[\'' + this.name + '\'].updateData();\n' +
+                '\tdataSets[\'' + this.name + '\'].dataIsLoaded.resolve();\n' +
+                '});\n\n';
+    };
+
     DataSubset.prototype.reset = function() {
         this.query.reset();
         this.executeCurrentQuery();
