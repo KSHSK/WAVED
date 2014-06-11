@@ -76,9 +76,9 @@ define([
 
         js += 'function updateColoring (states) {\n';
         js += '\tvar path = states.selectAll("path");\n';
-        js += '\tpath.style("stroke", function(d) {\n';
-        js += '\treturn "' + viewModel.strokeColor.value + '";\n';
-        js += '});\n';
+        js += '\t\tpath.style("stroke", function(d) {\n';
+        js += '\t\treturn "' + viewModel.strokeColor.value + '";\n';
+        js += '\t});\n';
 
         // Every time a color is used here, it should be converted toLowerCase() to be consistent across the board
         switch(coloringScheme.getType()){
@@ -108,31 +108,32 @@ define([
                 js += '});\n';
                 break;
             case ColoringSchemeType.GRADIENT_COLORING:
-                js += 'd3.csv(./' + coloringScheme.dataSet.value.filename + ', function(error, data) {\n';
-                js += 'var dataField = ' + coloringScheme.dataField.value + ';\n';
-                js += 'var startColor = ' + coloringScheme.startColor.value.toLowerCase() + ';\n';
-                js += 'var endColor = ' + coloringScheme.endColor.value.toLowerCase() + ';\n';
+                js += 'd3.csv(\'./data/' + coloringScheme.dataSet.value.filename + '\', function(error, data) {\n';
+                js += 'var dataField = \'' + coloringScheme.dataField.value + '\';\n';
+                js += 'var startColor = \'' + coloringScheme.startColor.value.toLowerCase() + '\';\n';
+                js += 'var endColor = \'' + coloringScheme.endColor.value.toLowerCase() + '\';\n';
                 js += 'var min = d3.min(data, function(d) { return +d[dataField]; });\n';
                 js += 'var max = d3.max(data, function(d) { return +d[dataField]; });\n';
                 js += 'if(min === undefined || max === undefined){\n';
                 js += 'path.style("fill", function(d){\n';
-                js += 'return ' + viewModel.DEFAULT_MAP_COLOR.toLowerCase() + ';\n';
+                js += 'return \'' + viewModel.DEFAULT_MAP_COLOR.toLowerCase() + '\';\n';
                 js += '});\n';
                 js += '}\n'; //end if
 
                 js += 'var gradient = d3.scale.linear().domain([min, max]).range([startColor, endColor]);\n';
                 js += 'path.style("fill", function(d) {\n';
                 js += 'var stateName = d.properties.name;\n';
-                js += 'var keyName = ' + coloringScheme.keyField.value + ';\n';
+                js += 'var keyName = \'' + coloringScheme.keyField.value + '\';\n';
                 js += 'for(var i=0; i<data.length; i++){\n';
                 js += 'if(data[i][keyName] === stateName){\n';
                 js += 'return gradient(data[i][dataField]);\n';
                 js += '}\n';
 
                 js += 'if(i === data.length-1){\n';
-                js += 'return ' + viewModel.DEFAULT_MAP_COLOR + ';\n';
+                js += 'return \'' + viewModel.DEFAULT_MAP_COLOR + '\';\n';
                 js += '}\n';
                 js += '}\n'; //end for
+                js += '});\n'; //end path.style function
                 js += '});\n'; //end d3.csv
                 break;
             default:
