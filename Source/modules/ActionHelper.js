@@ -87,7 +87,7 @@ define([
             viewModel.selectedActionType = ActionType.PROPERTY_ACTION;
             $('#action-editor-selected-action-type').prop('disabled', false);
 
-            // Select first Widget
+            // Reset the error flag on the affected widget field
             viewModel.actionEditorAffectedWidgetError = false;
 
             // Unselect DataSet.
