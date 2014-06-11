@@ -208,8 +208,6 @@ define([
             viewModel.selectedActionName.value = viewModel.selectedAction.name;
             $('#actionApplyAutomatically').prop('checked', viewModel.selectedAction.applyAutomatically ? true : false);
 
-            var widget = viewModel.actionEditorAffectedWidget;
-
             // Don't allow the modification of action type
             $('#action-editor-selected-action-type').prop('disabled', true);
 
