@@ -71,8 +71,10 @@ define([
     }
 
     var addStateDataToTrigger = function(viewModel, d) {
-        viewModel._trigger.addData('state', d.properties.name);
-        viewModel._trigger.addData('stateAbbreviation', d.properties.abbreviation);
+        var name = d.properties.name;
+        var abbrev = d.properties.abbreviation;
+        viewModel._trigger.addData('state', name);
+        viewModel._trigger.addData('stateAbbreviation', abbrev);
 
         // Iterate through each bound DataSet and add data values to the trigger
         // only for the state matching the specified name.
@@ -80,7 +82,8 @@ define([
             var data = viewModel._boundData[i].data;
             for (var j = 0; j < data.length; j++) {
                 for (var key in data[j]) {
-                    if (data[j][key] === d.properties.name) {
+                    var lowerVal = data[j][key].toLowerCase();
+                    if (lowerVal === name.toLowerCase() || lowerVal === abbrev.toLowerCase()) {
                         for (var k in data[j]) {
                             viewModel._trigger.addData(viewModel._boundData[i].name, k, data[j][k]);
                         }
