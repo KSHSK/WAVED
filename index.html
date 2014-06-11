@@ -426,8 +426,8 @@
                 <span>Apply Automatically</span>
             </div>
         </div>
-        <div id="query-action-options" class="inline top padding15">
-            <div>Options</div>
+        <div id="action-options" class="inline top padding15">
+            <div>Options <span id="action-argument-help-text" data-bind="click: openActionHelp">(Argument Help)</span></div>
             <!-- ko if: selectedActionType === 'Property Action' && actionEditorAffectedWidget -->
             <div data-bind="foreach: actionEditorAffectedWidget.properties">
                 <!-- ko if:  $data.displayName !== 'Name'  && $data.displayTemplateName !== undefined -->
@@ -576,6 +576,21 @@
     
     <div id="unsaved-changes-dialog" title="Unsaved Changes" class="dialog">
         <p>You have unsaved changes. Please discard your changes or cancel to continue working with the current project.</p>
+    </div>
+    
+    <div id="action-argument-help-dialog" title="Action Argument Help" class="dialog">
+        <div class="padding-vertical5">The widget that triggers this action may send additional information from the widget and its bound data.</div>
+        <div class="padding-vertical5">Arguments can be set as property values using the form {{arg}}. Replace 'arg' with one of the options below.</div>
+        <hr>
+        <div>
+            <div>The following arguments are available</div>
+            <div class="padding-vertical5" data-bind="foreach: {data: actionHelpOptions, as: 'group'}">
+                <div data-bind="text: group.name" class="action-argument-help-group-name"></div>
+                <ul data-bind="foreach: {data: Object.keys(group.options), as: 'key'}">
+                    <li><span class="action-argument-help-argument-name" data-bind="text: key"></span>: <span data-bind="text: group.options[key]"></span></li>
+                </ul>
+            </div>
+        </div>
     </div>
     
     <div id="error-dialog" title="" class="dialog">

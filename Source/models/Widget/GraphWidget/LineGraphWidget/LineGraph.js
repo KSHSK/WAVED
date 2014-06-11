@@ -32,5 +32,7 @@ define([
         return LineGraphViewModel.getType();
     };
 
+    // TODO: Define LineGraph.actionTriggerInfo similar to what USMap does.
+
     return LineGraph;
 });

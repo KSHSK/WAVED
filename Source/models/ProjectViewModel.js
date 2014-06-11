@@ -4,14 +4,14 @@ define([
         'knockout',
         'util/defined',
         'util/defaultValue',
-        'util/displayMessage',
-        'models/Constants/MessageType',
         'util/updateQueryByName',
         'util/subscribeObservable',
+        'models/Constants/MessageType',
         'models/ComponentViewModel',
         'models/Action/Action',
         'models/Action/PropertyAction',
         'models/Action/QueryAction',
+        'modules/DisplayMessage',
         'models/Event/Event',
         'models/WorkspaceViewModel',
         'models/GoogleAnalytics',
@@ -26,14 +26,14 @@ define([
         ko,
         defined,
         defaultValue,
-        displayMessage,
-        MessageType,
         updateQueryByName,
         subscribeObservable,
+        MessageType,
         ComponentViewModel,
         Action,
         PropertyAction,
         QueryAction,
+        DisplayMessage,
         Event,
         WorkspaceViewModel,
         GoogleAnalytics,
@@ -574,7 +574,7 @@ define([
 
         var response = DependencyChecker.allowedToDeleteWidget(widget, self);
         if (!response.allowed) {
-            displayMessage(response.message, MessageType.WARNING);
+            DisplayMessage.show(response.message, MessageType.WARNING);
             return false;
         }
 
@@ -618,7 +618,7 @@ define([
 
         var response = DependencyChecker.allowedToDeleteDataSet(dataSet, self);
         if (!response.allowed) {
-            displayMessage(response.message, MessageType.WARNING);
+            DisplayMessage.show(response.message, MessageType.WARNING);
             return;
         }
 
@@ -651,7 +651,7 @@ define([
 
         var response = DependencyChecker.allowedToDeleteAction(action, self);
         if (!response.allowed) {
-            displayMessage(response.message, MessageType.WARNING);
+            DisplayMessage.show(response.message, MessageType.WARNING);
             return;
         }
 
@@ -722,12 +722,12 @@ define([
             }
         });
 
-        for (i = 0; i < this.dataSubsets.length; i++) {
+        for (var i = 0; i < this.dataSubsets.length; i++) {
             this.dataSubsets[i].reset();
         }
 
         // Reapply automatically applied actions.
-        for (var i = 0; i < this._actions.length; i++) {
+        for (i = 0; i < this._actions.length; i++) {
             if (this._actions[i].applyAutomatically) {
                 this._actions[i].apply();
             }
