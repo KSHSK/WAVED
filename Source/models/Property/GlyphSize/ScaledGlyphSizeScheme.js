@@ -52,6 +52,21 @@ define([
             options: [],
             getOptionText: function(value){
                 return value;
+            },
+            validDisplayValue: function(value) {
+                if (!defined(value)) {
+                    /*
+                     * Force the value to be undefined anyway. We trigger an error by returning false
+                     */
+                    this._displayValue = undefined;
+                    return false;
+                }
+
+                if (defined(this.options) && this.options.length > 0) {
+                    return (this.options.indexOf(value) !== -1);
+                }
+
+                return true;
             }
         };
         this.dataField = new ArrayProperty(dataFieldOptions);
@@ -124,7 +139,7 @@ define([
                     });
                 }
                 else{
-                    self.dataField.displayValue = undefined; // Reset the dataField selection
+                    self.dataField._displayValue = undefined; // Reset the dataField selection directly, avoid validation
                     self.dataField.options = [];
                 }
             };
