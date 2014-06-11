@@ -20,6 +20,7 @@ define(['jquery',
         'modules/ActionHelper',
         'modules/EventHelper',
         'modules/DataSubsetHelper',
+        'modules/DisplayMessage',
         'modules/NewProject',
         'modules/LoadProject',
         'modules/SaveProject',
@@ -34,7 +35,6 @@ define(['jquery',
         'util/getBasename',
         'util/defined',
         'util/defaultValue',
-        'util/displayMessage',
         'util/createValidator',
         'util/subscribeObservable',
         'util/getNamePropertyInstance'
@@ -60,6 +60,7 @@ define(['jquery',
         ActionHelper,
         EventHelper,
         DataSubsetHelper,
+        DisplayMessage,
         NewProject,
         LoadProject,
         SaveProject,
@@ -74,7 +75,6 @@ define(['jquery',
         getBasename,
         defined,
         defaultValue,
-        displayMessage,
         createValidator,
         subscribeObservable,
         getNamePropertyInstance) {
@@ -213,6 +213,9 @@ define(['jquery',
         this.dataSubsetEditorConditions = [];
         this.dataSubsetEditorConditionCount = 0;
 
+        // Action Argument Help Dialog
+        this.actionHelpOptions = [];
+
         ko.track(this);
 
         /*
@@ -224,6 +227,8 @@ define(['jquery',
         subscribeObservable(self, 'actionEditorAffectedWidget', function() {
             ActionHelper.resetComponentDisplayProperties(self);
         });
+
+        this.setupActionHelp();
 
         this.currentProject.subscribeChanges();
 
@@ -239,9 +244,54 @@ define(['jquery',
         });
     };
 
+    // Setup action help dialog.
+    $('#action-argument-help-dialog').dialog({
+        modal: true,
+        autoOpen: false,
+        width: 500
+    });
+
+    WAVEDViewModel.prototype.openActionHelp = function() {
+        $('#action-argument-help-dialog').dialog('open');
+    };
+
+    WAVEDViewModel.prototype.setupActionHelp = function() {
+        // Bound data
+        this.actionHelpOptions.push({
+            name: 'Bound Data',
+            options: {
+                'datasetname.field': 'Where \'datasetname\' is the name of a DataSet and \'field\' is the name of a field from that DataSet.'
+            }
+        });
+
+        // x and y coordinates are included for all widget triggers.
+        this.actionHelpOptions.push({
+            name: 'All Widgets',
+            options: {
+                x: 'The x-coordinate of the triggering event.',
+                y: 'The y-coordinate of the triggering event.'
+            }
+        });
+
+        // Add Widget-specific arguments.
+        for (var i = 0; i < this.availableWidgets.length; i++) {
+            var widgetData = this.availableWidgets[i];
+            if (defined(widgetData.o.actionTriggerInfo)) {
+                var info = {};
+                this.actionHelpOptions.push({
+                    name: widgetData.name,
+                    options: widgetData.o.actionTriggerInfo()
+                });
+            }
+        }
+    };
+
     WAVEDViewModel.prototype.reset = function(projectState) {
         // Clear the workspace.
         $('#waved-workspace').empty();
+
+        // Clear any existing toast messages
+        DisplayMessage.clear();
 
         // Reset the unique names.
         UniqueTracker.reset();
@@ -398,7 +448,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.unbindData = function() {
         if(!defined(self.selectedBoundData)) {
-            displayMessage('No bound data selected for unbinding.', MessageType.INFO);
+            DisplayMessage.show('No bound data selected for unbinding.', MessageType.INFO);
             return;
         }
 
@@ -407,7 +457,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.markDataForDeletion = function() {
         if(!defined(self.selectedDataSet)) {
-            displayMessage('No dataset selected for deletion.', MessageType.INFO);
+            DisplayMessage.show('No dataset selected for deletion.', MessageType.INFO);
             return;
         }
 
@@ -429,7 +479,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.previewDataSet = function() {
         if (!defined(this.selectedDataSet)) {
-            displayMessage('No dataset selected for preview.', MessageType.INFO);
+            DisplayMessage.show('No dataset selected for preview.', MessageType.INFO);
             return;
         }
 
@@ -439,7 +489,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.previewDataSubset = function() {
         if (!defined(this.selectedDataSubset)) {
-            displayMessage('No data subset selected for preview.', MessageType.INFO);
+            DisplayMessage.show('No data subset selected for preview.', MessageType.INFO);
             return;
         }
 
@@ -449,7 +499,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.previewBoundDataSet = function() {
         if (!defined(this.selectedBoundData)) {
-            displayMessage('No bound data selected for preview.', MessageType.INFO);
+            DisplayMessage.show('No bound data selected for preview.', MessageType.INFO);
             return;
         }
 
@@ -459,7 +509,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.addDataSubset = function() {
         if (self.currentProject.unmarkedDataSets.length === 0) {
-            displayMessage('Must upload a Data Source before creating a Data Subset.', MessageType.INFO);
+            DisplayMessage.show('Must upload a Data Source before creating a Data Subset.', MessageType.INFO);
             return;
         }
 
@@ -468,7 +518,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.editDataSubset = function() {
         if(!defined(this.selectedDataSubset)) {
-            displayMessage('No data subset selected for edit.', MessageType.INFO);
+            DisplayMessage.show('No data subset selected for edit.', MessageType.INFO);
             return;
         }
 
@@ -477,7 +527,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.removeSelectedDataSubset = function() {
         if(!defined(this.selectedDataSubset)) {
-            displayMessage('No data subset selected for deletion.', MessageType.INFO);
+            DisplayMessage.show('No data subset selected for deletion.', MessageType.INFO);
             return;
         }
 
@@ -500,7 +550,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.addAction = function() {
         if(self.currentProject.widgets.length === 0) {
-            displayMessage('No widgets have been added. Please add at least one before adding an action.', MessageType.INFO);
+            DisplayMessage.show('No widgets have been added. Please add at least one before adding an action.', MessageType.INFO);
             return;
         }
 
@@ -509,7 +559,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.editAction = function() {
         if (!defined(self.selectedAction)) {
-            displayMessage('No action selected for editing.', MessageType.INFO);
+            DisplayMessage.show('No action selected for editing.', MessageType.INFO);
             return;
         }
 
@@ -518,7 +568,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.removeSelectedAction = function() {
         if(!defined(self.selectedAction)) {
-            displayMessage('No action selected for deletion.', MessageType.INFO);
+            DisplayMessage.show('No action selected for deletion.', MessageType.INFO);
             return;
         }
 
@@ -527,7 +577,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.addEvent = function() {
         if(self.currentProject.widgets.length === 0) {
-            displayMessage('No widgets have been added that can be used as event triggers. Please add at least one widget before creating an event.', MessageType.INFO);
+            DisplayMessage.show('No widgets have been added that can be used as event triggers. Please add at least one widget before creating an event.', MessageType.INFO);
             return;
         }
 
@@ -536,7 +586,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.editEvent = function() {
         if(!defined(self.selectedEvent)) {
-            displayMessage('No event selected for editing.', MessageType.INFO);
+            DisplayMessage.show('No event selected for editing.', MessageType.INFO);
             return;
         }
 
@@ -545,7 +595,7 @@ define(['jquery',
 
     WAVEDViewModel.prototype.removeSelectedEvent = function() {
         if(!defined(self.selectedEvent)) {
-            displayMessage('No event selected for deletion.', MessageType.INFO);
+            DisplayMessage.show('No event selected for deletion.', MessageType.INFO);
             return;
         }
 

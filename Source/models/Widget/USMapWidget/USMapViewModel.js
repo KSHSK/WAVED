@@ -1,5 +1,7 @@
 /*global console*/
 define([
+        'models/Constants/GlyphSizeSchemeType',
+        'models/Constants/MessageType',
         'models/Event/Trigger',
         'models/Property/Coloring/ColoringScheme',
         'models/Property/Coloring/ColoringSelectionProperty',
@@ -10,21 +12,21 @@ define([
         'models/ComponentViewModel',
         'models/Property/ListProperty',
         'models/Widget/WidgetViewModel',
-        'modules/ReadData',
-        'models/Constants/GlyphSizeSchemeType',
-        './GlyphViewModel',
-        'modules/UniqueTracker',
-        'util/createValidator',
+        'modules/DisplayMessage',
         'modules/GlyphHelper',
         'modules/HistoryMonitor',
+        'modules/ReadData',
+        'modules/UniqueTracker',
+        './GlyphViewModel',
+        'util/createValidator',
         'util/defined',
-        'util/displayMessage',
-        'models/Constants/MessageType',
         'util/subscribeObservable',
         'knockout',
         'd3',
         'jquery'
     ],function(
+        GlyphSizeSchemeType,
+        MessageType,
         Trigger,
         ColoringScheme,
         ColoringSelectionProperty,
@@ -35,16 +37,14 @@ define([
         ComponentViewModel,
         ListProperty,
         WidgetViewModel,
-        ReadData,
-        GlyphSizeSchemeType,
-        GlyphViewModel,
-        UniqueTracker,
-        createValidator,
+        DisplayMessage,
         GlyphHelper,
         HistoryMonitor,
+        ReadData,
+        UniqueTracker,
+        GlyphViewModel,
+        createValidator,
         defined,
-        displayMessage,
-        MessageType,
         subscribeObservable,
         ko,
         d3,
@@ -71,8 +71,10 @@ define([
     }
 
     var addStateDataToTrigger = function(viewModel, d) {
-        viewModel._trigger.addData('state', d.properties.name);
-        viewModel._trigger.addData('stateAbbreviation', d.properties.abbreviation);
+        var name = d.properties.name;
+        var abbrev = d.properties.abbreviation;
+        viewModel._trigger.addData('state', name);
+        viewModel._trigger.addData('stateAbbreviation', abbrev);
 
         // Iterate through each bound DataSet and add data values to the trigger
         // only for the state matching the specified name.
@@ -80,7 +82,8 @@ define([
             var data = viewModel._boundData[i].data;
             for (var j = 0; j < data.length; j++) {
                 for (var key in data[j]) {
-                    if (data[j][key] === d.properties.name) {
+                    var lowerVal = data[j][key].toLowerCase();
+                    if (lowerVal === name.toLowerCase() || lowerVal === abbrev.toLowerCase()) {
                         for (var k in data[j]) {
                             viewModel._trigger.addData(viewModel._boundData[i].name, k, data[j][k]);
                         }
@@ -201,7 +204,8 @@ define([
                     // Color names must be lowercase or this won't work due to the range function not liking caps
                     var gradient = d3.scale.linear().domain([min, max]).range([coloringScheme.startColor.value.toLowerCase(), coloringScheme.endColor.value.toLowerCase()]);
                     path.style('fill', function(d) {
-                        var stateName = d.properties.name;
+                        var stateName = d.properties.name.toLowerCase();
+                        var stateAbbrev = d.properties.abbreviation.toLowerCase();
                         var keyName = coloringScheme.keyField.value;
 
                         if(!defined(keyName)){
@@ -209,7 +213,8 @@ define([
                         }
 
                         for(var i=0; i<coloringScheme.dataSet.value.data.length; i++){
-                            if(coloringScheme.dataSet.value.data[i][keyName] === stateName){
+                            var currentValue = coloringScheme.dataSet.value.data[i][keyName].toLowerCase();
+                            if(currentValue === stateName || currentValue === stateAbbrev){
                                 return gradient(coloringScheme.dataSet.value.data[i][dataField]);
                             }
 
@@ -397,7 +402,7 @@ define([
             options: this.glyphs,
             add: function() {
                 if (!defined(self.boundData) || self.boundData.length === 0) {
-                    displayMessage('Must bind data to map before adding glyph', MessageType.WARNING);
+                    DisplayMessage.show('Must bind data to map before adding glyph', MessageType.WARNING);
                 } else {
                     var newGlyph = new GlyphViewModel({}, self);
                     var options = this.options;

@@ -1,29 +1,29 @@
 define([
         'WAVEDViewModel',
-        './UniqueTracker',
-        './HistoryMonitor',
+        'modules/DisplayMessage',
+        'modules/UniqueTracker',
+        'modules/HistoryMonitor',
         'models/Action/Action',
         'models/Action/PropertyAction',
         'models/Action/QueryAction',
         'models/Constants/ActionType',
+        'models/Constants/MessageType',
         'models/Data/Condition',
         'util/defined',
-        'models/Constants/MessageType',
-        'util/displayMessage',
         'knockout',
         'jquery'
     ],function(
         WAVEDViewModel,
+        DisplayMessage,
         UniqueTracker,
         HistoryMonitor,
         Action,
         PropertyAction,
         QueryAction,
         ActionType,
+        MessageType,
         Condition,
         defined,
-        MessageType,
-        displayMessage,
         ko,
         $
     ){
@@ -140,7 +140,7 @@ define([
                             if (!UniqueTracker.isValueUnique(Action.getUniqueNameNamespace(),
                                 viewModel.selectedActionName.value)) {
 
-                                displayMessage('The name "' + viewModel.selectedActionName.value + '" is already in use.', MessageType.WARNING);
+                                DisplayMessage.show('The name "' + viewModel.selectedActionName.value + '" is already in use.', MessageType.WARNING);
                                 return;
                             }
 
@@ -181,8 +181,10 @@ define([
                                 action = new PropertyAction(actionState);
                             }
                             else {
+                                var limit = viewModel.actionDataSubsetEditorConditionCount;
+
                                 actionState.dataSubset = viewModel.actionEditorDataSubset.name;
-                                actionState.conditions = viewModel.actionDataSubsetEditorConditions;
+                                actionState.conditions = viewModel.actionDataSubsetEditorConditions.slice(0, limit);
                                 action = new QueryAction(actionState, viewModel.currentProject.getDataSet.bind(viewModel.currentProject));
                             }
 
@@ -257,7 +259,7 @@ define([
                             if (!UniqueTracker.isValueUnique(Action.getUniqueNameNamespace(),
                                 viewModel.selectedActionName.value, viewModel.selectedAction)) {
 
-                                displayMessage('The name "' + viewModel.selectedActionName.value + '" is already in use.', MessageType.WARNING);
+                                DisplayMessage.show('The name "' + viewModel.selectedActionName.value + '" is already in use.', MessageType.WARNING);
                                 return;
                             }
 
