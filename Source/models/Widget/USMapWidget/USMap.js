@@ -56,7 +56,8 @@ define([
      */
     USMap.actionTriggerInfo = function() {
         return {
-            'state': 'The name of the state that was clicked.'
+            'state': 'The name of the state that was clicked.',
+            'stateAbbreviation': 'The abbreviation of the state that was clicked.'
         };
     };
 
