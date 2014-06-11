@@ -1,5 +1,5 @@
 <div>
     <input type="checkbox" data-bind="checked: displayValue, visible: visible"></input>
     <span data-bind="text:displayName, visible: visible"></span>
-    <div class="error" data-bind="visible: error, html: message"></div>
+    <div class="error" data-bind="visible: displayError, html: dialogErrorMessage"></div>
 </div>

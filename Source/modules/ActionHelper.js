@@ -1,29 +1,29 @@
 define([
         'WAVEDViewModel',
-        './UniqueTracker',
-        './HistoryMonitor',
+        'modules/DisplayMessage',
+        'modules/UniqueTracker',
+        'modules/HistoryMonitor',
         'models/Action/Action',
         'models/Action/PropertyAction',
         'models/Action/QueryAction',
         'models/Constants/ActionType',
+        'models/Constants/MessageType',
         'models/Data/Condition',
         'util/defined',
-        'models/Constants/MessageType',
-        'util/displayMessage',
         'knockout',
         'jquery'
     ],function(
         WAVEDViewModel,
+        DisplayMessage,
         UniqueTracker,
         HistoryMonitor,
         Action,
         PropertyAction,
         QueryAction,
         ActionType,
+        MessageType,
         Condition,
         defined,
-        MessageType,
-        displayMessage,
         ko,
         $
     ){
@@ -43,6 +43,53 @@ define([
             // Select first Widget
             viewModel.actionEditorAffectedWidgetError = false;
 
+            // Unselect DataSet.
+            viewModel.actionEditorDataSet = undefined;
+
+            // Only reset properties if there's a widget available
+            if(defined(viewModel.actionEditorAffectedWidget)) {
+                var widget = viewModel.actionEditorAffectedWidget.viewModel;
+
+                // All the properties
+                for (var index in widget.properties) {
+                    if(!defined(widget.properties[index])) {
+                     // Clear any existing error flags
+                        widget.properties[index].displayError = false;
+                        widget.properties[index].dialogErrorMessage = '';
+
+                        // Set directly to bypass undefined validation checks or errors might pop up everywhere
+                        // Necessary to properly reset the dialog because some fields start out undefined
+                        widget.properties[index]._displayValue = widget.properties[index]._originalValue;
+                    }
+                    else {
+                        // Use the setters to go through validation and clear any error flags
+                        widget.properties[index].displayValue = widget.properties[index].originalValue;
+                    }
+
+                    // Nested props
+                    if(defined(widget.properties[index].getSubscribableNestedProperties())) {
+                        var nestedProps = widget.properties[index].getSubscribableNestedProperties();
+
+                        for(var nestedIndex in nestedProps) {
+                            nestedProps[nestedIndex].properties.forEach(function(value) {
+                                if(!defined(value.originalValue)) {
+                                    // Clear any existing error flags
+                                    value.displayError = false;
+                                    value.dialogErrorMessage = '';
+
+                                    // Set directly to avoid validation for undefined values or errors might pop up everywhere
+                                    // Necessary to properly reset the dialog because some fields start out undefined
+                                    value._displayValue = value._originalValue;
+                                }
+                                else {
+                                    // Use setters to through validation and clear any error flags
+                                    value.displayValue = value.originalValue;
+                                }
+                            });
+                        }
+                    }
+                }
+            }
             $('#actionApplyAutomatically').attr('checked', false);
 
             // Select first Data Subset
@@ -87,7 +134,7 @@ define([
                             if (!UniqueTracker.isValueUnique(Action.getUniqueNameNamespace(),
                                 viewModel.selectedActionName.value)) {
 
-                                displayMessage('The name "' + viewModel.selectedActionName.value + '" is already in use.', MessageType.WARNING);
+                                DisplayMessage.show('The name "' + viewModel.selectedActionName.value + '" is already in use.', MessageType.WARNING);
                                 return;
                             }
 
@@ -104,7 +151,21 @@ define([
                                     var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
                                     if (propertyIndex > -1) {
                                         if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
-                                            actionValues[property] = properties[propertyIndex].displayValue;
+                                            actionValues[property] = properties[propertyIndex].getDisplayState();
+                                            continue; // We don't need to check for nested stuff since the top level changed
+                                        }
+
+                                        // Check for changes in nested properties
+                                        if (defined(properties[propertyIndex].getSubscribableNestedProperties())) {
+                                            // This means we have to look at the displayValue of the currently selected thing...
+                                            properties[propertyIndex].displayValue.properties.forEach(function(value) {
+                                                if (value.displayValue !== value.originalValue){
+                                                    // We have to check for undefined here because we can't break out of forEach
+                                                    if (actionValues[property] === undefined) {
+                                                        actionValues[property] = properties[propertyIndex].getDisplayState();
+                                                    }
+                                                }
+                                            });
                                         }
                                     }
                                 }
@@ -134,10 +195,6 @@ define([
         },
 
         editAction: function(viewModel) {
-            if (!defined(viewModel.selectedAction)) {
-                return;
-            }
-
             var self = this;
             self.resetActionEditor(viewModel);
 
@@ -153,13 +210,14 @@ define([
 
                 var widget = viewModel.actionEditorAffectedWidget.viewModel;
 
-                // Set the displayValues to match those saved in the Action
+                // Set the displayValues to match those saved in the widget
                 for (var index in widget.properties) {
                     widget.properties[index].displayValue = widget.properties[index].originalValue;
                 }
 
+                // Update any modified values from the Action
                 for (var key in viewModel.selectedAction.newValues) {
-                    widget[key].displayValue = viewModel.selectedAction.newValues[key];
+                    widget[key].setDisplayState(viewModel.selectedAction.newValues[key]);
                 }
             }
             else {
@@ -183,7 +241,7 @@ define([
                             if (!UniqueTracker.isValueUnique(Action.getUniqueNameNamespace(),
                                 viewModel.selectedActionName.value, viewModel.selectedAction)) {
 
-                                displayMessage('The name "' + viewModel.selectedActionName.value + '" is already in use.', MessageType.WARNING);
+                                DisplayMessage.show('The name "' + viewModel.selectedActionName.value + '" is already in use.', MessageType.WARNING);
                                 return;
                             }
 
@@ -233,7 +291,21 @@ define([
                 var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
                 if (propertyIndex > -1) {
                     if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
-                        actionValues[property] = properties[propertyIndex].displayValue;
+                        actionValues[property] = properties[propertyIndex].getDisplayState();
+                        continue;
+                    }
+
+                    // Check for changes in nested properties
+                    if (defined(properties[propertyIndex].getSubscribableNestedProperties())) {
+                        // This means we have to look at the displayValue of the currently selected thing...
+                        properties[propertyIndex].displayValue.properties.forEach(function(value) {
+                            if (value.displayValue !== value.originalValue){
+                                // We have to check for undefined here because we can't break out of forEach
+                                if (actionValues[property] === undefined) {
+                                    actionValues[property] = properties[propertyIndex].getDisplayState();
+                                }
+                            }
+                        });
                     }
                 }
             }
@@ -313,9 +385,26 @@ define([
                 if (defined(viewModel.actionEditorAffectedWidget)) {
                     var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
                     for (var i = 0; i < properties.length; i++) {
-                        if (properties[i].error) {
+                        /*
+                         * Calls isValidDisplayValue() for cases where we've bypassed validation for undefined fields (to properly reset the dialog),
+                         * but still want treat the field as if it has an error, such as when disabling the Save button
+                         */
+                        if (properties[i].displayError || !properties[i].isValidDisplayValue(properties[i].displayValue)) {
                             error = true;
                             break;
+                        }
+
+                        if (defined(properties[i].getSubscribableNestedProperties())) {
+                            for (var j = 0; j < properties[i].displayValue.properties.length; j++) {
+                                var nestedProperty = properties[i].displayValue.properties[j];
+                                if(nestedProperty.displayError || !nestedProperty.isValidDisplayValue(nestedProperty.displayValue)) {
+                                    error = true;
+                                    break;
+                                }
+                            }
+                            if (error) {
+                                break; // Break out of the outer loop
+                            }
                         }
                     }
                 }
