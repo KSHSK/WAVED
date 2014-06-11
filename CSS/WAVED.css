@@ -276,6 +276,20 @@ table.dataTable#project-list tr.row_selected td { background-color: #aaaaaa; }
     opacity: 1;
 }
 
-#query-action-options {
+#action-options {
     max-width: 500px;
+}
+
+#action-argument-help-text {
+    font-size: 0.8em;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.action-argument-help-group-name {
+    text-decoration: underline;
+}
+
+.action-argument-help-argument-name {
+    font-weight: bold;
 }

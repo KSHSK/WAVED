@@ -175,8 +175,10 @@ define([
                                 action = new PropertyAction(actionState);
                             }
                             else {
+                                var limit = viewModel.actionDataSubsetEditorConditionCount;
+
                                 actionState.dataSubset = viewModel.actionEditorDataSubset.name;
-                                actionState.conditions = viewModel.actionDataSubsetEditorConditions;
+                                actionState.conditions = viewModel.actionDataSubsetEditorConditions.slice(0, limit);
                                 action = new QueryAction(actionState, viewModel.currentProject.getDataSet.bind(viewModel.currentProject));
                             }
 
