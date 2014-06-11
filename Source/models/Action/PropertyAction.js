@@ -108,6 +108,9 @@ define([
                             });
                         }
                         else {
+                            // This else-statement deals with non-nested properties
+
+                            // Deal with ArrayProperties with DataSets/Subsets
                             var type = self._newValues[key].value.type;
                             if (defined(type) && (type === 'DataSet' || type === 'DataSubset')) {
                                 self._target[key].displayOptions.forEach(function(displayOption) {
