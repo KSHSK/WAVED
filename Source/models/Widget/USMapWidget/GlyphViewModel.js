@@ -78,7 +78,7 @@ define([
         })
         .attr('r', function(d, i) {
             var value;
-            if (glyph.size.value.type === GlyphSizeSchemeType.SCALED_SIZE) {
+            if (glyph.size.value.getType() === GlyphSizeSchemeType.SCALED_SIZE) {
                 value = radiusScale(d[glyph.size.value.dataField.value]);
             } else {
                 value = glyph.size.value.size.value*glyph.parent.width.value/100;
@@ -121,6 +121,7 @@ define([
         if (!defined(state.name)) {
             var namespace = ComponentViewModel.getUniqueNameNamespace();
             this.name.value = UniqueTracker.getDefaultUniqueValue(namespace, GlyphViewModel.getType(), this);
+            this.name.displayValue = this.name.value; // Don't rely on the subscription here, we need this to go through the setter for proper error flags
         }
 
         this.parent = parent;
@@ -232,9 +233,12 @@ define([
         if (this.dataSet.value === dataSet) {
             return true;
         }
-        if (this.size.type === GlyphSizeSchemeType.SCALED_SIZE) {
-            return this.size.value.dataField.value === dataSet;
-        }
+
+        /*
+         * The dataset used in the scaled glyph size scheme is not checked here because that dataset
+         * shadows the GlyphViewModel's dataset.
+         */
+
         return false;
     };
 

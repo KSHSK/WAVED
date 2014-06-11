@@ -19,29 +19,36 @@ define([
 
         ColoringScheme.call(this, state);
 
-        // All colors default to black
+        var isColorValid = function(value) {
+            return defined(value) && (value.trim() !== '');
+        };
+
         this.color1 = new StringProperty({
             displayName: 'Color #1',
             value: 'PaleGreen',
-            onchange: state.onchange
+            onchange: state.onchange,
+            validValue: isColorValid
         });
 
         this.color2 = new StringProperty({
             displayName: 'Color #2',
             value: 'PowderBlue',
-            onchange: state.onchange
+            onchange: state.onchange,
+            validValue: isColorValid
         });
 
         this.color3 = new StringProperty({
             displayName: 'Color #3',
             value: 'Plum',
-            onchange: state.onchange
+            onchange: state.onchange,
+            validValue: isColorValid
         });
 
         this.color4 = new StringProperty({
             displayName: 'Color #4',
             value: 'Khaki',
-            onchange: state.onchange
+            onchange: state.onchange,
+            validValue: isColorValid
         });
 
         this.setState(state);
@@ -53,6 +60,10 @@ define([
 
     FourColoringScheme.prototype.getType = function() {
         return ColoringSchemeType.FOUR_COLORING;
+    };
+
+    FourColoringScheme.prototype.getDisplayText = function() {
+        return 'Four coloring';
     };
 
     Object.defineProperties(FourColoringScheme.prototype, {
@@ -91,6 +102,33 @@ define([
         }
         if(defined(state.color4)){
             this.color4._originalValue = state.color4.value;
+        }
+    };
+
+    FourColoringScheme.prototype.getDisplayState = function() {
+        var displayState = {
+            color1: this.color1.getDisplayState(),
+            color2: this.color2.getDisplayState(),
+            color3: this.color3.getDisplayState(),
+            color4: this.color4.getDisplayState(),
+            type: this.getType()
+        };
+
+        return displayState;
+    };
+
+    FourColoringScheme.prototype.setDisplayState = function(state) {
+        if(defined(state.color1) && state.color1.value !== this.color1.originalValue) {
+            this.color1.displayValue = state.color1.value;
+        }
+        if(defined(state.color2) && state.color2.value !== this.color2.originalValue) {
+            this.color2.displayValue = state.color2.value;
+        }
+        if(defined(state.color3) && state.color3.value !== this.color3.originalValue) {
+            this.color3.displayValue = state.color3.value;
+        }
+        if(defined(state.color4) && state.color4.value !== this.color4.originalValue) {
+            this.color4.displayValue = state.color4.value;
         }
     };
 

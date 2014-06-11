@@ -74,6 +74,14 @@ define([
                 '});\n\n';
     };
 
+    DataSubset.prototype.getDisplayState = function() {
+        var displayState = DataSet.prototype.getDisplayState.call(this);
+
+        displayState.type = DataSubset.getType();
+
+        return displayState;
+    };
+
     DataSubset.prototype.reset = function() {
         this.query.reset();
         this.executeCurrentQuery();
