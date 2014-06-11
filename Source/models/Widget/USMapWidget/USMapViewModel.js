@@ -201,8 +201,8 @@ define([
                     // Color names must be lowercase or this won't work due to the range function not liking caps
                     var gradient = d3.scale.linear().domain([min, max]).range([coloringScheme.startColor.value.toLowerCase(), coloringScheme.endColor.value.toLowerCase()]);
                     path.style('fill', function(d) {
-                        var stateName = d.properties.name;
-                        var stateAbbrev = d.properties.abbreviation;
+                        var stateName = d.properties.name.toLowerCase();
+                        var stateAbbrev = d.properties.abbreviation.toLowerCase();
                         var keyName = coloringScheme.keyField.value;
 
                         if(!defined(keyName)){
@@ -210,7 +210,7 @@ define([
                         }
 
                         for(var i=0; i<coloringScheme.dataSet.value.data.length; i++){
-                            var currentValue = coloringScheme.dataSet.value.data[i][keyName];
+                            var currentValue = coloringScheme.dataSet.value.data[i][keyName].toLowerCase();
                             if(currentValue === stateName || currentValue === stateAbbrev){
                                 return gradient(coloringScheme.dataSet.value.data[i][dataField]);
                             }
