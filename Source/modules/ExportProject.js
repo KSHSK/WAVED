@@ -26,7 +26,7 @@ define([
     'use strict';
 
     var imports = {
-        D3: '<script src="http://d3js.org/d3.v3.min.js"></script>',
+        D3: '<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.8/d3.min.js"></script>',
         JQUERY: '<script src="https://code.jquery.com/jquery-1.9.1.js"></script>',
         WAVED_CSS: '<link rel="stylesheet" type=\"text/css\" href=\"WAVED.css">',
         WAVED_JS: '<script src="WAVED.js"></script>'
