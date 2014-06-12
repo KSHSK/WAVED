@@ -47,15 +47,18 @@ define([
 
     ConstantGlyphSizeScheme.prototype = Object.create(GlyphSizeScheme.prototype);
 
+    ConstantGlyphSizeScheme.prototype.getType = function() {
+        return GlyphSizeSchemeType.CONSTANT_SIZE;
+    };
+
+    ConstantGlyphSizeScheme.prototype.getDisplayText = function() {
+        return 'Constant size';
+    };
+
     Object.defineProperties(ConstantGlyphSizeScheme.prototype, {
         properties: {
             get: function() {
                 return [this.size];
-            }
-        },
-        type: {
-            get : function() {
-                return GlyphSizeSchemeType.CONSTANT_SIZE;
             }
         },
         error: {
@@ -65,10 +68,25 @@ define([
         }
     });
 
+    ConstantGlyphSizeScheme.prototype.getDisplayState = function() {
+        var displayState = {
+            size: this.size.getDisplayState(),
+            type: this.getType()
+        };
+
+        return displayState;
+    };
+
+    ConstantGlyphSizeScheme.prototype.setDisplayState = function(state) {
+        if(defined(state.size) && state.size.value !== this.size.originalValue) {
+            this.size.displayValue = state.size.value;
+        }
+    };
+
     ConstantGlyphSizeScheme.prototype.getState = function() {
         var state = {
             size: this.size.getState(),
-            type: this.type
+            type: this.getType()
         };
 
         return state;

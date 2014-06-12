@@ -32,7 +32,12 @@ define([
             },
             set: function(value) {
                 var templateRegex = /{{[\w]+}}/g;
-                if (!isNaN(Number(value)) && this.isValidValue(value)) {
+                /*
+                 * Both Number() and parseFloat() are needed due to deal with quirks in each
+                 * 1. Number() accepts whitespace as valid and treats it as 0 while parseFloat() doesn't
+                 * 2. parseFloat() accepts strings concatenated with numbers (like '10px') while Number() doesn't
+                 */
+                if (!isNaN(Number(value)) && this.isValidValue(value) && !isNaN(parseFloat(value))) {
                     this.error = false;
                     this.message = '';
                     this._originalValue = Number(value);
@@ -54,7 +59,7 @@ define([
             },
             set: function(value) {
                 var templateRegex = /{{[\w]+}}/g;
-                if (!isNaN(Number(value)) && this.isValidValue(value)) {
+                if (!isNaN(Number(value)) && this.isValidValue(value) && !isNaN(parseFloat(value))) {
                     this.error = false;
                     this.message = '';
                     this._value = Number(value);
@@ -76,19 +81,19 @@ define([
             },
             set: function(value) {
                 var templateRegex = /{{[\w]+}}/g;
-                if (!isNaN(Number(value)) && this.isValidValue(value)) {
-                    this.error = false;
+                if (!isNaN(Number(value)) && this.isValidDisplayValue(value) && !isNaN(parseFloat(value))) {
+                    this.displayError = false;
                     this.message = '';
                     this._displayValue = Number(value);
                 }
                 else if (templateRegex.test(value)) {
-                    this.error = false;
-                    this.message = '';
+                    this.displayError = false;
+                    this.dialogErrorMessage = '';
                     this._displayValue = value;
                 }
                 else {
-                    this.error = true;
-                    this.message = this.errorMessage;
+                    this.displayError = true;
+                    this.dialogErrorMessage = this.errorMessage;
                 }
             }
         }

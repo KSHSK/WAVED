@@ -5,6 +5,7 @@ define([
         'models/Action/Action',
         'models/Action/PropertyAction',
         'models/Action/QueryAction',
+        'models/Constants/ValueType',
         'util/defined',
         'knockout',
         'jquery'
@@ -15,6 +16,7 @@ define([
         Action,
         PropertyAction,
         QueryAction,
+        ValueType,
         defined,
         ko,
         $
@@ -27,17 +29,18 @@ define([
     GlyphHelper.addEditGlyph = function(glyph) {
         var self = this;
         var glyphAdded = $.Deferred();
+
         glyphDialog.dialog({
             resizable: false,
             width: 500,
             modal: true,
             buttons: {
                 'Save': function() {
-                    if (glyph.isValid()) {
+                    if (glyph.isValid(ValueType.DISPLAY_VALUE)) {
                         glyphAdded.resolve();
                         glyphDialog.dialog('close');
                     } else {
-                        glyph.displayErrors('displayValue');
+                        glyph.displayErrors(ValueType.DISPLAY_VALUE);
                     }
                 },
                 'Cancel': function() {

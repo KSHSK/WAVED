@@ -45,15 +45,15 @@ textarea:disabled {
 }
 
 .right {
-	float: right;
+    float: right;
 }
 
 .padding5 {
-	padding: 5px;
+    padding: 5px;
 }
 
 .padding15 {
-	padding: 15px;
+    padding: 15px;
 }
 
 .padding-vertical5 {
@@ -61,11 +61,11 @@ textarea:disabled {
 }
 
 .marginBottom10 {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .width100 {
-	width: 100%;
+    width: 100%;
 }
 
 .menu-text {
@@ -137,7 +137,7 @@ textarea:disabled {
 }
 
 .dialogColumnMaxWidth {
-	max-width: 170px;
+    max-width: 170px;
 }
 
 .error {
@@ -180,27 +180,27 @@ textarea:disabled {
 }
 
 #project-tree {
-	padding-left: 0;
+    padding-left: 0;
 }
 
 #project-tree .tree-row {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 #project-tree .tree-row-selected {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 #project-tree .tree-row:hover {
-	color: #3BB4BF;
+    color: #3BB4BF;
 }
 
 #project-tree li {
-	list-style: none;
+    list-style: none;
 }
 
 #project-tree ul {
-	padding-left: 16px;
+    padding-left: 16px;
 }
 
 #project-tree .tree-folder-icon {
@@ -276,6 +276,20 @@ table.dataTable#project-list tr.row_selected td { background-color: #aaaaaa; }
     opacity: 1;
 }
 
-#query-action-options {
+#action-options {
     max-width: 500px;
+}
+
+#action-argument-help-text {
+    font-size: 0.8em;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.action-argument-help-group-name {
+    text-decoration: underline;
+}
+
+.action-argument-help-argument-name {
+    font-weight: bold;
 }
