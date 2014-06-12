@@ -4,26 +4,21 @@ define([
         'models/Property/GlyphSize/GlyphSizeScheme',
         'models/Constants/GlyphSizeSchemeType',
         'models/Property/ArrayProperty',
-        'models/Widget/WidgetViewModel',
-        'models/ProjectViewModel',
         'modules/HistoryMonitor',
         'util/defined',
         'util/defaultValue',
-        'util/subscribeObservable',
-        'WAVED'
+        'util/subscribeObservable'
     ],function(
         ko,
         $,
         GlyphSizeScheme,
         GlyphSizeSchemeType,
         ArrayProperty,
-        WidgetViewModel,
-        ProjectViewModel,
         HistoryMonitor,
         defined,
         defaultValue,
-        subscribeObservable,
-        WAVED){
+        subscribeObservable
+    ){
     'use strict';
 
     var ScaledGlyphSizeScheme = function(state, viewModel) {
