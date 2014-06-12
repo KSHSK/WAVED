@@ -41,6 +41,7 @@ At this point the WAVED server should be up and running and clients should be ab
 
 #### Index Page
 Verify that you can get to the index page of WAVED. You should not get a 404 error, or a short HTML page displaying some generic message, but rather over 500 lines of HTML. 
+
 ```curl -sXPOST localhost/WAVED/```
 
 #### Project Listing
