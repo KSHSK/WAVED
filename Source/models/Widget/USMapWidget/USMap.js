@@ -84,56 +84,56 @@ define([
         switch(coloringScheme.getType()){
             case ColoringSchemeType.SOLID_COLORING:
                 js += 'path.style("fill", function(d) {\n';
-                js += 'return "';
+                js += '\treturn "';
                 js += defined(coloringScheme.color.value) ? coloringScheme.color.value.toLowerCase() : viewModel.DEFAULT_MAP_COLOR.toLowerCase();
                 js += '";\n';
                 js += '});\n';
                 break;
             case ColoringSchemeType.FOUR_COLORING:
                 js += 'var fourColorStateGroupings = [\n';
-                js += '["Alaska", "Alabama", "Arkansas", "Connecticut", "Delaware", "Illinois", "Maine", "Michigan", "Minnesota", "Montana", "Nebraska", "New Mexico", "Nevada", "Virginia"],\n';
-                js += '["Arizona", "District of Columbia", "Kansas", "Kentucky", "Mississippi", "North Carolina", "Oregon", "Pennsylvania", "Rhode Island", "Texas", "Vermont", "Wisconsin", "Wyoming"],\n';
-                js += '["California", "Colorado", "Georgia", "Idaho", "Indiana", "Louisiana", "Massachusetts", "Missouri", "New Jersey", "South Dakota", "West Virginia"],\n';
-                js += '["Florida", "Hawaii", "Iowa", "Maryland", "New Hampshire", "New York", "North Dakota", "Ohio", "Oklahoma", "South Carolina", "Tennessee", "Utah", "Washington"]\n';
+                js += '\t["Alaska", "Alabama", "Arkansas", "Connecticut", "Delaware", "Illinois", "Maine", "Michigan", "Minnesota", "Montana", "Nebraska", "New Mexico", "Nevada", "Virginia"],\n';
+                js += '\t["Arizona", "District of Columbia", "Kansas", "Kentucky", "Mississippi", "North Carolina", "Oregon", "Pennsylvania", "Rhode Island", "Texas", "Vermont", "Wisconsin", "Wyoming"],\n';
+                js += '\t["California", "Colorado", "Georgia", "Idaho", "Indiana", "Louisiana", "Massachusetts", "Missouri", "New Jersey", "South Dakota", "West Virginia"],\n';
+                js += '\t["Florida", "Hawaii", "Iowa", "Maryland", "New Hampshire", "New York", "North Dakota", "Ohio", "Oklahoma", "South Carolina", "Tennessee", "Utah", "Washington"]\n';
                 js += '];\n\n';
                 js += 'var colorArray = ["' + coloringScheme.getColorArray()[0] + '", "' + coloringScheme.getColorArray()[1];
                 js += '", "' + coloringScheme.getColorArray()[2] + '", "' + coloringScheme.getColorArray()[3] + '"];\n\n';
                 js += 'path.style("fill", function(d) {\n';
-                js += 'var stateName = d.properties.name;\n';
-                js += 'for(var i=0; i < 4; i++){\n';
-                js += 'if(fourColorStateGroupings[i].indexOf(stateName) !== -1){\n';
-                js += 'return colorArray[i].toLowerCase();\n';
-                js += '}\n';
-                js += '}\n';
+                js += '\tvar stateName = d.properties.name;\n';
+                js += '\tfor(var i=0; i < 4; i++){\n';
+                js += '\t\tif(fourColorStateGroupings[i].indexOf(stateName) !== -1){\n';
+                js += '\t\t\treturn colorArray[i].toLowerCase();\n';
+                js += '\t\t}\n';
+                js += '\t}\n';
                 js += '});\n';
                 break;
             case ColoringSchemeType.GRADIENT_COLORING:
                 js += 'd3.csv(\'./data/' + coloringScheme.dataSet.value.filename + '\', function(error, data) {\n';
-                js += 'var dataField = \'' + coloringScheme.dataField.value + '\';\n';
-                js += 'var startColor = \'' + coloringScheme.startColor.value.toLowerCase() + '\';\n';
-                js += 'var endColor = \'' + coloringScheme.endColor.value.toLowerCase() + '\';\n';
-                js += 'var min = d3.min(data, function(d) { return +d[dataField]; });\n';
-                js += 'var max = d3.max(data, function(d) { return +d[dataField]; });\n';
-                js += 'if(min === undefined || max === undefined){\n';
-                js += 'path.style("fill", function(d){\n';
-                js += 'return \'' + viewModel.DEFAULT_MAP_COLOR.toLowerCase() + '\';\n';
-                js += '});\n';
-                js += '}\n'; //end if
+                js += '\tvar dataField = \'' + coloringScheme.dataField.value + '\';\n';
+                js += '\tvar startColor = \'' + coloringScheme.startColor.value.toLowerCase() + '\';\n';
+                js += '\tvar endColor = \'' + coloringScheme.endColor.value.toLowerCase() + '\';\n';
+                js += '\tvar min = d3.min(data, function(d) { return +d[dataField]; });\n';
+                js += '\tvar max = d3.max(data, function(d) { return +d[dataField]; });\n';
+                js += '\tif(min === undefined || max === undefined){\n';
+                js += '\t\tpath.style("fill", function(d){\n';
+                js += '\t\t\treturn \'' + viewModel.DEFAULT_MAP_COLOR.toLowerCase() + '\';\n';
+                js += '\t\t});\n';
+                js += '\t}\n'; //end if
 
-                js += 'var gradient = d3.scale.linear().domain([min, max]).range([startColor, endColor]);\n';
-                js += 'path.style("fill", function(d) {\n';
-                js += 'var stateName = d.properties.name;\n';
-                js += 'var keyName = \'' + coloringScheme.keyField.value + '\';\n';
-                js += 'for(var i=0; i<data.length; i++){\n';
-                js += 'if(data[i][keyName] === stateName){\n';
-                js += 'return gradient(data[i][dataField]);\n';
-                js += '}\n';
+                js += '\tvar gradient = d3.scale.linear().domain([min, max]).range([startColor, endColor]);\n';
+                js += '\tpath.style("fill", function(d) {\n';
+                js += '\t\tvar stateName = d.properties.name;\n';
+                js += '\t\tvar keyName = \'' + coloringScheme.keyField.value + '\';\n';
+                js += '\t\tfor(var i=0; i<data.length; i++){\n';
+                js += '\t\t\tif(data[i][keyName] === stateName){\n';
+                js += '\t\t\t\treturn gradient(data[i][dataField]);\n';
+                js += '\t\t\t}\n';
 
-                js += 'if(i === data.length-1){\n';
-                js += 'return \'' + viewModel.DEFAULT_MAP_COLOR + '\';\n';
-                js += '}\n';
-                js += '}\n'; //end for
-                js += '});\n'; //end path.style function
+                js += '\t\tif(i === data.length-1){\n';
+                js += '\t\t\treturn \'' + viewModel.DEFAULT_MAP_COLOR + '\';\n';
+                js += '\t\t}\n';
+                js += '\t\t}\n'; //end for
+                js += '\t});\n'; //end path.style function
                 js += '});\n'; //end d3.csv
                 break;
             default:
@@ -155,43 +155,61 @@ define([
         var h2 = h * vm.width.value/100;
         var scale = w*1.3*vm.width.value/100;
 
-        //TODO trigger stuff
-
         js += 'function addStateDataToTrigger(d){\n';
-        js += '//todo\n';
+        js += '\tvar name = d.properties.name;\n';
+        js += '\tvar abbrev = d.properties.abbreviation;\n';
+        // TODO: viewModel does not exist here. We need a way to store data on each exported widget/trigger.
+//        js += '\tviewModel._trigger.addData(\'state\', name);\n';
+//        js += '\tviewModel._trigger.addData(\'stateAbbreviation\', abbrev);\n';
+//        js += '\t// Iterate through each bound DataSet and add data values to the trigger\n';
+//        js += '\t// only for the state matching the specified name.\n';
+//        js += '\tfor (var i = 0; i < viewModel._boundData.length; i++) {\n';
+//        js += '\t\t    var data = viewModel._boundData[i].data;\n';
+//        js += '\t\t    for (var j = 0; j < data.length; j++) {\n';
+//        js += '\t\t\t        for (var key in data[j]) {\n';
+//        js += '\t\t\t\t            var lowerVal = data[j][key].toLowerCase();\n';
+//        js += '\t\t\t\t            if (lowerVal === name.toLowerCase() || lowerVal === abbrev.toLowerCase()) {\n';
+//        js += '\t\t\t\t\t                for (var k in data[j]) {\n';
+//        js += '\t\t\t\t\t\t                    viewModel._trigger.addData(viewModel._boundData[i].name, k, data[j][k]);\n';
+//        js += '\t\t\t\t\t                 }\n';
+//        js += '\t\t\t\t\t               break;\n';
+//        js += '\t\t\t\t            }\n';
+//        js += '\t\t\t        }\n';
+//        js += '\t\t    }\n';
+//        js += '\t}\n';
         js += '}\n\n';
         js += 'var scale = ' + w + '*1.3*' + vm.width.value/100 + '; //1.3 is a magic number\n';
         js += 'var projection = d3.geo.albersUsa().scale(scale).translate(([' + w2 + '/2, ' + h2 + '/2]));\n';
         js += 'var path = d3.geo.path().projection(projection);\n';
         js += getColoringJs(vm);
         js += 'var svg = d3.select("#' + vm.name.value + '")\n';
-        js += '.append("svg")\n';
-        js += '.attr("height", ' +  h2 + ')\n';
-        js += '.attr("width", '  + w2 + ');\n';
+        js += '\t.append("svg")\n';
+        js += '\t.attr("height", ' +  h2 + ')\n';
+        js += '\t.attr("width", '  + w2 + ');\n';
         js += 'var states = svg.append("g");\n';
         js += 'd3.json(\'./data/states.json\', function(json) {\n';
-        js += 'states.selectAll("path")\n';
-        js += '.data(json.features)\n';
-        js += '.enter()\n';
-        js += '.append("path")\n';
-        js += '.attr("d", path)\n';
-        js += '.attr("stroke", "white")\n';
-        js += '.style("fill", function(d) {\n';
-        js += 'return "' + vm.coloring.value.getType() + '";\n';
-        js += '})\n';
-        js += '.on("mouseover", function(d) {\n';
-        js += 'addStateDataToTrigger(d);\n';
-        js += '})\n';
-        js += '.on("mousemove", function(d) {\n';
-        js += 'addStateDataToTrigger(d);\n';
-        js += '})\n';
-        js += '.on("mouseout", function(d) {\n';
-        js += 'addStateDataToTrigger(d);\n';
-        js += '})\n';
-        js += '.on("click", function(d) {\n';
-        js += 'addStateDataToTrigger(d);\n';
-        js += '});\n';
-        js += 'updateColoring(states);';
+        js += '\tstates.selectAll("path")\n';
+        js += '\t.data(json.features)\n';
+        js += '\t.enter()\n';
+        js += '\t.append("path")\n';
+        js += '\t.attr("d", path)\n';
+        js += '\t.attr("stroke", "white")\n';
+        js += '\t.style("fill", function(d) {\n';
+        js += '\t\treturn "' + vm.coloring.value.getType() + '";\n';
+        js += '\t})\n';
+        js += '\t.on("mouseover", function(d) {\n';
+        js += '\t\taddStateDataToTrigger(d);\n';
+        js += '\t})\n';
+        js += '\t.on("mousemove", function(d) {\n';
+        js += '\t\taddStateDataToTrigger(d);\n';
+        js += '\t})\n';
+        js += '\t.on("mouseout", function(d) {\n';
+        js += '\t\taddStateDataToTrigger(d);\n';
+        js += '\t})\n';
+        js += '\t.on("click", function(d) {\n';
+        js += '\t\taddStateDataToTrigger(d);\n';
+        js += '\t});\n';
+        js += '\tupdateColoring(states);';
         js += '});\n';
 
         return js;
