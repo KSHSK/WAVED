@@ -23,7 +23,10 @@ define([
         var stateColor = {
             displayName: 'Color',
             value: 'LightGrey',
-            onchange: state.onchange
+            onchange: state.onchange,
+            validValue: function(value) {
+                return defined(value) && (value.trim() !== '');
+            }
         };
         this.color = new StringProperty(stateColor);
 
@@ -38,6 +41,10 @@ define([
         return ColoringSchemeType.SOLID_COLORING;
     };
 
+    SolidColoringScheme.prototype.getDisplayText = function() {
+        return 'Solid coloring';
+    };
+
     Object.defineProperties(SolidColoringScheme.prototype, {
         properties: {
             get: function() {
@@ -45,6 +52,21 @@ define([
             }
         }
     });
+
+    SolidColoringScheme.prototype.getDisplayState = function() {
+        var displayState = {
+            color: this.color.getDisplayState(),
+            type: this.getType()
+        };
+
+        return displayState;
+    };
+
+    SolidColoringScheme.prototype.setDisplayState = function(state) {
+        if(defined(state.color) && state.color.value !== this.color.originalValue) {
+            this.color.displayValue = state.color.value;
+        }
+    };
 
     SolidColoringScheme.prototype.getState = function() {
         var state = {
@@ -57,7 +79,7 @@ define([
 
     SolidColoringScheme.prototype.setState = function(state) {
         if(defined(state.color)){
-            this.color._originalValue = state.color.value;
+            this.color.originalValue = state.color.value;
         }
     };
 

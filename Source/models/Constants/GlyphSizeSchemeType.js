@@ -2,8 +2,8 @@ define([], function(){
     'use strict';
 
     var GlyphSizeSchemeType = {
-        CONSTANT_SIZE: 'Constant glyph size',
-        SCALED_SIZE: 'Scaled glyph size'
+        CONSTANT_SIZE: 'ConstantGlyphSizeScheme',
+        SCALED_SIZE: 'ScaledGlyphSizeScheme'
     };
 
     return GlyphSizeSchemeType;

@@ -3,15 +3,15 @@
  */
 define([
         'jquery',
-        './ReadData',
+        'modules/DisplayMessage',
+        'modules/ReadData',
         'models/Constants/MessageType',
-        'util/displayMessage',
         'knockout'
     ], function(
         $,
+        DisplayMessage,
         ReadData,
         MessageType,
-        displayMessage,
         ko) {
     'use strict';
 
@@ -78,13 +78,12 @@ define([
                 success: function(dataString) {
                     var data = JSON.parse(dataString);
                     if (data.success) {
-                        displayMessage('The project was successfully saved', MessageType.SUCCESS);
+                        DisplayMessage.show('The project was successfully saved', MessageType.SUCCESS);
                         projectSaved.resolve();
                         viewModel.setSaveIndex();
                     }
                     else {
-                        // Display error to user.
-                        displayMessage(data.errorMessage, MessageType.ERROR);
+                        DisplayMessage.show(data.errorMessage, MessageType.ERROR);
                     }
                 }
             });
@@ -114,13 +113,12 @@ define([
                         // Set the project name since the name has changed.
                         viewModel.currentProject.name = data.projectName;
 
-                        displayMessage('The project was successfully saved', MessageType.SUCCESS);
+                        DisplayMessage.show('The project was successfully saved', MessageType.SUCCESS);
                         projectSaved.resolve();
                         viewModel.setSaveIndex();
                     }
                     else {
-                        // Display error to user.
-                        displayMessage(data.errorMessage, MessageType.ERROR);
+                        DisplayMessage.show(data.errorMessage, MessageType.ERROR);
                     }
                 }
             });

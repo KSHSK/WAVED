@@ -4,14 +4,14 @@ define([
         'knockout',
         'util/defined',
         'util/defaultValue',
-        'util/displayMessage',
-        'models/Constants/MessageType',
         'util/updateQueryByName',
         'util/subscribeObservable',
+        'models/Constants/MessageType',
         'models/ComponentViewModel',
         'models/Action/Action',
         'models/Action/PropertyAction',
         'models/Action/QueryAction',
+        'modules/DisplayMessage',
         'models/Event/Event',
         'models/WorkspaceViewModel',
         'models/GoogleAnalytics',
@@ -26,14 +26,14 @@ define([
         ko,
         defined,
         defaultValue,
-        displayMessage,
-        MessageType,
         updateQueryByName,
         subscribeObservable,
+        MessageType,
         ComponentViewModel,
         Action,
         PropertyAction,
         QueryAction,
+        DisplayMessage,
         Event,
         WorkspaceViewModel,
         GoogleAnalytics,
@@ -552,7 +552,7 @@ define([
 
         var response = DependencyChecker.allowedToDeleteWidget(widget, self);
         if (!response.allowed) {
-            displayMessage(response.message, MessageType.WARNING);
+            DisplayMessage.show(response.message, MessageType.WARNING);
             return false;
         }
 
@@ -596,7 +596,7 @@ define([
 
         var response = DependencyChecker.allowedToDeleteDataSet(dataSet, self);
         if (!response.allowed) {
-            displayMessage(response.message, MessageType.WARNING);
+            DisplayMessage.show(response.message, MessageType.WARNING);
             return;
         }
 
@@ -629,7 +629,7 @@ define([
 
         var response = DependencyChecker.allowedToDeleteAction(action, self);
         if (!response.allowed) {
-            displayMessage(response.message, MessageType.WARNING);
+            DisplayMessage.show(response.message, MessageType.WARNING);
             return;
         }
 
@@ -683,6 +683,17 @@ define([
         for (var i = 0; i < this._widgets.length; i++) {
             var properties = this._widgets[i].viewModel.properties;
             for (var j = 0; j < properties.length; j++) {
+                // Reset all nested values if present
+                if(defined(properties[j].getSubscribableNestedProperties())) {
+                    var nestedProps = properties[j].getSubscribableNestedProperties();
+
+                    for(var nestedIndex in nestedProps) {
+                        nestedProps[nestedIndex].properties.forEach(function(prop) {
+                            prop.value = prop.originalValue;
+                        });
+                    }
+                }
+
                 var displayValue = properties[j].displayValue;
                 properties[j].value = properties[j].originalValue;
                 properties[j].displayValue = displayValue;

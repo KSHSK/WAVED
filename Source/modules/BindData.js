@@ -4,23 +4,23 @@
 define([
         'jquery',
         'WAVEDViewModel',
-        './HistoryMonitor',
-        './DependencyChecker',
+        'modules/DisplayMessage',
+        'modules/HistoryMonitor',
+        'modules/DependencyChecker',
+        'models/Constants/MessageType',
         'models/Widget/WidgetViewModel',
         'models/Data/DataSet',
-        'util/defined',
-        'models/Constants/MessageType',
-        'util/displayMessage'
+        'util/defined'
     ], function(
         $,
         WAVEDViewModel,
+        DisplayMessage,
         HistoryMonitor,
         DependencyChecker,
+        MessageType,
         WidgetViewModel,
         DataSet,
-        defined,
-        MessageType,
-        displayMessage) {
+        defined) {
     'use strict';
 
     var BindData = {
@@ -48,7 +48,7 @@ define([
                         var checked = $('.bind-data-selections:checked');
 
                         if (checked.length === 0) {
-                            displayMessage('Select data to bind or click Cancel.', MessageType.INFO);
+                            DisplayMessage.show('Select data to bind or click Cancel.', MessageType.INFO);
                             return;
                         }
 
@@ -112,9 +112,9 @@ define([
                 if (defined(dataSet)) {
                     var widget = viewModel.selectedComponent.viewModel;
 
-                    var response = DependencyChecker.allowedToUnbindDataSet(dataSet, widget);
+                    var response = DependencyChecker.allowedToUnbindDataSet(dataSet, widget, viewModel.currentProject);
                     if (!response.allowed) {
-                        displayMessage(response.message, MessageType.WARNING);
+                        DisplayMessage.show(response.message, MessageType.WARNING);
                         return;
                     }
 

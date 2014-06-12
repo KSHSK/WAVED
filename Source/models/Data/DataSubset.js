@@ -73,6 +73,14 @@ define([
                 '\tdataSets[\'' + this.name + '\'].dataIsLoaded.resolve();\n' +
                 '});\n\n';
     };
+    
+    DataSubset.prototype.getDisplayState = function() {
+        var displayState = DataSet.prototype.getDisplayState.call(this);
+
+        displayState.type = DataSubset.getType();
+
+        return displayState;
+    };
 
     DataSubset.prototype.reset = function() {
         this.query.reset();

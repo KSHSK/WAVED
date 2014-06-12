@@ -1,33 +1,34 @@
 define([
         'jquery',
         'd3',
+        'models/Constants/MessageType',
         'models/Property/StringProperty',
         'models/Property/NumberProperty',
         'models/Property/BooleanProperty',
         'models/Property/ButtonProperty',
         'models/ComponentViewModel',
         'models/Event/Trigger',
+        'modules/DisplayMessage',
         'modules/HistoryMonitor',
         'util/defined',
         'util/defaultValue',
-        'util/createValidator',
-        'models/Constants/MessageType',
-        'util/displayMessage'
+        'util/createValidator'
     ], function(
         $,
         d3,
+        MessageType,
         StringProperty,
         NumberProperty,
         BooleanProperty,
         ButtonProperty,
         ComponentViewModel,
         Trigger,
+        DisplayMessage,
         HistoryMonitor,
         defined,
         defaultValue,
-        createValidator,
-        MessageType,
-        displayMessage) {
+        createValidator
+        ) {
     'use strict';
 
     var WidgetViewModel = function(state, getDataSet) {
@@ -175,7 +176,7 @@ define([
         var self = this;
 
         if (this.boundDataIndex(dataSet) > -1) {
-            displayMessage('DataSet "' + dataSet.name + '" is already bound.', MessageType.INFO);
+            DisplayMessage.show('DataSet "' + dataSet.name + '" is already bound.', MessageType.INFO);
             return;
         }
 

@@ -195,6 +195,15 @@ define([
         js += '});\n';
 
         return js;
+
+    /**
+     * Returns trigger data supplied to actions when this widget triggers an event.
+     */
+    USMap.actionTriggerInfo = function() {
+        return {
+            'state': 'The name of the state that was clicked.',
+            'stateAbbreviation': 'The abbreviation of the state that was clicked.'
+        };
     };
 
     return USMap;

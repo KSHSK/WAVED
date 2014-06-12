@@ -6,6 +6,7 @@
   "es3": true,
   "immed": true,
   "latedef": true,
+  "loopfunc": true,
   "newcap": true,
   "noarg": true,
   "nonew": true,
