@@ -195,6 +195,7 @@ define([
         js += '});\n';
 
         return js;
+    };
 
     /**
      * Returns trigger data supplied to actions when this widget triggers an event.
