@@ -15,7 +15,7 @@ define([
          * @param widget The widget to be deleted.
          * @param project The current project.
          */
-        allowedToDeleteWidget: function(widget, project) {
+        allowedToDeleteComponent: function(component, project) {
             var i;
             var message = '';
 
@@ -24,8 +24,8 @@ define([
             for (i = 0; i < propertyActions.length; i++) {
                 var action = propertyActions[i];
 
-                if (action.target === widget.viewModel) {
-                    message = 'Cannot delete this widget since it is used by action "' + action.name + '"';
+                if (action.target === component.viewModel) {
+                    message = 'Cannot delete "' + component.viewModel.name.value  + '" since it is used by action "' + action.name + '"';
                     return {
                         allowed: false,
                         message: message
@@ -37,8 +37,8 @@ define([
             for (i = 0; i < project.events.length; i++) {
                 var event = project.events[i];
 
-                if (event.triggeringWidget === widget) {
-                    message = 'Cannot delete this widget since it is used by event "' + event.name + '"';
+                if (event.triggeringWidget === component) {
+                    message = 'Cannot delete "' + component.viewModel.name.value + '" since it is used by event "' + event.name + '"';
                     return {
                         allowed: false,
                         message: message
