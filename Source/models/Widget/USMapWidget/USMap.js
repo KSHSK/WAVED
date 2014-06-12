@@ -83,11 +83,11 @@ define([
         // Every time a color is used here, it should be converted toLowerCase() to be consistent across the board
         switch(coloringScheme.getType()){
             case ColoringSchemeType.SOLID_COLORING:
-                js += 'path.style("fill", function(d) {\n';
-                js += '\treturn "';
+                js += '\tpath.style("fill", function(d) {\n';
+                js += '\t\treturn "';
                 js += defined(coloringScheme.color.value) ? coloringScheme.color.value.toLowerCase() : viewModel.DEFAULT_MAP_COLOR.toLowerCase();
                 js += '";\n';
-                js += '});\n';
+                js += '\t});\n';
                 break;
             case ColoringSchemeType.FOUR_COLORING:
                 js += 'var fourColorStateGroupings = [\n';
@@ -209,7 +209,7 @@ define([
         js += '\t.on("click", function(d) {\n';
         js += '\t\taddStateDataToTrigger(d);\n';
         js += '\t});\n';
-        js += '\tupdateColoring(states);';
+        js += '\tupdateColoring(states);\n';
         js += '});\n';
 
         return js;
