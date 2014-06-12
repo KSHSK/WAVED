@@ -67,6 +67,10 @@ define([
                 else {
                     self.zDecrement.enableButton();
                 }
+            },
+            css: {
+                attribute: 'z-index',
+                units: ''
             }
         });
 
