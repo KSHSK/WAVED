@@ -204,7 +204,8 @@ define([
             var errorType = (type === ValueType.DISPLAY_VALUE ? 'displayError' : 'error');
             var property = this.properties[i];
 
-            error = property[errorType] || (errorType === 'displayError' ? !property.isValidDisplayValue(property.displayValue) : !property.isValidValue(property.displayValue));
+            error = property[errorType] ||
+                (errorType === 'displayError' ? !property.isValidDisplayValue(property.displayValue) : !property.isValidValue(property.displayValue));
 
             // Search for nested property errors
             if (defined(property.getSubscribableNestedProperties())) {
