@@ -188,7 +188,7 @@ define([
                 }
 
                 coloringScheme.dataSet.value.executeWhenDataLoaded(function() {
-                 // Find the min and max values for the dataField we're using to scale the gradient
+                    // Find the min and max values for the dataField we're using to scale the gradient
                     var dataField = coloringScheme.dataField.value;
                     var min = d3.min(coloringScheme.dataSet.value.data, function(d) { return +d[dataField]; });
                     var max = d3.max(coloringScheme.dataSet.value.data, function(d) { return +d[dataField]; });
@@ -213,7 +213,8 @@ define([
                         }
 
                         for(var i=0; i<coloringScheme.dataSet.value.data.length; i++){
-                            var currentValue = coloringScheme.dataSet.value.data[i][keyName].toLowerCase();
+                            var currentValue = coloringScheme.dataSet.value.data[i][keyName] || '';
+                            currentValue = currentValue.toLowerCase();
                             if(currentValue === stateName || currentValue === stateAbbrev){
                                 return gradient(coloringScheme.dataSet.value.data[i][dataField]);
                             }
