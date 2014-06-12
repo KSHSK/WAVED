@@ -24,7 +24,7 @@ define([
             for (i = 0; i < propertyActions.length; i++) {
                 var action = propertyActions[i];
 
-                if (action.target === widget) {
+                if (action.target === widget.viewModel) {
                     message = 'Cannot delete this widget since it is used by action "' + action.name + '"';
                     return {
                         allowed: false,
