@@ -180,22 +180,21 @@ define([
         exportProject: function(projectExported, viewModel) {
             var self = this;
             var projectName = viewModel.currentProject.name;
+
             var filenames = {};
-            for (var i = 0; i < viewModel.currentProject.widgets.length; i++) {
+            for (var i = 0; i < viewModel.currentProject.dataSets.length; i++) {
+                var dataSet = viewModel.currentProject.dataSets[i];
+                var fileName = dataSet.filename;
+                filenames[fileName] = true;
+            }
+
+            for (i = 0; i < viewModel.currentProject.widgets.length; i++) {
                 var widget = viewModel.currentProject.widgets[i];
                 if (widget instanceof USMap) {
                     filenames['states.json'] = true;
                 }
-
-                for (var j = 0; j < widget.viewModel.boundData.length; j++) {
-                    var dataSet = widget.viewModel.boundData[j];
-                    var fileName = dataSet.filename;
-                    if (defined(dataSet.parent)) {
-                        fileName = dataSet.parent.filename;
-                    }
-                    filenames[fileName] = true;
-                }
             }
+
             var dataFiles = Object.keys(filenames);
             var html = self.generateHtml(viewModel);
             var css = self.generateCss(viewModel);
