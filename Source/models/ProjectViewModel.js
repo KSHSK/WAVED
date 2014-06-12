@@ -572,7 +572,7 @@ define([
     ProjectViewModel.prototype.removeWidget = function(widget) {
         var self = this;
 
-        var response = DependencyChecker.allowedToDeleteWidget(widget, self);
+        var response = DependencyChecker.allowedToDeleteComponent(widget, self);
         if (!response.allowed) {
             DisplayMessage.show(response.message, MessageType.WARNING);
             return false;
