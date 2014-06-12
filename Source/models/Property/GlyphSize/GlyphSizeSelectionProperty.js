@@ -171,7 +171,7 @@ define([
             this.scaledGlyphSize.setState(state.value, viewModel);
             this.originalValue = this.scaledGlyphSize;
         } else {
-            this.constantGlyphSize.size.value = state.value.size.value;
+            this.constantGlyphSize.setState(state.value);
             this.originalValue = this.constantGlyphSize;
         }
     };
