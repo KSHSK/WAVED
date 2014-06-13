@@ -93,9 +93,7 @@ define([
                 var items = [];
                 this.widgets.forEach(function(widget) {
                     items.push(widget.viewModel);
-
-                    // SubTargets is an array, must concat and not just push
-                    items = items.concat(widget.viewModel.subTargets);
+                    items.push.apply(widget.viewModel.subTargets);
                 });
                 return items;
             }
