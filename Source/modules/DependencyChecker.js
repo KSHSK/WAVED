@@ -167,11 +167,17 @@ define([
             // Check if dataSet is in use by a PropertyAction
             var usedByPropertyAction = false;
             var propertyActions = this.project.propertyActions;
-            var usedByPropertyActionMessage = 'Cannot unbind data that is used by an action affecting this widget';
 
             for (var i = 0; i < propertyActions.length; i++) {
                 var propertyAction = propertyActions[i];
+
+                // Only check the property actions that affect the widget with the bound data
+                if (propertyAction.target !== widget) {
+                    continue;
+                }
+
                 var newValues = propertyAction.newValues;
+                var usedByPropertyActionMessage = 'Cannot unbind data "' + dataSet.name + '" because it is used by the action "' + propertyAction.name + '"';
 
                 // Iterate through top level properties
                 for (var key in newValues) {
