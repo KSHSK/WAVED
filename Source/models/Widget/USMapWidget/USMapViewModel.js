@@ -448,7 +448,7 @@ define([
 
                 if (index > -1) {
                     // removeGlyph will return true on success, false otherwise
-                    var removeSuccess = removeGlyph(options.value);
+                    var removeSuccess = removeGlyph(options, value);
 
                     if(removeSuccess) {
                         var historyMonitor = HistoryMonitor.getInstance();
@@ -558,7 +558,7 @@ define([
                 var allSubTargets = [];
 
                 // Push all subtargets to a single array and return it
-                allSubTargets.push.apply(this.glyphs);
+                allSubTargets.push.apply(allSubTargets, this.glyphs);
 
                 return allSubTargets;
             }
