@@ -50,6 +50,10 @@ define(['knockout',
         return subscribeObservable(container, observableName, function(newValue) {
             self.historyMonitor.addRedoChange(function() {
                 container[observableName] = newValue;
+
+                // Clear errors. We can only ever redo to valid values anyway
+                container.error = false;
+                container.message = '';
             });
         });
     };
