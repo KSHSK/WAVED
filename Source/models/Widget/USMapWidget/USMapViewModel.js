@@ -555,15 +555,8 @@ define([
             get: function() {
                 var allSubTargets = [];
 
-                // Must separate out all subtargets and put them in a 1-dimensional array (flatten everything)
-                var glyphSubTargets = [];
-                for (var i=0; i < this.glyphs.length; i++) {
-                    glyphSubTargets.push(this.glyphs[i]);
-                }
-
-                allSubTargets = allSubTargets.concat(glyphSubTargets);
-
-                // Note: If the subtarget is not an array, just use push() to append it to allSubTargets
+                // Push all subtargets to a single array and return it
+                allSubTargets.push.apply(this.glyphs);
 
                 return allSubTargets;
             }
