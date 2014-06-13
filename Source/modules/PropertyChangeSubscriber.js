@@ -33,6 +33,10 @@ define(['knockout',
         return subscribeObservable(container, observableName, function(oldValue) {
             self.historyMonitor.addUndoChange(function() {
                 container[observableName] = oldValue;
+
+                // Clear errors. We can only ever undo to valid values anyway
+                container.error = false;
+                container.message = '';
             });
         }, null, 'beforeChange');
     };
