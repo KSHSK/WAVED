@@ -448,7 +448,9 @@ define([
 
                 if (index > -1) {
                     // removeGlyph will return true on success, false otherwise
-                    if(removeGlyph(options, value)) {
+                    var removeSuccess = removeGlyph(options.value);
+
+                    if(removeSuccess) {
                         var historyMonitor = HistoryMonitor.getInstance();
 
                         historyMonitor.addUndoChange(function() {
