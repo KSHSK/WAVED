@@ -21,7 +21,7 @@ define([
                 return;
             }
 
-            var response = DependencyChecker.allowedToDeleteDataSet(dataSet, viewModel.currentProject);
+            var response = DependencyChecker.allowedToDeleteDataSet(dataSet);
             if (!response.allowed) {
                 DisplayMessage.show(response.message, MessageType.WARNING);
                 return;

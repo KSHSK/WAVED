@@ -307,6 +307,11 @@ define([
     };
 
     Object.defineProperties(GlyphViewModel.prototype, {
+        viewModel: {
+            get: function() {
+                return this;
+            }
+        },
         properties: {
             get: function() {
                 return [this.name, this.color, this.opacity, this.dataSet, this.latitude, this.longitude, this.size, this.visible,

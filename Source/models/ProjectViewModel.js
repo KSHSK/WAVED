@@ -65,6 +65,8 @@ define([
         ko.track(this);
 
         this.subscribeNameChange();
+
+        DependencyChecker.project = this;
     };
 
     Object.defineProperties(ProjectViewModel.prototype, {
@@ -91,9 +93,10 @@ define([
                 var items = [];
                 this.widgets.forEach(function(widget) {
                     items.push(widget.viewModel);
-                    items.push.apply(items, widget.viewModel.subTargets);
-                });
 
+                    // SubTargets is an array, must concat and not just push
+                    items = items.concat(widget.viewModel.subTargets);
+                });
                 return items;
             }
         },
@@ -572,7 +575,7 @@ define([
     ProjectViewModel.prototype.removeWidget = function(widget) {
         var self = this;
 
-        var response = DependencyChecker.allowedToDeleteComponent(widget, self);
+        var response = DependencyChecker.allowedToDeleteComponent(widget);
         if (!response.allowed) {
             DisplayMessage.show(response.message, MessageType.WARNING);
             return false;
@@ -616,7 +619,7 @@ define([
     ProjectViewModel.prototype.removeDataSet = function(dataSet) {
         var self = this;
 
-        var response = DependencyChecker.allowedToDeleteDataSet(dataSet, self);
+        var response = DependencyChecker.allowedToDeleteDataSet(dataSet);
         if (!response.allowed) {
             DisplayMessage.show(response.message, MessageType.WARNING);
             return;
@@ -649,7 +652,7 @@ define([
     ProjectViewModel.prototype.removeAction = function(action) {
         var self = this;
 
-        var response = DependencyChecker.allowedToDeleteAction(action, self);
+        var response = DependencyChecker.allowedToDeleteAction(action);
         if (!response.allowed) {
             DisplayMessage.show(response.message, MessageType.WARNING);
             return;
