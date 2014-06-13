@@ -10,32 +10,47 @@ define([
     'use strict';
 
     var DependencyChecker = {
+
+        project: undefined,
+
         /**
          * Returns true if the widget is not in use; otherwise, returns false.
          * @param widget The widget to be deleted.
-         * @param project The current project.
          */
-        allowedToDeleteComponent: function(component, project) {
+        allowedToDeleteComponent: function(component) {
             var i;
             var message = '';
+            var subTargets = component.viewModel.subTargets;
 
             // Check PropertyActions.
-            var propertyActions = project.propertyActions;
+            var propertyActions = this.project.propertyActions;
             for (i = 0; i < propertyActions.length; i++) {
                 var action = propertyActions[i];
 
                 if (action.target === component.viewModel) {
-                    message = 'Cannot delete "' + component.viewModel.name.value  + '" since it is used by action "' + action.name + '"';
                     return {
                         allowed: false,
-                        message: message
+                        message: 'Cannot delete "' + component.viewModel.name.value  + '" since it is used by action "' + action.name + '"'
                     };
+                }
+
+                if (defined(subTargets) && subTargets.length > 0) {
+                    for(var j = 0; j < subTargets.length; j++) {
+                        var subTarget = subTargets[j];
+
+                        if(action.target === subTarget) {
+                            return {
+                                allowed: false,
+                                message: 'Cannot delete "' + component.viewModel.name.value + '" because "' + subTarget.viewModel.name.value + '" is used by action "' + action.name + '"'
+                            };
+                        }
+                    }
                 }
             }
 
             // Check Events.
-            for (i = 0; i < project.events.length; i++) {
-                var event = project.events[i];
+            for (i = 0; i < this.project.events.length; i++) {
+                var event = this.project.events[i];
 
                 if (event.triggeringWidget === component) {
                     message = 'Cannot delete "' + component.viewModel.name.value + '" since it is used by event "' + event.name + '"';
@@ -43,6 +58,19 @@ define([
                         allowed: false,
                         message: message
                     };
+                }
+
+                if (defined(subTargets) && subTargets.length > 0) {
+                    for (var k = 0; k < subTargets.length; k++) {
+                        var eventSubTarget = subTargets[k];
+
+                        if (event.triggeringWidget === eventSubTarget) {
+                            return {
+                                allowed: false,
+                                message: 'Cannot delete "' + component.viewModel.name.value + '" because "' + eventSubTarget.viewModel.name.value + '" is used by event "' + event.name + '"'
+                            };
+                        }
+                    }
                 }
             }
 
@@ -55,11 +83,10 @@ define([
         /**
          * Returns true if the action is not in use; otherwise, returns false.
          * @param action The action to be deleted.
-         * @param project The current project.
          */
-        allowedToDeleteAction: function(action, project) {
-            for (var i = 0; i < project.events.length; i++) {
-                var event = project.events[i];
+        allowedToDeleteAction: function(action) {
+            for (var i = 0; i < this.project.events.length; i++) {
+                var event = this.project.events[i];
 
                 for (var j = 0; j < event.actions.length; j++) {
                     var actionToCheck = event.actions[j];
@@ -82,10 +109,9 @@ define([
 
         /**
          * Returns true if the dataSet is not bound to a widget; otherwise, returns false.
-         * @param project The current project.
          * @param dataSet The dataSet to be deleted.
          */
-        allowedToDeleteDataSet: function(dataSet, project) {
+        allowedToDeleteDataSet: function(dataSet) {
             // Check reference count
             if (dataSet.referenceCount > 0) {
                 return {
@@ -95,7 +121,7 @@ define([
             }
 
             // Check if dataSet has a DataSubset created from it.
-            var subsets = project.dataSubsets;
+            var subsets = this.project.dataSubsets;
             for (var i = 0; i < subsets.length; i++) {
                 var subset = subsets[i];
                 if (subset.parent === dataSet) {
@@ -107,7 +133,7 @@ define([
             }
 
             // Check if dataSet is in use by a QueryAction
-            var queryActions = project.queryActions;
+            var queryActions = this.project.queryActions;
             for (i = 0; i < queryActions.length; i++) {
                 var queryAction = queryActions[i];
                 if (queryAction.dataSubset === dataSet) {
@@ -126,11 +152,10 @@ define([
 
         /**
          * Returns true if the dataSet is not used by the widget; otherwise, returns false.
-         * @param project The current project.
          * @param dataSet The dataSet to be unbound.
          * @param widget The widget that dataSet is bound to.
          */
-        allowedToUnbindDataSet: function(dataSet, widget, project) {
+        allowedToUnbindDataSet: function(dataSet, widget) {
             // Check if dataSet is in use by a Widget
             if (widget.usesDataSet(dataSet)) {
                 return {
@@ -141,7 +166,7 @@ define([
 
             // Check if dataSet is in use by a PropertyAction
             var usedByPropertyAction = false;
-            var propertyActions = project.propertyActions;
+            var propertyActions = this.project.propertyActions;
             var usedByPropertyActionMessage = 'Cannot unbind data that is used by an action affecting this widget';
 
             for (var i = 0; i < propertyActions.length; i++) {

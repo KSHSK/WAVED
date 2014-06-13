@@ -13,6 +13,7 @@ define([
         'models/Property/ListProperty',
         'models/Widget/WidgetViewModel',
         'modules/DisplayMessage',
+        'modules/DependencyChecker',
         'modules/GlyphHelper',
         'modules/HistoryMonitor',
         'modules/ReadData',
@@ -38,6 +39,7 @@ define([
         ListProperty,
         WidgetViewModel,
         DisplayMessage,
+        DependencyChecker,
         GlyphHelper,
         HistoryMonitor,
         ReadData,
@@ -233,9 +235,18 @@ define([
     }
 
     function removeGlyph(options, glyph) {
-        glyph.remove();
-        UniqueTracker.removeItem(ComponentViewModel.getUniqueNameNamespace(), glyph);
-        options.splice(options.indexOf(glyph), 1);
+        var response = DependencyChecker.allowedToDeleteComponent(glyph);
+
+        if (response.allowed) {
+            glyph.remove();
+            UniqueTracker.removeItem(ComponentViewModel.getUniqueNameNamespace(), glyph);
+            options.splice(options.indexOf(glyph), 1);
+            return true;
+        }
+
+        DisplayMessage.show(response.message, MessageType.WARNING);
+
+        return false;
     }
 
     function addGlyph(options, glyph, index) {
@@ -259,7 +270,6 @@ define([
     function addSuccess(options, glyph) {
         options.push(glyph);
         //set lat lon first for validation reasons
-        //TODO: look into why subscription isn't working for array property
         glyph.latitude.originalValue = glyph.latitude.displayValue;
         glyph.latitude.value = glyph.latitude.displayValue;
         glyph.longitude.originalValue = glyph.longitude.displayValue;
@@ -435,18 +445,21 @@ define([
                 var options = this.options;
                 var value = this.value;
                 var index = options.indexOf(value);
+
                 if (index > -1) {
-                    removeGlyph(options, value);
-                    var historyMonitor = HistoryMonitor.getInstance();
+                    // removeGlyph will return true on success, false otherwise
+                    if(removeGlyph(options, value)) {
+                        var historyMonitor = HistoryMonitor.getInstance();
 
-                    historyMonitor.addUndoChange(function() {
-                        addGlyph(options, value, index);
-                    });
+                        historyMonitor.addUndoChange(function() {
+                            addGlyph(options, value, index);
+                        });
 
-                    historyMonitor.addRedoChange(function() {
-                        removeGlyph(options, value);
-                    });
-                    this._value = undefined;
+                        historyMonitor.addRedoChange(function() {
+                            removeGlyph(options, value);
+                        });
+                        this._value = undefined;
+                    }
                 }
             }
         });
@@ -540,7 +553,19 @@ define([
         },
         subTargets: {
             get: function() {
-                return this.glyphs;
+                var allSubTargets = [];
+
+                // Must separate out all subtargets and put them in a 1-dimensional array (flatten everything)
+                var glyphSubTargets = [];
+                for (var i=0; i < this.glyphs.length; i++) {
+                    glyphSubTargets.push(this.glyphs[i]);
+                }
+
+                allSubTargets = allSubTargets.concat(glyphSubTargets);
+
+                // Note: If the subtarget is not an array, just use push() to append it to allSubTargets
+
+                return allSubTargets;
             }
         }
     });
