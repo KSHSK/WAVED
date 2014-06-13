@@ -3,6 +3,7 @@ define([
         'models/Constants/WidgetTemplateName',
         'models/Event/Trigger',
         'models/Constants/ColoringSchemeType',
+        'models/Constants/GlyphSizeSchemeType',
         '../Widget',
         'util/defined',
         'knockout',
@@ -12,6 +13,7 @@ define([
         WidgetTemplateName,
         Trigger,
         ColoringSchemeType,
+        GlyphSizeSchemeType,
         Widget,
         defined,
         ko,
@@ -68,6 +70,56 @@ define([
         return '<div id="' + this.viewModel.name.value + '"></div>';
     };
 
+
+    function getGlyphJs(name, glyph) {
+        var js = '';
+        var w = $('#waved-workspace').width() * glyph.parent.width.value/100;
+        var h = $('#waved-workspace').height() * glyph.parent.width.value/100;
+        js += 'var svg = d3.select("#' + name + '")\n';
+        js += '.append("svg")';
+        js += '.attr("height", ' + h + ')';
+        js += '.attr("width",' +  w + ')';
+        js += '.attr("class", "widget-container")';
+        js += '.style("top", "0")';
+        js += '.style("left", "0")';
+        js += '.attr("id",' +  glyph.id + ');';
+        js += 'var dom = svg.append("g");';
+        if (!glyph.visible.value) {
+            js += 'dom.attr("class", "hide");';
+        } else {
+            js += 'dom.attr("class", "show");';
+        }
+
+        js += 'var data = ' + glyph.dataSet.value.data; //TODO  something better with data. use d3.csv?
+        js += 'dom.selectAll("circle").data(data)';
+        js += '.enter().append("circle")';
+        js += '.attr("cx", function(d, i) {';
+        js += 'var coords = projection([d[' + glyph.longitude.value + '], d[' + glyph.latitude.value + ']]);';
+        js += 'if (coords !== null) {';
+        js += 'return coords[0];';
+        js += '}';
+        js += '})';
+        js += '.attr("cy", function(d, i) {';
+        js += 'var coords = projection([d[' + glyph.longitude.value + '], d[' + glyph.latitude.value + ']]);';
+        js += 'if (coords !== null) {';
+        js += 'return coords[1];';
+        js += '}';
+        js += '})';
+        js += '.attr("r", function(d, i) {';
+        if (glyph.size.value.getType() === GlyphSizeSchemeType.SCALED_SIZE) {
+            js += 'return radiusScale(d[' + glyph.size.value.dataField.value + ']);';
+        } else {
+            js += 'return ' + glyph.size.value.size.value*glyph.parent.width.value/100;
+        }
+        js += 'if (value !== null && value > 0 && !isNaN(value)) {';
+        js += 'return value;';
+        js += '}';
+        js += '})';
+        js += '.style("fill", ' +  glyph.color.value + ')';
+        js += '.style("opacity", ' + glyph.opacity.value/100 + ')';
+        js += '.style("z-index", ' + glyph.z.value + ');';
+        return js;
+    }
 
     function getColoringJs(viewModel) {
         var js = '';
@@ -211,6 +263,14 @@ define([
         js += '\t});\n';
         js += '\tupdateColoring(states);\n';
         js += '});\n';
+        js += '\n';
+        var glyphs = vm.glyphs;
+        if (glyphs.length > 0) {
+            for (var i = 0; i < glyphs.length; i++) {
+                js += getGlyphJs(vm.name.value, glyphs[i]);
+            }
+        }
+
 
         return js;
     };
