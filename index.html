@@ -487,6 +487,7 @@
         </div>
         <div>
             <label class="inline">Trigger: </label>
+            <!-- TODO: Once glyph triggers are hooked up, options need to change to currentProject.actionComponentOptions -->
             <select data-bind="options: currentProject.widgets,
                             optionsText: function(widget) {
                                 return widget.viewModel.name.value;
