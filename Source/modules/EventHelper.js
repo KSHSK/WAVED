@@ -156,6 +156,7 @@ define([
         },
         hasErrors: function(viewModel) {
             var error = false;
+            viewModel.eventEditorTriggeringWidgetError = false;
 
             // Check that the event name is valid.
             if (viewModel.selectedEventName.error) {
