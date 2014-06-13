@@ -104,6 +104,11 @@ define([
             get: function() {
                 return this._trigger;
             }
+        },
+        subTargets: {
+            get: function() {
+                return [];
+            }
         }
     });
 

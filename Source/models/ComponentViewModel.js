@@ -202,13 +202,17 @@ define([
             var error = false;
             var nestedError = false;
             var errorType = (type === ValueType.DISPLAY_VALUE ? 'displayError' : 'error');
+            var property = this.properties[i];
 
-            error = this.properties[i][errorType];
+            error = property[errorType] ||
+                (errorType === 'displayError' ? !property.isValidDisplayValue(property.displayValue) : !property.isValidValue(property.displayValue));
 
             // Search for nested property errors
-            if (defined(this.properties[i].getSubscribableNestedProperties())) {
-                for (var j = 0; j < this.properties[i].displayValue.properties.length; j++) {
-                    nestedError = this.properties[i].displayValue.properties[j][errorType];
+            if (defined(property.getSubscribableNestedProperties())) {
+                for (var j = 0; j < property.displayValue.properties.length; j++) {
+                    var nestedProperty = property.displayValue.properties[j];
+                    nestedError = nestedProperty[errorType] ||
+                        (errorType === 'displayError' ? !nestedProperty.isValidDisplayValue(nestedProperty.displayValue) : !nestedProperty.isValidValue(nestedProperty.displayValue));
                 }
             }
 
