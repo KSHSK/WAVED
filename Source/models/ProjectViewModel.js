@@ -93,8 +93,9 @@ define([
                 var items = [];
                 this.widgets.forEach(function(widget) {
                     items.push(widget.viewModel);
-                    items.push.apply(widget.viewModel.subTargets);
+                    items.push.apply(items, widget.viewModel.subTargets);
                 });
+
                 return items;
             }
         },
