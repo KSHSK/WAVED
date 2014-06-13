@@ -171,6 +171,12 @@ define([
 
             for (var i = 0; i < propertyActions.length; i++) {
                 var propertyAction = propertyActions[i];
+
+                // Only check the property actions that affect the widget with the bound data
+                if (propertyAction.target !== widget) {
+                    continue;
+                }
+
                 var newValues = propertyAction.newValues;
 
                 // Iterate through top level properties
