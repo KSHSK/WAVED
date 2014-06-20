@@ -33,7 +33,7 @@ define([
     };
 
     function cssToString(widget) {
-        var str = '#' + widget.viewModel.name.value + ' {\n';
+        var str = '#widget-' + widget.viewModel.name.value + ' {\n';
         var css = widget.getCss();
         for (var property in css) {
             str += '\t' + property + ': ' + css[property] + ';\n';

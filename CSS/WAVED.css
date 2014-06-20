@@ -22,6 +22,10 @@ textarea:disabled {
     background: #fff;
 }
 
+#export-file-link {
+	display: none;
+}
+
 /*** JQuery UI Overrides ***/
 .ui-widget {
     font-size: 14px;
