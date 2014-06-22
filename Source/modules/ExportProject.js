@@ -161,10 +161,27 @@ define([
 
             var htmlTemplate = '<html>\n' +
                              '<head>\n' +
-                             thirdPartyImports +
-                             '</head>\n' +
-                             '<body>\n' +
-                             '\t<div id="waved-container">\n';
+                             thirdPartyImports;
+
+            if (viewModel.currentProject.googleAnalytics.bound) {
+                htmlTemplate += '<script type="text/javascript">' + '\n' +
+                                '\t' + 'var _gaq=_gaq || [];' + '\n' +
+                                '\t' +'_gaq.push([\'_setAccount\',\'' + viewModel.currentProject.googleAnalytics.uaCode.originalValue +'\']);' + '\n' +
+                                '\t' +'_gaq.push([\'_trackPageview\']);' + '\n' +
+                                '\t' +'(function() {' + '\n' +
+                                '\t' + '\t' + 'var ga=document.createElement(\'script\');' + '\n' +
+                                '\t' + '\t' +'ga.type=\'text/javascript\';' + '\n' +
+                                '\t' + '\t' +'ga.async=true;' + '\n' +
+                                '\t' + '\t' + 'ga.src=(\'https:\'==document.location.protocol ? \'https://ssl\' :\'http://www\') + \'.google-analytics.com/ga.js\';' + '\n' +
+                                '\t' + '\t' + 'var s=document.getElementsByTagName(\'script\')[0];' + '\n' +
+                                '\t' + '\t' + 's.parentNode.insertBefore(ga,s);' + '\n' +
+                                '\t' + '})();' + '\n' +
+                                '</script>';
+            }
+
+            htmlTemplate += '</head>\n' +
+                            '<body>\n' +
+                            '\t<div id="waved-container">\n';
 
             for (var i = 0; i < viewModel.currentProject.widgets.length; i++) {
                 htmlTemplate += '\t\t' + viewModel.currentProject.widgets[i].exportHtml() + '\n';
