@@ -10,7 +10,7 @@ define([
         './UnsavedChanges',
         '../WAVEDViewModel',
         '../util/defined',
-        '../util/displayMessage',
+        '../modules/DisplayMessage',
         'jquery'
     ], function(
         EventType,
@@ -181,21 +181,20 @@ define([
             var self = this;
             var projectName = viewModel.currentProject.name;
 
-            var filenames = {};
+            var dataFiles = [];
             for (var i = 0; i < viewModel.currentProject.dataSets.length; i++) {
                 var dataSet = viewModel.currentProject.dataSets[i];
-                var fileName = dataSet.filename;
-                filenames[fileName] = true;
+                dataFiles.push(dataSet.filename);
             }
 
             for (i = 0; i < viewModel.currentProject.widgets.length; i++) {
                 var widget = viewModel.currentProject.widgets[i];
                 if (widget instanceof USMap) {
-                    filenames['states.json'] = true;
+                    dataFiles.push('states.json');
+                    break;
                 }
             }
 
-            var dataFiles = Object.keys(filenames);
             var html = self.generateHtml(viewModel);
             var css = self.generateCss(viewModel);
             var js = self.generateJs(viewModel);
