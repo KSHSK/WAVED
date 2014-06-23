@@ -215,7 +215,22 @@ define(['jquery',
         this.dataSubsetEditorConditions = [];
         this.dataSubsetEditorConditionCount = 0;
 
+        // Action Argument Help Dialog
+        this.actionHelpOptions = [];
+
         ko.track(this);
+
+        /*
+         * When the affected widget changes, reset the display properties.
+         * Necessary to deal with triggering an action affecting 1 widget, opening up the action editor (add/edit/whatever),
+         * switching to the affected widget, and seeing the properties that represent what's being shown in the workspace after the
+         * action was applied, not what original values like intended.
+         */
+        subscribeObservable(self, 'actionEditorAffectedWidget', function() {
+            ActionHelper.resetComponentDisplayProperties(self);
+        });
+
+        this.setupActionHelp();
 
         this.currentProject.subscribeChanges();
 
@@ -229,6 +244,48 @@ define(['jquery',
                 $('#redo-button').removeClass('ui-state-hover ui-state-focus');
             }
         });
+    };
+
+    // Setup action help dialog.
+    $('#action-argument-help-dialog').dialog({
+        modal: true,
+        autoOpen: false,
+        width: 500
+    });
+
+    WAVEDViewModel.prototype.openActionHelp = function() {
+        $('#action-argument-help-dialog').dialog('open');
+    };
+
+    WAVEDViewModel.prototype.setupActionHelp = function() {
+        // Bound data
+        this.actionHelpOptions.push({
+            name: 'Bound Data',
+            options: {
+                'datasetname.field': 'Where \'datasetname\' is the name of a DataSet and \'field\' is the name of a field from that DataSet.'
+            }
+        });
+
+        // x and y coordinates are included for all widget triggers.
+        this.actionHelpOptions.push({
+            name: 'All Widgets',
+            options: {
+                x: 'The x-coordinate of the triggering event.',
+                y: 'The y-coordinate of the triggering event.'
+            }
+        });
+
+        // Add Widget-specific arguments.
+        for (var i = 0; i < this.availableWidgets.length; i++) {
+            var widgetData = this.availableWidgets[i];
+            if (defined(widgetData.o.actionTriggerInfo)) {
+                var info = {};
+                this.actionHelpOptions.push({
+                    name: widgetData.name,
+                    options: widgetData.o.actionTriggerInfo()
+                });
+            }
+        }
     };
 
     WAVEDViewModel.prototype.reset = function(projectState) {

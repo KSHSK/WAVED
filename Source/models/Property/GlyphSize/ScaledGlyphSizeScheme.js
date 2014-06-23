@@ -4,26 +4,21 @@ define([
         'models/Property/GlyphSize/GlyphSizeScheme',
         'models/Constants/GlyphSizeSchemeType',
         'models/Property/ArrayProperty',
-        'models/Widget/WidgetViewModel',
-        'models/ProjectViewModel',
         'modules/HistoryMonitor',
         'util/defined',
         'util/defaultValue',
-        'util/subscribeObservable',
-        'WAVED'
+        'util/subscribeObservable'
     ],function(
         ko,
         $,
         GlyphSizeScheme,
         GlyphSizeSchemeType,
         ArrayProperty,
-        WidgetViewModel,
-        ProjectViewModel,
         HistoryMonitor,
         defined,
         defaultValue,
-        subscribeObservable,
-        WAVED){
+        subscribeObservable
+    ){
     'use strict';
 
     var ScaledGlyphSizeScheme = function(state, viewModel) {
@@ -52,6 +47,21 @@ define([
             options: [],
             getOptionText: function(value){
                 return value;
+            },
+            validDisplayValue: function(value) {
+                if (!defined(value)) {
+                    /*
+                     * Force the value to be undefined anyway. We trigger an error by returning false
+                     */
+                    this._displayValue = undefined;
+                    return false;
+                }
+
+                if (defined(this.options) && this.options.length > 0) {
+                    return (this.options.indexOf(value) !== -1);
+                }
+
+                return true;
             }
         };
         this.dataField = new ArrayProperty(dataFieldOptions);
@@ -124,7 +134,7 @@ define([
                     });
                 }
                 else{
-                    self.dataField.displayValue = undefined; // Reset the dataField selection
+                    self.dataField._displayValue = undefined; // Reset the dataField selection directly, avoid validation
                     self.dataField.options = [];
                 }
             };
@@ -140,7 +150,6 @@ define([
                     self.dataSet.orignalValue = undefined;
             }
         });
-
 
         self.dataSet.options = viewModel.boundData;
 

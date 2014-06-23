@@ -32,28 +32,15 @@ define([
     var ActionHelper = {
         actionDialog: $('#action-editor-dialog'),
 
-        resetActionEditor: function(viewModel) {
-            // Reset name.
-            viewModel.selectedActionName.reset();
-
-            // Select Property Action
-            viewModel.selectedActionType = ActionType.PROPERTY_ACTION;
-            $('#action-editor-selected-action-type').prop('disabled', false);
-
-            // Select first Widget
-            viewModel.actionEditorAffectedWidgetError = false;
-
-            // Unselect DataSet.
-            viewModel.actionEditorDataSet = undefined;
-
+        resetComponentDisplayProperties: function(viewModel) {
             // Only reset properties if there's a widget available
             if(defined(viewModel.actionEditorAffectedWidget)) {
-                var widget = viewModel.actionEditorAffectedWidget.viewModel;
+                var widget = viewModel.actionEditorAffectedWidget;
 
                 // All the properties
                 for (var index in widget.properties) {
                     if(!defined(widget.properties[index])) {
-                     // Clear any existing error flags
+                        // Clear any existing error flags
                         widget.properties[index].displayError = false;
                         widget.properties[index].dialogErrorMessage = '';
 
@@ -90,6 +77,25 @@ define([
                     }
                 }
             }
+        },
+
+        resetActionEditor: function(viewModel) {
+            // Reset name.
+            viewModel.selectedActionName.reset();
+
+            // Select Property Action
+            viewModel.selectedActionType = ActionType.PROPERTY_ACTION;
+            $('#action-editor-selected-action-type').prop('disabled', false);
+
+            // Reset the error flag on the affected widget field
+            viewModel.actionEditorAffectedWidgetError = false;
+
+            // Unselect DataSet.
+            viewModel.actionEditorDataSet = undefined;
+
+            // Reset the properties
+            this.resetComponentDisplayProperties(viewModel);
+
             $('#actionApplyAutomatically').attr('checked', false);
 
             // Select first Data Subset
@@ -105,7 +111,7 @@ define([
             // Restore displayValue to value so that it's not shown as the new value
             // if the action isn't applied automatically.
             if (defined(viewModel.actionEditorAffectedWidget)) {
-                var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
+                var properties = viewModel.actionEditorAffectedWidget.properties;
                 for (var i = 0; i < properties.length; i++) {
                     properties[i].displayValue = properties[i].value;
 
@@ -146,9 +152,9 @@ define([
 
                             if (viewModel.selectedActionType === ActionType.PROPERTY_ACTION) {
                                 var actionValues = {};
-                                var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
-                                for (var property in viewModel.actionEditorAffectedWidget.viewModel) {
-                                    var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
+                                var properties = viewModel.actionEditorAffectedWidget.properties;
+                                for (var property in viewModel.actionEditorAffectedWidget) {
+                                    var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget[property]);
                                     if (propertyIndex > -1) {
                                         if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
                                             actionValues[property] = properties[propertyIndex].getDisplayState();
@@ -175,8 +181,10 @@ define([
                                 action = new PropertyAction(actionState);
                             }
                             else {
+                                var limit = viewModel.actionDataSubsetEditorConditionCount;
+
                                 actionState.dataSubset = viewModel.actionEditorDataSubset.name;
-                                actionState.conditions = viewModel.actionDataSubsetEditorConditions;
+                                actionState.conditions = viewModel.actionDataSubsetEditorConditions.slice(0, limit);
                                 action = new QueryAction(actionState, viewModel.currentProject.getDataSet.bind(viewModel.currentProject));
                             }
 
@@ -208,7 +216,7 @@ define([
             if (viewModel.selectedActionType === ActionType.PROPERTY_ACTION) {
                 viewModel.actionEditorAffectedWidget = viewModel.selectedAction.target;
 
-                var widget = viewModel.actionEditorAffectedWidget.viewModel;
+                var widget = viewModel.actionEditorAffectedWidget;
 
                 // Set the displayValues to match those saved in the widget
                 for (var index in widget.properties) {
@@ -217,7 +225,17 @@ define([
 
                 // Update any modified values from the Action
                 for (var key in viewModel.selectedAction.newValues) {
-                    widget[key].setDisplayState(viewModel.selectedAction.newValues[key]);
+                    var type = viewModel.selectedAction.newValues[key].value.type;
+                    if (defined(type) && (type === 'DataSet' || type === 'DataSubset')) {
+                        // Get dataset or subset by the name stored in the action
+                        var data = viewModel.currentProject.getDataSet(viewModel.selectedAction.newValues[key].value.name);
+
+                        // setDisplayState expects an object with the key 'value'
+                        widget[key].setDisplayState({value: data});
+                    }
+                    else {
+                        widget[key].setDisplayState(viewModel.selectedAction.newValues[key]);
+                    }
                 }
             }
             else {
@@ -264,10 +282,9 @@ define([
                 }
             });
         },
-
         updateEditPropertyActionChanges: function(viewModel) {
             var action = viewModel.selectedAction;
-            var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
+            var properties = viewModel.actionEditorAffectedWidget.properties;
 
             var oldName = action.name;
             var oldTarget = action.target;
@@ -287,8 +304,8 @@ define([
 
             var actionValues = {};
 
-            for (var property in viewModel.actionEditorAffectedWidget.viewModel) {
-                var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget.viewModel[property]);
+            for (var property in viewModel.actionEditorAffectedWidget) {
+                var propertyIndex = properties.indexOf(viewModel.actionEditorAffectedWidget[property]);
                 if (propertyIndex > -1) {
                     if (properties[propertyIndex].displayValue !== properties[propertyIndex].originalValue) {
                         actionValues[property] = properties[propertyIndex].getDisplayState();
@@ -383,7 +400,7 @@ define([
 
                 // Check if any property has an error.
                 if (defined(viewModel.actionEditorAffectedWidget)) {
-                    var properties = viewModel.actionEditorAffectedWidget.viewModel.properties;
+                    var properties = viewModel.actionEditorAffectedWidget.properties;
                     for (var i = 0; i < properties.length; i++) {
                         /*
                          * Calls isValidDisplayValue() for cases where we've bypassed validation for undefined fields (to properly reset the dialog),
