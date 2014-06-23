@@ -36,7 +36,7 @@
                     <button class="inline" id="save-button" data-bind="click: saveProject">Save</button>
                     <button class="inline" id="save-as-button" data-bind="click: tryToSaveProjectAs">Save As</button>
                     
-                    <a id="export-file-link" href="" style="display: none"></a>
+                    <a id="export-file-link" href=""></a>
                     <button class="inline" id="export-button" data-bind="click: exportProject">Export</button>
                 
                     <span class="menu-text">Select: </span>
@@ -398,9 +398,9 @@
             <div class="marginBottom10">
                 <label class="required" for="action-editor-selected-widget">Affected Widget:</label> 
                 <select id="action-editor-selected-widget" class="width100"
-                        data-bind="options: currentProject.widgets, 
+                        data-bind="options: currentProject.actionComponentOptions, 
                           optionsText: function(widget) {
-                             return widget.viewModel.name.value;
+                             return widget.name.value;
                           },
                       value: actionEditorAffectedWidget">
                 </select>
@@ -427,10 +427,10 @@
                 <span>Apply Automatically</span>
             </div>
         </div>
-        <div id="query-action-options" class="inline top padding15">
-            <div>Options</div>
+        <div id="action-options" class="inline top padding15">
+            <div>Options <span id="action-argument-help-text" data-bind="click: openActionHelp">(Argument Help)</span></div>
             <!-- ko if: selectedActionType === 'Property Action' && actionEditorAffectedWidget -->
-            <div data-bind="foreach: actionEditorAffectedWidget.viewModel.properties">
+            <div data-bind="foreach: actionEditorAffectedWidget.properties">
                 <!-- ko if:  $data.displayName !== 'Name'  && $data.displayTemplateName !== undefined -->
                 <div data-bind="template: {name : $data.displayTemplateName, data: $data}"></div>
                 <!-- /ko -->
@@ -488,6 +488,7 @@
         </div>
         <div>
             <label class="inline">Trigger: </label>
+            <!-- TODO: Once glyph triggers are hooked up, options need to change to currentProject.actionComponentOptions -->
             <select data-bind="options: currentProject.widgets,
                             optionsText: function(widget) {
                                 return widget.viewModel.name.value;
@@ -577,6 +578,21 @@
     
     <div id="unsaved-changes-dialog" title="Unsaved Changes" class="dialog">
         <p>You have unsaved changes. Please discard your changes or cancel to continue working with the current project.</p>
+    </div>
+    
+    <div id="action-argument-help-dialog" title="Action Argument Help" class="dialog">
+        <div class="padding-vertical5">The widget that triggers this action may send additional information from the widget and its bound data.</div>
+        <div class="padding-vertical5">Arguments can be set as property values using the form {{arg}}. Replace 'arg' with one of the options below.</div>
+        <hr>
+        <div>
+            <div>The following arguments are available</div>
+            <div class="padding-vertical5" data-bind="foreach: {data: actionHelpOptions, as: 'group'}">
+                <div data-bind="text: group.name" class="action-argument-help-group-name"></div>
+                <ul data-bind="foreach: {data: Object.keys(group.options), as: 'key'}">
+                    <li><span class="action-argument-help-argument-name" data-bind="text: key"></span>: <span data-bind="text: group.options[key]"></span></li>
+                </ul>
+            </div>
+        </div>
     </div>
     
     <div id="error-dialog" title="" class="dialog">

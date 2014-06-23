@@ -36,11 +36,11 @@ define([
     Widget.prototype.getCss = function() {
         this._css.position = 'absolute';
         this._css.display = (this.viewModel.visible.value ? 'block' : 'none');
-        this._css.left = this.viewModel.x.originalValue + '%';
-        this._css.top = this.viewModel.y.originalValue + '%';
-        this._css.height = this.viewModel.height.originalValue + '%';
-        this._css.width = this.viewModel.width.originalValue + '%';
-        this._css['z-index'] = this.viewModel.z.originalValue;
+        this._css[this.viewModel.x.css.attribute] = this.viewModel.x.originalValue + this.viewModel.x.css.units;
+        this._css[this.viewModel.y.css.attribute] = this.viewModel.y.originalValue + this.viewModel.y.css.units;
+        this._css[this.viewModel.height.css.attribute] = this.viewModel.height.originalValue + this.viewModel.height.css.units;
+        this._css[this.viewModel.width.css.attribute] = this.viewModel.width.originalValue + this.viewModel.height.css.units;
+        this._css[this.viewModel.z.css.attribute] = this.viewModel.z.originalValue + this.viewModel.z.css.units;
 
         return this._css;
     };

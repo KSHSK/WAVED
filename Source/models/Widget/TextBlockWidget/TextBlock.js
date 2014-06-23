@@ -67,7 +67,7 @@ define([
     };
 
     TextBlock.prototype.exportHtml = function() {
-        return '<div id="' + this.viewModel.name.value + '">' + this.viewModel.text.originalValue + '</div>';
+        return '<div class="widget widget-textblock" id="widget-' + this.viewModel.name.value + '">' + this.viewModel.text.originalValue + '</div>';
     };
 
     return TextBlock;
