@@ -149,7 +149,7 @@ define([
             for (i = 0; i < viewModel.currentProject.widgets.length; i++) {
                 var widget = viewModel.currentProject.widgets[i];
                 if (defined(widget.getJs)) {
-                    js += widget.getJs();
+                    js += widget.getJs(viewModel.googleAnalytics);
                 }
 
                 // Add Google Analytics track on click event
