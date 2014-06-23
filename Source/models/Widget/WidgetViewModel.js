@@ -120,6 +120,11 @@ define([
             get: function() {
                 return this._trigger;
             }
+        },
+        exportId: {
+            get: function() {
+                return 'widget-' + this.name.originalValue;
+            }
         }
     });
 

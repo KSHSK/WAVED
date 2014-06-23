@@ -4,6 +4,7 @@
 define([
         '../models/Constants/EventType',
         '../models/Action/PropertyAction',
+        '../models/Constants/MessageType',
         '../models/Data/Query',
         '../models/Data/DataSet',
         '../models/Widget/USMapWidget/USMap',
@@ -15,13 +16,14 @@ define([
     ], function(
         EventType,
         PropertyAction,
+        MessageType,
         Query,
         DataSet,
         USMap,
         UnsavedChangesModule,
         WAVEDViewModel,
         defined,
-        displayMessage,
+        DisplayMessage,
         $) {
     'use strict';
 
@@ -33,7 +35,7 @@ define([
     };
 
     function cssToString(widget) {
-        var str = '#widget-' + widget.viewModel.name.value + ' {\n';
+        var str = '#' + widget.viewModel.exportId + ' {\n';
         var css = widget.getCss();
         for (var property in css) {
             str += '\t' + property + ': ' + css[property] + ';\n';
@@ -136,7 +138,7 @@ define([
             // Export Events
             for (i = 0; i < viewModel.currentProject.events.length; i++) {
                 var event = viewModel.currentProject.events[i];
-                js += '$(\'#'+ event.triggeringWidget.viewModel.name.value + '\').on(\'' + EventType[event.eventType] + '\', function() {';
+                js += '$(\'#-'+ event.triggeringWidget.viewModel.exportId + '\').on(\'' + EventType[event.eventType] + '\', function() {';
                 // apply actions
                 for (var j = 0; j < event.actions.length; j++) {
                     js += this.exportAction(event.actions[j], '\t');
@@ -145,8 +147,16 @@ define([
             }
 
             for (i = 0; i < viewModel.currentProject.widgets.length; i++) {
-                if (defined(viewModel.currentProject.widgets[i].getJs)) {
-                    js += viewModel.currentProject.widgets[i].getJs();
+                var widget = viewModel.currentProject.widgets[i];
+                if (defined(widget.getJs)) {
+                    js += widget.getJs();
+                }
+
+                // Add Google Analytics track on click event
+                if (widget.viewModel.logGoogleAnalytics && !(widget instanceof USMap)) {
+                    js += '$(\'#'+ widget.viewModel.exportId + '\').on(\'click\', function() {';
+                    js += '\t_gaq.push([\'_trackEvent\', \''+ viewModel.currentProject.name + '\', \'click-' + widget.viewModel.name.originalValue +'\']);';
+                    js += '});\n';
                 }
             }
 
@@ -166,12 +176,12 @@ define([
             if (viewModel.currentProject.googleAnalytics.bound) {
                 htmlTemplate += '<script type="text/javascript">' + '\n' +
                                 '\t' + 'var _gaq=_gaq || [];' + '\n' +
-                                '\t' +'_gaq.push([\'_setAccount\',\'' + viewModel.currentProject.googleAnalytics.uaCode.originalValue +'\']);' + '\n' +
-                                '\t' +'_gaq.push([\'_trackPageview\']);' + '\n' +
-                                '\t' +'(function() {' + '\n' +
+                                '\t' + '_gaq.push([\'_setAccount\',\'' + viewModel.currentProject.googleAnalytics.uaCode.originalValue +'\']);' + '\n' +
+                                '\t' + '_gaq.push([\'_trackPageview\']);' + '\n' +
+                                '\t' + '(function() {' + '\n' +
                                 '\t' + '\t' + 'var ga=document.createElement(\'script\');' + '\n' +
-                                '\t' + '\t' +'ga.type=\'text/javascript\';' + '\n' +
-                                '\t' + '\t' +'ga.async=true;' + '\n' +
+                                '\t' + '\t' + 'ga.type=\'text/javascript\';' + '\n' +
+                                '\t' + '\t' + 'ga.async=true;' + '\n' +
                                 '\t' + '\t' + 'ga.src=(\'https:\'==document.location.protocol ? \'https://ssl\' :\'http://www\') + \'.google-analytics.com/ga.js\';' + '\n' +
                                 '\t' + '\t' + 'var s=document.getElementsByTagName(\'script\')[0];' + '\n' +
                                 '\t' + '\t' + 's.parentNode.insertBefore(ga,s);' + '\n' +
@@ -239,7 +249,7 @@ define([
         downloadGeneratedZipFile: function(response, fileName) {
             var data = JSON.parse(response);
             if (!data.success) {
-                displayMessage(data.errorMessage);
+                DisplayMessage.show(data.errorMessage, MessageType.ERROR);
                 return;
             }
 
