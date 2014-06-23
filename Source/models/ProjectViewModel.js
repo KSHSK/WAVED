@@ -65,6 +65,8 @@ define([
         ko.track(this);
 
         this.subscribeNameChange();
+
+        DependencyChecker.project = this;
     };
 
     Object.defineProperties(ProjectViewModel.prototype, {
@@ -84,6 +86,17 @@ define([
         components: {
             get: function() {
                 return [this.workspace].concat(this.widgets);
+            }
+        },
+        actionComponentOptions: {
+            get: function() {
+                var items = [];
+                this.widgets.forEach(function(widget) {
+                    items.push(widget.viewModel);
+                    items.push.apply(items, widget.viewModel.subTargets);
+                });
+
+                return items;
             }
         },
         dataSets: {
@@ -300,7 +313,7 @@ define([
                 var action;
 
                 if (itemState.type === PropertyAction.getType()) {
-                    itemState.target = self.getWidget(itemState.target);
+                    itemState.target = self.getActionComponentOption(itemState.target);
                     action = new PropertyAction(itemState);
                 }
                 else if (itemState.type === QueryAction.getType()) {
@@ -506,6 +519,17 @@ define([
         return null;
     };
 
+    ProjectViewModel.prototype.getActionComponentOption = function(name) {
+        for (var index = 0; index < this.actionComponentOptions.length; index++) {
+            var viewModel = this.actionComponentOptions[index];
+            if (viewModel.name.value === name) {
+                return viewModel;
+            }
+        }
+
+        return null;
+    };
+
     ProjectViewModel.prototype.getDataSet = function(name) {
         var self = this;
 
@@ -550,7 +574,7 @@ define([
     ProjectViewModel.prototype.removeWidget = function(widget) {
         var self = this;
 
-        var response = DependencyChecker.allowedToDeleteWidget(widget, self);
+        var response = DependencyChecker.allowedToDeleteComponent(widget);
         if (!response.allowed) {
             DisplayMessage.show(response.message, MessageType.WARNING);
             return false;
@@ -594,7 +618,7 @@ define([
     ProjectViewModel.prototype.removeDataSet = function(dataSet) {
         var self = this;
 
-        var response = DependencyChecker.allowedToDeleteDataSet(dataSet, self);
+        var response = DependencyChecker.allowedToDeleteDataSet(dataSet);
         if (!response.allowed) {
             DisplayMessage.show(response.message, MessageType.WARNING);
             return;
@@ -627,7 +651,7 @@ define([
     ProjectViewModel.prototype.removeAction = function(action) {
         var self = this;
 
-        var response = DependencyChecker.allowedToDeleteAction(action, self);
+        var response = DependencyChecker.allowedToDeleteAction(action);
         if (!response.allowed) {
             DisplayMessage.show(response.message, MessageType.WARNING);
             return;
@@ -680,8 +704,8 @@ define([
     };
 
     ProjectViewModel.prototype.refreshWorkspace = function() {
-        for (var i = 0; i < this._widgets.length; i++) {
-            var properties = this._widgets[i].viewModel.properties;
+        this.actionComponentOptions.forEach(function(viewModel) {
+            var properties = viewModel.properties;
             for (var j = 0; j < properties.length; j++) {
                 // Reset all nested values if present
                 if(defined(properties[j].getSubscribableNestedProperties())) {
@@ -698,9 +722,9 @@ define([
                 properties[j].value = properties[j].originalValue;
                 properties[j].displayValue = displayValue;
             }
-        }
+        });
 
-        for (i = 0; i < this.dataSubsets.length; i++) {
+        for (var i = 0; i < this.dataSubsets.length; i++) {
             this.dataSubsets[i].reset();
         }
 

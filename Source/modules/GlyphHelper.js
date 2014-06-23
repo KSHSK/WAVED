@@ -26,8 +26,35 @@ define([
 
     var glyphDialog = $('#glyph-editor-dialog');
 
+    GlyphHelper.resetGlyphDialog = function(glyph) {
+        glyph.properties.forEach(function(prop) {
+            prop.displayValue = prop.originalValue;
+
+            // Clear any existing error flags
+            prop.displayError = false;
+            prop.dialogErrorMessage = '';
+
+            // Force view to reset to handle entering invalid input, canceling, and opening the dialog again
+            ko.getObservable(prop, '_displayValue').valueHasMutated();
+
+            if (defined(prop.getSubscribableNestedProperties())) {
+                prop.getSubscribableNestedProperties().forEach(function(nestedObject) {
+                    nestedObject.properties.forEach(function(nestedProp){
+                        nestedProp.displayValue = nestedProp.originalValue;
+
+                        nestedProp.displayError = false;
+                        nestedProp.dialogErrorMessage = '';
+
+                        ko.getObservable(nestedProp, '_displayValue').valueHasMutated();
+                    });
+                });
+            }
+        });
+    };
+
     GlyphHelper.addEditGlyph = function(glyph) {
         var self = this;
+
         var glyphAdded = $.Deferred();
 
         glyphDialog.dialog({
@@ -35,12 +62,19 @@ define([
             width: 500,
             modal: true,
             buttons: {
-                'Save': function() {
-                    if (glyph.isValid(ValueType.DISPLAY_VALUE)) {
-                        glyphAdded.resolve();
-                        glyphDialog.dialog('close');
-                    } else {
-                        glyph.displayErrors(ValueType.DISPLAY_VALUE);
+                'Save': {
+                    text: 'Save',
+                    'data-bind': 'jQueryDisable: glyphDialogHasErrors()',
+                    click: function() {
+                        if (!self.hasErrors(glyph)) {
+                            glyphAdded.resolve();
+                            glyphDialog.dialog('close');
+                        } else {
+                            glyph.displayErrors(ValueType.DISPLAY_VALUE);
+                        }
+                    },
+                    create: function() {
+                        ko.applyBindings(glyph, this);
                     }
                 },
                 'Cancel': function() {
@@ -53,6 +87,10 @@ define([
         });
 
         return glyphAdded.promise();
+    };
+
+    GlyphHelper.hasErrors = function(glyph) {
+        return !glyph.isValid(ValueType.DISPLAY_VALUE);
     };
 
     return GlyphHelper;

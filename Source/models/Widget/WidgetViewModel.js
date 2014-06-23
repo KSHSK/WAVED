@@ -125,6 +125,11 @@ define([
             get: function() {
                 return 'widget-' + this.name.originalValue;
             }
+        },
+        subTargets: {
+            get: function() {
+                return [];
+            }
         }
     });
 
