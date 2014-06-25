@@ -149,13 +149,13 @@ define([
             for (i = 0; i < viewModel.currentProject.widgets.length; i++) {
                 var widget = viewModel.currentProject.widgets[i];
                 if (defined(widget.getJs)) {
-                    js += widget.getJs(viewModel.googleAnalytics);
+                    js += widget.getJs(viewModel.currentProject.googleAnalytics);
                 }
 
                 // Add Google Analytics track on click event
                 if (widget.viewModel.logGoogleAnalytics && !(widget instanceof USMap)) {
                     js += '$(\'#'+ widget.viewModel.exportId + '\').on(\'click\', function() {';
-                    js += '\t_gaq.push([\'_trackEvent\', \''+ viewModel.googleAnalytics.eventCategory.originalValue + '\', \'click-' + widget.viewModel.name.originalValue +'\']);';
+                    js += '\t_gaq.push([\'_trackEvent\', \''+ viewModel.currentProject.googleAnalytics.eventCategory.originalValue + '\', \'click-' + widget.viewModel.name.originalValue +'\']);';
                     js += '});\n';
                 }
             }
