@@ -65,7 +65,7 @@ define([
     };
 
     USMap.prototype.exportHtml = function() {
-        return '<div class="widget widget-map" id="widget-' + this.viewModel.name.value + '"></div>';
+        return '<div class="widget widget-map" id="' + this.viewModel.exportId + '"></div>';
     };
 
 
