@@ -71,20 +71,53 @@ define([
             return css;
         },
 
+        // TODO: Action with nested properties
         exportAction: function(action, tabs) {
             var js = '';
             if (action instanceof PropertyAction) {
                 for (var key in action.newValues) {
-                    if (defined(action.target.viewModel[key].css)) {
-                        var value = action.newValues[key];
-                        if (defined(action.target.viewModel[key].css.units)) {
-                            value += action.target.viewModel[key].css.units;
+
+                    var subscribableNestedProperties = action.target[key].getSubscribableNestedProperties();
+
+                    // Nested properties
+                    if(defined(subscribableNestedProperties)) { // if the key has nested objects
+                        var nestedObject = action.newValues[key].value; // get that nested object
+                        var widgetNestedObject; // This is the nested object we're looking at
+
+                        for (var x = 0; x < subscribableNestedProperties.length; x++) {
+                            if (subscribableNestedProperties[x].getType() === nestedObject.type) {
+                                widgetNestedObject = subscribableNestedProperties[x];
+                                break;
+                            }
                         }
-                        js += tabs + '\n\t$(\'#' + action.target.viewModel.name.value + '\').css(\'' + action.target.viewModel[key].css.attribute + '\', \'' + value + '\');\n';
+
+                        for (var nestedProperty in nestedObject) { // for every property in that nested object
+                            if (defined(widgetNestedObject[nestedProperty]) && defined(widgetNestedObject[nestedProperty].css)) {
+                                var nestedValue = action.newValues[key].value[nestedProperty].value;
+                                if(defined(nestedValue.css.units)) {
+                                    nestedValue += action.target[key].css.units;
+                                }
+                            }
+                        }
+
+                        // TODO: Specific for US Map??
+                        js += tabs + '\n\t$(\'#' + action.target.name.value + '\').css(\'' + action.target[key].css.attribute + '\', \'' + value + '\');\n';
+
+                        // TODO: Needs specific function calls for map and glyphs to update coloring or rerender
+
+                        continue; // Skip the rest of the loop, no reason to look at the top level property again
                     }
 
-                    if (defined(action.target.viewModel[key].html)) {
-                        js += tabs + '\n\t$(\'#' + action.target.viewModel.name.value + '\').html(\'' + action.newValues[key] + '\');\n';
+                    if (defined(action.target[key].css)) {
+                        var value = action.newValues[key].value;
+                        if (defined(action.target[key].css.units)) {
+                            value += action.target[key].css.units;
+                        }
+                        js += tabs + '\n\t$(\'#' + action.target.name.value + '\').css(\'' + action.target[key].css.attribute + '\', \'' + value + '\');\n';
+                    }
+
+                    if (defined(action.target[key].html)) {
+                        js += tabs + '\n\t$(\'#' + action.target.name.value + '\').html(\'' + action.newValues[key] + '\');\n';
                     }
                 }
             }
