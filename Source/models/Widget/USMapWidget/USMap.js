@@ -108,6 +108,7 @@ define([
         js += '\t\t.attr("r", function(d, i) {\n';
         js += '\t\t\tvar value;\n';
         if (glyph.size.value.getType() === GlyphSizeSchemeType.SCALED_SIZE) {
+            js += '\t\tvar radiusScale = d3.scale.linear().domain([1000,500000]).range([2,10]).clamp(true);\n';
             js += '\t\t\tvalue = radiusScale(d[\'' + glyph.size.value.dataField.value + '\']);\n';
         } else {
             js += '\t\t\tvalue = ' + (glyph.size.value.size.value * glyph.parent.width.value/100) + '\n';
