@@ -64,6 +64,11 @@ define([
 
             var css = workspace.getCss() + '\n\n';
 
+            css += '.widget-container {\n';
+            css += '\tposition: absolute;\n';
+            css += '\tpointer-events: none;\n';
+            css += '}\n\n';
+
             for (var i = 0; i < viewModel.currentProject.widgets.length; i++) {
                 css += cssToString(viewModel.currentProject.widgets[i]);
                 css += '\n\n';
