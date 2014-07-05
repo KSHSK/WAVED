@@ -49,7 +49,7 @@ define([
     };
 
     Button.prototype.exportHtml = function() {
-        return '<button id="' + this.viewModel.name.value + '">' + this.viewModel.label.originalValue + '</button>';
+        return '<button class="widget widget-button" id="' + this.viewModel.exportId + '">' + this.viewModel.label.originalValue + '</button>';
     };
 
     return Button;

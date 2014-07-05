@@ -93,8 +93,8 @@ define([
     };
 
     ConstantGlyphSizeScheme.prototype.setState = function(state) {
-        if(defined(state.value) && defined(state.value.size) && state.value.size.value > 0){
-            this.size.value = state.value.size.value;
+        if (defined(state.size) && state.size.value > 0) {
+            this.size.originalValue = state.size.value;
         }
     };
 

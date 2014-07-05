@@ -67,7 +67,7 @@ define([
     };
 
     USMap.prototype.exportHtml = function() {
-        return '<div id="' + this.viewModel.name.value + '"></div>';
+        return '<div class="widget widget-map" id="' + this.viewModel.exportId + '"></div>';
     };
 
 
@@ -197,7 +197,7 @@ define([
         return js;
     }
 
-    USMap.prototype.getJs = function() {
+    USMap.prototype.getJs = function(googleAnalytics) {
         var vm = this.viewModel;
         var js = '';
 
@@ -260,6 +260,9 @@ define([
         js += '\t})\n';
         js += '\t.on("click", function(d) {\n';
         js += '\t\taddStateDataToTrigger(d);\n';
+        if (vm.logGoogleAnalytics) {
+            js += '\t\t_gaq.push([\'_trackEvent\', \'' + googleAnalytics.eventCategory.originalValue + '\', \'click-' + vm.name.originalValue + '-\' + d.properties.name]);';
+        }
         js += '\t});\n';
         js += '\tupdateColoring(states);\n';
         js += '});\n';
