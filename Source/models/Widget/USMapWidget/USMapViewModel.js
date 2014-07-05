@@ -13,6 +13,7 @@ define([
         'models/Property/ListProperty',
         'models/Widget/WidgetViewModel',
         'modules/DisplayMessage',
+        'modules/DependencyChecker',
         'modules/GlyphHelper',
         'modules/HistoryMonitor',
         'modules/ReadData',
@@ -38,6 +39,7 @@ define([
         ListProperty,
         WidgetViewModel,
         DisplayMessage,
+        DependencyChecker,
         GlyphHelper,
         HistoryMonitor,
         ReadData,
@@ -188,7 +190,7 @@ define([
                 }
 
                 coloringScheme.dataSet.value.executeWhenDataLoaded(function() {
-                 // Find the min and max values for the dataField we're using to scale the gradient
+                    // Find the min and max values for the dataField we're using to scale the gradient
                     var dataField = coloringScheme.dataField.value;
                     var min = d3.min(coloringScheme.dataSet.value.data, function(d) { return +d[dataField]; });
                     var max = d3.max(coloringScheme.dataSet.value.data, function(d) { return +d[dataField]; });
@@ -213,7 +215,8 @@ define([
                         }
 
                         for(var i=0; i<coloringScheme.dataSet.value.data.length; i++){
-                            var currentValue = coloringScheme.dataSet.value.data[i][keyName].toLowerCase();
+                            var currentValue = coloringScheme.dataSet.value.data[i][keyName] || '';
+                            currentValue = currentValue.toLowerCase();
                             if(currentValue === stateName || currentValue === stateAbbrev){
                                 return gradient(coloringScheme.dataSet.value.data[i][dataField]);
                             }
@@ -232,9 +235,18 @@ define([
     }
 
     function removeGlyph(options, glyph) {
-        glyph.remove();
-        UniqueTracker.removeItem(ComponentViewModel.getUniqueNameNamespace(), glyph);
-        options.splice(options.indexOf(glyph), 1);
+        var response = DependencyChecker.allowedToDeleteComponent(glyph);
+
+        if (response.allowed) {
+            glyph.remove();
+            UniqueTracker.removeItem(ComponentViewModel.getUniqueNameNamespace(), glyph);
+            options.splice(options.indexOf(glyph), 1);
+            return true;
+        }
+
+        DisplayMessage.show(response.message, MessageType.WARNING);
+
+        return false;
     }
 
     function addGlyph(options, glyph, index) {
@@ -258,7 +270,6 @@ define([
     function addSuccess(options, glyph) {
         options.push(glyph);
         //set lat lon first for validation reasons
-        //TODO: look into why subscription isn't working for array property
         glyph.latitude.originalValue = glyph.latitude.displayValue;
         glyph.latitude.value = glyph.latitude.displayValue;
         glyph.longitude.originalValue = glyph.longitude.displayValue;
@@ -422,6 +433,7 @@ define([
             edit: function() {
                 if (defined(this.value)) {
                     var value = this.value;
+                    GlyphHelper.resetGlyphDialog(value);
                     GlyphHelper.addEditGlyph(value).then(function() {
                         editSuccess(value);
                     }, function() {
@@ -433,18 +445,23 @@ define([
                 var options = this.options;
                 var value = this.value;
                 var index = options.indexOf(value);
+
                 if (index > -1) {
-                    removeGlyph(options, value);
-                    var historyMonitor = HistoryMonitor.getInstance();
+                    // removeGlyph will return true on success, false otherwise
+                    var removeSuccess = removeGlyph(options, value);
 
-                    historyMonitor.addUndoChange(function() {
-                        addGlyph(options, value, index);
-                    });
+                    if(removeSuccess) {
+                        var historyMonitor = HistoryMonitor.getInstance();
 
-                    historyMonitor.addRedoChange(function() {
-                        removeGlyph(options, value);
-                    });
-                    this._value = undefined;
+                        historyMonitor.addUndoChange(function() {
+                            addGlyph(options, value, index);
+                        });
+
+                        historyMonitor.addRedoChange(function() {
+                            removeGlyph(options, value);
+                        });
+                        this._value = undefined;
+                    }
                 }
             }
         });
@@ -532,8 +549,18 @@ define([
         properties: {
             // z is not exposed here because the map should always be on the bottom
             get: function() {
-                return [this.name, this.x, this.y, this.width, this.visible,
-                        this.strokeColor, this.coloring, this.logGoogleAnalytics, this.glyphList];
+                return [this.name, this.x, this.y, this.width, this.strokeColor, this.coloring, this.visible,
+                this.logGoogleAnalytics, this.glyphList];
+            }
+        },
+        subTargets: {
+            get: function() {
+                var allSubTargets = [];
+
+                // Push all subtargets to a single array and return it
+                allSubTargets.push.apply(allSubTargets, this.glyphs);
+
+                return allSubTargets;
             }
         }
     });
