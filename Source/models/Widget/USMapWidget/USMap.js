@@ -75,49 +75,50 @@ define([
         var js = '';
         var w = $('#waved-workspace').width() * glyph.parent.width.value/100;
         var h = $('#waved-workspace').height() * glyph.parent.width.value/100;
-        js += 'var svg = d3.select("#' + name + '")\n';
-        js += '.append("svg")';
-        js += '.attr("height", ' + h + ')';
-        js += '.attr("width",' +  w + ')';
-        js += '.attr("class", "widget-container")';
-        js += '.style("top", "0")';
-        js += '.style("left", "0")';
-        js += '.attr("id",' +  glyph.id + ');';
-        js += 'var dom = svg.append("g");';
+        js += 'var svg = d3.select("#widget-' + name + '")\n';
+        js += '\t.append("svg")\n';
+        js += '\t.attr("height", ' + h + ')\n';
+        js += '\t.attr("width",' +  w + ')\n';
+        js += '\t.attr("class", "widget-container")\n';
+        js += '\t.style("top", "0")\n';
+        js += '\t.style("left", "0")\n';
+        js += '\t.attr("id","' +  glyph.id + '");\n';
+        js += 'var dom = svg.append("g");\n';
         if (!glyph.visible.value) {
-            js += 'dom.attr("class", "hide");';
+            js += 'dom.attr("class", "hide");\n';
         } else {
-            js += 'dom.attr("class", "show");';
+            js += 'dom.attr("class", "show");\n';
         }
 
-        js += 'var data = ' + glyph.dataSet.value.data; //TODO  something better with data. use d3.csv?
-        js += 'dom.selectAll("circle").data(data)';
-        js += '.enter().append("circle")';
-        js += '.attr("cx", function(d, i) {';
-        js += 'var coords = projection([d[' + glyph.longitude.value + '], d[' + glyph.latitude.value + ']]);';
-        js += 'if (coords !== null) {';
-        js += 'return coords[0];';
-        js += '}';
-        js += '})';
-        js += '.attr("cy", function(d, i) {';
-        js += 'var coords = projection([d[' + glyph.longitude.value + '], d[' + glyph.latitude.value + ']]);';
-        js += 'if (coords !== null) {';
-        js += 'return coords[1];';
-        js += '}';
-        js += '})';
-        js += '.attr("r", function(d, i) {';
+        js += 'var data = dataSets["' + glyph.dataSet.value.name + '"].data;\n'; //TODO  something better with data. use d3.csv?
+        js += 'dom.selectAll("circle").data(data)\n';
+        js += '\t.enter().append("circle")\n';
+        js += '\t.attr("cx", function(d, i) {\n';
+        js += '\t\tvar coords = projection([d[\'' + glyph.longitude.value + '\'], d[\'' + glyph.latitude.value + '\']]);\n';
+        js += '\t\tif (coords !== null) {\n';
+        js += '\t\t\treturn coords[0];\n';
+        js += '\t\t}\n';
+        js += '\t})\n';
+        js += '\t.attr("cy", function(d, i) {\n';
+        js += '\t\tvar coords = projection([d[\'' + glyph.longitude.value + '\'], d[\'' + glyph.latitude.value + '\']]);\n';
+        js += '\t\tif (coords !== null) {\n';
+        js += '\t\t\treturn coords[1];\n';
+        js += '\t\t}\n';
+        js += '\t})\n';
+        js += '\t.attr("r", function(d, i) {\n';
+        js += '\t\tvar value;\n';
         if (glyph.size.value.getType() === GlyphSizeSchemeType.SCALED_SIZE) {
-            js += 'return radiusScale(d[' + glyph.size.value.dataField.value + ']);';
+            js += '\t\tvalue = radiusScale(d[\'' + glyph.size.value.dataField.value + '\']);\n';
         } else {
-            js += 'return ' + glyph.size.value.size.value*glyph.parent.width.value/100;
+            js += '\t\tvalue = ' + (glyph.size.value.size.value * glyph.parent.width.value/100) + '\n';
         }
-        js += 'if (value !== null && value > 0 && !isNaN(value)) {';
-        js += 'return value;';
-        js += '}';
-        js += '})';
-        js += '.style("fill", ' +  glyph.color.value + ')';
-        js += '.style("opacity", ' + glyph.opacity.value/100 + ')';
-        js += '.style("z-index", ' + glyph.z.value + ');';
+        js += '\t\tif (value !== null && value > 0 && !isNaN(value)) {\n';
+        js += '\t\t\treturn value;\n';
+        js += '\t\t}\n';
+        js += '\t})\n';
+        js += '\t.style("fill", "' +  glyph.color.value + '")\n';
+        js += '\t.style("opacity", ' + glyph.opacity.value/100 + ')\n';
+        js += '\t.style("z-index", ' + glyph.z.value + ');\n';
         return js;
     }
 
@@ -234,7 +235,7 @@ define([
         js += 'var projection = d3.geo.albersUsa().scale(scale).translate(([' + w2 + '/2, ' + h2 + '/2]));\n';
         js += 'var path = d3.geo.path().projection(projection);\n';
         js += getColoringJs(vm);
-        js += 'var svg = d3.select("#' + vm.name.value + '")\n';
+        js += 'var svg = d3.select("#' + vm.exportId + '")\n';
         js += '\t.append("svg")\n';
         js += '\t.attr("height", ' +  h2 + ')\n';
         js += '\t.attr("width", '  + w2 + ');\n';
@@ -261,7 +262,7 @@ define([
         js += '\t.on("click", function(d) {\n';
         js += '\t\taddStateDataToTrigger(d);\n';
         if (vm.logGoogleAnalytics) {
-            js += '\t\t_gaq.push([\'_trackEvent\', \'' + googleAnalytics.eventCategory.originalValue + '\', \'click-' + vm.name.originalValue + '-\' + d.properties.name]);';
+            js += '\t\t_gaq.push([\'_trackEvent\', \'' + googleAnalytics.eventCategory.originalValue + '\', \'click-' + vm.name.originalValue + '-\' + d.properties.name]);\n';
         }
         js += '\t});\n';
         js += '\tupdateColoring(states);\n';
