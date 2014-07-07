@@ -90,38 +90,55 @@ define([
             js += 'dom.attr("class", "show");\n';
         }
 
-        js += 'dataSets["' + glyph.dataSet.value.name + '"].dataIsLoaded.done(function() {\n';
-        js += '\tdom.selectAll("circle").data(dataSets["' + glyph.dataSet.value.name + '"].data)\n';
-        js += '\t\t.enter().append("circle")\n';
-        js += '\t\t.attr("cx", function(d, i) {\n';
-        js += '\t\t\tvar coords = projection([d[\'' + glyph.longitude.value + '\'], d[\'' + glyph.latitude.value + '\']]);\n';
-        js += '\t\t\tif (coords !== null) {\n';
-        js += '\t\t\t\treturn coords[0];\n';
-        js += '\t\t\t}\n';
-        js += '\t\t})\n';
-        js += '\t\t.attr("cy", function(d, i) {\n';
-        js += '\t\t\tvar coords = projection([d[\'' + glyph.longitude.value + '\'], d[\'' + glyph.latitude.value + '\']]);\n';
-        js += '\t\t\tif (coords !== null) {\n';
-        js += '\t\t\t\treturn coords[1];\n';
-        js += '\t\t\t}\n';
-        js += '\t\t})\n';
-        js += '\t\t.attr("r", function(d, i) {\n';
-        js += '\t\t\tvar value;\n';
-        if (glyph.size.value.getType() === GlyphSizeSchemeType.SCALED_SIZE) {
-            js += '\t\tvar radiusScale = d3.scale.linear().domain([1000,500000]).range([2,10]).clamp(true);\n';
-            js += '\t\t\tvalue = radiusScale(d[\'' + glyph.size.value.dataField.value + '\']);\n';
-        } else {
-            js += '\t\t\tvalue = ' + (glyph.size.value.size.value * glyph.parent.width.value/100) + '\n';
-        }
-        js += '\t\t\tif (value !== null && value > 0 && !isNaN(value)) {\n';
-        js += '\t\t\t\treturn value;\n';
-        js += '\t\t\t}\n';
-        js += '\t\t})\n';
-        js += '\t\t.style("fill", "' +  glyph.color.value + '")\n';
-        js += '\t\t.style("opacity", ' + glyph.opacity.value/100 + ')\n';
-        js += '\t\t.style("z-index", ' + glyph.z.value + ');\n';
+        // Generic glyph rendering function. Can be called from generated js
+        js += 'var renderGlyphs = function(glyphDataSet, lonValue, latValue, sizeType, size, color, opacity, z, parentWidth) {\n';
+        js += '\tdataSets[glyphDataSet].dataIsLoaded.done(function() {\n';
+        js += '\t\tdom.selectAll("circle").data(dataSets[glyphDataSet].data)\n';
+        js += '\t\t\t.enter().append("circle")\n';
+        js += '\t\t\t.attr("cx", function(d, i) {\n';
+        js += '\t\t\t\tvar coords = projection([d[lonValue], d[latValue]]);\n';
+        js += '\t\t\t\tif (coords !== null) {\n';
+        js += '\t\t\t\t\treturn coords[0];\n';
+        js += '\t\t\t\t}\n';
+        js += '\t\t\t})\n';
+        js += '\t\t\t.attr("cy", function(d, i) {\n';
+        js += '\t\t\t\tvar coords = projection([d[lonValue], d[latValue]]);\n';
+        js += '\t\t\t\tif (coords !== null) {\n';
+        js += '\t\t\t\t\treturn coords[1];\n';
+        js += '\t\t\t\t}\n';
+        js += '\t\t\t})\n';
+        js += '\t\t\t.attr("r", function(d, i) {\n';
+        js += '\t\t\t\tvar value;\n';
 
-        js += '});\n';
+        js += '\t\t\t\tif (sizeType === "' + GlyphSizeSchemeType.SCALED_SIZE + '") {\n';
+        js += '\t\t\t\t\tvar radiusScale = d3.scale.linear().domain([1000,500000]).range([2,10]).clamp(true);\n';
+        js += '\t\t\t\t\tvalue = radiusScale(d[size]);\n';
+        js += '\t\t\t\t}\n';
+        js += '\t\t\t\telse {\n';
+        js += '\t\t\t\t\tvalue = size * (parentWidth/100);\n';
+        js += '\t\t\t\t}\n';
+
+        js += '\t\t\t\tif (value !== null && value > 0 && !isNaN(value)) {\n';
+        js += '\t\t\t\t\treturn value;\n';
+        js += '\t\t\t\t}\n';
+        js += '\t\t\t})\n';
+        js += '\t\t\t.style("fill", "' +  glyph.color.value + '")\n';
+        js += '\t\t\t.style("opacity", ' + glyph.opacity.value/100 + ')\n';
+        js += '\t\t\t.style("z-index", ' + glyph.z.value + ');\n';
+
+        js += '\t});\n';
+        js += '}\n';
+
+        js += '\n';
+
+        // Figure out what size field (constant or scaling field) to pass into the intial renderGlyphs call
+        var sizeValue = defined(glyph.size.value.size) ? glyph.size.value.size.value : glyph.size.value.dataField.value;
+
+        // Render the initial set of glyphs
+        js += 'renderGlyphs("' + glyph.dataSet.value.name + '", "' + glyph.longitude.value + '", "' +
+            glyph.latitude.value + '", "' + glyph.size.value.getType() + '", "' + sizeValue + '", "' + glyph.color.value + '", "' +
+            glyph.opacity.value + '", "' + glyph.z.value + '", "' + glyph.parent.width.value + '");\n';
+
         return js;
     }
 
