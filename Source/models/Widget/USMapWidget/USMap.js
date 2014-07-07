@@ -3,6 +3,7 @@ define([
         'models/Constants/WidgetTemplateName',
         'models/Event/Trigger',
         'models/Constants/ColoringSchemeType',
+        'models/Constants/GlyphSizeSchemeType',
         '../Widget',
         'util/defined',
         'knockout',
@@ -12,6 +13,7 @@ define([
         WidgetTemplateName,
         Trigger,
         ColoringSchemeType,
+        GlyphSizeSchemeType,
         Widget,
         defined,
         ko,
@@ -68,6 +70,60 @@ define([
         return '<div class="widget widget-map" id="' + this.viewModel.exportId + '"></div>';
     };
 
+
+    function getGlyphJs(name, glyph) {
+        var js = '';
+        var w = $('#waved-workspace').width() * glyph.parent.width.value/100;
+        var h = $('#waved-workspace').height() * glyph.parent.width.value/100;
+        js += 'var svg = d3.select("#widget-' + name + '")\n';
+        js += '\t.append("svg")\n';
+        js += '\t.attr("height", ' + h + ')\n';
+        js += '\t.attr("width",' +  w + ')\n';
+        js += '\t.attr("class", "widget-container")\n';
+        js += '\t.style("top", "0")\n';
+        js += '\t.style("left", "0")\n';
+        js += '\t.attr("id","' +  glyph.id + '");\n';
+        js += 'var dom = svg.append("g");\n';
+        if (!glyph.visible.value) {
+            js += 'dom.attr("class", "hide");\n';
+        } else {
+            js += 'dom.attr("class", "show");\n';
+        }
+
+        js += 'dataSets["' + glyph.dataSet.value.name + '"].dataIsLoaded.done(function() {\n';
+        js += '\tdom.selectAll("circle").data(dataSets["' + glyph.dataSet.value.name + '"].data)\n';
+        js += '\t\t.enter().append("circle")\n';
+        js += '\t\t.attr("cx", function(d, i) {\n';
+        js += '\t\t\tvar coords = projection([d[\'' + glyph.longitude.value + '\'], d[\'' + glyph.latitude.value + '\']]);\n';
+        js += '\t\t\tif (coords !== null) {\n';
+        js += '\t\t\t\treturn coords[0];\n';
+        js += '\t\t\t}\n';
+        js += '\t\t})\n';
+        js += '\t\t.attr("cy", function(d, i) {\n';
+        js += '\t\t\tvar coords = projection([d[\'' + glyph.longitude.value + '\'], d[\'' + glyph.latitude.value + '\']]);\n';
+        js += '\t\t\tif (coords !== null) {\n';
+        js += '\t\t\t\treturn coords[1];\n';
+        js += '\t\t\t}\n';
+        js += '\t\t})\n';
+        js += '\t\t.attr("r", function(d, i) {\n';
+        js += '\t\t\tvar value;\n';
+        if (glyph.size.value.getType() === GlyphSizeSchemeType.SCALED_SIZE) {
+            js += '\t\tvar radiusScale = d3.scale.linear().domain([1000,500000]).range([2,10]).clamp(true);\n';
+            js += '\t\t\tvalue = radiusScale(d[\'' + glyph.size.value.dataField.value + '\']);\n';
+        } else {
+            js += '\t\t\tvalue = ' + (glyph.size.value.size.value * glyph.parent.width.value/100) + '\n';
+        }
+        js += '\t\t\tif (value !== null && value > 0 && !isNaN(value)) {\n';
+        js += '\t\t\t\treturn value;\n';
+        js += '\t\t\t}\n';
+        js += '\t\t})\n';
+        js += '\t\t.style("fill", "' +  glyph.color.value + '")\n';
+        js += '\t\t.style("opacity", ' + glyph.opacity.value/100 + ')\n';
+        js += '\t\t.style("z-index", ' + glyph.z.value + ');\n';
+
+        js += '});\n';
+        return js;
+    }
 
     function getColoringJs(viewModel) {
         var js = '';
@@ -182,7 +238,7 @@ define([
         js += 'var projection = d3.geo.albersUsa().scale(scale).translate(([' + w2 + '/2, ' + h2 + '/2]));\n';
         js += 'var path = d3.geo.path().projection(projection);\n';
         js += getColoringJs(vm);
-        js += 'var svg = d3.select("#' + vm.name.value + '")\n';
+        js += 'var svg = d3.select("#' + vm.exportId + '")\n';
         js += '\t.append("svg")\n';
         js += '\t.attr("height", ' +  h2 + ')\n';
         js += '\t.attr("width", '  + w2 + ');\n';
@@ -209,11 +265,19 @@ define([
         js += '\t.on("click", function(d) {\n';
         js += '\t\taddStateDataToTrigger(d);\n';
         if (vm.logGoogleAnalytics) {
-            js += '\t\t_gaq.push([\'_trackEvent\', \'' + googleAnalytics.eventCategory.originalValue + '\', \'click-' + vm.name.originalValue + '-\' + d.properties.name]);';
+            js += '\t\t_gaq.push([\'_trackEvent\', \'' + googleAnalytics.eventCategory.originalValue + '\', \'click-' + vm.name.originalValue + '-\' + d.properties.name]);\n';
         }
         js += '\t});\n';
         js += '\tupdateColoring(states);\n';
         js += '});\n';
+        js += '\n';
+        var glyphs = vm.glyphs;
+        if (glyphs.length > 0) {
+            for (var i = 0; i < glyphs.length; i++) {
+                js += getGlyphJs(vm.name.value, glyphs[i]);
+            }
+        }
+
 
         return js;
     };
