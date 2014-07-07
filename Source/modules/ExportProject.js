@@ -105,10 +105,12 @@ define([
                             }
                         }
 
-                        // TODO: Specific for US Map??
-                        js += tabs + '\n\t$(\'#' + action.target.name.value + '\').css(\'' + action.target[key].css.attribute + '\', \'' + value + '\');\n';
 
-                        // TODO: Needs specific function calls for map and glyphs to update coloring or rerender
+
+                        // TODO: Specific for US Map??
+                        //js += tabs + '\n\t$(\'#' + action.target.name.value + '\').css(\'' + action.target[key].css.attribute + '\', \'' + value + '\');\n';
+
+                        // TODO: Needs specific function calls for map and glyphs to update coloring or rerender (due to scaling and such)
 
                         continue; // Skip the rest of the loop, no reason to look at the top level property again
                     }
@@ -118,11 +120,11 @@ define([
                         if (defined(action.target[key].css.units)) {
                             value += action.target[key].css.units;
                         }
-                        js += tabs + '\n\t$(\'#' + action.target.name.value + '\').css(\'' + action.target[key].css.attribute + '\', \'' + value + '\');\n';
+                        js += tabs + '\n\t$(\'#' + action.target.exportId + '\').css(\'' + action.target[key].css.attribute + '\', \'' + value + '\');\n';
                     }
 
                     if (defined(action.target[key].html)) {
-                        js += tabs + '\n\t$(\'#' + action.target.name.value + '\').html(\'' + action.newValues[key] + '\');\n';
+                        js += tabs + '\n\t$(\'#' + action.target.exportId + '\').html(\'' + action.newValues[key] + '\');\n';
                     }
                 }
             }
@@ -176,7 +178,7 @@ define([
             // Export Events
             for (i = 0; i < viewModel.currentProject.events.length; i++) {
                 var event = viewModel.currentProject.events[i];
-                js += '$(\'#-'+ event.triggeringWidget.viewModel.exportId + '\').on(\'' + EventType[event.eventType] + '\', function() {';
+                js += '$(\'#'+ event.triggeringWidget.viewModel.exportId + '\').on(\'' + EventType[event.eventType] + '\', function() {';
                 // apply actions
                 for (var j = 0; j < event.actions.length; j++) {
                     js += this.exportAction(event.actions[j], '\t');
