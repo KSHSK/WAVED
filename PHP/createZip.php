@@ -23,7 +23,15 @@ $css = $_POST["css"];
 $js = $_POST["js"];
 
 // Get the data files.
-$data_files = $_POST["data_files"];
+
+// The 'isset' check is necessary when hosting on Windows. Without this, '$data_files = $_POST["data_files"]' would fail.
+if (isset($_POST["data_files"])) {
+    $data_files = $_POST["data_files"];
+}
+else {
+    $data_files = array();
+}
+
 if ($data_files == null) {
    // Default to no data files.
    $data_files = array();
