@@ -167,9 +167,10 @@ define([
             var i;
 
             // Export Data
-            if (viewModel.currentProject.dataSets.length > 0) {
+            var dataSets = viewModel.currentProject.unmarkedDataSets;
+            if (dataSets.length > 0) {
                 var hasSubsets = (viewModel.currentProject.dataSubsets.length > 0);
-                js += this.exportDataJs(viewModel.currentProject.dataSets, hasSubsets);
+                js += this.exportDataJs(dataSets, hasSubsets);
             }
 
             // Override CSS attributes from automatically applied Actions
