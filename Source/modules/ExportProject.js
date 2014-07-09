@@ -135,13 +135,18 @@ define([
             return js;
         },
 
-        exportDataJs: function(dataSets) {
+        exportDataJs: function(dataSets, hasSubsets) {
             var js = '';
             var i;
 
             js += '// START DATA\n';
-            js += Query.getHelperFunctionsJs();
+
+            if (hasSubsets) {
+                js += Query.getHelperFunctionsJs();
+            }
+
             js += DataSet.getHelperFunctionsJs();
+
             js += '// Initialize Data sets\n';
             js += 'var dataSets = {};\n';
             for (i = 0; i < dataSets.length; i++) {
@@ -163,7 +168,8 @@ define([
 
             // Export Data
             if (viewModel.currentProject.dataSets.length > 0) {
-                js += this.exportDataJs(viewModel.currentProject.dataSets);
+                var hasSubsets = (viewModel.currentProject.dataSubsets.length > 0);
+                js += this.exportDataJs(viewModel.currentProject.dataSets, hasSubsets);
             }
 
             // Override CSS attributes from automatically applied Actions
@@ -249,8 +255,9 @@ define([
             var projectName = viewModel.currentProject.name;
 
             var dataFiles = [];
-            for (var i = 0; i < viewModel.currentProject.dataSets.length; i++) {
-                var dataSet = viewModel.currentProject.dataSets[i];
+            var dataSets = viewModel.currentProject.unmarkedProperDataSets;
+            for (var i = 0; i < dataSets.length; i++) {
+                var dataSet = dataSets[i];
                 dataFiles.push(dataSet.filename);
             }
 
