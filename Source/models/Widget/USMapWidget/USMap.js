@@ -281,7 +281,7 @@ define([
         js += '\t})\n';
         js += '\t.on("click", function(d) {\n';
         js += '\t\taddStateDataToTrigger(d);\n';
-        if (vm.logGoogleAnalytics) {
+        if (vm.logGoogleAnalytics.value) {
             js += '\t\t_gaq.push([\'_trackEvent\', \'' + googleAnalytics.eventCategory.originalValue + '\', \'click-' + vm.name.originalValue + '-\' + d.properties.name]);\n';
         }
         js += '\t});\n';

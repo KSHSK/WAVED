@@ -193,7 +193,7 @@ define([
                 }
 
                 // Add Google Analytics track on click event
-                if (widget.viewModel.logGoogleAnalytics && !(widget instanceof USMap)) {
+                if (widget.viewModel.logGoogleAnalytics.value && !(widget instanceof USMap)) {
                     js += '$(\'#'+ widget.viewModel.exportId + '\').on(\'click\', function() {';
                     js += '\t_gaq.push([\'_trackEvent\', \''+ viewModel.currentProject.googleAnalytics.eventCategory.originalValue + '\', \'click-' + widget.viewModel.name.originalValue +'\']);';
                     js += '});\n';
