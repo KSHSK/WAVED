@@ -123,7 +123,7 @@ define([
         },
         exportId: {
             get: function() {
-                return 'widget-' + this.name.originalValue.replace('-', '--').replace(' ', '-');
+                return 'widget-' + this.name.originalValue.replace(/-/g, '--').replace(/ /g, '-');
             }
         },
         subTargets: {
