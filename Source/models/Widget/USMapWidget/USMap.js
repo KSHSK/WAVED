@@ -286,16 +286,16 @@ define([
         js += '\t\treturn "' + vm.coloring.value.getType() + '";\n';
         js += '\t})\n';
         js += '\t.on("mouseover", function(d) {\n';
-        js += '\t\taddStateDataToTrigger(d, ' + this.viewModel.name.originalValue + ');\n';
+        js += '\t\taddStateDataToTrigger(d, \'' + this.viewModel.name.originalValue + '\');\n';
         js += '\t})\n';
         js += '\t.on("mousemove", function(d) {\n';
-        js += '\t\taddStateDataToTrigger(d, ' + this.viewModel.name.originalValue + ');\n';
+        js += '\t\taddStateDataToTrigger(d, \'' + this.viewModel.name.originalValue + '\');\n';
         js += '\t})\n';
         js += '\t.on("mouseout", function(d) {\n';
-        js += '\t\taddStateDataToTrigger(d, ' + this.viewModel.name.originalValue + ');\n';
+        js += '\t\taddStateDataToTrigger(d, \'' + this.viewModel.name.originalValue + '\');\n';
         js += '\t})\n';
         js += '\t.on("click", function(d) {\n';
-        js += '\t\taddStateDataToTrigger(d, ' + this.viewModel.name.originalValue + ');\n';
+        js += '\t\taddStateDataToTrigger(d, \'' + this.viewModel.name.originalValue + '\');\n';
         if (vm.logGoogleAnalytics.value) {
             js += '\t\t_gaq.push([\'_trackEvent\', \'' + googleAnalytics.eventCategory.originalValue + '\', \'click-' + vm.name.originalValue + '-\' + d.properties.name]);\n';
         }
