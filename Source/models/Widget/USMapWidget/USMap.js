@@ -228,29 +228,44 @@ define([
         var h2 = h * vm.width.value/100;
         var scale = w*1.3*vm.width.value/100;
 
-        js += 'function addStateDataToTrigger(d){\n';
+
+        // TODO: only export these functions once
+
+        js += 'function addDataToTrigger(widgetName, name, key, value) {\n';
+        js += '\tif (arguments.length === 3) {\n';
+        js += '\t\twidgets[widgetName].triggerData[name] = key;\n';
+        js += '\t\treturn;\n';
+        js += '\t}\n';
+        js += '\tif (typeof (widgets[widgetName].triggerData[name]) === \'undefined\') {\n';
+        js += '\t\twidgets[widgetName].triggerData[name] = {};\n';
+        js += '\t}\n';
+        js += '\twidgets[widgetName].triggerData[name][key] = value;\n';
+        js += '};\n';
+
+
+        js += 'function addStateDataToTrigger(d, mapWidget) {\n';
         js += '\tvar name = d.properties.name;\n';
         js += '\tvar abbrev = d.properties.abbreviation;\n';
-        // TODO: viewModel does not exist here. We need a way to store data on each exported widget/trigger.
-//        js += '\tviewModel._trigger.addData(\'state\', name);\n';
-//        js += '\tviewModel._trigger.addData(\'stateAbbreviation\', abbrev);\n';
-//        js += '\t// Iterate through each bound DataSet and add data values to the trigger\n';
-//        js += '\t// only for the state matching the specified name.\n';
-//        js += '\tfor (var i = 0; i < viewModel._boundData.length; i++) {\n';
-//        js += '\t\t    var data = viewModel._boundData[i].data;\n';
-//        js += '\t\t    for (var j = 0; j < data.length; j++) {\n';
-//        js += '\t\t\t        for (var key in data[j]) {\n';
-//        js += '\t\t\t\t            var lowerVal = data[j][key].toLowerCase();\n';
-//        js += '\t\t\t\t            if (lowerVal === name.toLowerCase() || lowerVal === abbrev.toLowerCase()) {\n';
-//        js += '\t\t\t\t\t                for (var k in data[j]) {\n';
-//        js += '\t\t\t\t\t\t                    viewModel._trigger.addData(viewModel._boundData[i].name, k, data[j][k]);\n';
-//        js += '\t\t\t\t\t                 }\n';
-//        js += '\t\t\t\t\t               break;\n';
-//        js += '\t\t\t\t            }\n';
-//        js += '\t\t\t        }\n';
-//        js += '\t\t    }\n';
-//        js += '\t}\n';
+        js += '\taddDataToTrigger(mapWidget, \'state\', name);\n';
+        js += '\taddDataToTrigger(mapWidget, \'stateAbbreviation\', abbrev);\n';
+        js += '\t// Iterate through each bound DataSet and add data values to the trigger\n';
+        js += '\t// only for the state matching the specified name.\n';
+        js += '\tfor (var i = 0; i < widgets[mapWidget].boundData.length; i++) {\n';
+        js += '\t\tvar data = dataSets[widgets[mapWidget].boundData[i]].data;\n';
+        js += '\t\tfor (var j = 0; j < data.length; j++) {\n';
+        js += '\t\t\tfor (var key in data[j]) {\n';
+        js += '\t\t\t\tvar lowerVal = data[j][key].toLowerCase();\n';
+        js += '\t\t\t\tif (lowerVal === name.toLowerCase() || lowerVal === abbrev.toLowerCase()) {\n';
+        js += '\t\t\t\t\tfor (var k in data[j]) {\n';
+        js += '\t\t\t\t\t\taddDataToTrigger(mapWidget, widgets[mapWidget].boundData[i], k, data[j][k]);\n';
+        js += '\t\t\t\t\t}\n';
+        js += '\t\t\t\t\tbreak;\n';
+        js += '\t\t\t\t}\n';
+        js += '\t\t\t}\n';
+        js += '\t\t}\n';
+        js += '\t}\n';
         js += '}\n\n';
+
         js += 'var scale = ' + w + '*1.3*' + vm.width.value/100 + '; //1.3 is a magic number\n';
         js += 'var projection = d3.geo.albersUsa().scale(scale).translate(([' + w2 + '/2, ' + h2 + '/2]));\n';
         js += 'var path = d3.geo.path().projection(projection);\n';
@@ -271,16 +286,16 @@ define([
         js += '\t\treturn "' + vm.coloring.value.getType() + '";\n';
         js += '\t})\n';
         js += '\t.on("mouseover", function(d) {\n';
-        js += '\t\taddStateDataToTrigger(d);\n';
+        js += '\t\taddStateDataToTrigger(d, ' + this.viewModel.name.originalValue + ');\n';
         js += '\t})\n';
         js += '\t.on("mousemove", function(d) {\n';
-        js += '\t\taddStateDataToTrigger(d);\n';
+        js += '\t\taddStateDataToTrigger(d, ' + this.viewModel.name.originalValue + ');\n';
         js += '\t})\n';
         js += '\t.on("mouseout", function(d) {\n';
-        js += '\t\taddStateDataToTrigger(d);\n';
+        js += '\t\taddStateDataToTrigger(d, ' + this.viewModel.name.originalValue + ');\n';
         js += '\t})\n';
         js += '\t.on("click", function(d) {\n';
-        js += '\t\taddStateDataToTrigger(d);\n';
+        js += '\t\taddStateDataToTrigger(d, ' + this.viewModel.name.originalValue + ');\n';
         if (vm.logGoogleAnalytics.value) {
             js += '\t\t_gaq.push([\'_trackEvent\', \'' + googleAnalytics.eventCategory.originalValue + '\', \'click-' + vm.name.originalValue + '-\' + d.properties.name]);\n';
         }
