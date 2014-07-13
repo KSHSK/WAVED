@@ -124,8 +124,6 @@ define([
                     }
 
                     if (defined(action.target[key].html)) {
-                        console.log(action.target);
-                        console.log(action.newValues[key]);
                         js += tabs + '\n\t$(\'#' + action.target.exportId + '\').html(\'' + action.newValues[key].value + '\');\n';
                     }
                 }
@@ -185,9 +183,18 @@ define([
             }
 
             // Export Events
+            js += 'function addMouseDataToTrigger(event, widgetName){\n';
+            js += 'var workspace = $(\'#waved-container\');\n';
+            js += 'addDataToTrigger(widgetName, \'x\', 100 * (event.pageX - workspace.offset().left) / workspace.width());\n';
+            js += 'addDataToTrigger(widgetName, \'y\', 100 * (event.pageY - workspace.offset().top) / workspace.height());\n';
+            js += '}\n\n';
+
             for (i = 0; i < viewModel.currentProject.events.length; i++) {
                 var event = viewModel.currentProject.events[i];
-                js += '$(\'#'+ event.triggeringWidget.viewModel.exportId + '\').on(\'' + EventType[event.eventType] + '\', function() {';
+                js += '$(\'#'+ event.triggeringWidget.viewModel.exportId + '\').on(\'' + EventType[event.eventType] + '\', function(event) {\n';
+
+                js += '\taddMouseDataToTrigger(event, \'' + event.triggeringWidget.viewModel.name.originalValue + '\');\n';
+
                 // apply actions
                 for (j = 0; j < event.actions.length; j++) {
                     js += this.exportAction(event.actions[j], '\t');
@@ -206,7 +213,7 @@ define([
                 if (widget.viewModel.boundData.length > 0) {
                     js += '\t\'boundData\': [' ;
                     for (j = 0; j < widget.viewModel.boundData.length; j++) {
-                        js += widget.viewModel.boundData[j].name;
+                        js += '\'' + widget.viewModel.boundData[j].name + '\'';
                         if (j !== widget.viewModel.boundData.length - 1) {
                             js += ', ';
                         }
