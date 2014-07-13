@@ -124,7 +124,9 @@ define([
                     }
 
                     if (defined(action.target[key].html)) {
-                        js += tabs + '\n\t$(\'#' + action.target.exportId + '\').html(\'' + action.newValues[key] + '\');\n';
+                        console.log(action.target);
+                        console.log(action.newValues[key]);
+                        js += tabs + '\n\t$(\'#' + action.target.exportId + '\').html(\'' + action.newValues[key].value + '\');\n';
                     }
                 }
             }
