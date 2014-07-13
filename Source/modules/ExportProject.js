@@ -164,7 +164,7 @@ define([
 
         generateJs: function(viewModel) {
             var js = '$(document).ready(function() {\n';
-            var i;
+            var i, j;
 
             // Export Data
             var dataSets = viewModel.currentProject.unmarkedDataSets;
@@ -187,14 +187,36 @@ define([
                 var event = viewModel.currentProject.events[i];
                 js += '$(\'#'+ event.triggeringWidget.viewModel.exportId + '\').on(\'' + EventType[event.eventType] + '\', function() {';
                 // apply actions
-                for (var j = 0; j < event.actions.length; j++) {
+                for (j = 0; j < event.actions.length; j++) {
                     js += this.exportAction(event.actions[j], '\t');
                 }
                 js += '});\n';
             }
 
+            js += '// Initialize Widgets\n';
+            js += 'var widgets = {};\n';
             for (i = 0; i < viewModel.currentProject.widgets.length; i++) {
                 var widget = viewModel.currentProject.widgets[i];
+
+                js += 'widgets[\'' + widget.viewModel.name.originalValue + '\'] = {\n';
+                js += '\t\'id\': \'' + widget.viewModel.exportId + '\',\n';
+
+                if (widget.viewModel.boundData.length > 0) {
+                    js += '\t\'boundData\': [' ;
+                    for (j = 0; j < widget.viewModel.boundData.length; j++) {
+                        js += widget.viewModel.boundData[j].name;
+                        if (j !== widget.viewModel.boundData.length - 1) {
+                            js += ', ';
+                        }
+                    }
+                    js += '],\n';
+                } else {
+                    js += '\t\'boundData\': [],\n';
+                }
+                js += '\t\'triggerData\': {}\n';
+                js += '};\n';
+
+
                 if (defined(widget.getJs)) {
                     js += widget.getJs(viewModel.currentProject.googleAnalytics);
                 }
