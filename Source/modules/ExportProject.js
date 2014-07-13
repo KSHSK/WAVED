@@ -108,7 +108,7 @@ define([
 
 
                         // TODO: Specific for US Map??
-                        //js += tabs + '\n\t$(\'#' + action.target.name.value + '\').css(\'' + action.target[key].css.attribute + '\', \'' + value + '\');\n';
+                        //js += tabs + '\n\t$(\'#' + action.target.exportId + '\').css(\'' + action.target[key].css.attribute + '\', \'' + value + '\');\n';
 
                         // TODO: Needs specific function calls for map and glyphs to update coloring or rerender (due to scaling and such)
 
