@@ -230,7 +230,7 @@ define([
 
 
         // TODO: only export these functions once
-
+        // addDataToTrigger, thoug used only by USMap right now, isn't specific to USMap.
         js += 'function addDataToTrigger(widgetName, name, key, value) {\n';
         js += '\tif (arguments.length === 3) {\n';
         js += '\t\twidgets[widgetName].triggerData[name] = key;\n';

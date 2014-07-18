@@ -77,7 +77,7 @@ define([
         },
 
         // TODO: Action with nested properties
-        exportAction: function(action, tabs) {
+        exportAction: function(action, triggerName, tabs) {
             var js = '';
             if (action instanceof PropertyAction) {
                 for (var key in action.newValues) {
@@ -120,11 +120,13 @@ define([
                         if (defined(action.target[key].css.units)) {
                             value += action.target[key].css.units;
                         }
-                        js += tabs + '\n\t$(\'#' + action.target.exportId + '\').css(\'' + action.target[key].css.attribute + '\', \'' + value + '\');\n';
+                        // TODO: check if value is a number/string before putting it in quotes.
+                        js += tabs + '\n\t$(\'#' + action.target.exportId + '\').css(\'' + action.target[key].css.attribute + '\', replaceTemplates(\'' + triggerName + '\', \'' + value + '\'));\n';
                     }
 
                     if (defined(action.target[key].html)) {
-                        js += tabs + '\n\t$(\'#' + action.target.exportId + '\').html(\'' + action.newValues[key].value + '\');\n';
+                        // TODO: check if value is a number/string before putting it in quotes.
+                        js += tabs + '\n\t$(\'#' + action.target.exportId + '\').html(replaceTemplates(\'' + triggerName + '\', \'' + action.newValues[key].value + '\'));\n';
                     }
                 }
             }
@@ -197,7 +199,7 @@ define([
 
                 // apply actions
                 for (j = 0; j < event.actions.length; j++) {
-                    js += this.exportAction(event.actions[j], '\t');
+                    js += this.exportAction(event.actions[j], event.triggeringWidget.viewModel.name.originalValue, '\t');
                 }
                 js += '});\n';
             }
