@@ -127,7 +127,7 @@ define([
 
                     if (defined(action.target[key].html)) {
                         var isString = (typeof action.newValues[key].value === 'string');
-                        js += tabs + '\n\t$(\'#' + action.target.exportId + '\').html(replaceTemplates(\'' + triggerName + '\', ' + (isString ? '\'' : '') + action.newValues[key].value + (isString ? '\'' : '') + '));\n';
+                        js += tabs + '\n\t$(\'#' + action.target.exportId + '\').html(replaceTemplates(\'' + triggerName + '\', ' + (isString ? ('\'' + action.newValues[key].value.replace(/\r\n|\r|\n/g, '<br>') + '\'') : action.newValues[key].value) + '));\n';
                     }
                 }
             }
