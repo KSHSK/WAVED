@@ -120,13 +120,14 @@ define([
                         if (defined(action.target[key].css.units)) {
                             value += action.target[key].css.units;
                         }
-                        // TODO: check if value is a number/string before putting it in quotes.
-                        js += tabs + '\n\t$(\'#' + action.target.exportId + '\').css(\'' + action.target[key].css.attribute + '\', replaceTemplates(\'' + triggerName + '\', \'' + value + '\'));\n';
+
+                        var numericValue = (typeof value === 'number');
+                        js += tabs + '\n\t$(\'#' + action.target.exportId + '\').css(\'' + action.target[key].css.attribute + '\', replaceTemplates(\'' + triggerName + '\', ' + (numericValue ? '' : '\'') + value + (numericValue ? '' : '\'') + '));\n';
                     }
 
                     if (defined(action.target[key].html)) {
-                        // TODO: check if value is a number/string before putting it in quotes.
-                        js += tabs + '\n\t$(\'#' + action.target.exportId + '\').html(replaceTemplates(\'' + triggerName + '\', \'' + action.newValues[key].value + '\'));\n';
+                        var isString = (typeof action.newValues[key].value === 'string');
+                        js += tabs + '\n\t$(\'#' + action.target.exportId + '\').html(replaceTemplates(\'' + triggerName + '\', ' + (isString ? '\'' : '') + action.newValues[key].value + (isString ? '\'' : '') + '));\n';
                     }
                 }
             }
@@ -187,10 +188,11 @@ define([
             // Export Events
             js += 'function addMouseDataToTrigger(event, widgetName){\n';
             js += 'var workspace = $(\'#waved-container\');\n';
-            js += 'addDataToTrigger(widgetName, \'x\', 100 * (event.pageX - workspace.offset().left) / workspace.width());\n';
-            js += 'addDataToTrigger(widgetName, \'y\', 100 * (event.pageY - workspace.offset().top) / workspace.height());\n';
+            js += '\taddDataToTrigger(widgetName, \'x\', 100 * (event.pageX - workspace.offset().left) / workspace.width());\n';
+            js += '\taddDataToTrigger(widgetName, \'y\', 100 * (event.pageY - workspace.offset().top) / workspace.height());\n';
             js += '}\n\n';
 
+            var propertyActionHelperExported = false;
             for (i = 0; i < viewModel.currentProject.events.length; i++) {
                 var event = viewModel.currentProject.events[i];
                 js += '$(\'#'+ event.triggeringWidget.viewModel.exportId + '\').on(\'' + EventType[event.eventType] + '\', function(event) {\n';
@@ -199,6 +201,10 @@ define([
 
                 // apply actions
                 for (j = 0; j < event.actions.length; j++) {
+                    if (!propertyActionHelperExported && event.actions[j] instanceof PropertyAction) {
+                        js += PropertyAction.getHelperFunctionsJs();
+                        propertyActionHelperExported = true;
+                    }
                     js += this.exportAction(event.actions[j], event.triggeringWidget.viewModel.name.originalValue, '\t');
                 }
                 js += '});\n';
