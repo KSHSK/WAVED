@@ -151,9 +151,6 @@ define([
 
         js += 'function updateColoring (states) {\n';
         js += '\tvar path = states.selectAll("path");\n';
-        js += '\t\tpath.style("stroke", function(d) {\n';
-        js += '\t\treturn "' + viewModel.strokeColor.value + '";\n';
-        js += '\t});\n';
 
         // Every time a color is used here, it should be converted toLowerCase() to be consistent across the board
         switch(coloringScheme.getType()){
@@ -256,43 +253,56 @@ define([
         js += '\t}\n';
         js += '}\n\n';
 
-        js += 'var scale = ' + w + '*1.3*' + vm.width.value/100 + '; //1.3 is a magic number\n';
-        js += 'var projection = d3.geo.albersUsa().scale(scale).translate(([' + w2 + '/2, ' + h2 + '/2]));\n';
-        js += 'var path = d3.geo.path().projection(projection);\n';
+        // Initial map properties.
+        var nameString = '"' + vm.name.originalValue + '"';
+        js += 'widgets[' + nameString + '].properties = {};\n';
+        js += 'widgets[' + nameString + '].properties.left = ' + vm.x.value + ';\n';
+        js += 'widgets[' + nameString + '].properties.top = ' + vm.y.value + ';\n';
+        js += 'widgets[' + nameString + '].properties.scale = ' + vm.width.value + ';\n';
+        js += 'widgets[' + nameString + '].properties.strokeColor = "' + vm.strokeColor.value + '";\n';
+
+        js += 'function renderUSMap(map) {\n';
+        js += '\tvar scale = ' + w + '*1.3*map.properties.scale/100;\n'; //1.3 is a magic number\n';
+        js += '\tvar projection = d3.geo.albersUsa().scale(scale).translate(([' + w2 + '/2, ' + h2 + '/2]));\n';
+        js += '\tvar path = d3.geo.path().projection(projection);\n';
         js += getColoringJs(vm);
-        js += 'var svg = d3.select("#' + vm.exportId + '")\n';
-        js += '\t.append("svg")\n';
-        js += '\t.attr("height", ' +  h2 + ')\n';
-        js += '\t.attr("width", '  + w2 + ');\n';
-        js += 'var states = svg.append("g");\n';
-        js += 'd3.json(\'./data/states.json\', function(json) {\n';
-        js += '\tstates.selectAll("path")\n';
-        js += '\t.data(json.features)\n';
-        js += '\t.enter()\n';
-        js += '\t.append("path")\n';
-        js += '\t.attr("d", path)\n';
-        js += '\t.attr("stroke", "white")\n';
-        js += '\t.style("fill", function(d) {\n';
-        js += '\t\treturn "' + vm.coloring.value.getType() + '";\n';
-        js += '\t})\n';
-        js += '\t.on("mouseover", function(d) {\n';
-        js += '\t\taddStateDataToTrigger(d, \'' + this.viewModel.name.originalValue + '\');\n';
-        js += '\t})\n';
-        js += '\t.on("mousemove", function(d) {\n';
-        js += '\t\taddStateDataToTrigger(d, \'' + this.viewModel.name.originalValue + '\');\n';
-        js += '\t})\n';
-        js += '\t.on("mouseout", function(d) {\n';
-        js += '\t\taddStateDataToTrigger(d, \'' + this.viewModel.name.originalValue + '\');\n';
-        js += '\t})\n';
-        js += '\t.on("click", function(d) {\n';
-        js += '\t\taddStateDataToTrigger(d, \'' + this.viewModel.name.originalValue + '\');\n';
+        js += '\tvar svg = d3.select("#" + map.id)\n';
+        js += '\t\t.append("svg")\n';
+        js += '\t\t.attr("height", ' +  h2 + ')\n';
+        js += '\t\t.attr("width", '  + w2 + ');\n';
+        js += '\tvar states = svg.append("g");\n';
+        js += '\td3.json(\'./data/states.json\', function(json) {\n';
+        js += '\t\tstates.selectAll("path")\n';
+        js += '\t\t.data(json.features)\n';
+        js += '\t\t.enter()\n';
+        js += '\t\t.append("path")\n';
+        js += '\t\t.attr("d", path)\n';
+        js += '\t\t.style("stroke", function(d) {\n';
+        js += '\t\t\treturn map.properties.strokeColor;\n';
+        js += '\t\t})\n';
+        js += '\t\t.style("fill", function(d) {\n';
+        js += '\t\t\treturn "' + vm.coloring.value.getType() + '";\n';
+        js += '\t\t})\n';
+        js += '\t\t.on("mouseover", function(d) {\n';
+        js += '\t\t\taddStateDataToTrigger(d, \'' + this.viewModel.name.originalValue + '\');\n';
+        js += '\t\t})\n';
+        js += '\t\t.on("mousemove", function(d) {\n';
+        js += '\t\t\taddStateDataToTrigger(d, \'' + this.viewModel.name.originalValue + '\');\n';
+        js += '\t\t})\n';
+        js += '\t\t.on("mouseout", function(d) {\n';
+        js += '\t\t\taddStateDataToTrigger(d, \'' + this.viewModel.name.originalValue + '\');\n';
+        js += '\t\t})\n';
+        js += '\t\t.on("click", function(d) {\n';
+        js += '\t\t\taddStateDataToTrigger(d, \'' + this.viewModel.name.originalValue + '\');\n';
         if (vm.logGoogleAnalytics.value) {
-            js += '\t\t_gaq.push([\'_trackEvent\', \'' + googleAnalytics.eventCategory.originalValue + '\', \'click-' + vm.name.originalValue + '-\' + d.properties.name]);\n';
+            js += '\t\t\t_gaq.push([\'_trackEvent\', \'' + googleAnalytics.eventCategory.originalValue + '\', \'click-' + vm.name.originalValue + '-\' + d.properties.name]);\n';
         }
+        js += '\t\t});\n';
+        js += '\t\tupdateColoring(states);\n';
         js += '\t});\n';
-        js += '\tupdateColoring(states);\n';
-        js += '});\n';
-        js += '\n';
+        js += '}\n\n';
+
+        js += 'renderUSMap(widgets[' + nameString + ']);\n\n';
         var glyphs = vm.glyphs;
         if (glyphs.length > 0) {
             for (var i = 0; i < glyphs.length; i++) {
