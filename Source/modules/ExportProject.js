@@ -115,6 +115,7 @@ define([
                         continue; // Skip the rest of the loop, no reason to look at the top level property again
                     }
 
+                    var isString = (typeof action.newValues[key].value === 'string');
                     if (defined(action.target[key].css)) {
                         var value = action.newValues[key].value;
                         if (defined(action.target[key].css.units)) {
@@ -122,12 +123,15 @@ define([
                         }
 
                         var numericValue = (typeof value === 'number');
-                        js += tabs + '\n\t$(\'#' + action.target.exportId + '\').css(\'' + action.target[key].css.attribute + '\', replaceTemplates(\'' + triggerName + '\', ' + (numericValue ? '' : '\'') + value + (numericValue ? '' : '\'') + '));\n';
+                        js += tabs + '$(\'#' + action.target.exportId + '\').css(\'' + action.target[key].css.attribute + '\', replaceTemplates(\'' + triggerName + '\', ' + (numericValue ? '' : '\'') + value + (numericValue ? '' : '\'') + '));\n';
                     }
 
                     if (defined(action.target[key].html)) {
-                        var isString = (typeof action.newValues[key].value === 'string');
-                        js += tabs + '\n\t$(\'#' + action.target.exportId + '\').html(replaceTemplates(\'' + triggerName + '\', ' + (isString ? ('\'' + action.newValues[key].value.replace(/\r\n|\r|\n/g, '<br>') + '\'') : action.newValues[key].value) + '));\n';
+                        js += tabs + '$(\'#' + action.target.exportId + '\').html(replaceTemplates(\'' + triggerName + '\', ' + (isString ? ('\'' + action.newValues[key].value.replace(/\r\n|\r|\n/g, '<br>') + '\'') : action.newValues[key].value) + '));\n';
+                    }
+
+                    if (defined(action.target[key].exportProperty)) {
+                        js += tabs + 'widgets["' + action.target.name.originalValue + '"].properties.' + action.target[key].exportProperty + ' = ' + (isString ?  '"' + action.newValues[key].value + '"' : action.newValues[key].value) + ';\n';
                     }
                 }
             }
@@ -168,6 +172,11 @@ define([
         generateJs: function(viewModel) {
             var js = '$(document).ready(function() {\n';
             var i, j;
+
+            // Export workspace width and height, which may be used by widgets.
+            var $workspace = $('#waved-workspace');
+            js += 'var workspaceWidth = ' + $workspace.width() + ';\n';
+            js += 'var workspaceHeight = ' + $workspace.height() + ';\n';
 
             // Export Data
             var dataSets = viewModel.currentProject.unmarkedDataSets;
@@ -217,8 +226,21 @@ define([
                 js += '\taddMouseDataToTrigger(event, \'' + event.triggeringWidget.viewModel.name.originalValue + '\');\n';
 
                 // apply actions
+                var targets = [];
                 for (j = 0; j < event.actions.length; j++) {
                     js += this.exportAction(event.actions[j], event.triggeringWidget.viewModel.name.originalValue, '\t');
+                    js += '\n';
+                    if (targets.indexOf(event.actions[j].target) === -1) {
+                        targets.push(event.actions[j].target);
+                    }
+                }
+
+                // Do any rerendering.
+                for (j = 0; j < targets.length; j++) {
+                    var target = targets[j];
+                    if (defined(target.renderFunctionName)) {
+                        js += '\t' + target.renderFunctionName + '(widgets["' + target.name.originalValue + '"]);\n';
+                    }
                 }
                 js += '});\n';
             }
@@ -243,7 +265,8 @@ define([
                 } else {
                     js += '\t\'boundData\': [],\n';
                 }
-                js += '\t\'triggerData\': {}\n';
+                js += '\t\'triggerData\': {},\n';
+                js += '\t\'properties\': {}\n';
                 js += '};\n';
 
 
