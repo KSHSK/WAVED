@@ -197,11 +197,11 @@ define([
             js += '\t\twidgets[widgetName].triggerData[name] = {};\n';
             js += '\t}\n';
             js += '\twidgets[widgetName].triggerData[name][key] = value;\n';
-            js += '};\n\n';
+            js += '}\n\n';
 
             // addMouseDataToTrigger
             js += 'function addMouseDataToTrigger(event, widgetName){\n';
-            js += 'var workspace = $(\'#waved-container\');\n';
+            js += '\tvar workspace = $(\'#waved-container\');\n';
             js += '\taddDataToTrigger(widgetName, \'x\', 100 * (event.pageX - workspace.offset().left) / workspace.width());\n';
             js += '\taddDataToTrigger(widgetName, \'y\', 100 * (event.pageY - workspace.offset().top) / workspace.height());\n';
             js += '}\n\n';

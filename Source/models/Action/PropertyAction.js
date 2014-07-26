@@ -228,7 +228,7 @@ define([
         js += 'function replaceTemplates(triggerName, actionValue) {\n';
         js += '\tvar templates = getTemplateMatches(actionValue);\n';
         js += '\tif (templates.length === 0) {\n';
-        js += '\t\treturn actionValue\n';
+        js += '\t\treturn actionValue;\n';
         js += '\t}\n';
         js += '\tvar temp = actionValue;\n';
         js += '\tif (typeof actionValue === \'number\') {\n';
