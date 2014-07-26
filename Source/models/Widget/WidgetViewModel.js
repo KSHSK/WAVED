@@ -126,11 +126,6 @@ define([
                 return 'widget-' + this.name.originalValue;
             }
         },
-        exportSelector: {
-            get: function() {
-                return this.exportId;
-            }
-        },
         subTargets: {
             get: function() {
                 return [];
