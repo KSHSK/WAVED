@@ -193,18 +193,17 @@ define([
             js += '}\n\n';
 
             var propertyActionHelperExported = false;
-            for (i = 0; i < viewModel.currentProject.events.length; i++) {
-                var event = viewModel.currentProject.events[i];
+            var events = viewModel.currentProject.events;
+            if (events.length > 0 && viewModel.currentProject.propertyActions.length > 0) {
+                js += PropertyAction.getHelperFunctionsJs();
+            }
+            for (i = 0; i < events.length; i++) {
+                var event = events[i];
                 js += '$(\'#'+ event.triggeringWidget.viewModel.exportId + '\').on(\'' + EventType[event.eventType] + '\', function(event) {\n';
-
                 js += '\taddMouseDataToTrigger(event, \'' + event.triggeringWidget.viewModel.name.originalValue + '\');\n';
 
                 // apply actions
                 for (j = 0; j < event.actions.length; j++) {
-                    if (!propertyActionHelperExported && event.actions[j] instanceof PropertyAction) {
-                        js += PropertyAction.getHelperFunctionsJs();
-                        propertyActionHelperExported = true;
-                    }
                     js += this.exportAction(event.actions[j], event.triggeringWidget.viewModel.name.originalValue, '\t');
                 }
                 js += '});\n';
