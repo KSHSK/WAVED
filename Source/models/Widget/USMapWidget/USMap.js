@@ -64,6 +64,8 @@ define([
 
         this._css.height = '100%';
         this._css.width = '100%';
+
+        return this._css;
     };
 
     USMap.prototype.exportHtml = function() {
@@ -230,19 +232,7 @@ define([
 
 
         // TODO: only export these functions once
-        // addDataToTrigger, thoug used only by USMap right now, isn't specific to USMap.
-        js += 'function addDataToTrigger(widgetName, name, key, value) {\n';
-        js += '\tif (arguments.length === 3) {\n';
-        js += '\t\twidgets[widgetName].triggerData[name] = key;\n';
-        js += '\t\treturn;\n';
-        js += '\t}\n';
-        js += '\tif (typeof (widgets[widgetName].triggerData[name]) === \'undefined\') {\n';
-        js += '\t\twidgets[widgetName].triggerData[name] = {};\n';
-        js += '\t}\n';
-        js += '\twidgets[widgetName].triggerData[name][key] = value;\n';
-        js += '};\n';
-
-
+        // addStateDataToTrigger
         js += 'function addStateDataToTrigger(d, mapWidget) {\n';
         js += '\tvar name = d.properties.name;\n';
         js += '\tvar abbrev = d.properties.abbreviation;\n';

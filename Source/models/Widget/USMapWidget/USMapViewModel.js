@@ -562,6 +562,11 @@ define([
 
                 return allSubTargets;
             }
+        },
+        exportSelector: {
+            get: function() {
+                return this.exportId + ' svg';
+            }
         }
     });
 

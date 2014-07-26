@@ -35,7 +35,7 @@ define([
     };
 
     function cssToString(widget) {
-        var str = '#' + widget.viewModel.exportId + ' {\n';
+        var str = '#' + widget.viewModel.exportSelector + ' {\n';
         var css = widget.getCss();
         for (var property in css) {
             str += '\t' + property + ': ' + css[property] + ';\n';
@@ -122,12 +122,12 @@ define([
                         }
 
                         var numericValue = (typeof value === 'number');
-                        js += tabs + '\n\t$(\'#' + action.target.exportId + '\').css(\'' + action.target[key].css.attribute + '\', replaceTemplates(\'' + triggerName + '\', ' + (numericValue ? '' : '\'') + value + (numericValue ? '' : '\'') + '));\n';
+                        js += tabs + '\n\t$(\'#' + action.target.exportSelector + '\').css(\'' + action.target[key].css.attribute + '\', replaceTemplates(\'' + triggerName + '\', ' + (numericValue ? '' : '\'') + value + (numericValue ? '' : '\'') + '));\n';
                     }
 
                     if (defined(action.target[key].html)) {
                         var isString = (typeof action.newValues[key].value === 'string');
-                        js += tabs + '\n\t$(\'#' + action.target.exportId + '\').html(replaceTemplates(\'' + triggerName + '\', ' + (isString ? ('\'' + action.newValues[key].value.replace(/\r\n|\r|\n/g, '<br>') + '\'') : action.newValues[key].value) + '));\n';
+                        js += tabs + '\n\t$(\'#' + action.target.exportSelector + '\').html(replaceTemplates(\'' + triggerName + '\', ' + (isString ? ('\'' + action.newValues[key].value.replace(/\r\n|\r|\n/g, '<br>') + '\'') : action.newValues[key].value) + '));\n';
                     }
                 }
             }
@@ -186,6 +186,20 @@ define([
             }
 
             // Export Events
+
+            // addDataToTrigger
+            js += 'function addDataToTrigger(widgetName, name, key, value) {\n';
+            js += '\tif (arguments.length === 3) {\n';
+            js += '\t\twidgets[widgetName].triggerData[name] = key;\n';
+            js += '\t\treturn;\n';
+            js += '\t}\n';
+            js += '\tif (typeof (widgets[widgetName].triggerData[name]) === \'undefined\') {\n';
+            js += '\t\twidgets[widgetName].triggerData[name] = {};\n';
+            js += '\t}\n';
+            js += '\twidgets[widgetName].triggerData[name][key] = value;\n';
+            js += '};\n\n';
+
+            // addMouseDataToTrigger
             js += 'function addMouseDataToTrigger(event, widgetName){\n';
             js += 'var workspace = $(\'#waved-container\');\n';
             js += '\taddDataToTrigger(widgetName, \'x\', 100 * (event.pageX - workspace.offset().left) / workspace.width());\n';
@@ -239,7 +253,7 @@ define([
 
                 // Add Google Analytics track on click event
                 if (widget.viewModel.logGoogleAnalytics.value && !(widget instanceof USMap)) {
-                    js += '$(\'#'+ widget.viewModel.exportId + '\').on(\'click\', function() {';
+                    js += '$(\'#'+ widget.viewModel.exportSelector + '\').on(\'click\', function() {';
                     js += '\t_gaq.push([\'_trackEvent\', \''+ viewModel.currentProject.googleAnalytics.eventCategory.originalValue + '\', \'click-' + widget.viewModel.name.originalValue +'\']);';
                     js += '});\n';
                 }
