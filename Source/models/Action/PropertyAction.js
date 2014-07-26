@@ -242,8 +242,9 @@ define([
         js += '\t\t\t\tif (index > -1) {\n';
         js += '\t\t\t\t\tvar dataName = templates[i].slice(0, index);\n';
         js += '\t\t\t\t\tvar fieldName = templates[i].slice(index + 1);\n';
-        js += '\t\t\t\t\tif (defined(widgets[triggerName].triggerData[dataName][fieldName])) {\n';
-        js += '\t\t\t\t\t\ttemp = temp.replace(\'{{\' + templates[i] + \'}}\', widgets[triggerName].triggerData[dataName][fieldName]);\n';
+        js += '\t\t\t\t\tvar triggerData = widgets[triggerName].triggerData[dataName];\n';
+        js += '\t\t\t\t\tif (defined(triggerData) && defined(triggerData[fieldName])) {\n';
+        js += '\t\t\t\t\t\ttemp = temp.replace(\'{{\' + templates[i] + \'}}\', triggerData[fieldName]);\n';
         js += '\t\t\t\t\t}\n';
         js += '\t\t\t\t}\n';
         js += '\t\t\t}\n';
