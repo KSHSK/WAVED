@@ -400,6 +400,7 @@ define([
         this.strokeColor = new StringProperty({
             displayName: 'Stroke Color',
             value: 'Black',
+            exportProperty: 'strokeColor',
             onchange: function() {
                 updateColoring(self);
             },
@@ -469,6 +470,10 @@ define([
         this.width.onchange = this.render;
         this.width.originalValue = 100;
         this.width._displayName = 'Scale';
+
+        // Required for rendering after export.
+        this.width.exportProperty = 'scale';
+        this.renderFunctionName = 'renderUSMap';
 
         this.setState(state);
 

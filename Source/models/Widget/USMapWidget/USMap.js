@@ -255,17 +255,20 @@ define([
 
         // Initial map properties.
         var nameString = '"' + vm.name.originalValue + '"';
-        js += 'widgets[' + nameString + '].properties = {};\n';
-        js += 'widgets[' + nameString + '].properties.left = ' + vm.x.value + ';\n';
-        js += 'widgets[' + nameString + '].properties.top = ' + vm.y.value + ';\n';
+        js += 'widgets[' + nameString + '].properties.x = ' + vm.x.value + ';\n';
+        js += 'widgets[' + nameString + '].properties.y = ' + vm.y.value + ';\n';
+        js += 'widgets[' + nameString + '].properties.visible = ' + vm.visible.value + ';\n';
         js += 'widgets[' + nameString + '].properties.scale = ' + vm.width.value + ';\n';
         js += 'widgets[' + nameString + '].properties.strokeColor = "' + vm.strokeColor.value + '";\n';
 
         js += 'function renderUSMap(map) {\n';
-        js += '\tvar scale = ' + w + '*1.3*map.properties.scale/100;\n'; //1.3 is a magic number\n';
-        js += '\tvar projection = d3.geo.albersUsa().scale(scale).translate(([' + w2 + '/2, ' + h2 + '/2]));\n';
+        js += '\tvar scale = workspaceWidth*1.3*map.properties.scale/100;\n'; //1.3 is a magic number\n';
+        js += '\tvar width = workspaceWidth * map.properties.scale/100;\n';
+        js += '\tvar height = workspaceHeight * map.properties.scale/100;\n';
+        js += '\tvar projection = d3.geo.albersUsa().scale(scale).translate(([width/2, height/2]));\n';
         js += '\tvar path = d3.geo.path().projection(projection);\n';
         js += getColoringJs(vm);
+        js += '\td3.select("#" + map.id).selectAll("svg").remove();\n';
         js += '\tvar svg = d3.select("#" + map.id)\n';
         js += '\t\t.append("svg")\n';
         js += '\t\t.attr("height", ' +  h2 + ')\n';
