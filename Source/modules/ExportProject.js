@@ -76,7 +76,6 @@ define([
             return css;
         },
 
-        // TODO: Action with nested properties
         exportAction: function(action, triggerName, tabs) {
             var js = '';
             var value;
