@@ -117,7 +117,7 @@ define([
         js += '\t\t\t\t\tvalue = radiusScale(d[glyph.size.dataField]);\n';
         js += '\t\t\t\t}\n';
         js += '\t\t\t\telse {\n';
-        js += '\t\t\t\t\tvalue = glyph.size.size.value;\n';
+        js += '\t\t\t\t\tvalue = glyph.size.size.value * map.properties.scale/100;\n';
         js += '\t\t\t\t}\n';
 
         js += '\t\t\t\tif (value !== null && value > 0 && !isNaN(value)) {\n';
