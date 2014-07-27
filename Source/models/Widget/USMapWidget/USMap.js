@@ -73,38 +73,39 @@ define([
     };
 
 
-    function getGlyphJs(name, glyph) {
+    function getGlyphFunctionJs(mapName) {
         var js = '';
-        var w = $('#waved-workspace').width() * glyph.parent.width.value/100;
-        var h = $('#waved-workspace').height() * glyph.parent.width.value/100;
-        js += 'var svg = d3.select("#widget-' + name + '")\n';
-        js += '\t.append("svg")\n';
-        js += '\t.attr("height", ' + h + ')\n';
-        js += '\t.attr("width",' +  w + ')\n';
-        js += '\t.attr("class", "widget-container")\n';
-        js += '\t.style("top", "0")\n';
-        js += '\t.style("left", "0")\n';
-        js += '\t.attr("id","' +  glyph.id + '");\n';
-        js += 'var dom = svg.append("g");\n';
-        if (!glyph.visible.value) {
-            js += 'dom.attr("class", "hide");\n';
-        } else {
-            js += 'dom.attr("class", "show");\n';
-        }
 
         // Generic glyph rendering function. Can be called from generated js
-        js += 'var renderGlyphs = function(glyphDataSet, lonValue, latValue, sizeType, size, color, opacity, z, parentWidth) {\n';
-        js += '\tdataSets[glyphDataSet].dataIsLoaded.done(function() {\n';
-        js += '\t\tdom.selectAll("circle").data(dataSets[glyphDataSet].data)\n';
-        js += '\t\t\t.enter().append("circle")\n';
+
+        js += 'var radiusScale = d3.scale.linear().domain([1000,500000]).range([2,10]).clamp(true);\n';
+        js += 'var renderGlyphs = function(map, glyphName) {\n';
+        js += '\tvar glyph = map.glyphs[glyphName];\n';
+        js += '\tvar width = workspaceWidth * map.properties.scale/100;\n';
+        js += '\tvar height = workspaceHeight * map.properties.scale/100;\n';
+
+        js += '\tvar svg = d3.select("#" + map.id)\n';
+        js += '\t\t.append("svg")\n';
+        js += '\t\t.attr("height", height)\n';
+        js += '\t\t.attr("width", width)\n';
+        js += '\t\t.attr("class", "widget-container")\n';
+        js += '\t\t.style("top", "0")\n';
+        js += '\t\t.style("left", "0")\n';
+        js += '\t\t.attr("id", glyphName);\n';
+        js += '\tvar dom = svg.append("g");\n';
+
+        js += '\tdataSets[glyph.dataSet].dataIsLoaded.done(function() {\n';
+        js += '\t\tdom.selectAll("circle").data(dataSets[glyph.dataSet].data)\n';
+        js += '\t\t\t.enter()\n';
+        js += '\t\t\t.append("circle")\n';
         js += '\t\t\t.attr("cx", function(d, i) {\n';
-        js += '\t\t\t\tvar coords = projection([d[lonValue], d[latValue]]);\n';
+        js += '\t\t\t\tvar coords = projection([d[glyph.longitude], d[glyph.latitude]]);\n';
         js += '\t\t\t\tif (coords !== null) {\n';
         js += '\t\t\t\t\treturn coords[0];\n';
         js += '\t\t\t\t}\n';
         js += '\t\t\t})\n';
         js += '\t\t\t.attr("cy", function(d, i) {\n';
-        js += '\t\t\t\tvar coords = projection([d[lonValue], d[latValue]]);\n';
+        js += '\t\t\t\tvar coords = projection([d[glyph.longitude], d[glyph.latitude]]);\n';
         js += '\t\t\t\tif (coords !== null) {\n';
         js += '\t\t\t\t\treturn coords[1];\n';
         js += '\t\t\t\t}\n';
@@ -112,35 +113,44 @@ define([
         js += '\t\t\t.attr("r", function(d, i) {\n';
         js += '\t\t\t\tvar value;\n';
 
-        js += '\t\t\t\tif (sizeType === "' + GlyphSizeSchemeType.SCALED_SIZE + '") {\n';
-        js += '\t\t\t\t\tvar radiusScale = d3.scale.linear().domain([1000,500000]).range([2,10]).clamp(true);\n';
-        js += '\t\t\t\t\tvalue = radiusScale(d[size]);\n';
+        js += '\t\t\t\tif (glyph.size.type === "' + GlyphSizeSchemeType.SCALED_SIZE + '") {\n';
+        js += '\t\t\t\t\tvalue = radiusScale(d[glyph.size.dataField]);\n';
         js += '\t\t\t\t}\n';
         js += '\t\t\t\telse {\n';
-        js += '\t\t\t\t\tvalue = size * (parentWidth/100);\n';
+        js += '\t\t\t\t\tvalue = glyph.size.size.value;\n';
         js += '\t\t\t\t}\n';
 
         js += '\t\t\t\tif (value !== null && value > 0 && !isNaN(value)) {\n';
         js += '\t\t\t\t\treturn value;\n';
         js += '\t\t\t\t}\n';
         js += '\t\t\t})\n';
-        js += '\t\t\t.style("fill", "' +  glyph.color.value + '")\n';
-        js += '\t\t\t.style("opacity", ' + glyph.opacity.value/100 + ')\n';
-        js += '\t\t\t.style("z-index", ' + glyph.z.value + ');\n';
+        js += '\t\t\t.style("fill", glyph.color)\n';
+        js += '\t\t\t.style("opacity", glyph.opacity/100)\n';
+        js += '\t\t\t.style("z-index", 1);\n';
 
         js += '\t});\n';
         js += '}\n';
 
         js += '\n';
 
-        // Figure out what size field (constant or scaling field) to pass into the intial renderGlyphs call
-        var sizeValue = defined(glyph.size.value.size) ? glyph.size.value.size.value : glyph.size.value.dataField.value;
+        return js;
+    }
 
-        // Render the initial set of glyphs
-        js += 'renderGlyphs("' + glyph.dataSet.value.name + '", "' + glyph.longitude.value + '", "' +
-            glyph.latitude.value + '", "' + glyph.size.value.getType() + '", "' + sizeValue + '", "' + glyph.color.value + '", "' +
-            glyph.opacity.value + '", "' + glyph.z.value + '", "' + glyph.parent.width.value + '");\n';
+    function getGlyphJs(mapName, glyph) {
+        var js = '';
 
+        var glyphName = '"' + glyph.name.originalValue + '"';
+        js += 'glyphs[' + glyphName + '] = {};\n';
+        js += 'glyphs[' + glyphName + '].dataSet = "' + glyph.dataSet.getState().value.name + '";\n';
+        js += 'glyphs[' + glyphName + '].color = "' + glyph.color.getState().value + '";\n';
+        js += 'glyphs[' + glyphName + '].opacity = ' + glyph.opacity.getState().value + ';\n';
+        js += 'glyphs[' + glyphName + '].size = ' + JSON.stringify(glyph.size.getState().value) + ';\n';
+        js += 'glyphs[' + glyphName + '].latitude = "' + glyph.latitude.getState().value + '";\n';
+        js += 'glyphs[' + glyphName + '].longitude = "' + glyph.longitude.getState().value + '";\n';
+        js += 'glyphs[' + glyphName + '].visible = ' + glyph.visible.getState().value + ';\n';
+        js += 'renderGlyphs(widgets["' + mapName + '"], ' + glyphName + ');\n';
+
+        js += '\n';
         return js;
     }
 
@@ -207,8 +217,8 @@ define([
         js += tabs + '\t\t});\n'; //end d3.csv
         js += tabs + '\t\tbreak;\n';
 
-        js += tabs + '\t\t}\n'; // end updateColoring
-        js += tabs + '\t}\n\n'; // end updateColoring
+        js += tabs + '\t}\n'; // end updateColoring
+        js += tabs + '}\n\n'; // end updateColoring
 
         return js;
     }
@@ -249,6 +259,9 @@ define([
         js += '\t}\n';
         js += '}\n\n';
 
+        // Projection must be declared outside the renderUSMap function because glyphs may need to access it.
+        js += 'var projection;\n';
+
         // Initial map properties.
         var nameString = '"' + vm.name.originalValue + '"';
         js += 'widgets[' + nameString + '].properties.x = ' + vm.x.getState().value + ';\n';
@@ -262,14 +275,14 @@ define([
         js += '\tvar scale = workspaceWidth*1.3*map.properties.scale/100;\n'; //1.3 is a magic number\n';
         js += '\tvar width = workspaceWidth * map.properties.scale/100;\n';
         js += '\tvar height = workspaceHeight * map.properties.scale/100;\n';
-        js += '\tvar projection = d3.geo.albersUsa().scale(scale).translate(([width/2, height/2]));\n';
+        js += '\tprojection = d3.geo.albersUsa().scale(scale).translate(([width/2, height/2]));\n';
         js += '\tvar path = d3.geo.path().projection(projection);\n';
         js += getColoringJs(vm, '\t');
         js += '\td3.select("#" + map.id).selectAll("svg").remove();\n';
         js += '\tvar svg = d3.select("#" + map.id)\n';
         js += '\t\t.append("svg")\n';
-        js += '\t\t.attr("height", ' +  h2 + ')\n';
-        js += '\t\t.attr("width", '  + w2 + ');\n';
+        js += '\t\t.attr("height", height)\n';
+        js += '\t\t.attr("width", width);\n';
         js += '\tvar states = svg.append("g");\n';
         js += '\td3.json(\'./data/states.json\', function(json) {\n';
         js += '\t\tstates.selectAll("path")\n';
@@ -302,8 +315,11 @@ define([
         js += 'renderUSMap(widgets[' + nameString + ']);\n\n';
         var glyphs = vm.glyphs;
         if (glyphs.length > 0) {
+            js += 'widgets[' + nameString + '].glyphs = {};\n';
+            js += 'var glyphs = widgets[' + nameString + '].glyphs;\n\n';
+            js += getGlyphFunctionJs(vm.name.originalValue);
             for (var i = 0; i < glyphs.length; i++) {
-                js += getGlyphJs(vm.name.value, glyphs[i]);
+                js += getGlyphJs(vm.name.originalValue, glyphs[i]);
             }
         }
 
