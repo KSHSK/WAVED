@@ -79,59 +79,39 @@ define([
         // TODO: Action with nested properties
         exportAction: function(action, triggerName, tabs) {
             var js = '';
+            var value;
             if (action instanceof PropertyAction) {
                 for (var key in action.newValues) {
-
-                    var subscribableNestedProperties = action.target[key].getSubscribableNestedProperties();
-
-                    // Nested properties
-                    if(defined(subscribableNestedProperties)) { // if the key has nested objects
-                        var nestedObject = action.newValues[key].value; // get that nested object
-                        var widgetNestedObject; // This is the nested object we're looking at
-
-                        for (var x = 0; x < subscribableNestedProperties.length; x++) {
-                            if (subscribableNestedProperties[x].getType() === nestedObject.type) {
-                                widgetNestedObject = subscribableNestedProperties[x];
-                                break;
-                            }
-                        }
-
-                        for (var nestedProperty in nestedObject) { // for every property in that nested object
-                            if (defined(widgetNestedObject[nestedProperty]) && defined(widgetNestedObject[nestedProperty].css)) {
-                                var nestedValue = action.newValues[key].value[nestedProperty].value;
-                                if(defined(nestedValue.css.units)) {
-                                    nestedValue += action.target[key].css.units;
-                                }
-                            }
-                        }
-
-
-
-                        // TODO: Specific for US Map??
-                        //js += tabs + '\n\t$(\'#' + action.target.exportId + '\').css(\'' + action.target[key].css.attribute + '\', \'' + value + '\');\n';
-
-                        // TODO: Needs specific function calls for map and glyphs to update coloring or rerender (due to scaling and such)
-
-                        continue; // Skip the rest of the loop, no reason to look at the top level property again
-                    }
-
-                    var isString = (typeof action.newValues[key].value === 'string');
+                    value = action.newValues[key].value;
                     if (defined(action.target[key].css)) {
-                        var value = action.newValues[key].value;
+                        var cssValue = value;
                         if (defined(action.target[key].css.units)) {
-                            value += action.target[key].css.units;
+                            cssValue += action.target[key].css.units;
                         }
 
-                        var numericValue = (typeof value === 'number');
-                        js += tabs + '$(\'#' + action.target.exportId + '\').css(\'' + action.target[key].css.attribute + '\', replaceTemplates(\'' + triggerName + '\', ' + (numericValue ? '' : '\'') + value + (numericValue ? '' : '\'') + '));\n';
+                        var numericValue = (typeof cssValue === 'number');
+                        js += tabs + '$(\'#' + action.target.exportId + '\').css(\'' + action.target[key].css.attribute + '\', replaceTemplates(\'' + triggerName + '\', ' + (numericValue ? '' : '\'') + cssValue + (numericValue ? '' : '\'') + '));\n';
                     }
 
                     if (defined(action.target[key].html)) {
-                        js += tabs + '$(\'#' + action.target.exportId + '\').html(replaceTemplates(\'' + triggerName + '\', ' + (isString ? ('\'' + action.newValues[key].value.replace(/\r\n|\r|\n/g, '<br>') + '\'') : action.newValues[key].value) + '));\n';
+                        var htmlValue = value;
+                        if (typeof value === 'string') {
+                            htmlValue = '\'' + value.replace(/\r\n|\r|\n/g, '<br>') + '\'';
+                        }
+                        js += tabs + '$(\'#' + action.target.exportId + '\').html(replaceTemplates(\'' + triggerName + '\', ' + htmlValue + '));\n';
                     }
 
                     if (defined(action.target[key].exportProperty)) {
-                        js += tabs + 'widgets["' + action.target.name.originalValue + '"].properties.' + action.target[key].exportProperty + ' = ' + (isString ?  '"' + action.newValues[key].value + '"' : action.newValues[key].value) + ';\n';
+                        var propValue = value;
+                        var type = typeof propValue;
+                        if (type === 'string') {
+                            propValue = '\'' + propValue + '\'';
+                        }
+                        else if (type === 'object') {
+                            propValue = JSON.stringify(propValue);
+                        }
+
+                        js += tabs + 'widgets["' + action.target.name.originalValue + '"].properties.' + action.target[key].exportProperty + ' = ' + propValue + ';\n';
                     }
                 }
             }
