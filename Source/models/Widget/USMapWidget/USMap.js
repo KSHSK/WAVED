@@ -79,11 +79,14 @@ define([
         // Generic glyph rendering function. Can be called from generated js
 
         js += 'var glyphRadiusScale = d3.scale.linear().domain([1000,500000]).range([2,10]).clamp(true);\n';
-        js += 'var renderGlyphs = function(map, glyphName) {\n';
-        js += '\tvar glyph = map.glyphs[glyphName];\n';
+        js += 'var renderGlyphs = function(glyph) {\n';
+        js += '\tvar map = widgets[glyph.parent];\n';
         js += '\tvar width = workspaceWidth * map.properties.scale/100;\n';
         js += '\tvar height = workspaceHeight * map.properties.scale/100;\n';
 
+        js += '\t// Remove existing glyph set.\n';
+        js += '\td3.select("#" + map.id + " svg#" + glyph.id).remove();\n\n';
+        js += '\t// Add updated glyph set.\n';
         js += '\tvar svg = d3.select("#" + map.id)\n';
         js += '\t\t.append("svg")\n';
         js += '\t\t.attr("height", height)\n';
@@ -91,21 +94,21 @@ define([
         js += '\t\t.attr("class", "widget-container")\n';
         js += '\t\t.style("top", "0")\n';
         js += '\t\t.style("left", "0")\n';
-        js += '\t\t.attr("id", glyphName);\n';
+        js += '\t\t.attr("id", glyph.id);\n';
         js += '\tvar dom = svg.append("g");\n';
 
-        js += '\tdataSets[glyph.dataSet].dataIsLoaded.done(function() {\n';
-        js += '\t\tdom.selectAll("circle").data(dataSets[glyph.dataSet].data)\n';
+        js += '\tdataSets[glyph.properties.dataSet].dataIsLoaded.done(function() {\n';
+        js += '\t\tdom.selectAll("circle").data(dataSets[glyph.properties.dataSet].data)\n';
         js += '\t\t\t.enter()\n';
         js += '\t\t\t.append("circle")\n';
         js += '\t\t\t.attr("cx", function(d, i) {\n';
-        js += '\t\t\t\tvar coords = projection([d[glyph.longitude], d[glyph.latitude]]);\n';
+        js += '\t\t\t\tvar coords = projection([d[glyph.properties.longitude], d[glyph.properties.latitude]]);\n';
         js += '\t\t\t\tif (coords !== null) {\n';
         js += '\t\t\t\t\treturn coords[0];\n';
         js += '\t\t\t\t}\n';
         js += '\t\t\t})\n';
         js += '\t\t\t.attr("cy", function(d, i) {\n';
-        js += '\t\t\t\tvar coords = projection([d[glyph.longitude], d[glyph.latitude]]);\n';
+        js += '\t\t\t\tvar coords = projection([d[glyph.properties.longitude], d[glyph.properties.latitude]]);\n';
         js += '\t\t\t\tif (coords !== null) {\n';
         js += '\t\t\t\t\treturn coords[1];\n';
         js += '\t\t\t\t}\n';
@@ -113,19 +116,19 @@ define([
         js += '\t\t\t.attr("r", function(d, i) {\n';
         js += '\t\t\t\tvar value;\n';
 
-        js += '\t\t\t\tif (glyph.size.type === "' + GlyphSizeSchemeType.SCALED_SIZE + '") {\n';
-        js += '\t\t\t\t\tvalue = glyphRadiusScale(d[glyph.size.dataField]);\n';
+        js += '\t\t\t\tif (glyph.properties.size.type === "' + GlyphSizeSchemeType.SCALED_SIZE + '") {\n';
+        js += '\t\t\t\t\tvalue = glyphRadiusScale(d[glyph.properties.size.dataField]);\n';
         js += '\t\t\t\t}\n';
         js += '\t\t\t\telse {\n';
-        js += '\t\t\t\t\tvalue = glyph.size.size.value * map.properties.scale/100;\n';
+        js += '\t\t\t\t\tvalue = glyph.properties.size.size.value * map.properties.scale/100;\n';
         js += '\t\t\t\t}\n';
 
         js += '\t\t\t\tif (value !== null && value > 0 && !isNaN(value)) {\n';
         js += '\t\t\t\t\treturn value;\n';
         js += '\t\t\t\t}\n';
         js += '\t\t\t})\n';
-        js += '\t\t\t.style("fill", glyph.color)\n';
-        js += '\t\t\t.style("opacity", glyph.opacity/100)\n';
+        js += '\t\t\t.style("fill", glyph.properties.color)\n';
+        js += '\t\t\t.style("opacity", glyph.properties.opacity/100)\n';
         js += '\t\t\t.style("z-index", 1);\n';
 
         js += '\t});\n';
@@ -140,14 +143,17 @@ define([
         var js = '';
 
         var glyphName = '"' + glyph.name.originalValue + '"';
-        js += 'glyphs[' + glyphName + '] = {};\n';
-        js += 'glyphs[' + glyphName + '].dataSet = "' + glyph.dataSet.getState().value.name + '";\n';
-        js += 'glyphs[' + glyphName + '].color = "' + glyph.color.getState().value + '";\n';
-        js += 'glyphs[' + glyphName + '].opacity = ' + glyph.opacity.getState().value + ';\n';
-        js += 'glyphs[' + glyphName + '].size = ' + JSON.stringify(glyph.size.getState().value) + ';\n';
-        js += 'glyphs[' + glyphName + '].latitude = "' + glyph.latitude.getState().value + '";\n';
-        js += 'glyphs[' + glyphName + '].longitude = "' + glyph.longitude.getState().value + '";\n';
-        js += 'glyphs[' + glyphName + '].visible = ' + glyph.visible.getState().value + ';\n';
+        js += 'widgets[' + glyphName + '] = {};\n';
+        js += 'widgets[' + glyphName + '].parent = "' + mapName + '";\n';
+        js += 'widgets[' + glyphName + '].id = ' + glyphName + ';\n';
+        js += 'widgets[' + glyphName + '].properties = {};\n';
+        js += 'widgets[' + glyphName + '].properties.dataSet = "' + glyph.dataSet.getState().value.name + '";\n';
+        js += 'widgets[' + glyphName + '].properties.color = "' + glyph.color.getState().value + '";\n';
+        js += 'widgets[' + glyphName + '].properties.opacity = ' + glyph.opacity.getState().value + ';\n';
+        js += 'widgets[' + glyphName + '].properties.size = ' + JSON.stringify(glyph.size.getState().value) + ';\n';
+        js += 'widgets[' + glyphName + '].properties.latitude = "' + glyph.latitude.getState().value + '";\n';
+        js += 'widgets[' + glyphName + '].properties.longitude = "' + glyph.longitude.getState().value + '";\n';
+        js += 'widgets[' + glyphName + '].properties.visible = ' + glyph.visible.getState().value + ';\n';
         js += 'widgets["' + mapName + '"].glyphOrder.push(' + glyphName + ');\n';
 
         js += '\n';
@@ -317,7 +323,7 @@ define([
             js += '\n';
             js += '\t// Render glyphs.\n';
             js += '\tfor (var i = 0; i < map.glyphOrder.length; i++) {\n';
-            js += '\t\trenderGlyphs(map, map.glyphOrder[i]);\n';
+            js += '\t\trenderGlyphs(widgets[map.glyphOrder[i]]);\n';
             js += '\t}\n';
         }
 
@@ -325,9 +331,7 @@ define([
 
         // Set up glyph function and data for individual glyphs.
         if (glyphs.length > 0) {
-            js += 'widgets[' + nameString + '].glyphs = {};\n';
             js += 'widgets[' + nameString + '].glyphOrder = [];\n';
-            js += 'var glyphs = widgets[' + nameString + '].glyphs;\n\n';
             js += getGlyphFunctionJs(vm.name.originalValue);
             for (var i = 0; i < glyphs.length; i++) {
                 js += getGlyphJs(vm.name.originalValue, glyphs[i]);

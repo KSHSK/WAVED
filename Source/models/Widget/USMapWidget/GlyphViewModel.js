@@ -131,6 +131,7 @@ define([
         this.dataSet = new ArrayProperty({
             displayName: 'Data Set',
             errorMessage: 'Value is required.',
+            exportProperty: 'dataSet',
             options: this.parent.boundData,
             getOptionText: function(value) {
                 return value.displayName;
@@ -140,6 +141,7 @@ define([
         this.color = new StringProperty({
             displayName: 'Color',
             value: 'Red',
+            exportProperty: 'color',
             validValue: createValidator({
                 minLength: 1
             }),
@@ -150,6 +152,7 @@ define([
         this.opacity = new NumberProperty({
             displayName: 'Opacity',
             value: 50,
+            exportProperty: 'opacity',
             validValue: createValidator({
                 min: 0,
                 max: 100
@@ -160,12 +163,14 @@ define([
 
         this.size = new GlyphSizeSelectionProperty({
             displayName: 'Size',
+            exportProperty: 'size',
             errorMessage: 'All size fields are required.',
             onchange: editGlyph.bind(self, self)
         }, this);
 
         this.latitude = new ArrayProperty({
             displayName: 'Latitude',
+            exportProperty: 'latitude',
             errorMessage: 'Value is required.',
             options: [],
             onchange: editGlyph.bind(self, self)
@@ -173,6 +178,7 @@ define([
 
         this.longitude = new ArrayProperty({
             displayName: 'Longitude',
+            exportProperty: 'longitude',
             errorMessage: 'Value is required.',
             options: [],
             onchange: editGlyph.bind(self, self)
@@ -236,6 +242,8 @@ define([
         this.remove = function() {
             removeGlyph(self);
         };
+
+        this.renderFunctionName = 'renderGlyphs';
 
         ko.track(this);
     };
