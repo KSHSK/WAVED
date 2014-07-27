@@ -177,7 +177,8 @@ define([
         js += tabs + '\t\t\tbreak;\n';
 
         js += tabs + '\t\tcase "' + ColoringSchemeType.GRADIENT_COLORING + '":\n';
-        js += tabs + '\t\td3.csv(\'./data/\' + coloring.dataSet.value.name, function(error, data) {\n';
+        js += tabs + '\t\t$.when(dataSets[coloring.dataSet.value.name].dataIsLoaded).done(function() {\n';
+        js += tabs + '\t\tvar data = dataSets[coloring.dataSet.value.name].data;\n';
         js += tabs + '\t\t\tvar dataField = coloring.dataField.value;\n';
         js += tabs + '\t\t\tvar startColor = coloring.startColor.value.toLowerCase();\n';
         js += tabs + '\t\t\tvar endColor = coloring.endColor.value.toLowerCase();\n';
