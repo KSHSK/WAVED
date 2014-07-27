@@ -177,9 +177,9 @@ define([
         js += tabs + '\t\t\tbreak;\n';
 
         js += tabs + '\t\tcase "' + ColoringSchemeType.GRADIENT_COLORING + '":\n';
-        js += tabs + '\t\t$.when(dataSets[coloring.dataSet.value.name].dataIsLoaded).done(function() {\n';
-        js += tabs + '\t\tvar data = dataSets[coloring.dataSet.value.name].data;\n';
-        js += tabs + '\t\t\tvar dataField = coloring.dataField.value;\n';
+        js += tabs + '\t\t$.when(dataSets[coloring.dataSet].dataIsLoaded).done(function() {\n';
+        js += tabs + '\t\tvar data = dataSets[coloring.dataSet].data;\n';
+        js += tabs + '\t\t\tvar dataField = coloring.dataField;\n';
         js += tabs + '\t\t\tvar startColor = coloring.startColor.value.toLowerCase();\n';
         js += tabs + '\t\t\tvar endColor = coloring.endColor.value.toLowerCase();\n';
         js += tabs + '\t\t\tvar min = d3.min(data, function(d) { return +d[dataField]; });\n';
@@ -193,7 +193,7 @@ define([
         js += tabs + '\t\t\tvar gradient = d3.scale.linear().domain([min, max]).range([startColor, endColor]);\n';
         js += tabs + '\t\t\tpath.style("fill", function(d) {\n';
         js += tabs + '\t\t\t\tvar stateName = d.properties.name;\n';
-        js += tabs + '\t\t\t\tvar keyName = coloring.keyField.value;\n';
+        js += tabs + '\t\t\t\tvar keyName = coloring.keyField;\n';
         js += tabs + '\t\t\t\tfor(var i=0; i<data.length; i++){\n';
         js += tabs + '\t\t\t\t\tif(data[i][keyName] === stateName){\n';
         js += tabs + '\t\t\t\t\t\treturn gradient(data[i][dataField]);\n';
