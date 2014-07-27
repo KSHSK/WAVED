@@ -108,6 +108,14 @@ define([
                             propValue = '\'' + propValue + '\'';
                         }
                         else if (type === 'object') {
+                            if (defined(action.target.exportActionCorrection)) {
+                                // Can occur for USMap Gradient Coloring.
+                                var temp = action.target.exportActionCorrection(propValue, key);
+                                if (defined(temp)) {
+                                    propValue = temp;
+                                }
+                            }
+
                             propValue = JSON.stringify(propValue);
                         }
 

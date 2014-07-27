@@ -551,6 +551,21 @@ define([
         return false;
     };
 
+    // Returns undefined if the given key does not need to be overridden.
+    USMapViewModel.prototype.exportActionCorrection = function(group, key) {
+        if (key === 'coloring' && group.type === ColoringSchemeType.GRADIENT_COLORING) {
+            // Override gradient coloring since the action newValues has too much DataSet information.
+            return {
+                'startColor': {'value': group.startColor.value},
+                'endColor': {'value': group.endColor.value},
+                'dataSet': group.dataSet.value.name,
+                'dataField': group.dataField.value,
+                'keyField': group.keyField.value,
+                'type': group.type
+            };
+        }
+    };
+
     Object.defineProperties(USMapViewModel.prototype, {
         properties: {
             // z is not exposed here because the map should always be on the bottom
