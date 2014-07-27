@@ -78,7 +78,7 @@ define([
 
         // Generic glyph rendering function. Can be called from generated js
 
-        js += 'var radiusScale = d3.scale.linear().domain([1000,500000]).range([2,10]).clamp(true);\n';
+        js += 'var glyphRadiusScale = d3.scale.linear().domain([1000,500000]).range([2,10]).clamp(true);\n';
         js += 'var renderGlyphs = function(map, glyphName) {\n';
         js += '\tvar glyph = map.glyphs[glyphName];\n';
         js += '\tvar width = workspaceWidth * map.properties.scale/100;\n';
@@ -114,7 +114,7 @@ define([
         js += '\t\t\t\tvar value;\n';
 
         js += '\t\t\t\tif (glyph.size.type === "' + GlyphSizeSchemeType.SCALED_SIZE + '") {\n';
-        js += '\t\t\t\t\tvalue = radiusScale(d[glyph.size.dataField]);\n';
+        js += '\t\t\t\t\tvalue = glyphRadiusScale(d[glyph.size.dataField]);\n';
         js += '\t\t\t\t}\n';
         js += '\t\t\t\telse {\n';
         js += '\t\t\t\t\tvalue = glyph.size.size.value * map.properties.scale/100;\n';
@@ -148,7 +148,7 @@ define([
         js += 'glyphs[' + glyphName + '].latitude = "' + glyph.latitude.getState().value + '";\n';
         js += 'glyphs[' + glyphName + '].longitude = "' + glyph.longitude.getState().value + '";\n';
         js += 'glyphs[' + glyphName + '].visible = ' + glyph.visible.getState().value + ';\n';
-        js += 'renderGlyphs(widgets["' + mapName + '"], ' + glyphName + ');\n';
+        js += 'widgets["' + mapName + '"].glyphOrder.push(' + glyphName + ');\n';
 
         js += '\n';
         return js;
@@ -225,6 +225,7 @@ define([
 
     USMap.prototype.getJs = function(googleAnalytics) {
         var vm = this.viewModel;
+        var glyphs = vm.glyphs;
         var js = '';
 
         var w = $('#waved-workspace').width();
@@ -310,12 +311,22 @@ define([
         js += '\t\t});\n';
         js += '\t\tupdateColoring(states, map.properties.coloring);\n';
         js += '\t});\n';
+
+        // Only make glyph calls if they exist.
+        if (glyphs.length > 0) {
+            js += '\n';
+            js += '\t// Render glyphs.\n';
+            js += '\tfor (var i = 0; i < map.glyphOrder.length; i++) {\n';
+            js += '\t\trenderGlyphs(map, map.glyphOrder[i]);\n';
+            js += '\t}\n';
+        }
+
         js += '}\n\n';
 
-        js += 'renderUSMap(widgets[' + nameString + ']);\n\n';
-        var glyphs = vm.glyphs;
+        // Set up glyph function and data for individual glyphs.
         if (glyphs.length > 0) {
             js += 'widgets[' + nameString + '].glyphs = {};\n';
+            js += 'widgets[' + nameString + '].glyphOrder = [];\n';
             js += 'var glyphs = widgets[' + nameString + '].glyphs;\n\n';
             js += getGlyphFunctionJs(vm.name.originalValue);
             for (var i = 0; i < glyphs.length; i++) {
@@ -323,6 +334,8 @@ define([
             }
         }
 
+        // Render map after glyph data is set up.
+        js += 'renderUSMap(widgets[' + nameString + ']);\n\n';
 
         return js;
     };
