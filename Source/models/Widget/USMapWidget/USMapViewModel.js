@@ -555,7 +555,7 @@ define([
     USMapViewModel.prototype.exportActionCorrection = function(group, key) {
         if (key === 'coloring' && group.type === ColoringSchemeType.GRADIENT_COLORING) {
             // Override gradient coloring since the action newValues has DataSet information in an incorrect format.
-            // This puts it inline with what gradient coloring getState returns.
+            // This puts it in line with what gradient coloring getState returns.
             return {
                 'startColor': {'value': group.startColor.value},
                 'endColor': {'value': group.endColor.value},

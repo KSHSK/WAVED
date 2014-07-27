@@ -82,6 +82,7 @@ define([
             if (action instanceof PropertyAction) {
                 for (var key in action.newValues) {
                     value = action.newValues[key].value;
+                    // Export CSS changes.
                     if (defined(action.target[key].css)) {
                         var cssValue = value;
                         if (defined(action.target[key].css.units)) {
@@ -92,6 +93,7 @@ define([
                         js += tabs + '$(\'#' + action.target.exportId + '\').css(\'' + action.target[key].css.attribute + '\', replaceTemplates(\'' + triggerName + '\', ' + (numericValue ? '' : '\'') + cssValue + (numericValue ? '' : '\'') + '));\n';
                     }
 
+                    // Export HTML changes.
                     if (defined(action.target[key].html)) {
                         var htmlValue = value;
                         if (typeof value === 'string') {
@@ -100,6 +102,7 @@ define([
                         js += tabs + '$(\'#' + action.target.exportId + '\').html(replaceTemplates(\'' + triggerName + '\', ' + htmlValue + '));\n';
                     }
 
+                    // Exporting property changes for rendering.
                     if (defined(action.target[key].exportProperty)) {
                         var propValue = value;
                         var type = typeof propValue;
@@ -108,7 +111,7 @@ define([
                         }
                         else if (type === 'object') {
                             if (defined(action.target.exportActionCorrection)) {
-                                // Can occur for USMap Gradient Coloring.
+                                // Can occur for USMap Gradient Coloring and Scaled Glyphs.
                                 var temp = action.target.exportActionCorrection(propValue, key);
                                 if (defined(temp)) {
                                     propValue = temp;

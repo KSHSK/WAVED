@@ -307,6 +307,20 @@ define([
         }
     };
 
+    // Returns undefined if the given key does not need to be overridden.
+    GlyphViewModel.prototype.exportActionCorrection = function(group, key) {
+        if (key === 'size' && group.type === GlyphSizeSchemeType.SCALED_SIZE) {
+            // Override scaled glyph size since the action newValues has DataSet information in an incorrect format.
+            // This puts it in line with what scaled glyph size getState returns.
+
+            return {
+                'dataSet': group.dataSet.value.name,
+                'dataField': group.dataField.value,
+                'type': group.type
+            };
+        }
+    };
+
     /**
      * Static method that returns the type String for this class.
      */
