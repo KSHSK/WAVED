@@ -391,6 +391,7 @@ define([
         this.coloring = new ColoringSelectionProperty({
             displayName: 'Color Scheme',
             value: '',
+            exportProperty: 'coloring',
             onchange: function() {
                 updateColoring(self);
             }
