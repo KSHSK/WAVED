@@ -224,14 +224,21 @@ define([
                 // apply actions
                 var targets = [];
                 for (j = 0; j < event.actions.length; j++) {
-                    js += this.exportAction(event.actions[j], event.triggeringWidget.viewModel.name.originalValue, '\t');
+                    var currentAction = event.actions[j];
+                    js += this.exportAction(currentAction, event.triggeringWidget.viewModel.name.originalValue, '\t');
                     js += '\n';
-                    if (targets.indexOf(event.actions[j].target) === -1) {
-                        targets.push(event.actions[j].target);
+
+                    if (currentAction instanceof PropertyAction) {
+                        if (targets.indexOf(event.actions[j].target) === -1) {
+                            targets.push(currentAction.target);
+                        }
+                    }
+                    else {
+
                     }
                 }
 
-                // Do any rerendering.
+                // Do any rerendering for property actions.
                 for (j = 0; j < targets.length; j++) {
                     var target = targets[j];
                     if (defined(target.renderFunctionName)) {
