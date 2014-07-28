@@ -187,6 +187,7 @@ define([
             // Export Events
 
             // addDataToTrigger
+            js += '// Trigger Functions\n';
             js += 'function addDataToTrigger(widgetName, name, key, value) {\n';
             js += '\tif (arguments.length === 3) {\n';
             js += '\t\twidgets[widgetName].triggerData[name] = key;\n';
@@ -210,6 +211,11 @@ define([
             if (events.length > 0 && viewModel.currentProject.propertyActions.length > 0) {
                 js += PropertyAction.getHelperFunctionsJs();
             }
+
+            if (events.length > 0) {
+                js += '// Events\n';
+            }
+
             for (i = 0; i < events.length; i++) {
                 var event = events[i];
                 js += '$(\'#'+ event.triggeringWidget.viewModel.exportId + '\').on(\'' + EventType[event.eventType] + '\', function(event) {\n';
@@ -232,7 +238,7 @@ define([
                         js += '\t' + target.renderFunctionName + '(widgets["' + target.name.originalValue + '"]);\n';
                     }
                 }
-                js += '});\n';
+                js += '});\n\n';
             }
 
             js += '// Initialize Widgets\n';
@@ -257,7 +263,7 @@ define([
                 }
                 js += '\t\'triggerData\': {},\n';
                 js += '\t\'properties\': {}\n';
-                js += '};\n';
+                js += '};\n\n';
 
 
                 if (defined(widget.getJs)) {

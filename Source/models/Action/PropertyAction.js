@@ -209,6 +209,7 @@ define([
     PropertyAction.getHelperFunctionsJs = function() {
         var js = '';
 
+        js += '// Template Helper Functions\n';
         js += 'function getTemplateMatches(str) {\n';
         js += '\tvar index = 1;\n';
         js += '\tvar matches = [];\n';
@@ -224,7 +225,6 @@ define([
         js += '\treturn (typeof value !== \'undefined\');\n';
         js += '};\n\n';
 
-        // TODO: Make sure USMap has 'state' as a root level attribute in triggerData.
         js += 'function replaceTemplates(triggerName, actionValue) {\n';
         js += '\tvar templates = getTemplateMatches(actionValue);\n';
         js += '\tif (templates.length === 0) {\n';
