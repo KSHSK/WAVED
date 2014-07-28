@@ -79,6 +79,7 @@ define([
         // Generic glyph rendering function. Can be called from generated js
 
         js += 'var glyphRadiusScale = d3.scale.linear().domain([1000,500000]).range([2,10]).clamp(true);\n';
+        js += '// Render Glyphs Function\n';
         js += 'var renderGlyphs = function(glyph) {\n';
         js += '\tvar map = widgets[glyph.parent];\n';
         js += '\tvar width = workspaceWidth * map.properties.scale/100;\n';
@@ -164,7 +165,8 @@ define([
         var js = '';
 
         js += '\n';
-        js += tabs + 'function updateColoring (states, coloring) {\n';
+        js += '// Coloring Function\n';
+        js += tabs + 'function updateColoring(states, coloring) {\n';
         js += tabs + '\tvar path = states.selectAll("path");\n';
         js += tabs + '\tswitch(coloring.type){\n';
         js += tabs + '\t\tcase "' + ColoringSchemeType.SOLID_COLORING + '":\n';
@@ -243,6 +245,7 @@ define([
 
         // TODO: only export these functions once
         // addStateDataToTrigger
+        js += '// Function to add trigger data for USMap templating\n';
         js += 'function addStateDataToTrigger(d, mapWidget) {\n';
         js += '\tvar name = d.properties.name;\n';
         js += '\tvar abbrev = d.properties.abbreviation;\n';
@@ -278,13 +281,15 @@ define([
         js += 'widgets[' + nameString + '].properties.strokeColor = "' + vm.strokeColor.getState().value + '";\n';
         js += 'widgets[' + nameString + '].properties.coloring = ' + JSON.stringify(vm.coloring.getState().value) + ';\n';
 
+        js += getColoringJs(vm, '');
+
+        js += '// Render USMap Function\n';
         js += 'function renderUSMap(map) {\n';
         js += '\tvar scale = workspaceWidth*1.3*map.properties.scale/100;\n'; //1.3 is a magic number\n';
         js += '\tvar width = workspaceWidth * map.properties.scale/100;\n';
         js += '\tvar height = workspaceHeight * map.properties.scale/100;\n';
         js += '\tprojection = d3.geo.albersUsa().scale(scale).translate(([width/2, height/2]));\n';
         js += '\tvar path = d3.geo.path().projection(projection);\n';
-        js += getColoringJs(vm, '\t');
         js += '\td3.select("#" + map.id).selectAll("svg").remove();\n';
         js += '\tvar svg = d3.select("#" + map.id)\n';
         js += '\t\t.append("svg")\n';
@@ -333,12 +338,14 @@ define([
         if (glyphs.length > 0) {
             js += 'widgets[' + nameString + '].glyphOrder = [];\n';
             js += getGlyphFunctionJs(vm.name.originalValue);
+            js += '// Setup glyphs\n';
             for (var i = 0; i < glyphs.length; i++) {
                 js += getGlyphJs(vm.name.originalValue, glyphs[i]);
             }
         }
 
         // Render map after glyph data is set up.
+        js += '// Render the USMap in its initial state\n';
         js += 'renderUSMap(widgets[' + nameString + ']);\n\n';
 
         return js;
