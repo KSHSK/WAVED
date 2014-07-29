@@ -145,7 +145,7 @@ define([
             tabs + 'dataSets[\'' + this.dataSubset.name + '\'].updateData = ' + this.getDataFunctionJs(tabs) +
             tabs + 'dataSets[\'' + this.dataSubset.name + '\'].updateData();\n' +
             tabs + '$.each(dataSets[\'' + this.dataSubset.name + '\'].onChange, function(key, callback) {\n' +
-            tabs + '\tcallback();\n' +
+            tabs + '\tcallback(widgets[key]);\n' +
             tabs + '});\n';
     };
 

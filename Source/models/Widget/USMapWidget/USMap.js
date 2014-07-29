@@ -144,11 +144,12 @@ define([
         var js = '';
 
         var glyphName = '"' + glyph.name.originalValue + '"';
+        var dataSetName = '"' + glyph.dataSet.getState().value.name + '"';
         js += 'widgets[' + glyphName + '] = {};\n';
         js += 'widgets[' + glyphName + '].parent = "' + mapName + '";\n';
         js += 'widgets[' + glyphName + '].id = ' + glyphName + ';\n';
         js += 'widgets[' + glyphName + '].properties = {};\n';
-        js += 'widgets[' + glyphName + '].properties.dataSet = "' + glyph.dataSet.getState().value.name + '";\n';
+        js += 'widgets[' + glyphName + '].properties.dataSet = ' + dataSetName + ';\n';
         js += 'widgets[' + glyphName + '].properties.color = "' + glyph.color.getState().value + '";\n';
         js += 'widgets[' + glyphName + '].properties.opacity = ' + glyph.opacity.getState().value + ';\n';
         js += 'widgets[' + glyphName + '].properties.size = ' + JSON.stringify(glyph.size.getState().value) + ';\n';
@@ -156,6 +157,7 @@ define([
         js += 'widgets[' + glyphName + '].properties.longitude = "' + glyph.longitude.getState().value + '";\n';
         js += 'widgets[' + glyphName + '].properties.visible = ' + glyph.visible.getState().value + ';\n';
         js += 'widgets["' + mapName + '"].glyphOrder.push(' + glyphName + ');\n';
+        js += 'dataSubscribe(' + dataSetName + ', ' + glyphName + ', renderGlyphs);\n';
 
         js += '\n';
         return js;
