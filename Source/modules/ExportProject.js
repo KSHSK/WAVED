@@ -76,58 +76,38 @@ define([
             return css;
         },
 
-        exportAction: function(action, triggerName, tabs) {
+        exportActions: function(event, tabs) {
             var js = '';
-            var value;
-            if (action instanceof PropertyAction) {
-                for (var key in action.newValues) {
-                    value = action.newValues[key].value;
-                    // Export CSS changes.
-                    if (defined(action.target[key].css)) {
-                        var cssValue = value;
-                        if (defined(action.target[key].css.units)) {
-                            cssValue += action.target[key].css.units;
-                        }
+            var j;
+            var targets = [];
+            var triggerName = event.triggeringWidget.viewModel.name.originalValue;
 
-                        var numericValue = (typeof cssValue === 'number');
-                        js += tabs + '$(\'#' + action.target.exportId + '\').css(\'' + action.target[key].css.attribute + '\', replaceTemplates(\'' + triggerName + '\', ' + (numericValue ? '' : '\'') + cssValue + (numericValue ? '' : '\'') + '));\n';
-                    }
+            for (j = 0; j < event.actions.length; j++) {
+                var currentAction = event.actions[j];
+                js += this.exportAction(currentAction, triggerName, '\t');
 
-                    // Export HTML changes.
-                    if (defined(action.target[key].html)) {
-                        var htmlValue = value;
-                        if (typeof value === 'string') {
-                            htmlValue = '\'' + value.replace(/\r\n|\r|\n/g, '<br>') + '\'';
-                        }
-                        js += tabs + '$(\'#' + action.target.exportId + '\').html(replaceTemplates(\'' + triggerName + '\', ' + htmlValue + '));\n';
-                    }
-
-                    // Exporting property changes for rendering.
-                    if (defined(action.target[key].exportProperty)) {
-                        var propValue = value;
-                        var type = typeof propValue;
-                        if (type === 'string') {
-                            propValue = '\'' + propValue + '\'';
-                        }
-                        else if (type === 'object') {
-                            if (defined(action.target.exportActionCorrection)) {
-                                // Can occur for USMap Gradient Coloring and Scaled Glyphs.
-                                var temp = action.target.exportActionCorrection(propValue, key);
-                                if (defined(temp)) {
-                                    propValue = temp;
-                                }
-                            }
-
-                            propValue = JSON.stringify(propValue);
-                        }
-
-                        js += tabs + 'widgets["' + action.target.name.originalValue + '"].properties.' + action.target[key].exportProperty + ' = ' + propValue + ';\n';
+                if (currentAction instanceof PropertyAction) {
+                    if (targets.indexOf(event.actions[j].target) === -1) {
+                        targets.push(currentAction.target);
                     }
                 }
             }
-            else {
-                js += '\n' + action.getJs(tabs);
+
+            // Do any rerendering for property actions.
+            for (j = 0; j < targets.length; j++) {
+                var target = targets[j];
+                if (defined(target.renderFunctionName)) {
+                    js += '\t' + target.renderFunctionName + '(widgets["' + target.name.originalValue + '"]);\n';
+                }
             }
+
+            return js;
+        },
+
+        exportAction: function(action, triggerName, tabs) {
+            var js = '';
+
+            js += action.getJs(tabs, triggerName) + '\n';
 
             return js;
         },
@@ -219,29 +199,10 @@ define([
             for (i = 0; i < events.length; i++) {
                 var event = events[i];
                 js += '$(\'#'+ event.triggeringWidget.viewModel.exportId + '\').on(\'' + EventType[event.eventType] + '\', function(event) {\n';
-                js += '\taddMouseDataToTrigger(event, \'' + event.triggeringWidget.viewModel.name.originalValue + '\');\n';
+                js += '\taddMouseDataToTrigger(event, \'' + event.triggeringWidget.viewModel.name.originalValue + '\');\n\n';
 
                 // apply actions
-                var targets = [];
-                for (j = 0; j < event.actions.length; j++) {
-                    var currentAction = event.actions[j];
-                    js += this.exportAction(currentAction, event.triggeringWidget.viewModel.name.originalValue, '\t');
-                    js += '\n';
-
-                    if (currentAction instanceof PropertyAction) {
-                        if (targets.indexOf(event.actions[j].target) === -1) {
-                            targets.push(currentAction.target);
-                        }
-                    }
-                }
-
-                // Do any rerendering for property actions.
-                for (j = 0; j < targets.length; j++) {
-                    var target = targets[j];
-                    if (defined(target.renderFunctionName)) {
-                        js += '\t' + target.renderFunctionName + '(widgets["' + target.name.originalValue + '"]);\n';
-                    }
-                }
+                js += this.exportActions(event, '\t');
                 js += '});\n\n';
             }
 
