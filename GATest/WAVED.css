@@ -1,0 +1,43 @@
+#waved-container {
+	position: relative;
+	width: 600px;
+	height: 400px;
+	background-color: blue;
+}
+
+.widget-container {
+	position: absolute;
+	pointer-events: none;
+}
+
+#widget-USMap1 {
+	position: absolute;
+	display: block;
+	left: 0%;
+	top: 0%;
+	height: 100%;
+	width: 100%;
+	z-index: 0;
+}
+
+#widget-TextBlock1 {
+	position: absolute;
+	display: block;
+	left: 0%;
+	top: 0%;
+	height: 10%;
+	width: 20%;
+	z-index: 25;
+	color: Black;
+	border: 1px solid Black;
+	overflow: hidden;
+	padding: 3px;
+	font-size: 12px;
+	text-align: Left;
+	font-weight: normal;
+	text-decoration: none;
+	background-color: White;
+	border-radius: 5px;
+	font-family: Arial;
+}
+
