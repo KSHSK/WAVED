@@ -319,6 +319,12 @@ define([
                 'type': group.type
             };
         }
+
+        if (key === 'dataSet') {
+            // Override dataSet since the action newValues has information in an incorrect format.
+            // This puts it in line with what dataSet getState returns.
+            return group.name;
+        }
     };
 
     /**
