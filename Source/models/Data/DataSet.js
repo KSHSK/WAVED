@@ -171,8 +171,12 @@ define(['knockout',
             '/*\n' +
             ' * Unsubscribe the given keys callback function to the dataset\n' +
             ' */\n' +
-            'var dataUnsubscribe = function(dataSetName, key) {\n' +
-            '\tdelete dataSets[dataSetName].onChange[key];\n' +
+            'var transferDataSubscription = function(oldDataSetName, newDataSetName, key) {\n' +
+            '\tvar callbackFunction = dataSets[oldDataSetName].onChange[key];\n' +
+            '\tdelete dataSets[oldDataSetName].onChange[key];\n' +
+            '\tif (typeof callbackFunction !== \'undefined\') {\n' +
+            '\t\tdataSubscribe(newDataSetName, key, callbackFunction);\n' +
+            '\t}\n' +
             '};\n\n';
     };
 
