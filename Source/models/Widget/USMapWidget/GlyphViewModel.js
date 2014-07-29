@@ -132,6 +132,7 @@ define([
             displayName: 'Data Set',
             errorMessage: 'Value is required.',
             exportProperty: 'dataSet',
+            dataSetType: true,
             options: this.parent.boundData,
             getOptionText: function(value) {
                 return value.displayName;

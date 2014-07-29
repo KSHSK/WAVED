@@ -312,6 +312,15 @@ define([
 
                 js += tabs + 'widgets["' + this.target.name.originalValue + '"].properties.' + this.target[key].exportProperty + ' = ' + propValue + ';\n';
             }
+
+            // Transfer dataset subscription if necessary.
+            if (this.target[key].dataSetType === true) {
+                var oldDataSetName = '"' + this.target[key].value.name + '"';
+                var newDataSetName = '"' + this.newValues[key].value.name + '"';
+                var target = '"' + this.target.name.value + '"';
+
+                js += tabs + 'transferDataSubscription(' + oldDataSetName + ', ' + newDataSetName + ', ' + target + ');\n';
+            }
         }
 
         return js;
