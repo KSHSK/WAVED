@@ -233,9 +233,6 @@ define([
                             targets.push(currentAction.target);
                         }
                     }
-                    else {
-
-                    }
                 }
 
                 // Do any rerendering for property actions.
