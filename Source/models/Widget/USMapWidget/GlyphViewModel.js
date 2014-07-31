@@ -246,7 +246,9 @@ define([
             removeGlyph(self);
         };
 
+        // Required for rendering after export.
         this.renderFunctionName = 'renderGlyphs';
+        this.visible.exportProperty = 'visible';
 
         ko.track(this);
     };

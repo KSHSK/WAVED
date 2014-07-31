@@ -35,7 +35,7 @@ define([
 
     Widget.prototype.getCss = function() {
         this._css.position = 'absolute';
-        this._css.display = (this.viewModel.visible.value ? 'block' : 'none');
+        this._css.display = (this.viewModel.visible.originalValue ? 'block' : 'none');
         this._css[this.viewModel.x.css.attribute] = this.viewModel.x.originalValue + this.viewModel.x.css.units;
         this._css[this.viewModel.y.css.attribute] = this.viewModel.y.originalValue + this.viewModel.y.css.units;
         this._css[this.viewModel.height.css.attribute] = this.viewModel.height.originalValue + this.viewModel.height.css.units;

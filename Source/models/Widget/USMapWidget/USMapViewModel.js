@@ -475,6 +475,7 @@ define([
         // Required for rendering after export.
         this.width.exportProperty = 'scale';
         this.renderFunctionName = 'renderUSMap';
+        this.visible.exportProperty = 'visible';
 
         this.setState(state);
 
