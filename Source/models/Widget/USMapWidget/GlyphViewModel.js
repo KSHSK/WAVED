@@ -249,6 +249,7 @@ define([
         // Required for rendering after export.
         this.renderFunctionName = 'renderGlyphs';
         this.visible.exportProperty = 'visible';
+        this.visible.css.ignore = true;
 
         ko.track(this);
     };

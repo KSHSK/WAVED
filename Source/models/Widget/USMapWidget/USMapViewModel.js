@@ -476,6 +476,9 @@ define([
         this.width.exportProperty = 'scale';
         this.renderFunctionName = 'renderUSMap';
         this.visible.exportProperty = 'visible';
+        this.visible.css.ignore = true;
+        this.width.css.ignore = true;
+        this.height.css.ignore = true;
 
         this.setState(state);
 
