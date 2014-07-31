@@ -82,11 +82,14 @@ define([
         js += '// Render Glyphs Function\n';
         js += 'var renderGlyphs = function(glyph) {\n';
         js += '\tvar map = widgets[glyph.parent];\n';
-        js += '\tvar width = workspaceWidth * map.properties.scale/100;\n';
-        js += '\tvar height = workspaceHeight * map.properties.scale/100;\n';
-
         js += '\t// Remove existing glyph set.\n';
         js += '\td3.select("#" + map.id + " svg#" + glyph.id).remove();\n\n';
+        js += '\tif (!(map.properties.visible && glyph.properties.visible)) {\n';
+        js += '\t\treturn;\n';
+        js += '\t}\n';
+        js += '\n';
+        js += '\tvar width = workspaceWidth * map.properties.scale/100;\n';
+        js += '\tvar height = workspaceHeight * map.properties.scale/100;\n';
         js += '\t// Add updated glyph set.\n';
         js += '\tvar svg = d3.select("#" + map.id)\n';
         js += '\t\t.append("svg")\n';
@@ -287,12 +290,16 @@ define([
 
         js += '// Render USMap Function\n';
         js += 'function renderUSMap(map) {\n';
+        js += '\td3.select("#" + map.id).selectAll("svg").remove();\n';
+        js += '\tif (!map.properties.visible) {\n';
+        js += '\t\treturn;\n';
+        js += '\t}\n';
+        js += '\n';
         js += '\tvar scale = workspaceWidth*1.3*map.properties.scale/100;\n'; //1.3 is a magic number\n';
         js += '\tvar width = workspaceWidth * map.properties.scale/100;\n';
         js += '\tvar height = workspaceHeight * map.properties.scale/100;\n';
         js += '\tprojection = d3.geo.albersUsa().scale(scale).translate(([width/2, height/2]));\n';
         js += '\tvar path = d3.geo.path().projection(projection);\n';
-        js += '\td3.select("#" + map.id).selectAll("svg").remove();\n';
         js += '\tvar svg = d3.select("#" + map.id)\n';
         js += '\t\t.append("svg")\n';
         js += '\t\t.attr("height", height)\n';
