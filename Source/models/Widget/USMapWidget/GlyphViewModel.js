@@ -185,6 +185,8 @@ define([
             onchange: editGlyph.bind(self, self)
         });
 
+        this.visible.onchange = editGlyph.bind(self, self);
+
         // Change the data field options.
         this.dataSet.ondisplaychange = function(newValue) {
             if (self.latitude.options !== newValue.dataFields) {

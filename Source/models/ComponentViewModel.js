@@ -40,7 +40,8 @@ define([
         // Set visible
         this.visible = new BooleanProperty({
             displayName: 'Visible',
-            value: true
+            value: true,
+            exportProperty: 'visible'
         });
 
         // Set logGoogleAnalytics
