@@ -272,9 +272,14 @@ define([
         for (var key in this.newValues) {
             value = this.newValues[key].value;
             // Export CSS changes.
-            if (defined(this.target[key].css)) {
+            if (defined(this.target[key].css) && !this.target[key].css.ignore) {
                 var cssValue = value;
-                if (defined(this.target[key].css.units)) {
+                if (defined(this.target[key].css.options)) {
+                    // Boolean option, with specific CSS value.
+                    cssValue = this.target[key].css.options[cssValue];
+                }
+                else if (defined(this.target[key].css.units)) {
+                    // Regular option.
                     cssValue += this.target[key].css.units;
                 }
 
