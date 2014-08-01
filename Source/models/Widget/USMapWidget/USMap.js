@@ -143,8 +143,9 @@ define([
         return js;
     }
 
-    function getGlyphJs(mapName, glyph) {
+    function getGlyphJs(mapName, glyph, autoActionCode) {
         var js = '';
+        var j;
 
         var glyphName = '"' + glyph.name.originalValue + '"';
         var dataSetName = '"' + glyph.dataSet.getState().value.name + '"';
@@ -161,6 +162,14 @@ define([
         js += 'widgets[' + glyphName + '].properties.visible = ' + glyph.visible.getState().value + ';\n';
         js += 'widgets["' + mapName + '"].glyphOrder.push(' + glyphName + ');\n';
         js += 'dataSubscribe(' + dataSetName + ', ' + glyphName + ', renderGlyphs);\n';
+
+        var glyphAutoActions = autoActionCode[glyph.name.originalValue];
+        if (defined(glyphAutoActions) && glyphAutoActions.length > 0) {
+            js += '// Override properties from automatically applied actions.\n';
+            for (j = 0; j < glyphAutoActions.length; j++) {
+                js += glyphAutoActions[j];
+            }
+        }
 
         js += '\n';
         return js;
@@ -359,7 +368,7 @@ define([
             js += getGlyphFunctionJs(vm.name.originalValue);
             js += '// Setup glyphs\n';
             for (i = 0; i < glyphs.length; i++) {
-                js += getGlyphJs(vm.name.originalValue, glyphs[i]);
+                js += getGlyphJs(vm.name.originalValue, glyphs[i], autoActionCode);
             }
         }
 
