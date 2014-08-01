@@ -136,13 +136,13 @@ define([
         this.dataSubset.executeCurrentQuery();
     };
 
-    QueryAction.prototype.getDataFunctionJs = function(tabs) {
-        return Query.getDataFunctionJs(this.conditions, tabs);
+    QueryAction.prototype.getDataFunctionJs = function(tabs, triggerName) {
+        return Query.getDataFunctionJs(triggerName, this.conditions, tabs);
     };
 
-    QueryAction.prototype.getJs = function(tabs) {
+    QueryAction.prototype.getJs = function(tabs, triggerName) {
         return tabs + '// Update data and notify subscribers\n' +
-            tabs + 'dataSets[\'' + this.dataSubset.name + '\'].updateData = ' + this.getDataFunctionJs(tabs) +
+            tabs + 'dataSets[\'' + this.dataSubset.name + '\'].updateData = ' + this.getDataFunctionJs(tabs, triggerName) +
             tabs + 'dataSets[\'' + this.dataSubset.name + '\'].updateData();\n' +
             tabs + '$.each(dataSets[\'' + this.dataSubset.name + '\'].onChange, function(key, callback) {\n' +
             tabs + '\tcallback(widgets[key]);\n' +
