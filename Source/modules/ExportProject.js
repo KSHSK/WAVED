@@ -3,6 +3,7 @@
  */
 define([
         '../models/Constants/EventType',
+        '../models/Action/Action',
         '../models/Action/PropertyAction',
         '../models/Constants/MessageType',
         '../models/Data/Query',
@@ -15,6 +16,7 @@ define([
         'jquery'
     ], function(
         EventType,
+        Action,
         PropertyAction,
         MessageType,
         Query,
@@ -179,8 +181,8 @@ define([
 
             var propertyActionHelperExported = false;
             var events = viewModel.currentProject.events;
-            if (events.length > 0 && viewModel.currentProject.propertyActions.length > 0) {
-                js += PropertyAction.getHelperFunctionsJs();
+            if (viewModel.currentProject.actions.length > 0) {
+                js += Action.getHelperFunctionsJs();
             }
 
             if (events.length > 0) {
