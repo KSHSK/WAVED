@@ -66,7 +66,8 @@ define([
             optionsCaption: null,
             errorMessage: 'Value is required.',
             css: {
-                attribute: 'text-align'
+                attribute: 'text-align',
+                units: ''
             }
         });
 
@@ -75,7 +76,8 @@ define([
             displayName: 'Text Color',
             value: 'Black',
             css: {
-                attribute: 'color'
+                attribute: 'color',
+                units: ''
             }
         });
 
@@ -84,7 +86,11 @@ define([
             displayName: 'Bold Text',
             value: false,
             css: {
-                attribute: 'font-weight'
+                attribute: 'font-weight',
+                options: {
+                    'true': 'bold',
+                    'false': 'normal'
+                }
             }
         });
 
@@ -93,7 +99,11 @@ define([
             displayName: 'Underline Text',
             value: false,
             css: {
-                attribute: 'text-decoration'
+                attribute: 'text-decoration',
+                options: {
+                    'true': 'underline',
+                    'false': 'none'
+                }
             }
         });
 
@@ -102,7 +112,8 @@ define([
             displayName: 'Background Color',
             value: 'White',
             css: {
-                attribute: 'background-color'
+                attribute: 'background-color',
+                units: ''
             }
         });
 
@@ -125,7 +136,8 @@ define([
             displayName: 'Border Color',
             value: 'Black',
             css: {
-                attribute: 'border-color'
+                attribute: 'border-color',
+                units: ''
             }
         });
 
