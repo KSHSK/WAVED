@@ -236,10 +236,11 @@ define([
         return js;
     }
 
-    USMap.prototype.getJs = function(googleAnalytics) {
+    USMap.prototype.getJs = function(googleAnalytics, autoActionCode) {
         var vm = this.viewModel;
         var glyphs = vm.glyphs;
         var js = '';
+        var i;
 
         var w = $('#waved-workspace').width();
         var w2 = w * vm.width.originalValue/100;
@@ -285,6 +286,15 @@ define([
         js += 'widgets[' + nameString + '].properties.scale = ' + vm.width.getState().value + ';\n';
         js += 'widgets[' + nameString + '].properties.strokeColor = "' + vm.strokeColor.getState().value + '";\n';
         js += 'widgets[' + nameString + '].properties.coloring = ' + JSON.stringify(vm.coloring.getState().value) + ';\n';
+
+        // Add auto-actions.
+        var widgetAutoActions = autoActionCode[this.viewModel.name.originalValue];
+        if (defined(widgetAutoActions) && widgetAutoActions.length > 0) {
+            js += '// Override properties from automatically applied actions.\n';
+            for (i = 0; i < widgetAutoActions.length; i++) {
+                js += widgetAutoActions[i];
+            }
+        }
 
         js += getColoringJs(vm, '');
 
@@ -348,7 +358,7 @@ define([
             js += 'widgets[' + nameString + '].glyphOrder = [];\n';
             js += getGlyphFunctionJs(vm.name.originalValue);
             js += '// Setup glyphs\n';
-            for (var i = 0; i < glyphs.length; i++) {
+            for (i = 0; i < glyphs.length; i++) {
                 js += getGlyphJs(vm.name.originalValue, glyphs[i]);
             }
         }
