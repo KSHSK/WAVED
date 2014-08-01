@@ -201,8 +201,8 @@ define([
 
             // Figure out which widget properties to override for automatically applied actions.
             var autoActionCode = {};
-            for (i = 0; i < viewModel.currentProject.actions.length; i++) {
-                var action = viewModel.currentProject.actions[i];
+            for (i = 0; i < viewModel.currentProject.propertyActions.length; i++) {
+                var action = viewModel.currentProject.propertyActions[i];
                 if (action.applyAutomatically) {
                     var targetName = action.target.name.originalValue;
                     if (!defined(autoActionCode[targetName])) {

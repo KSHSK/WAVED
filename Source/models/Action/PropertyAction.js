@@ -42,7 +42,7 @@ define([
 
                 for (var key in self._newValues) {
                     var templates = getTemplateMatches(self._newValues[key].value);
-                    if (templates.length > 0) {
+                    if (defined(data) && templates.length > 0) {
                         var temp = self._newValues[key].value;
                         if (typeof self._target[key].value === 'number') {
                             temp = self._newValues[key].value.toString();

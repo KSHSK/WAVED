@@ -114,17 +114,19 @@ define([
         }
 
         // Loop through every condition to replace any templated arguments with the relevant values from the data given
-        for (var j = 0; j < conditions.length; j++) {
-            var condition = conditions[j];
-            var templates = getTemplateMatches(condition.value);
-            for (var i = 0; i < templates.length; i++) {
-                if (defined(data.trigger) && defined(data.trigger[templates[i]])) {
-                    condition.value = condition.value.replace('{{' + templates[i]+ '}}', data.trigger[templates[i]]);
-                } else {
-                    var components = templates[i].split('.');
-                    if (components.length > 1) {
-                        if (defined(data[components[0]]) && defined(data[components[0]][components[1]])) {
-                            condition.value = condition.value.replace('{{' + templates[i]+ '}}', data[components[0]][components[1]]);
+        if (defined(data)) {
+            for (var j = 0; j < conditions.length; j++) {
+                var condition = conditions[j];
+                var templates = getTemplateMatches(condition.value);
+                for (var i = 0; i < templates.length; i++) {
+                    if (defined(data.trigger) && defined(data.trigger[templates[i]])) {
+                        condition.value = condition.value.replace('{{' + templates[i]+ '}}', data.trigger[templates[i]]);
+                    } else {
+                        var components = templates[i].split('.');
+                        if (components.length > 1) {
+                            if (defined(data[components[0]]) && defined(data[components[0]][components[1]])) {
+                                condition.value = condition.value.replace('{{' + templates[i]+ '}}', data[components[0]][components[1]]);
+                            }
                         }
                     }
                 }
