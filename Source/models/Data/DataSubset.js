@@ -62,7 +62,7 @@ define([
     };
 
     DataSubset.prototype.getDataFunctionJs = function(tabs) {
-        return Query.getDataFunctionJs(this.query.conditions, tabs);
+        return Query.getDataFunctionJs('', this.query.conditions, tabs);
     };
 
     DataSubset.prototype.getLoadDataJs = function () {

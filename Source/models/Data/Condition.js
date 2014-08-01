@@ -64,10 +64,10 @@ define([
         return indices;
     };
 
-    Condition.prototype.getExecuteJs = function(tabs) {
+    Condition.prototype.getExecuteJs = function(triggerName, tabs) {
         return 'conditionFunction(\'' + this.field + '\', ' +
             comparisonFunctions[this.comparisonOperator].toString().replace(/\r*\n\s*/g, '' ) + ', ' +
-            '\'' + this.value + '\')';
+            'replaceTemplates(\'' + triggerName + '\', \'' + this.value + '\'))';
     };
 
     Condition.prototype.getState = function() {
