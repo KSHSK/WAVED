@@ -155,15 +155,6 @@ define([
                 js += this.exportDataJs(dataSets, hasSubsets);
             }
 
-            // Override CSS attributes from automatically applied Actions
-            // TODO: Nested Properties?
-            for (i = 0; i < viewModel.currentProject.actions.length; i++) {
-                var action = viewModel.currentProject.actions[i];
-                if (action.applyAutomatically) {
-                    js += this.exportAction(action, '');
-                }
-            }
-
             // Export Events
 
             // addDataToTrigger
@@ -206,6 +197,19 @@ define([
                 js += '});\n\n';
             }
 
+            // Figure out which widget properties to override for automatically applied actions.
+            var autoActionCode = {};
+            for (i = 0; i < viewModel.currentProject.actions.length; i++) {
+                var action = viewModel.currentProject.actions[i];
+                if (action.applyAutomatically) {
+                    var targetName = action.target.name.originalValue;
+                    if (!defined(autoActionCode[targetName])) {
+                        autoActionCode[targetName] = [];
+                    }
+                    autoActionCode[targetName].push(this.exportAction(action, '', ''));
+                }
+            }
+
             js += '// Initialize Widgets\n';
             js += 'var widgets = {};\n';
             for (i = 0; i < viewModel.currentProject.widgets.length; i++) {
@@ -232,7 +236,16 @@ define([
 
 
                 if (defined(widget.getJs)) {
-                    js += widget.getJs(viewModel.currentProject.googleAnalytics);
+                    js += widget.getJs(viewModel.currentProject.googleAnalytics, autoActionCode);
+                }
+                else {
+                    var widgetAutoActions = autoActionCode[widget.viewModel.name.originalValue];
+                    if (defined(widgetAutoActions) && widgetAutoActions.length > 0) {
+                        js += '// Override properties from automatically applied actions.\n';
+                        for (j = 0; j < widgetAutoActions.length; j++) {
+                            js += widgetAutoActions[j];
+                        }
+                    }
                 }
 
                 // Add Google Analytics track on click event
