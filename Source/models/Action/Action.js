@@ -114,6 +114,9 @@ define(['jquery',
         js += '};\n\n';
 
         js += 'function replaceTemplates(triggerName, actionValue) {\n';
+        js += '\tif (!defined(triggerName) || !defined(widgets[triggerName])) {\n';
+        js += '\t\treturn actionValue;\n';
+        js += '\t}\n';
         js += '\tvar templates = getTemplateMatches(actionValue);\n';
         js += '\tif (templates.length === 0) {\n';
         js += '\t\treturn actionValue;\n';
