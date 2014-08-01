@@ -34,30 +34,32 @@ define([
     };
 
     Widget.prototype.getCss = function() {
+        var vm = this.viewModel;
+
         this._css.position = 'absolute';
 
-        if (!this.viewModel.visible.css.ignore) {
-            this._css[this.viewModel.visible.css.attribute] = this.viewModel.visible.css.options[this.viewModel.visible.originalValue.toString()];
+        if (!vm.visible.css.ignore) {
+            this._css[vm.visible.css.attribute] = vm.visible.css.options[vm.visible.originalValue.toString()];
         }
 
-        if (!this.viewModel.x.css.ignore) {
-            this._css[this.viewModel.x.css.attribute] = this.viewModel.x.originalValue + this.viewModel.x.css.units;
+        if (!vm.x.css.ignore) {
+            this._css[vm.x.css.attribute] = vm.x.originalValue + vm.x.css.units;
         }
 
-        if (!this.viewModel.y.css.ignore) {
-            this._css[this.viewModel.y.css.attribute] = this.viewModel.y.originalValue + this.viewModel.y.css.units;
+        if (!vm.y.css.ignore) {
+            this._css[vm.y.css.attribute] = vm.y.originalValue + vm.y.css.units;
         }
 
-        if (!this.viewModel.height.css.ignore) {
-            this._css[this.viewModel.height.css.attribute] = this.viewModel.height.originalValue + this.viewModel.height.css.units;
+        if (!vm.height.css.ignore) {
+            this._css[vm.height.css.attribute] = vm.height.originalValue + vm.height.css.units;
         }
 
-        if (!this.viewModel.width.css.ignore) {
-            this._css[this.viewModel.width.css.attribute] = this.viewModel.width.originalValue + this.viewModel.height.css.units;
+        if (!vm.width.css.ignore) {
+            this._css[vm.width.css.attribute] = vm.width.originalValue + vm.height.css.units;
         }
 
-        if (!this.viewModel.z.css.ignore) {
-            this._css[this.viewModel.z.css.attribute] = this.viewModel.z.originalValue + this.viewModel.z.css.units;
+        if (!vm.z.css.ignore) {
+            this._css[vm.z.css.attribute] = vm.z.originalValue + vm.z.css.units;
         }
 
         return this._css;
