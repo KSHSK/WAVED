@@ -256,7 +256,7 @@ define([
                     propValue = JSON.stringify(propValue);
                 }
 
-                js += tabs + 'widgets["' + this.target.name.originalValue + '"].properties.' + this.target[key].exportProperty + ' = ' + propValue + ';\n';
+                js += tabs + 'widgets["' + this.target.name.originalValue + '"].properties.' + this.target[key].exportProperty + ' = replaceTemplates(\'' + triggerName + '\', ' + propValue + ');\n';
             }
 
             // Transfer dataset subscription if necessary.
