@@ -65,9 +65,17 @@ define([
     };
 
     Condition.prototype.getExecuteJs = function(triggerName, tabs) {
-        return 'conditionFunction(\'' + this.field + '\', ' +
-            comparisonFunctions[this.comparisonOperator].toString().replace(/\r*\n\s*/g, '' ) + ', ' +
-            'replaceTemplates(\'' + triggerName + '\', \'' + this.value + '\'))';
+        var js = 'conditionFunction(\'' + this.field + '\', ' +
+            comparisonFunctions[this.comparisonOperator].toString().replace(/\r*\n\s*/g, '' ) + ', ';
+
+        if (defined(triggerName) && triggerName !== '') {
+            js += 'replaceTemplates(\'' + triggerName + '\', \'' + this.value + '\'))';
+        }
+        else {
+            js += '\'' + this.value + '\')';
+        }
+
+        return js;
     };
 
     Condition.prototype.getState = function() {
