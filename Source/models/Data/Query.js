@@ -100,6 +100,60 @@ define(['jquery',
         });
     };
 
+    Query.getHelperFunctionsJs = function() {
+        return '/**\n' +
+            ' * a and b are sorted arrays of indices.\n' +
+            ' * Returns the intersection of the two arrays.\n' +
+            ' */\n' +
+            'var intersection = ' +  intersection.toString() + ';\n\n' +
+            '/**\n' +
+            ' * array contains array of indices to be unioned.\n' +
+            ' */\n' +
+            'var unionAll = ' + unionAll.toString() + ';\n\n' +
+            '/**\n' +
+            ' * Return a function that computes which indices of data pass the\n' +
+            ' * given condition on the given field based on the given value.\n' +
+            ' */\n' +
+            'var conditionFunction = function (field, condition, value) {\n' +
+            '\treturn function(data) {\n' +
+            '\t\tvar indices = [];\n' +
+            '\t\tdata.forEach(function(row, index) {\n' +
+            '\t\t\tvar fieldValue = row[field];\n' +
+            '\t\t\tif(condition(fieldValue, value)) {\n' +
+            '\t\t\t\tindices.push(index);\n' +
+            '\t\t\t}\n' +
+            '\t\t});\n\n' +
+            '\t\treturn indices;\n' +
+            '\t};\n' +
+            '};\n\n';
+    };
+
+    Query.getDataFunctionJs = function(triggerName, conditions, tabs) {
+        var js = 'function(args) {\n';
+        js += tabs + '\tvar group = [];\n';
+        js += tabs + '\tvar andIndices = [];\n';
+        js += tabs + '\tvar indicesFunction;\n\n';
+
+        for (var i = 0; i < conditions.length; i++) {
+            js += tabs + '\tindicesFunction = ' + conditions[i].getExecuteJs(triggerName, tabs + '\t\t') + ';\n';
+            js += tabs + '\tgroup = indicesFunction(this.loadedData);\n\n';
+            while (conditions[i].logicalOperator === LogicalOperator.AND) {
+                i++;
+                js += tabs + '\tindicesFunction = ' + conditions[i].getExecuteJs(triggerName, tabs + '\t\t') + ';\n';
+                js += tabs + '\tgroup = intersection(group, indicesFunction(this.loadedData));\n';
+            }
+            js += tabs + '\tandIndices.push(group);\n\n';
+        }
+
+        js += tabs + '\tvar dataIndices = unionAll(andIndices)\n';
+        js += tabs + '\tthis.data = this.loadedData.filter(function(value, index) {\n';
+        js += tabs + '\t\treturn dataIndices.indexOf(index) !== -1;\n';
+        js += tabs + '\t});\n';
+        js += tabs + '};\n';
+
+        return js;
+    };
+
     Query.prototype.execute = function(data) {
         return execute.call(this, data, false);
     };

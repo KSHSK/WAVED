@@ -49,11 +49,19 @@ define(['knockout',
 
         this.setState(options);
 
+        // Used for applying Actions after export.
+        this.css = options.css;
+        this.html = options.html;
+        this.exportProperty = options.exportProperty;
+
         ko.track(this);
 
         var self = this;
         subscribeObservable(this, '_originalValue', function() {
             self._value = self._originalValue;
+            // TODO & Note: This should set "self._displayValue = self._originalValue;" INSTEAD of the code below.
+            // It was only kept in the other location because
+            // it was so late in the development cycle and would require much testing.
         });
 
         // When this._value changes, call onchange.
@@ -62,6 +70,8 @@ define(['knockout',
                 self.onchange(newValue);
             }
             self._displayValue = self._value;
+            // TODO & Note: This should NOT set "self._displayValue = self._value;"
+            // It was only kept because it was so late in the development cycle and would require much testing.
         });
 
         subscribeObservable(this, '_displayValue', function(newValue) {

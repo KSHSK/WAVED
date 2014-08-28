@@ -131,6 +131,8 @@ define([
         this.dataSet = new ArrayProperty({
             displayName: 'Data Set',
             errorMessage: 'Value is required.',
+            exportProperty: 'dataSet',
+            dataSetType: true,
             options: this.parent.boundData,
             getOptionText: function(value) {
                 return value.displayName;
@@ -140,6 +142,7 @@ define([
         this.color = new StringProperty({
             displayName: 'Color',
             value: 'Red',
+            exportProperty: 'color',
             validValue: createValidator({
                 minLength: 1
             }),
@@ -150,6 +153,7 @@ define([
         this.opacity = new NumberProperty({
             displayName: 'Opacity',
             value: 50,
+            exportProperty: 'opacity',
             validValue: createValidator({
                 min: 0,
                 max: 100
@@ -160,12 +164,14 @@ define([
 
         this.size = new GlyphSizeSelectionProperty({
             displayName: 'Size',
+            exportProperty: 'size',
             errorMessage: 'All size fields are required.',
             onchange: editGlyph.bind(self, self)
         }, this);
 
         this.latitude = new ArrayProperty({
             displayName: 'Latitude',
+            exportProperty: 'latitude',
             errorMessage: 'Value is required.',
             options: [],
             onchange: editGlyph.bind(self, self)
@@ -173,10 +179,13 @@ define([
 
         this.longitude = new ArrayProperty({
             displayName: 'Longitude',
+            exportProperty: 'longitude',
             errorMessage: 'Value is required.',
             options: [],
             onchange: editGlyph.bind(self, self)
         });
+
+        this.visible.onchange = editGlyph.bind(self, self);
 
         // Change the data field options.
         this.dataSet.ondisplaychange = function(newValue) {
@@ -237,6 +246,11 @@ define([
             removeGlyph(self);
         };
 
+        // Required for rendering after export.
+        this.renderFunctionName = 'renderGlyphs';
+        this.visible.exportProperty = 'visible';
+        this.visible.css.ignore = true;
+
         ko.track(this);
     };
 
@@ -296,6 +310,26 @@ define([
         }
         if (defined(state.longitude)) {
             this.longitude.setState(state.longitude);
+        }
+    };
+
+    // Returns undefined if the given key does not need to be overridden.
+    GlyphViewModel.prototype.exportActionCorrection = function(group, key) {
+        if (key === 'size' && group.type === GlyphSizeSchemeType.SCALED_SIZE) {
+            // Override scaled glyph size since the action newValues has DataSet information in an incorrect format.
+            // This puts it in line with what scaled glyph size getState returns.
+
+            return {
+                'dataSet': group.dataSet.value.name,
+                'dataField': group.dataField.value,
+                'type': group.type
+            };
+        }
+
+        if (key === 'dataSet') {
+            // Override dataSet since the action newValues has information in an incorrect format.
+            // This puts it in line with what dataSet getState returns.
+            return group.name;
         }
     };
 

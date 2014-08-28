@@ -47,7 +47,11 @@ define([
                 min: 1,
                 max: 100
             }),
-            errorMessage: 'Value must be between 1 and 100'
+            errorMessage: 'Value must be between 1 and 100',
+            css: {
+                attribute: 'width',
+                units: '%'
+            }
         });
 
         // Set height
@@ -58,7 +62,11 @@ define([
                 min: 1,
                 max: 100
             }),
-            errorMessage: 'Value must be between 1 and 100'
+            errorMessage: 'Value must be between 1 and 100',
+            css: {
+                attribute: 'height',
+                units: '%'
+            }
         });
 
         // Set x
@@ -69,7 +77,11 @@ define([
                 min: 0,
                 max: 100
             }),
-            errorMessage: 'Value must be between 0 and 100'
+            errorMessage: 'Value must be between 0 and 100',
+            css: {
+                attribute: 'left',
+                units: '%'
+            }
         });
 
         // Set y
@@ -80,7 +92,11 @@ define([
                 min: 0,
                 max: 100
             }),
-            errorMessage: 'Value must be between 0 and 100'
+            errorMessage: 'Value must be between 0 and 100',
+            css: {
+                attribute: 'top',
+                units: '%'
+            }
         });
 
         this._boundData = []; // String[]
@@ -103,6 +119,11 @@ define([
         trigger: {
             get: function() {
                 return this._trigger;
+            }
+        },
+        exportId: {
+            get: function() {
+                return 'widget-' + this.name.originalValue;
             }
         },
         subTargets: {

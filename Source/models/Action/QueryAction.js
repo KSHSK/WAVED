@@ -1,6 +1,7 @@
 define([
         'models/Action/Action',
         'models/Data/DataSubset',
+        'models/Data/Query',
         'models/Constants/ActionType',
         'models/Data/Condition',
         'util/defined',
@@ -9,6 +10,7 @@ define([
     ],function(
         Action,
         DataSubset,
+        Query,
         ActionType,
         Condition,
         defined,
@@ -112,17 +114,19 @@ define([
         }
 
         // Loop through every condition to replace any templated arguments with the relevant values from the data given
-        for (var j = 0; j < conditions.length; j++) {
-            var condition = conditions[j];
-            var templates = getTemplateMatches(condition.value);
-            for (var i = 0; i < templates.length; i++) {
-                if (defined(data.trigger) && defined(data.trigger[templates[i]])) {
-                    condition.value = condition.value.replace('{{' + templates[i]+ '}}', data.trigger[templates[i]]);
-                } else {
-                    var components = templates[i].split('.');
-                    if (components.length > 1) {
-                        if (defined(data[components[0]]) && defined(data[components[0]][components[1]])) {
-                            condition.value = condition.value.replace('{{' + templates[i]+ '}}', data[components[0]][components[1]]);
+        if (defined(data)) {
+            for (var j = 0; j < conditions.length; j++) {
+                var condition = conditions[j];
+                var templates = getTemplateMatches(condition.value);
+                for (var i = 0; i < templates.length; i++) {
+                    if (defined(data.trigger) && defined(data.trigger[templates[i]])) {
+                        condition.value = condition.value.replace('{{' + templates[i]+ '}}', data.trigger[templates[i]]);
+                    } else {
+                        var components = templates[i].split('.');
+                        if (components.length > 1) {
+                            if (defined(data[components[0]]) && defined(data[components[0]][components[1]])) {
+                                condition.value = condition.value.replace('{{' + templates[i]+ '}}', data[components[0]][components[1]]);
+                            }
                         }
                     }
                 }
@@ -132,6 +136,19 @@ define([
         // Update and run the query with the new current conditions
         this.dataSubset.query.currentConditions = conditions;
         this.dataSubset.executeCurrentQuery();
+    };
+
+    QueryAction.prototype.getDataFunctionJs = function(tabs, triggerName) {
+        return Query.getDataFunctionJs(triggerName, this.conditions, tabs);
+    };
+
+    QueryAction.prototype.getJs = function(tabs, triggerName) {
+        return tabs + '// Update data and notify subscribers\n' +
+            tabs + 'dataSets[\'' + this.dataSubset.name + '\'].updateData = ' + this.getDataFunctionJs(tabs, triggerName) +
+            tabs + 'dataSets[\'' + this.dataSubset.name + '\'].updateData();\n' +
+            tabs + '$.each(dataSets[\'' + this.dataSubset.name + '\'].onChange, function(key, callback) {\n' +
+            tabs + '\tcallback(widgets[key]);\n' +
+            tabs + '});\n';
     };
 
     return QueryAction;

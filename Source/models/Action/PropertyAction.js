@@ -42,7 +42,7 @@ define([
 
                 for (var key in self._newValues) {
                     var templates = getTemplateMatches(self._newValues[key].value);
-                    if (templates.length > 0) {
+                    if (defined(data) && templates.length > 0) {
                         var temp = self._newValues[key].value;
                         if (typeof self._target[key].value === 'number') {
                             temp = self._newValues[key].value.toString();
@@ -204,6 +204,72 @@ define([
 
     PropertyAction.getType = function() {
         return 'PropertyAction';
+    };
+
+    PropertyAction.prototype.getJs = function(tabs, triggerName) {
+        var js = '';
+        var value;
+
+        for (var key in this.newValues) {
+            value = this.newValues[key].value;
+            // Export CSS changes.
+            if (defined(this.target[key].css) && !this.target[key].css.ignore) {
+                var cssValue = value;
+                if (defined(this.target[key].css.options)) {
+                    // Boolean option, with specific CSS value.
+                    cssValue = this.target[key].css.options[cssValue];
+                }
+                else if (defined(this.target[key].css.units)) {
+                    // Regular option.
+                    cssValue += this.target[key].css.units;
+                }
+
+                var numericValue = (typeof cssValue === 'number');
+                js += tabs + '$(\'#' + this.target.exportId + '\').css(\'' + this.target[key].css.attribute + '\', replaceTemplates(\'' + triggerName + '\', ' + (numericValue ? '' : '\'') + cssValue + (numericValue ? '' : '\'') + '));\n';
+            }
+
+            // Export HTML changes.
+            if (defined(this.target[key].html)) {
+                var htmlValue = value;
+                if (typeof value === 'string') {
+                    htmlValue = '\'' + value.replace(/\r\n|\r|\n/g, '<br>') + '\'';
+                }
+                js += tabs + '$(\'#' + this.target.exportId + '\').html(replaceTemplates(\'' + triggerName + '\', ' + htmlValue + '));\n';
+            }
+
+            // Exporting property changes for rendering.
+            if (defined(this.target[key].exportProperty)) {
+                var propValue = value;
+                var type = typeof propValue;
+                if (type === 'string') {
+                    propValue = '\'' + propValue + '\'';
+                }
+                else if (type === 'object') {
+                    if (defined(this.target.exportActionCorrection)) {
+                        // Can occur for USMap Gradient Coloring and Scaled Glyphs.
+                        var temp = this.target.exportActionCorrection(propValue, key);
+                        if (defined(temp)) {
+                            propValue = temp;
+                        }
+                    }
+
+                    propValue = JSON.stringify(propValue);
+                }
+
+                js += tabs + 'widgets["' + this.target.name.originalValue + '"].properties.' + this.target[key].exportProperty + ' = replaceTemplates(\'' + triggerName + '\', ' + propValue + ');\n';
+            }
+
+            // Transfer dataset subscription if necessary.
+            if (this.target[key].dataSetType === true) {
+                var oldDataSetName = '"' + this.target[key].value.name + '"';
+                var newDataSetName = '"' + this.newValues[key].value.name + '"';
+                var target = '"' + this.target.name.value + '"';
+
+                js += tabs + 'transferDataSubscription(' + oldDataSetName + ', ' + newDataSetName + ', ' + target + ');\n';
+            }
+        }
+
+        return js;
     };
 
     return PropertyAction;

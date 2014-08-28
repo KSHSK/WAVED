@@ -64,6 +64,20 @@ define([
         return indices;
     };
 
+    Condition.prototype.getExecuteJs = function(triggerName, tabs) {
+        var js = 'conditionFunction(\'' + this.field + '\', ' +
+            comparisonFunctions[this.comparisonOperator].toString().replace(/\r*\n\s*/g, '' ) + ', ';
+
+        if (defined(triggerName) && triggerName !== '') {
+            js += 'replaceTemplates(\'' + triggerName + '\', \'' + this.value + '\'))';
+        }
+        else {
+            js += '\'' + this.value + '\')';
+        }
+
+        return js;
+    };
+
     Condition.prototype.getState = function() {
         return {
             field: this.field,

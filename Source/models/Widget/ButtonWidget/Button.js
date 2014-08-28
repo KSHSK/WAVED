@@ -44,5 +44,13 @@ define([
         return 'Source/models/Widget/ButtonWidget/button-icon.png';
     };
 
+    Button.prototype.getCss = function() {
+        return Widget.prototype.getCss.call(this);
+    };
+
+    Button.prototype.exportHtml = function() {
+        return '<button class="widget widget-button" id="' + this.viewModel.exportId + '">' + this.viewModel.label.originalValue + '</button>';
+    };
+
     return Button;
 });

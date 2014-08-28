@@ -352,7 +352,7 @@ define([
        });
     }
 
-    function  editFailure(glyph) {
+    function editFailure(glyph) {
         for (var i = 0; i < glyph.properties.length; i++) {
             var property = glyph.properties[i];
             property.displayValue = glyph.properties[i].originalValue;
@@ -391,6 +391,7 @@ define([
         this.coloring = new ColoringSelectionProperty({
             displayName: 'Color Scheme',
             value: '',
+            exportProperty: 'coloring',
             onchange: function() {
                 updateColoring(self);
             }
@@ -400,6 +401,7 @@ define([
         this.strokeColor = new StringProperty({
             displayName: 'Stroke Color',
             value: 'Black',
+            exportProperty: 'strokeColor',
             onchange: function() {
                 updateColoring(self);
             },
@@ -469,6 +471,13 @@ define([
         this.width.onchange = this.render;
         this.width.originalValue = 100;
         this.width._displayName = 'Scale';
+
+        // Required for rendering after export.
+        this.width.exportProperty = 'scale';
+        this.renderFunctionName = 'renderUSMap';
+        this.visible.exportProperty = 'visible';
+        this.width.css.ignore = true;
+        this.height.css.ignore = true;
 
         this.setState(state);
 
@@ -543,6 +552,22 @@ define([
         }
 
         return false;
+    };
+
+    // Returns undefined if the given key does not need to be overridden.
+    USMapViewModel.prototype.exportActionCorrection = function(group, key) {
+        if (key === 'coloring' && group.type === ColoringSchemeType.GRADIENT_COLORING) {
+            // Override gradient coloring since the action newValues has DataSet information in an incorrect format.
+            // This puts it in line with what gradient coloring getState returns.
+            return {
+                'startColor': {'value': group.startColor.value},
+                'endColor': {'value': group.endColor.value},
+                'dataSet': group.dataSet.value.name,
+                'dataField': group.dataField.value,
+                'keyField': group.keyField.value,
+                'type': group.type
+            };
+        }
     };
 
     Object.defineProperties(USMapViewModel.prototype, {

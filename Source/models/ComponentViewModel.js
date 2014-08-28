@@ -40,7 +40,14 @@ define([
         // Set visible
         this.visible = new BooleanProperty({
             displayName: 'Visible',
-            value: true
+            value: true,
+            css: {
+                attribute: 'display',
+                options: {
+                    'true': 'block',
+                    'false': 'none'
+                }
+            }
         });
 
         // Set logGoogleAnalytics
@@ -69,6 +76,10 @@ define([
                 else {
                     self.zDecrement.enableButton();
                 }
+            },
+            css: {
+                attribute: 'z-index',
+                units: ''
             }
         });
 

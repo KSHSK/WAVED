@@ -19,6 +19,7 @@ define(['jquery',
         'models/ProjectTree',
         'modules/ActionHelper',
         'modules/EventHelper',
+        'modules/ExportProject',
         'modules/DataSubsetHelper',
         'modules/DisplayMessage',
         'modules/NewProject',
@@ -59,6 +60,7 @@ define(['jquery',
         ProjectTree,
         ActionHelper,
         EventHelper,
+        ExportProject,
         DataSubsetHelper,
         DisplayMessage,
         NewProject,
@@ -625,6 +627,10 @@ define(['jquery',
 
     WAVEDViewModel.prototype.tryToSaveProjectAs = function() {
         return SaveProject.tryToSaveProjectAs(self);
+    };
+
+    WAVEDViewModel.prototype.exportProject = function() {
+        ExportProject.tryToExportProject(self);
     };
 
     WAVEDViewModel.prototype.tryToDeleteProject = function() {

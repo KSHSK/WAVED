@@ -63,6 +63,10 @@ define([
             this.optionsCaption = opts.optionsCaption;
         }
 
+        if (defined(opts.dataSetType)) {
+           this.dataSetType = opts.dataSetType;
+        }
+
         this.setState(opts);
 
         ko.track(this);

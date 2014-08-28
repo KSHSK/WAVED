@@ -160,6 +160,44 @@ define(['knockout',
         this.subscribed = true;
     };
 
+    DataSet.getHelperFunctionsJs = function() {
+        return '/*\n' +
+            ' * Subscribe to changes in dataset using the given key with a callback function.\n' +
+            ' * Using an existing key overwrites the existing callback function,\n' +
+            ' */\n' +
+            'var dataSubscribe = function(dataSetName, key, callbackFunction) {\n' +
+            '\tdataSets[dataSetName].onChange[key] = callbackFunction;\n' +
+            '};\n\n' +
+            '/*\n' +
+            ' * Unsubscribe the given keys callback function to the dataset\n' +
+            ' */\n' +
+            'var transferDataSubscription = function(oldDataSetName, newDataSetName, key) {\n' +
+            '\tvar callbackFunction = dataSets[oldDataSetName].onChange[key];\n' +
+            '\tdelete dataSets[oldDataSetName].onChange[key];\n' +
+            '\tif (typeof callbackFunction !== \'undefined\') {\n' +
+            '\t\tdataSubscribe(newDataSetName, key, callbackFunction);\n' +
+            '\t}\n' +
+            '};\n\n';
+    };
+
+    DataSet.prototype.getLoadDataJs = function () {
+        return 'd3.csv(\'data/' + this.filename + '\', function (loadedData) { \n' +
+                '\tdataSets[\'' + this.name + '\'].loadedData = loadedData;\n' +
+                '\tdataSets[\'' + this.name + '\'].data = loadedData;\n' +
+                '\tdataSets[\'' + this.name + '\'].dataIsLoaded.resolve();\n' +
+                '});\n\n';
+    };
+
+    DataSet.prototype.getSetupJs = function() {
+        return 'dataSets[\'' + this.name + '\'] = {\n' +
+                '\t\'dataIsLoaded\' : $.Deferred()' + ',\n' +
+                '\t\'loadedData\': []' + ',\n' +
+                '\t\'data\': []' + ',\n' +
+                '\t\'onChange\': {}' + ',\n' +
+                '\t\'updateData\': $.noop\n' +
+                '};\n\n';
+    };
+
     Object.defineProperties(DataSet.prototype, {
         type: {
             get: function() {
